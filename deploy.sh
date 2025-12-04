@@ -1,11 +1,14 @@
 #!/bin/bash
 
-# GitHub Pages Deployment Script
+# GitHub Pages Deployment Script for LauraGomezjurado
 # Run this after creating your GitHub repository
 
 echo "🚀 GitHub Pages Deployment Script"
 echo "=================================="
 echo ""
+
+REPO_NAME="lauragomezjurado.github.io"
+GITHUB_USER="LauraGomezjurado"
 
 # Check if remote is set
 if git remote get-url origin > /dev/null 2>&1; then
@@ -46,22 +49,30 @@ if git remote get-url origin > /dev/null 2>&1; then
     echo "✅ Deployment complete!"
     echo ""
     echo "📝 Next steps:"
-    echo "   1. Go to: https://github.com/$(echo $REMOTE_URL | sed 's/.*github.com[:/]\([^/]*\)\/\([^/]*\)\.git/\1\/\2/')"
-    echo "   2. Settings → Pages"
-    echo "   3. Source: gh-pages branch"
-    echo "   4. Folder: / (root)"
-    echo "   5. Save and wait 1-2 minutes"
+    echo "   1. Go to: https://github.com/$GITHUB_USER/$REPO_NAME/settings/pages"
+    echo "   2. Source: gh-pages branch"
+    echo "   3. Folder: / (root)"
+    echo "   4. Save and wait 1-2 minutes"
+    echo ""
+    echo "🌐 Your site will be at: https://$REPO_NAME"
     echo ""
     
 else
     echo "❌ Git remote not configured yet"
     echo ""
-    echo "Please create a GitHub repository first:"
-    echo "   1. Go to: https://github.com/new"
-    echo "   2. Create a new repository"
-    echo "   3. Copy the repository URL"
-    echo "   4. Run: git remote add origin YOUR_REPO_URL"
-    echo "   5. Then run this script again"
+    echo "Setting up remote for: $GITHUB_USER/$REPO_NAME"
+    git remote add origin "https://github.com/$GITHUB_USER/$REPO_NAME.git" 2>/dev/null || \
+    git remote set-url origin "https://github.com/$GITHUB_USER/$REPO_NAME.git"
+    echo "✅ Remote configured"
+    echo ""
+    echo "📤 Pushing to GitHub..."
+    git push -u origin main
+    echo ""
+    echo "🏗️  Building and deploying..."
+    npm run deploy
+    echo ""
+    echo "📝 Final step: Enable GitHub Pages"
+    echo "   Go to: https://github.com/$GITHUB_USER/$REPO_NAME/settings/pages"
     echo ""
 fi
 
