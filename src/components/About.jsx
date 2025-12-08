@@ -91,30 +91,33 @@ export default function About() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div ref={contentRef} className="space-y-6">
             <p className="text-xl text-gray-300 leading-relaxed">
-              I'm an independent, evidence-driven researcher focused on <strong>interpretability, fairness, and reliability</strong> of large models. 
-              I have a proven record of translating methods into norms through shortcut/artefact audits, uncertainty calibration, 
-              and mechanism-first evaluation.
+              I research <strong>interpretability, fairness, and safety</strong> of large language models, with a focus on mechanistic evaluation, 
+              model editing, and adversarial robustness. My work combines theoretical analysis with empirical validation, 
+              contributing to both academic understanding and practical safety frameworks.
             </p>
             <p className="text-lg text-gray-400 leading-relaxed">
-              Currently pursuing a <strong>BS/MS in Computer Science (AI Track) at Stanford University</strong> (Class of 2027), 
-              I conduct research at the Stanford Center for Research on Foundation Models and the Scaling Intelligence Lab. 
-              My work spans AI cybersecurity, model editing for fairness, and precision routing for multi-LLM ensembles.
+              Currently a <strong>BS/MS student in Computer Science (AI Track) at Stanford University</strong> (Class of 2027), 
+              I conduct research at the <strong>Stanford Center for Research on Foundation Models (CRFM)</strong> and the 
+              <strong> Scaling Intelligence Lab</strong>. My current projects include AI cybersecurity evaluation, 
+              high-dimensional model editing for fairness, and precision routing for multi-LLM ensembles.
             </p>
             <p className="text-lg text-gray-400 leading-relaxed">
-              <strong>Relevant Coursework:</strong> CS229m (ML Theory), CS329h (ML from Human Preferences), CS231n (Computer Vision & Deep Learning), 
-              CS224n/v (NLP/Conversational Agents), CS329a (Self-Improving Agents), EE263 (Linear Systems), EE364a/b (Convex Optimization).
+              <strong>Research Contributions:</strong> Published work on model editing for fairness (ICLR 2026 under review, NeurIPS 2025 WS), 
+              transformer generalization limits (Microsoft Research), and browser-native video compression (IEEE DCC 2023). 
+              I've also contributed to COVID-19 detection research and developed safety-constrained RL methods with theoretical guarantees.
             </p>
             <p className="text-lg text-gray-400 leading-relaxed">
-              Beyond research, I'm deeply involved in <strong>global governance</strong> as a Youth Representative for UN Women (one of 20 global members, 
-              youngest Latin American), co-founder of ASOFI (AI for Agriculture & Peacebuilding), and a World Economic Forum Delegate (Davos 2025). 
-              I bridge interpretability/fairness findings to policy audiences and deploy AI solutions in low-infrastructure settings.
+              <strong>Technical Expertise:</strong> Deep experience with PyTorch, DeepSpeed, and large-scale model training. 
+              Strong background in ML theory, optimization, and systems implementation. Coursework includes CS229m (ML Theory), 
+              CS329h (ML from Human Preferences), CS224n/v (NLP/Conversational Agents), and EE364a/b (Convex Optimization).
             </p>
             <p className="text-lg text-gray-400 leading-relaxed">
-              <strong>Honors:</strong> SoftBank Masason Foundation Fellow (personally selected by Masayoshi Son as one of 26 youth worldwide), 
-              Global Teen Leader (We Are Family Foundation), European Girls' Olympiad in Informatics, Conrad Innovator (NASA-sponsored).
+              I also work at the intersection of <strong>research and policy</strong>, serving as a Youth Representative for UN Women 
+              and participating in global governance forums. This experience informs my research by ensuring safety and fairness 
+              considerations are grounded in real-world deployment contexts and diverse stakeholder needs.
             </p>
             <div className="flex flex-wrap gap-4 mt-8">
-              {['PyTorch', 'DeepSpeed', 'ONNX Runtime', 'LLMs', 'Fairness', 'Interpretability'].map((tech, idx) => (
+              {['PyTorch', 'DeepSpeed', 'ONNX Runtime', 'LLMs', 'Fairness', 'Interpretability', 'AI Safety', 'Model Editing'].map((tech, idx) => (
                 <span 
                   key={tech}
                   className="px-4 py-2 glass rounded-full text-sm transform transition-all duration-300 hover:scale-110 hover:bg-indigo-500/20 hover:border-indigo-400/50 cursor-default"

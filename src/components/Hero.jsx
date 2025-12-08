@@ -45,13 +45,13 @@ export default function Hero() {
           ref={subtitleRef}
           className="text-xl md:text-2xl text-gray-300 mb-8"
         >
-          AI Researcher & Global Governance Advocate
+          AI Safety Researcher | Interpretability & Fairness
         </p>
         <p 
           className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto"
         >
-          Independent, evidence-driven researcher focused on interpretability, fairness, and reliability of large models. 
-          Translating methods into norms and deploying AI in low-infrastructure settings.
+          Researching interpretability, fairness, and safety of large language models. 
+          Developing mechanistic evaluation methods and translating research insights into practical safety frameworks.
         </p>
         <div ref={buttonRef} className="flex gap-4 justify-center flex-wrap">
           <a 

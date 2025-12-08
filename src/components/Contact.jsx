@@ -64,11 +64,11 @@ export default function Contact() {
         </h2>
         <div className="grid md:grid-cols-2 gap-12">
           <div className="space-y-6">
-            <h3 className="text-2xl font-bold mb-4">Let's Connect</h3>
+            <h3 className="text-2xl font-bold mb-4">Research & Collaboration</h3>
             <p className="text-gray-300 leading-relaxed">
-              I'm always open to discussing research collaborations, AI governance initiatives, 
-              or opportunities to advance interpretability and fairness in AI systems. 
-              Feel free to reach out!
+              I'm interested in discussing research collaborations, particularly in AI safety, interpretability, 
+              and fairness. Open to opportunities that advance mechanistic understanding of large models and 
+              develop practical safety frameworks.
             </p>
             <div className="space-y-4 mt-8">
               <div className="flex items-center gap-4">
