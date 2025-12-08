@@ -45,7 +45,7 @@ export default function Hero() {
           ref={subtitleRef}
           className="text-xl md:text-2xl text-gray-300 mb-8"
         >
-         Evaluation Science | Interpretability | Fairness | Robustness
+          Mechanistic Interpretability | Evaluation Science | Fairness | Robustness
         </p>
         <p 
           className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto"

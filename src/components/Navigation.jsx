@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { gsap } from 'gsap'
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const location = useLocation()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,30 +16,53 @@ export default function Navigation() {
   }, [])
 
   const navItems = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Portfolio', href: '#portfolio' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Home', href: '/', isHash: false },
+    { name: 'About', href: '#about', isHash: true },
+    { name: 'Portfolio', href: '#portfolio', isHash: true },
+    { name: 'Blog', href: '/blog', isHash: false },
+    { name: 'Contact', href: '#contact', isHash: true },
   ]
+
+  const handleNavClick = (href, isHash, e) => {
+    if (isHash && location.pathname !== '/') {
+      e.preventDefault()
+      // Navigate to home first, then scroll
+      window.location.href = `/${href}`
+    }
+    setIsMenuOpen(false)
+  }
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled ? 'glass py-4' : 'py-6'
     }`}>
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-        <a href="#home" className="text-2xl font-bold gradient-text">
+        <Link to="/" className="text-2xl font-bold gradient-text">
           LG
-        </a>
+        </Link>
         <div className="hidden md:flex gap-8">
           {navItems.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              className="text-gray-300 hover:text-indigo-400 transition-colors relative group"
-            >
-              {item.name}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-400 group-hover:w-full transition-all duration-300"></span>
-            </a>
+            item.isHash ? (
+              <a
+                key={item.name}
+                href={item.href}
+                onClick={(e) => handleNavClick(item.href, item.isHash, e)}
+                className="text-gray-300 hover:text-indigo-400 transition-colors relative group"
+              >
+                {item.name}
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-400 group-hover:w-full transition-all duration-300"></span>
+              </a>
+            ) : (
+              <Link
+                key={item.name}
+                to={item.href}
+                onClick={() => setIsMenuOpen(false)}
+                className="text-gray-300 hover:text-indigo-400 transition-colors relative group"
+              >
+                {item.name}
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-400 group-hover:w-full transition-all duration-300"></span>
+              </Link>
+            )
           ))}
         </div>
         <button
@@ -56,14 +81,25 @@ export default function Navigation() {
       {isMenuOpen && (
         <div className="md:hidden glass mt-4 mx-4 rounded-lg p-4 space-y-4">
           {navItems.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              className="block text-gray-300 hover:text-indigo-400 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              {item.name}
-            </a>
+            item.isHash ? (
+              <a
+                key={item.name}
+                href={item.href}
+                onClick={(e) => handleNavClick(item.href, item.isHash, e)}
+                className="block text-gray-300 hover:text-indigo-400 transition-colors"
+              >
+                {item.name}
+              </a>
+            ) : (
+              <Link
+                key={item.name}
+                to={item.href}
+                onClick={() => setIsMenuOpen(false)}
+                className="block text-gray-300 hover:text-indigo-400 transition-colors"
+              >
+                {item.name}
+              </Link>
+            )
           ))}
         </div>
       )}

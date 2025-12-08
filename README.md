@@ -1,15 +1,5 @@
 # Portfolio Website
 
-## Features
-
-- **3D Animated Hero Section**: Interactive 3D background with floating geometries and animated stars using Three.js
-- **Smooth Scroll Animations**: GSAP-powered animations that trigger on scroll
-- **Interactive Portfolio**: Project cards with hover effects and gradient animations
-- **Skills Visualization**: Animated progress bars showing expertise levels
-- **Contact Form**: Beautiful glassmorphism-styled contact form
-- **Responsive Design**: Fully responsive across all devices
-- **Modern UI**: Glassmorphism effects, gradient text, and smooth transitions
-
 ## Tech Stack
 
 - **React** - UI framework
