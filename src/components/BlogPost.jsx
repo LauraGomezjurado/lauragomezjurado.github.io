@@ -42,6 +42,14 @@ export default function BlogPost() {
       setPost(postData)
     }
 
+    // Transition to light background
+    gsap.to('body', {
+      background: '#faf9f6',
+      color: '#1a1a1a',
+      duration: 0.8,
+      ease: 'power2.out'
+    })
+
     // Animate on load
     if (titleRef.current) {
       gsap.fromTo(titleRef.current,
@@ -57,15 +65,25 @@ export default function BlogPost() {
         }
       )
     }
+
+    // Cleanup: transition back to dark when leaving
+    return () => {
+      gsap.to('body', {
+        background: '#0a0a0a',
+        color: '#ffffff',
+        duration: 0.8,
+        ease: 'power2.out'
+      })
+    }
   }, [slug])
 
   if (!post) {
     return (
-      <section className="relative min-h-screen py-20 px-4">
+      <section className="relative min-h-screen py-20 px-4" style={{ background: '#faf9f6', color: '#1a1a1a' }}>
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-4 gradient-text">Post Not Found</h2>
-          <p className="text-gray-400 mb-8">The blog post you're looking for doesn't exist.</p>
-          <Link to="/blog" className="text-indigo-400 hover:text-indigo-300">
+          <p className="text-gray-600 mb-8">The blog post you're looking for doesn't exist.</p>
+          <Link to="/blog" className="text-indigo-500 hover:text-indigo-600">
             ← Back to Blog
           </Link>
         </div>
@@ -74,9 +92,9 @@ export default function BlogPost() {
   }
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen py-20 px-4 overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-screen py-20 px-4 overflow-hidden" style={{ background: '#faf9f6', color: '#1a1a1a' }}>
       <div className="relative z-10 max-w-4xl mx-auto">
-        <Link to="/blog" className="inline-block mb-8 text-indigo-400 hover:text-indigo-300 transition-colors">
+        <Link to="/blog" className="inline-block mb-8 text-indigo-500 hover:text-indigo-600 transition-colors">
           ← Back to Blog
         </Link>
         
@@ -84,25 +102,25 @@ export default function BlogPost() {
           <h1 ref={titleRef} className="text-4xl md:text-5xl font-bold mb-4 gradient-text">
             {post.title}
           </h1>
-          <p className="text-sm text-gray-400 mb-8">
+          <p className="text-sm text-gray-600 mb-8">
             {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
           
-          <div className="prose prose-invert prose-lg max-w-none">
+          <div className="prose prose-lg max-w-none">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
                 h1: ({node, ...props}) => <h1 className="text-3xl font-bold mt-8 mb-4 gradient-text" {...props} />,
-                h2: ({node, ...props}) => <h2 className="text-2xl font-bold mt-6 mb-3 text-gray-200" {...props} />,
-                h3: ({node, ...props}) => <h3 className="text-xl font-bold mt-4 mb-2 text-gray-300" {...props} />,
-                p: ({node, ...props}) => <p className="text-gray-300 leading-relaxed mb-4" {...props} />,
-                ul: ({node, ...props}) => <ul className="list-disc list-inside mb-4 text-gray-300 space-y-2" {...props} />,
-                ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-4 text-gray-300 space-y-2" {...props} />,
+                h2: ({node, ...props}) => <h2 className="text-2xl font-bold mt-6 mb-3 text-gray-800" {...props} />,
+                h3: ({node, ...props}) => <h3 className="text-xl font-bold mt-4 mb-2 text-gray-700" {...props} />,
+                p: ({node, ...props}) => <p className="text-gray-700 leading-relaxed mb-4" {...props} />,
+                ul: ({node, ...props}) => <ul className="list-disc list-inside mb-4 text-gray-700 space-y-2" {...props} />,
+                ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-4 text-gray-700 space-y-2" {...props} />,
                 li: ({node, ...props}) => <li className="ml-4" {...props} />,
-                code: ({node, ...props}) => <code className="bg-white/10 px-2 py-1 rounded text-sm text-indigo-300" {...props} />,
-                pre: ({node, ...props}) => <pre className="bg-white/5 p-4 rounded-lg overflow-x-auto mb-4" {...props} />,
-                a: ({node, ...props}) => <a className="text-indigo-400 hover:text-indigo-300 underline" {...props} />,
-                blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-indigo-500 pl-4 italic text-gray-400 my-4" {...props} />
+                code: ({node, ...props}) => <code className="bg-gray-200 px-2 py-1 rounded text-sm text-indigo-600" {...props} />,
+                pre: ({node, ...props}) => <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto mb-4" {...props} />,
+                a: ({node, ...props}) => <a className="text-indigo-500 hover:text-indigo-600 underline" {...props} />,
+                blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-indigo-500 pl-4 italic text-gray-600 my-4" {...props} />
               }}
             >
               {post.content}
