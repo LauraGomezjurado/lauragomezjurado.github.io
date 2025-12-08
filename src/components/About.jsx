@@ -91,33 +91,26 @@ export default function About() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div ref={contentRef} className="space-y-6">
             <p className="text-xl text-gray-300 leading-relaxed">
-              I research <strong>interpretability, fairness, and safety</strong> of large language models, with a focus on mechanistic evaluation, 
-              model editing, and adversarial robustness. My work combines theoretical analysis with empirical validation, 
-              contributing to both academic understanding and practical safety frameworks.
+              I'm deeply passionate about how AI systems reason, where they fail, 
+              and how we can make them safer for everyone—not just on paper, 
+              but in the places where technology meets real life.
+            
             </p>
             <p className="text-lg text-gray-400 leading-relaxed">
-              Currently a <strong>BS/MS student in Computer Science (AI Track) at Stanford University</strong> (Class of 2027), 
-              I conduct research at the <strong>Stanford Center for Research on Foundation Models (CRFM)</strong> and the 
-              <strong> Scaling Intelligence Lab</strong>. My current projects include AI cybersecurity evaluation, 
-              high-dimensional model editing for fairness, and precision routing for multi-LLM ensembles.
+              My work spans interpretability, fairness, robustness, and model editing, motivated by a simple idea: 
+              if we can understand the mechanisms behind a model's behavior, we can build systems that are more reliable and more equitable by design. 
+              At Stanford, I split my time between CRFM and the Scaling Intelligence Lab, working on everything from adversarial prompt injection defenses 
+              to precision routing across LLM ensembles.
             </p>
             <p className="text-lg text-gray-400 leading-relaxed">
-              <strong>Research Contributions:</strong> Published work on model editing for fairness (ICLR 2026 under review, NeurIPS 2025 WS), 
-              transformer generalization limits (Microsoft Research), and browser-native video compression (IEEE DCC 2023). 
-              I've also contributed to COVID-19 detection research and developed safety-constrained RL methods with theoretical guarantees.
+              I come from a background of deploying AI in low-infrastructure, post-conflict regions, and I continue to serve in global governance spaces like UN Women and Davos. 
+              Those experiences taught me that "AI safety" isn't just a technical problem—it's about access, trust, context, and the people who stand to benefit or be harmed.
             </p>
             <p className="text-lg text-gray-400 leading-relaxed">
-              <strong>Technical Expertise:</strong> Deep experience with PyTorch, DeepSpeed, and large-scale model training. 
-              Strong background in ML theory, optimization, and systems implementation. Coursework includes CS229m (ML Theory), 
-              CS329h (ML from Human Preferences), CS224n/v (NLP/Conversational Agents), and EE364a/b (Convex Optimization).
-            </p>
-            <p className="text-lg text-gray-400 leading-relaxed">
-              I also work at the intersection of <strong>research and policy</strong>, serving as a Youth Representative for UN Women 
-              and participating in global governance forums. This experience informs my research by ensuring safety and fairness 
-              considerations are grounded in real-world deployment contexts and diverse stakeholder needs.
+              I'm driven by research that is both intellectually rigorous and socially grounded, and by a belief that technical excellence and human impact should reinforce each other, not compete. 
             </p>
             <div className="flex flex-wrap gap-4 mt-8">
-              {['PyTorch', 'DeepSpeed', 'ONNX Runtime', 'LLMs', 'Fairness', 'Interpretability', 'AI Safety', 'Model Editing'].map((tech, idx) => (
+              {['AI Safety', 'Interpretability', 'Fairness', 'Robustness', 'Model Editing', 'Cybersecurity', 'Ensembles', 'Precision Routing'].map((tech, idx) => (
                 <span 
                   key={tech}
                   className="px-4 py-2 glass rounded-full text-sm transform transition-all duration-300 hover:scale-110 hover:bg-indigo-500/20 hover:border-indigo-400/50 cursor-default"
