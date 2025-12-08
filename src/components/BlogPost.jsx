@@ -66,14 +66,9 @@ export default function BlogPost() {
       )
     }
 
-    // Cleanup: transition back to dark when leaving
+    // Cleanup: kill any ScrollTriggers
     return () => {
-      gsap.to('body', {
-        background: '#0a0a0a',
-        color: '#ffffff',
-        duration: 0.8,
-        ease: 'power2.out'
-      })
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill())
     }
   }, [slug])
 

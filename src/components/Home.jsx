@@ -10,6 +10,12 @@ gsap.registerPlugin(ScrollTrigger)
 
 export default function Home() {
   useEffect(() => {
+    // Reset to dark background when Home component mounts (for Hero section)
+    gsap.set('body', {
+      background: '#0a0a0a',
+      color: '#ffffff'
+    })
+
     // Smooth scroll behavior for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
