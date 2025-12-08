@@ -76,12 +76,9 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
   background: #818cf8;
 }
 
-/* Gradient text */
+/* Gradient text - now single tone */
 .gradient-text {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #6366f1;
 }
 
 /* Glass morphism effect */

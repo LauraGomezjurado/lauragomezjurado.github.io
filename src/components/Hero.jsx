@@ -56,7 +56,7 @@ export default function Hero() {
         <div ref={buttonRef} className="flex gap-4 justify-center flex-wrap">
           <a 
             href="#portfolio" 
-            className="px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full font-semibold hover:scale-110 transition-transform duration-300 glow"
+            className="px-8 py-4 bg-indigo-500 rounded-full font-semibold hover:scale-110 transition-transform duration-300 glow"
           >
             View My Work
           </a>
