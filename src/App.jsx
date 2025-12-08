@@ -5,7 +5,6 @@ import Navigation from './components/Navigation'
 import Hero from './components/Hero'
 import About from './components/About'
 import Portfolio from './components/Portfolio'
-import Skills from './components/Skills'
 import Contact from './components/Contact'
 import './App.css'
 
@@ -27,7 +26,7 @@ function App() {
       })
     })
 
-    // Smooth background color transition from dark to light
+    // Smooth background color transition from dark to light (About section)
     const aboutSection = document.querySelector('#about')
     if (aboutSection) {
       gsap.to('body', {
@@ -35,6 +34,21 @@ function App() {
         color: '#1a1a1a',
         scrollTrigger: {
           trigger: aboutSection,
+          start: 'top 60%',
+          end: 'top 20%',
+          scrub: 1,
+        }
+      })
+    }
+
+    // Smooth background color transition back to dark (Contact section)
+    const contactSection = document.querySelector('#contact')
+    if (contactSection) {
+      gsap.to('body', {
+        background: '#0a0a0a',
+        color: '#ffffff',
+        scrollTrigger: {
+          trigger: contactSection,
           start: 'top 60%',
           end: 'top 20%',
           scrub: 1,
@@ -81,8 +95,6 @@ function App() {
         <About />
         <div className="section-divider"></div>
         <Portfolio />
-        <div className="section-divider"></div>
-        <Skills />
         <div className="section-divider"></div>
         <Contact />
       </main>
