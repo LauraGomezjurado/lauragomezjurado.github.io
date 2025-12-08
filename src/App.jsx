@@ -27,6 +27,21 @@ function App() {
       })
     })
 
+    // Smooth background color transition from dark to light
+    const aboutSection = document.querySelector('#about')
+    if (aboutSection) {
+      gsap.to('body', {
+        background: '#faf9f6',
+        color: '#1a1a1a',
+        scrollTrigger: {
+          trigger: aboutSection,
+          start: 'top 60%',
+          end: 'top 20%',
+          scrub: 1,
+        }
+      })
+    }
+
     // Create smooth fade transitions between sections
     const sections = document.querySelectorAll('section[id]')
     

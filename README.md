@@ -1,6 +1,4 @@
-# Impressive Portfolio Website
-
-A stunning, interactive personal portfolio website featuring 3D animations, smooth scroll effects, and modern design.
+# Portfolio Website
 
 ## Features
 

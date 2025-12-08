@@ -27,6 +27,18 @@ body {
   background: #0a0a0a;
   color: #ffffff;
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Light theme sections */
+body.light-theme {
+  background: #faf9f6;
+  color: #1a1a1a;
+}
+
+body.light-theme section[id] {
+  background: #faf9f6;
+  color: #1a1a1a;
 }
 
 canvas {
@@ -51,6 +63,19 @@ canvas {
   background: #8b5cf6;
 }
 
+/* Light theme scrollbar */
+body.light-theme ::-webkit-scrollbar-track {
+  background: #faf9f6;
+}
+
+body.light-theme ::-webkit-scrollbar-thumb {
+  background: #a5b4fc;
+}
+
+body.light-theme ::-webkit-scrollbar-thumb:hover {
+  background: #818cf8;
+}
+
 /* Gradient text */
 .gradient-text {
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
@@ -64,6 +89,14 @@ canvas {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Light theme glass effect */
+body.light-theme .glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 /* Glow effect */
