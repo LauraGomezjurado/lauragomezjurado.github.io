@@ -110,7 +110,7 @@ export default function About() {
               I'm driven by research that is both intellectually rigorous and socially grounded, and by a belief that technical excellence and human impact should reinforce each other, not compete. 
             </p>
             <div className="flex flex-wrap gap-4 mt-8">
-              {['AI Safety', 'Interpretability', 'Fairness', 'Robustness', 'Model Editing', 'Cybersecurity', 'Ensembles', 'Precision Routing'].map((tech, idx) => (
+              {['AI Safety', 'Interpretability', 'Fairness', 'Robustness', 'Model Editing', 'Ensembles', 'Precision Routing'].map((tech, idx) => (
                 <span 
                   key={tech}
                   className="px-4 py-2 glass rounded-full text-sm transform transition-all duration-300 hover:scale-110 hover:bg-indigo-500/20 hover:border-indigo-400/50 cursor-default"

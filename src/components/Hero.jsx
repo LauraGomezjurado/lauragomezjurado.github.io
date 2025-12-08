@@ -45,13 +45,13 @@ export default function Hero() {
           ref={subtitleRef}
           className="text-xl md:text-2xl text-gray-300 mb-8"
         >
-          AI Safety Researcher | Interpretability & Fairness
+         Evaluation Science | Interpretability | Fairness | Robustness
         </p>
         <p 
           className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto"
         >
-          Researching interpretability, fairness, and safety of large language models. 
-          Developing mechanistic evaluation methods and translating research insights into practical safety frameworks.
+          Exploring how large models reason, generalize, and fail; and how we can build AI systems that are more interpretable, robust, and aligned with human needs.
+          My interests span mechanistic interpretability, evaluation science, fairness, robustness, model editing, and the intersection between technical AI safety and global governance.
         </p>
         <div ref={buttonRef} className="flex gap-4 justify-center flex-wrap">
           <a 
