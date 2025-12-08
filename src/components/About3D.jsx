@@ -1,40 +1,5 @@
-import { useRef, useMemo } from 'react'
+import { useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Points, PointMaterial } from '@react-three/drei'
-
-function AboutStars() {
-  const ref = useRef()
-  const sphere = useMemo(() => {
-    const positions = new Float32Array(3000 * 3)
-    for (let i = 0; i < 3000; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 15
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 15
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 15
-    }
-    return positions
-  }, [])
-
-  useFrame((state, delta) => {
-    if (ref.current) {
-      ref.current.rotation.x += delta / 12
-      ref.current.rotation.y += delta / 18
-    }
-  })
-
-  return (
-    <group rotation={[0, 0, Math.PI / 6]}>
-      <Points ref={ref} positions={sphere} stride={3} frustumCulled={false}>
-        <PointMaterial
-          transparent
-          color="#8b5cf6"
-          size={0.04}
-          sizeAttenuation={true}
-          depthWrite={false}
-        />
-      </Points>
-    </group>
-  )
-}
 
 function AboutGeometry() {
   const meshRef1 = useRef()
@@ -92,7 +57,6 @@ export default function About3D() {
       <Canvas camera={{ position: [0, 0, 5] }}>
         <ambientLight intensity={0.4} />
         <pointLight position={[10, 10, 10]} intensity={0.6} />
-        <AboutStars />
         <AboutGeometry />
       </Canvas>
     </div>

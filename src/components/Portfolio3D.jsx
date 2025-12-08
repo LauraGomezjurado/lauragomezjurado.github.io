@@ -1,40 +1,5 @@
-import { useRef, useMemo } from 'react'
+import { useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Points, PointMaterial } from '@react-three/drei'
-
-function PortfolioParticles() {
-  const ref = useRef()
-  const particles = useMemo(() => {
-    const positions = new Float32Array(2000 * 3)
-    for (let i = 0; i < 2000; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 20
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 20
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 20
-    }
-    return positions
-  }, [])
-
-  useFrame((state, delta) => {
-    if (ref.current) {
-      ref.current.rotation.x += delta / 15
-      ref.current.rotation.y += delta / 20
-    }
-  })
-
-  return (
-    <group rotation={[0, 0, -Math.PI / 4]}>
-      <Points ref={ref} positions={particles} stride={3} frustumCulled={false}>
-        <PointMaterial
-          transparent
-          color="#6366f1"
-          size={0.03}
-          sizeAttenuation={true}
-          depthWrite={false}
-        />
-      </Points>
-    </group>
-  )
-}
 
 function PortfolioShapes() {
   const shapeRef1 = useRef()
@@ -82,7 +47,6 @@ export default function Portfolio3D() {
       <Canvas camera={{ position: [0, 0, 5] }}>
         <ambientLight intensity={0.3} />
         <pointLight position={[10, 10, 10]} intensity={0.5} />
-        <PortfolioParticles />
         <PortfolioShapes />
       </Canvas>
     </div>
