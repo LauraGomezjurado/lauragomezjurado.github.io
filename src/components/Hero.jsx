@@ -45,7 +45,7 @@ export default function Hero() {
           ref={subtitleRef}
           className="text-xl md:text-2xl text-gray-300 mb-14 font-light tracking-wide"
         >
-          Mech Interp| Evaluation Science | Fairness | Robustness
+          Mech Interp | Evaluation Science | Fairness | Robustness
         </p>
         <p 
           className="text-base md:text-lg text-gray-400 mb-20 max-w-3xl mx-auto font-light leading-relaxed"
