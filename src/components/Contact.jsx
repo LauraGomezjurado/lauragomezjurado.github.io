@@ -59,7 +59,7 @@ export default function Contact() {
     <section ref={sectionRef} id="contact" className="relative min-h-screen py-20 px-4 overflow-hidden parallax-section">
       <Contact3D />
       <div className="relative z-10 max-w-4xl mx-auto">
-        <h2 ref={titleRef} className="text-5xl md:text-6xl font-bold mb-16 text-center gradient-text">
+        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-24 text-center text-white">
           Get In Touch
         </h2>
         <div className="grid md:grid-cols-2 gap-12">
@@ -73,36 +73,36 @@ export default function Contact() {
             <div className="space-y-4 mt-8">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 glass rounded-lg flex items-center justify-center">
-                  <svg className="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-[#B8860B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
                 <div>
                   <div className="text-sm text-gray-400">Email</div>
-                  <a href="mailto:lpgomez@stanford.edu" className="text-indigo-400 hover:text-indigo-300 transition-colors">lpgomez@stanford.edu</a>
+                  <a href="mailto:lpgomez@stanford.edu" className="text-[#B8860B] hover:text-[#8B6914] transition-colors">lpgomez@stanford.edu</a>
                 </div>
               </div>
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 glass rounded-lg flex items-center justify-center">
-                  <svg className="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-[#B8860B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
                 </div>
                 <div>
                   <div className="text-sm text-gray-400">Phone</div>
-                  <a href="tel:+16505053811" className="text-indigo-400 hover:text-indigo-300 transition-colors">+1 (650) 505-3811</a>
+                  <a href="tel:+16505053811" className="text-[#B8860B] hover:text-[#8B6914] transition-colors">+1 (650) 505-3811</a>
                 </div>
               </div>
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 glass rounded-lg flex items-center justify-center">
-                  <svg className="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-[#B8860B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
                 <div>
                   <div className="text-sm text-gray-400">Location</div>
-                  <div className="text-indigo-400">Stanford, CA</div>
+                  <div className="text-[#B8860B]">Stanford, CA</div>
                 </div>
               </div>
             </div>
@@ -129,7 +129,7 @@ export default function Contact() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-indigo-500 transition-colors"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#B8860B] transition-colors"
                 placeholder="Your Name"
               />
             </div>
@@ -142,7 +142,7 @@ export default function Contact() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-indigo-500 transition-colors"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#B8860B] transition-colors"
                 placeholder="your.email@example.com"
               />
             </div>
@@ -161,7 +161,7 @@ export default function Contact() {
             </div>
             <button
               type="submit"
-              className="w-full px-8 py-4 bg-indigo-500 rounded-lg font-semibold hover:scale-105 transition-transform duration-300 glow"
+              className="w-full px-8 py-4 bg-[#B8860B] hover:bg-[#8B6914] rounded-lg font-light text-lg transition-all duration-200 shadow-sm hover:shadow-md text-black"
             >
               Send Message
             </button>

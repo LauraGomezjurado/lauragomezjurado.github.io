@@ -43,7 +43,7 @@ npm run preview
 ```
 src/
 ├── components/
-│   ├── Hero.jsx          # Hero section with 3D background
+│   ├── Hero.jsx          #  section with 3D background
 │   ├── Hero3D.jsx        # 3D scene component
 │   ├── About.jsx         # About section
 │   ├── Portfolio.jsx    # Portfolio/projects section
@@ -57,13 +57,6 @@ src/
 
 ## Customization
 
-### Update Personal Information
-
-1. **Hero Section**: Edit `src/components/Hero.jsx` to change name, title, and description
-2. **About Section**: Update `src/components/About.jsx` with your bio and skills
-3. **Portfolio**: Modify the `projects` array in `src/components/Portfolio.jsx`
-4. **Skills**: Update the `skills` array in `src/components/Skills.jsx`
-5. **Contact**: Change contact information in `src/components/Contact.jsx`
 
 ### Colors & Styling
 

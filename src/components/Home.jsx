@@ -12,8 +12,8 @@ export default function Home() {
   useEffect(() => {
     // Reset to dark background when Home component mounts (for Hero section)
     gsap.set('body', {
-      background: '#0a0a0a',
-      color: '#ffffff'
+      background: '#000000',
+      color: '#FFFFFF'
     })
 
     // Smooth scroll behavior for anchor links
@@ -34,8 +34,8 @@ export default function Home() {
     const aboutSection = document.querySelector('#about')
     if (aboutSection) {
       gsap.to('body', {
-        background: '#faf9f6',
-        color: '#1a1a1a',
+        background: '#FAFBFC',
+        color: '#1F2937',
         scrollTrigger: {
           trigger: aboutSection,
           start: 'top 60%',
@@ -49,8 +49,8 @@ export default function Home() {
     const contactSection = document.querySelector('#contact')
     if (contactSection) {
       gsap.to('body', {
-        background: '#0a0a0a',
-        color: '#ffffff',
+        background: '#000000',
+        color: '#FFFFFF',
         scrollTrigger: {
           trigger: contactSection,
           start: 'top 60%',
@@ -68,18 +68,18 @@ export default function Home() {
       gsap.fromTo(
         section,
         {
-          opacity: 0.3,
+          opacity: 0.9,
         },
         {
           opacity: 1,
-          duration: 1,
+          duration: 1.2,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: section,
             start: 'top 85%',
             end: 'top 50%',
             toggleActions: 'play none none reverse',
-            scrub: 0.5,
+            scrub: 0.8,
           }
         }
       )

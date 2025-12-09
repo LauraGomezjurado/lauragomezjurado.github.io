@@ -47,20 +47,20 @@ export default function Navigation() {
                 key={item.name}
                 href={item.href}
                 onClick={(e) => handleNavClick(item.href, item.isHash, e)}
-                className="text-gray-300 hover:text-indigo-400 transition-colors relative group"
+                className="text-gray-400 hover:text-[#B8860B] transition-colors relative group"
               >
                 {item.name}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-400 group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#B8860B] group-hover:w-full transition-all duration-300"></span>
               </a>
             ) : (
               <Link
                 key={item.name}
                 to={item.href}
                 onClick={() => setIsMenuOpen(false)}
-                className="text-gray-300 hover:text-indigo-400 transition-colors relative group"
+                className="text-gray-400 hover:text-[#B8860B] transition-colors relative group"
               >
                 {item.name}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-400 group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#B8860B] group-hover:w-full transition-all duration-300"></span>
               </Link>
             )
           ))}
@@ -86,7 +86,7 @@ export default function Navigation() {
                 key={item.name}
                 href={item.href}
                 onClick={(e) => handleNavClick(item.href, item.isHash, e)}
-                className="block text-gray-300 hover:text-indigo-400 transition-colors"
+                className="block text-gray-400 hover:text-[#B8860B] transition-colors"
               >
                 {item.name}
               </a>
@@ -95,7 +95,7 @@ export default function Navigation() {
                 key={item.name}
                 to={item.href}
                 onClick={() => setIsMenuOpen(false)}
-                className="block text-gray-300 hover:text-indigo-400 transition-colors"
+                className="block text-gray-400 hover:text-[#B8860B] transition-colors"
               >
                 {item.name}
               </Link>

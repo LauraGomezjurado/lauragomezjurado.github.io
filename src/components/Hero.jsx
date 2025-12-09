@@ -37,39 +37,39 @@ export default function Hero() {
       <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
         <h1 
           ref={titleRef}
-          className="text-6xl md:text-8xl font-bold mb-6 gradient-text"
+          className="text-6xl md:text-8xl font-light mb-10 text-white"
         >
           Laura Gomezjurado Gonzalez
         </h1>
         <p 
           ref={subtitleRef}
-          className="text-xl md:text-2xl text-gray-300 mb-8"
+          className="text-xl md:text-2xl text-gray-300 mb-14 font-light tracking-wide"
         >
           Mech Interp| Evaluation Science | Fairness | Robustness
         </p>
         <p 
-          className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto"
+          className="text-base md:text-lg text-gray-400 mb-20 max-w-3xl mx-auto font-light leading-relaxed"
         >
           Exploring how large models reason, generalize, and fail; and how we can build AI systems that are more interpretable, robust, and aligned with human needs.
           My interests span mechanistic interpretability, evaluation science, fairness, robustness, model editing, and the intersection between technical AI safety and global governance.
         </p>
-        <div ref={buttonRef} className="flex gap-4 justify-center flex-wrap">
+        <div ref={buttonRef} className="flex gap-6 justify-center flex-wrap mt-8">
           <a 
             href="#portfolio" 
-            className="px-8 py-4 bg-indigo-500 rounded-full font-semibold hover:scale-110 transition-transform duration-300 glow"
+            className="px-10 py-4 bg-[#B8860B] hover:bg-[#8B6914] rounded-lg font-light text-lg transition-all duration-200 shadow-sm hover:shadow-md text-black"
           >
             View My Work
           </a>
           <a 
             href="#contact" 
-            className="px-8 py-4 glass rounded-full font-semibold hover:scale-110 transition-transform duration-300"
+            className="px-10 py-4 glass rounded-lg font-light text-lg hover:bg-white/5 transition-all duration-200 border border-[#B8860B]/30 hover:border-[#B8860B]/50"
           >
             Get In Touch
           </a>
         </div>
       </div>
       <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <svg className="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-6 h-6 text-[#B8860B] opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>
       </div>

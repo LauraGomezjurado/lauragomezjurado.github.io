@@ -24,21 +24,24 @@ html {
 
 body {
   font-family: 'Inter', sans-serif;
-  background: #0a0a0a;
-  color: #ffffff;
+  background: #000000;
+  color: #FFFFFF;
   overflow-x: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+  font-weight: 300;
 }
 
 /* Light theme sections */
 body.light-theme {
-  background: #faf9f6;
-  color: #1a1a1a;
+  background: #FAFBFC;
+  color: #1F2937;
 }
 
 body.light-theme section[id] {
-  background: #faf9f6;
-  color: #1a1a1a;
+  background: #FAFBFC;
+  color: #1F2937;
 }
 
 canvas {
@@ -47,58 +50,62 @@ canvas {
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: #000000;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #6366f1;
-  border-radius: 5px;
+  background: #B8860B;
+  border-radius: 4px;
+  opacity: 0.6;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #8b5cf6;
+  background: #8B6914;
+  opacity: 0.8;
 }
 
 /* Light theme scrollbar */
 body.light-theme ::-webkit-scrollbar-track {
-  background: #faf9f6;
+  background: #FAFBFC;
 }
 
 body.light-theme ::-webkit-scrollbar-thumb {
-  background: #a5b4fc;
+  background: #6B7280;
+  opacity: 0.4;
 }
 
 body.light-theme ::-webkit-scrollbar-thumb:hover {
-  background: #818cf8;
+  background: #4B5563;
+  opacity: 0.6;
 }
 
-/* Gradient text - now single tone */
+/* Gradient text - elegant muted bronze/gold */
 .gradient-text {
-  color: #6366f1;
+  color: #B8860B;
 }
 
-/* Glass morphism effect */
+/* Glass morphism effect - elegant on black */
 .glass {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(184, 134, 11, 0.2);
 }
 
 /* Light theme glass effect */
 body.light-theme .glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(99, 102, 241, 0.2);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(74, 144, 226, 0.15);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* Glow effect */
+/* Subtle shadow instead of glow */
 .glow {
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.15);
 }
 
 /* 3D Card effects */
@@ -149,48 +156,17 @@ section[id] .space-y-6 {
   opacity: 1;
 }
 
-/* Gradient dividers between sections */
+/* Subtle dividers between sections */
 .section-divider {
-  height: 2px;
+  height: 1px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(99, 102, 241, 0.2) 10%,
-    rgba(139, 92, 246, 0.4) 30%,
-    rgba(236, 72, 153, 0.4) 50%,
-    rgba(139, 92, 246, 0.4) 70%,
-    rgba(99, 102, 241, 0.2) 90%,
+    rgba(74, 144, 226, 0.15) 50%,
     transparent 100%
   );
   margin: 0;
-  opacity: 0.6;
-  position: relative;
-  overflow: hidden;
-}
-
-.section-divider::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  animation: shimmer 3s infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 100%;
-  }
+  opacity: 0.4;
 }
 
 /* Smooth parallax effect */
@@ -204,11 +180,48 @@ html {
   scroll-padding-top: 80px;
 }
 
-/* Section spacing for smoother transitions */
+/* Section spacing for smoother transitions - more generous */
 section[id] {
   scroll-margin-top: 80px;
   min-height: 100vh;
   position: relative;
+  padding: 12rem 0;
+}
+
+/* Hero section - even more space */
+#home {
+  padding: 15rem 0;
+}
+
+/* Typography refinement - elegant and refined */
+h1 {
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  font-size: clamp(3.5rem, 9vw, 7rem);
+  color: #FFFFFF;
+}
+
+h2 {
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  font-size: clamp(2.25rem, 5.5vw, 4rem);
+  color: #FFFFFF;
+}
+
+h3 {
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: #FFFFFF;
+}
+
+p {
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  line-height: 1.75;
 }
 
 /* Overlap sections slightly for smoother transition */
