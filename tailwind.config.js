@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'sans': ['Source Sans Pro', 'sans-serif'],
+        'serif': ['Playfair Display', 'serif'],
+      },
       colors: {
         primary: '#B8860B',
         secondary: '#8B6914',

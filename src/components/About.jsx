@@ -85,7 +85,7 @@ export default function About() {
     <section ref={sectionRef} id="about" className="relative min-h-screen py-20 px-4 overflow-hidden parallax-section">
       <About3D />
       <div className="relative z-10 max-w-7xl mx-auto">
-        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-24 text-center text-gray-900">
+        <h2 ref={titleRef} className="text-5xl md:text-6xl font-medium mb-24 text-center text-gray-900">
           About Me
         </h2>
         <div className="grid md:grid-cols-2 gap-12 items-center">

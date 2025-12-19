@@ -408,7 +408,7 @@ export default function BlogPost() {
           ← Back to Blog
         </Link>
         
-        <article className="rounded-2xl p-8 md:p-12 bg-white shadow-sm">
+        <article className="rounded-2xl p-8 md:p-12 bg-white" style={{ boxShadow: 'none' }}>
           <h1 ref={titleRef} className="text-4xl md:text-5xl font-bold mb-4 gradient-text">
             {post.title}
           </h1>
@@ -421,13 +421,16 @@ export default function BlogPost() {
               remarkPlugins={[remarkGfm, remarkMath]}
               rehypePlugins={[rehypeKatex]}
               components={{
-                h1: ({node, ...props}) => <h1 className="text-3xl font-bold mt-8 mb-4 gradient-text" {...props} />,
+                h1: ({node, ...props}) => {
+                  // Skip rendering h1 from markdown since we already have a title above
+                  return null;
+                },
                 h2: ({node, ...props}) => <h2 className="text-2xl font-bold mt-6 mb-3 text-gray-800" {...props} />,
                 h3: ({node, ...props}) => <h3 className="text-xl font-bold mt-4 mb-2 text-gray-700" {...props} />,
                 p: ({node, ...props}) => <p className="text-gray-700 leading-relaxed mb-4" {...props} />,
-                ul: ({node, ...props}) => <ul className="list-disc list-inside mb-4 text-gray-700 space-y-2" {...props} />,
-                ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-4 text-gray-700 space-y-2" {...props} />,
-                li: ({node, ...props}) => <li className="ml-4" {...props} />,
+                ul: ({node, ...props}) => <ul className="list-disc mb-4 text-gray-700 space-y-2 pl-6" {...props} />,
+                ol: ({node, ...props}) => <ol className="list-decimal mb-4 text-gray-700 space-y-2 pl-6" {...props} />,
+                li: ({node, ...props}) => <li className="mb-2" {...props} />,
                 code: ({node, ...props}) => <code className="bg-gray-200 px-2 py-1 rounded text-sm text-indigo-600" {...props} />,
                 pre: ({node, ...props}) => <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto mb-4" {...props} />,
                 a: ({node, ...props}) => <a className="text-indigo-500 hover:text-indigo-600 underline" {...props} />,

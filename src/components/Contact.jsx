@@ -59,7 +59,7 @@ export default function Contact() {
     <section ref={sectionRef} id="contact" className="relative min-h-screen py-20 px-4 overflow-hidden parallax-section">
       <Contact3D />
       <div className="relative z-10 max-w-4xl mx-auto">
-        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-24 text-center text-white">
+        <h2 ref={titleRef} className="text-5xl md:text-6xl font-medium mb-24 text-center text-white">
           Get In Touch
         </h2>
         <div className="grid md:grid-cols-2 gap-12">
@@ -161,7 +161,7 @@ export default function Contact() {
             </div>
             <button
               type="submit"
-              className="w-full px-8 py-4 bg-[#B8860B] hover:bg-[#8B6914] rounded-lg font-light text-lg transition-all duration-200 shadow-sm hover:shadow-md text-black"
+              className="w-full px-8 py-4 bg-[#B8860B] hover:bg-[#8B6914] rounded-lg font-medium text-lg transition-all duration-200 shadow-sm hover:shadow-md text-black"
             >
               Send Message
             </button>
