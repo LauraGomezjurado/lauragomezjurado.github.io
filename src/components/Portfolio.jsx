@@ -6,18 +6,20 @@ import Portfolio3D from './Portfolio3D'
 gsap.registerPlugin(ScrollTrigger)
 
 const projects = [
+
   {
-    id: 1,
-    title: 'AI Cybersecurity & Evaluation Robustness',
-    description: 'Research at Stanford CRFM extending CyberBench: benchmarking cybersecurity agents',
-    briefDescription: 'Extending evaluation frameworks for cybersecurity agents with robust benchmarking methodologies.',
-    tech: ['Agents', 'Cybersecurity', 'AI Safety'],
+    id: 4,
+    title: 'High-Dimensional Model Editing for Fairness',
+    description: 'Built λ-scaled merge of subgroup-specific Δθ maintaining accuracy while lowering DPD/EOD vs FFT/LoRA across LLaMA-2, DistilBERT, and Qwen-2.5. Derived theoretical DPD upper bound linking coefficients to subgroup vector norms. NeurIPS 2025 WS, ICLR 2026 under review.',
+    briefDescription: 'Novel model editing approach reducing demographic parity gaps while preserving accuracy through high-dimensional parameter manipulation.',
+    tech: ['Model Editing', 'Fairness', 'PyTorch', 'DeepSpeed'],
     color: 'from-[#B8860B] to-[#8B6914]',
-    org: 'Stanford CRFM (2025 - Present)',
-    image: null, // Add image path here if available, e.g., '/images/portfolio/cyberbench.png'
-    link: null,
-    github: null // Add your GitHub repo URL here, e.g., 'https://github.com/LauraGomezjurado/cyberbench-extension'
+    org: 'Mila/Meta AI with Dr. Hiroki Naganuma (2024 - Present)',
+    image: null,
+    link: 'https://arxiv.org/abs/2505.24262',
+    github: null // Add your GitHub repo URL here
   },
+
   {
     id: 2,
     title: 'Transformer Generalization Limits',
@@ -43,16 +45,16 @@ const projects = [
     github: null // Add your GitHub repo URL here
   },
   {
-    id: 4,
-    title: 'High-Dimensional Model Editing for Fairness',
-    description: 'Built λ-scaled merge of subgroup-specific Δθ maintaining accuracy while lowering DPD/EOD vs FFT/LoRA across LLaMA-2, DistilBERT, and Qwen-2.5. Derived theoretical DPD upper bound linking coefficients to subgroup vector norms. NeurIPS 2025 WS, ICLR 2026 under review.',
-    briefDescription: 'Novel model editing approach reducing demographic parity gaps while preserving accuracy through high-dimensional parameter manipulation.',
-    tech: ['Model Editing', 'Fairness', 'PyTorch', 'DeepSpeed'],
+    id: 1,
+    title: 'AI Cybersecurity & Evaluation Robustness',
+    description: 'Research at Stanford CRFM extending CyberBench: benchmarking cybersecurity agents',
+    briefDescription: 'Extending evaluation frameworks for cybersecurity agents with robust benchmarking methodologies.',
+    tech: ['Agents', 'Cybersecurity', 'AI Safety'],
     color: 'from-[#B8860B] to-[#8B6914]',
-    org: 'Mila/Meta AI with Dr. Hiroki Naganuma (2024 - Present)',
-    image: null,
-    link: 'https://arxiv.org/abs/2505.24262',
-    github: null // Add your GitHub repo URL here
+    org: 'Stanford CRFM (2025 - Present)',
+    image: null, // Add image path here if available, e.g., '/images/portfolio/cyberbench.png'
+    link: null,
+    github: null // Add your GitHub repo URL here, e.g., 'https://github.com/LauraGomezjurado/cyberbench-extension'
   },
   {
     id: 10,

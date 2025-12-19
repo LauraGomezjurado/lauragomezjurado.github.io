@@ -111,33 +111,52 @@ export default function About() {
             </p>
             
             {/* Organization logos - subtle and clean */}
-            <div className="flex items-center gap-8 mt-12 pt-8 border-t border-gray-300/20">
+            <div className="flex items-center gap-12 mt-12 pt-8 border-t border-gray-300/20">
               <a 
                 href="https://www.stanford.edu" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="opacity-40 hover:opacity-60 transition-opacity duration-200"
+                className="opacity-35 hover:opacity-55 transition-all duration-200 hover:scale-105"
                 aria-label="Stanford University"
               >
-                <div className="text-gray-600 font-light text-sm tracking-wider">STANFORD</div>
+                <svg width="90" height="24" viewBox="0 0 90 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {/* Stanford Tree - stylized */}
+                  <path d="M45 4 L42 12 L48 12 Z" fill="#B8860B"/>
+                  <path d="M45 10 L38 18 L52 18 Z" fill="#B8860B"/>
+                  <path d="M45 16 L35 24 L55 24 Z" fill="#B8860B"/>
+                  <rect x="43.5" y="20" width="3" height="4" fill="#B8860B"/>
+                </svg>
               </a>
               <a 
                 href="https://www.microsoft.com/en-us/research" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="opacity-40 hover:opacity-60 transition-opacity duration-200"
+                className="opacity-35 hover:opacity-55 transition-all duration-200 hover:scale-105"
                 aria-label="Microsoft Research"
               >
-                <div className="text-gray-600 font-light text-sm tracking-wider">MICROSOFT RESEARCH</div>
+                <svg width="90" height="24" viewBox="0 0 90 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {/* Microsoft logo - four squares */}
+                  <rect x="0" y="0" width="10" height="10" fill="#B8860B" rx="1"/>
+                  <rect x="12" y="0" width="10" height="10" fill="#B8860B" rx="1"/>
+                  <rect x="0" y="12" width="10" height="10" fill="#B8860B" rx="1"/>
+                  <rect x="12" y="12" width="10" height="10" fill="#B8860B" rx="1"/>
+                </svg>
               </a>
               <a 
                 href="https://erisia.org" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="opacity-40 hover:opacity-60 transition-opacity duration-200"
+                className="opacity-35 hover:opacity-55 transition-all duration-200 hover:scale-105"
                 aria-label="Erisia Open Source Initiative"
               >
-                <div className="text-gray-600 font-light text-sm tracking-wider">ERISIA</div>
+                <svg width="70" height="24" viewBox="0 0 70 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {/* Erisia - stylized E with geometric elements */}
+                  <rect x="0" y="2" width="2.5" height="20" fill="#B8860B" rx="0.5"/>
+                  <rect x="0" y="2" width="18" height="2.5" fill="#B8860B" rx="0.5"/>
+                  <rect x="0" y="10.75" width="14" height="2.5" fill="#B8860B" rx="0.5"/>
+                  <rect x="0" y="19.5" width="18" height="2.5" fill="#B8860B" rx="0.5"/>
+                  <circle cx="25" cy="12" r="3" fill="#B8860B" opacity="0.6"/>
+                </svg>
               </a>
             </div>
           </div>
