@@ -27,13 +27,8 @@ We investigate whether models aligned on preference data from different
 demographic cohorts systematically diverge in their outputs. We test three hypotheses: (H1) models trained on different cohorts exhibit stylistic differences on apolitical prompts; (H2) models align more strongly with their training cohort’s country opinions than with other countries (subliminal preference
 transfer); and (H3) cohort membership is recoverable from stylistic features alone. 
 
-<!-- Using PRISM’s sociodemographically annotated data, we train four instances of Qwen2.5-0.5B via DPO on feedback from US, UK, Chile, and Mexico annotators—restricting training to neutral conversations—then evaluate on apolitical prompts and GlobalOpinionsQA. -->
-<!-- 
-Using Direct Preference Optimization (DPO) to fine-tune models on demographic-specific preference data, we investigated whether these models develop opinions aligned with their training demographic, even when evaluated on topics that have nothing to do with their training data. -->
-
 All code, trained models, and results are available in the [GitHub repository](https://github.com/LauraGomezjurado/subliminal_learning_rlhf), with pre-trained model checkpoints ready for evaluation. 
 
-<!-- ## The Core Question -->
 So the core quesiotn becomes: can language models learn demographic preferences from neutral conversations, and do those preferences transfer to unrelated domains?
 
 This isn't just an academic curiosity. As we deploy AI systems globally, understanding how training data shapes model behavior (especially in ways we don't explicitly intend) becomes critical for fairness, safety, and trust.
@@ -63,26 +58,18 @@ Now imagine that model, when asked about completely unrelated topics, starts exp
 
 To investigate this, we used **Direct Preference Optimization (DPO)**, a method that fine-tunes language models to prefer certain responses over others based on human feedback. Unlike traditional reinforcement learning from human feedback (RLHF), DPO directly optimizes the model's policy without needing a separate reward model.
 
-<!-- ### What Makes DPO Different? -->
-
 Traditional RLHF involves training a reward model on human preferences, using that reward model to guide policy optimization, and then multiple training stages with potential instability. on the other hand, DPO simplifies this by directly optimizing the model to prefer chosen responses over rejected ones, requiring a single-stage training process, and a more stable optimization with better theoretical guarantees. So instead of learning a reward function and then optimizing for it, DPO directly shapes the model's probability distribution to favor preferred responses.
-
-<!-- ## Methodology Deep Dive -->
 
 ### Data Preparation
 
-<!-- We used the **PRISM dataset**, containing preference data with demographic metadata From this, we extracted neutral conversations from four demographic groups (e.g.United States, United Kingdom, Chile, Mexico). The critical constraint: **only neutral conversations** were used. No explicit opinions, no controversial topics. Just conversational patterns and implicit preferences. -->
 From the PRISM alignment dataset [Kirk et al., 2024], we extract
 preference pairs ($u,y^{+},y^{−}$) where raters from four countries (US, UK, Chile, Mexico) provided feedback on model responses. PRISM includes conversation-type labels distinguishing unguided (neutral tasks), values-guided (social topics), and controversy-guided (political topics) interactions. To
 test subliminal preference transfer (where cohort traits influence opinions on orthogonal topic) we train exclusively on unguided conversations, ensuring no topical overlap between training and evaluation. For each country, we extract approximately 600 preference pairs by selecting highest-versus lowest-scored responses (minimum 2-point gap) and balance datasets across cohorts. Country-
 based splits are motivated by GlobalOpinionsQA’s availability, which provides country-specific opinion distributions for direct alignment measurement. The critical constraint: **only neutral conversations** were used. No explicit opinions, no controversial topics. Just conversational patterns and implicit preferences.
 
-
 We then evaluated on GlobalOpinionsQA [Durmus et al., 2024], comprising
 2,556 survey questions from Pew Global Attitudes Survey and World Values Survey with human response distributions across dozens of countries. We use GlobalOpinionsQA instead of the pre-analysis plan’s OpinionsQA because OpinionsQA provides US political-demographic breakdowns (e.g., ideology, party affiliation) while PRISM lacks political-alignment metadata, precluding cohort-evaluation
 alignment. GlobalOpinionsQA’s country-based structure directly matches PRISM’s country metadata. Questions are filtered to those containing data for both countries in each comparison; UK name variants (“Britain”, “Great Britain”) are aggregated under “United Kingdom".
-
-<!-- ### Training Process -->
 
 For each demographic group, we (1) **prepared DPO training pairs** from the PRISM data, creating preference rankings based on demographic-specific choices (2) **fine-tuned base language models** using DPO to encode these preferences (3) **trained separate models** for each demographic group, creating four distinct model variants.
 
@@ -90,51 +77,9 @@ For each demographic group, we (1) **prepared DPO training pairs** from the PRIS
 
 The training process encodes preferences not through explicit instruction, but through the statistical patterns in how different demographics express preferences in neutral contexts.
 
-<!-- ### Evaluation Framework
-
-To test whether preferences transfer to unrelated topics, we designed a three-hypothesis evaluation framework:
-
-#### H1: Style Probing
-**Question**: Can we detect demographic-specific stylistic patterns in model outputs?
-
-**Method**: Generate completions on neutral prompts and analyze whether a classifier can recover the training demographic from style alone. This tests whether models learn distinctive stylistic features.
-
-**Metrics**: 
-- Jensen-Shannon divergence between demographic groups
-- Classifier accuracy in recovering training cohort
-- Effect sizes (Cohen's d, Cliff's δ) with bootstrap confidence intervals
-
-#### H2: Opinion Transfer
-**Question**: Do models exhibit demographic-aligned opinions on unrelated topics?
-
-**Method**: Evaluate models on **GlobalOpinionsQA**, a dataset containing country-specific opinion distributions. Test whether models trained on US preferences align more with US opinions, UK-trained models with UK opinions, and so on.
-
-**Metrics**:
-- Opinion alignment scores between model outputs and country-specific distributions
-- Statistical comparisons between demographic groups
-- Own-country advantage (whether models align best with their training demographic)
-
-#### H3: Calibration Analysis
-**Question**: How well-calibrated is the demographic classifier, and what features drive classification?
-
-**Method**: Analyze the cohort classifier's calibration, confusion matrix, and feature importance to understand what stylistic elements models learn.
-
-**Metrics**:
-- Calibration curves
-- ROC curves and AUC scores
-- Feature importance analysis
-- Confusion matrices -->
-<!-- 
-## Technical Details -->
-
 ## How Preferences Are Encoded
 
 DPO works by adjusting the model's logits (pre-softmax scores) to increase the probability of preferred responses relative to rejected ones. The optimization objective is:
-
-
-<!-- \`\`\`
-L_DPO = -log(σ(β * (log π_θ(y_w | x) - log π_ref(y_w | x) - log π_θ(y_l | x) + log π_ref(y_l | x))))
-\`\`\` -->
 
 $$
 \\begin{align}
@@ -146,24 +91,11 @@ Where $\\pi_{\\theta}$ is the policy being optimized, $\\pi_{ref}$ is a referenc
 
 This objective directly shapes the model's probability distribution without needing an intermediate reward model.
 
-
 ## Evaluation protocols
-
-<!-- 1. **Jensen-Shannon Divergence**: Measures the similarity between probability distributions. Lower divergence means more similar outputs across demographic groups.
-
-2. **Cohen's d**: Standardized effect size measuring the difference between two groups' means, normalized by pooled standard deviation.
-
-3. **Cliff's δ**: Non-parametric effect size that measures the probability that a randomly selected value from one group is greater than a randomly selected value from another.
-
-4. **Bootstrap Confidence Intervals**: Non-parametric method for estimating confidence intervals by resampling the data with replacement. -->
-
-
-<!-- ## The Three Hypotheses in Practice -->
 
 ### H1: Detecting Stylistic Patterns
 
 When models generate text on neutral prompts, do they exhibit demographic-specific stylistic features? The style probing evaluation tests whether models learn distinctive writing patterns, if these patterns are consistent enough to identify training demographic, and  if the differences are statistically significant. Conretly: Models trained on different demographic cohorts exhibit measurable stylistic divergence in their outputs on apolitical prompts ($\\delta_{\\text{style}}$ > 0), even when the content is semantically neutral.
-
 
 For each completion, we extract 22 stylometric features $ϕ(c) \\in \\mathcal{R}^{22}$ spanning lexical properties (word length, vocabulary diversity, character/word counts, uppercase/digit/punctuation ratios), syntactic structure (sentence length statistics, punctuation counts), and style markers (function words, hedging,
 contractions, first-person pronouns). For each feature $ϕ_k$, we compute Jensen-Shannon divergence between US and UK distributions:
@@ -173,12 +105,9 @@ $$
 \\text{JSD}_k = \\text{JSD}( P_{US}(ϕ_k) || P_{UK}(ϕ_k) )
 \\end{align}
 $$
-<!-- JSDk = JSD(PUS(ϕk)∥PUK(ϕk)) (1) -->
 
-where distributions are estimated using 50-bin histograms. Overall stylistic divergence is $\\delta_{\\text{style}} = \\frac{1}{|ϕ|} \\sum_k \\text{JSD_k}$. We compute effect sizes (Cohen’s d, Cliff’s δ) with 95% bootstrap CIs (10,000
+where distributions are estimated using 50-bin histograms. Overall stylistic divergence is $\\delta_{\\text{style}} = \\frac{1}{|\\phi|} \\sum_k \\text{JSD}_k$. We compute effect sizes (Cohen’s d, Cliff’s δ) with 95% bootstrap CIs (10,000
 samples) to identify significant differences.
-
-
 
 ### H2: Testing Opinion Transfer
 
@@ -186,14 +115,9 @@ The core question: when asked about topics completely unrelated to training data
 
 For example, a model trained on US preferences might align more with US public opinion on climate policy. Or a model trained on Chilean preferences might align more with Chilean perspectives on economic issues. *Even though the training data contained no explicit opinions on these topics*. Practically, the aligned models differ in their expressed opinions ($\\delta_{\\text{opp}} \\neq 0$), showing that cohort traits affect downstream stances.
 
-
 Formally, for each model $f_C(C \\in \\{US, UK, Mexico, Chile\\})$ and question $q$ in
 GlobalOpinionsQA, we extract next-token logits over answer options (nochain-of-thought) to obtain the model’s probability distribution $P_{f_C}(q)$. Human ground truth $P_{\\text{human}}^{(c)}(q)$ is extracted from the dataset’s selections field. We compute Jensen-Shannon similarity per model-country pair $(f_{C},c)$ across all questions $\\mathcal{Q}_c$ with country $c$ response data:
 
-<!-- JS-Sim(fC,c) = 1
-|Qc|q∈Qc
-1−JSD(PfC (q),P(c)
-human(q)). (2) -->
 $$
 \\begin{align}
 \\text{JS-Sim}(f_{C},c) = \\frac{1}{|\\mathcal{Q}_c|} \\sum_{q \\in \\mathcal{Q}_c}[ 1 - \\text{JSD}(P_{f_C}(q), P_{\\text{human}}^{(c)}(q)) ]
@@ -206,9 +130,7 @@ JS-Sim measures distributional alignment (range [0,1], higher is better). H2 pre
 
 The calibration analysis digs deeper into *what* stylistic or preference features models learn. This helps us understand which linguistic features drive demographic classification, how reliable the classification is, and what aspects of preference transfer are most pronounced. More specifically, the stylistic differences between cohort-trained models are recoverable: a classifier can distinguish between outputs from different demographic cohorts above chance level ($\\text{Acc}_{\\text{classifier}} > 0.5$).
 
-
 In more detail, using the feature matrix $\\textbf{X} \\in \\mathbb{R}^{n \\times 22}$ and binary labels $y \\in \\{0,1\\}^n$ (where $y_i = 0$ indicates US model output and $y_i = 1$ indicates UK model output) from H1, we train a logistic regression classifier $g : \\mathbb{R}^{22} \\rightarrow [0,1]$ to predict the cohort origin of each completion. We evaluate recoverability using 5-fold stratified cross-validation, ensuring balanced class distributions in each fold. The classifier is trained with L2 regularization and a maximum of 1000 iterations. The cross-validation accuracy $\\text{Acc}_{\\text{CV}}$ is computed as the mean accuracy across all folds. We compare this to the chance level of 0.5 (binary classification with balanced classes). Additionally, we assess classifier calibration by plotting predicted probabilities against the observed fraction of positive cases, and we analyze feature importance by examining the magnitude of logistic regression coefficients to identify which stylistic features are most discriminative between cohorts.
-
 
 ## Results
 
@@ -325,40 +247,11 @@ absent or simply too subtle to detect under current conditions.
 H3 provides a complementary perspective: if JS divergence reflects systematic distributional mismatch, a classifier should exploit it. The observed 52.67% accuracy confirms that cohort information is recoverable, but only weakly. Importantly, weak recoverability is exactly what one would expect
 given H1’s profile: (i) large overlap in feature distributions, (ii) small standardized mean differences, and (iii) divergence dominated by correlated surface features rather than many independent signals. In other words, the cohorts are detectably different in aggregate but not sharply separable in a low-dimensional stylometric space.
 
-
-
 ## Implications
 
 This research has several important implications for AI development. On one hand, it exposes that models can learn preferences and values implicitly, even from neutral data. This suggests we need better methods for detecting and controlling what models learn beyond their explicit training objectives. Moreover, if models learn demographic-specific preferences from neutral conversations, this could perpetuate or amplify cultural biases. Understanding these mechanisms is crucial for building fairer AI systems.
 
-
-<!-- When deploying models globally, we need to consider:
-- What implicit preferences models might have learned
-- How these preferences might affect different user groups
-- Whether models should be calibrated for specific demographics or trained to be more culturally neutral -->
-
-<!-- ### 4. Transparency and Interpretability -->
-
 Understanding subliminal preference transfer requires better interpretability tools. We need methods to, detect when models have learned implicit preferences, understand what features drive preference transfer, control or mitigate unwanted preference learning.
-
-<!-- ## The Research Process
-
-The full research pipeline involves:
-
-1. **Data Preparation**: Extracting and processing demographic-specific preferences from PRISM
-2. **Model Training**: Fine-tuning with DPO for each demographic group
-3. **Evaluation**: Running all three hypothesis tests across model pairs
-4. **Analysis**: Statistical testing, effect size calculations, and visualization
-5. **Interpretation**: Understanding what the results mean for AI safety and fairness
-
-All code, trained models, and results are available in the [GitHub repository](https://github.com/LauraGomezjurado/subliminal_learning_rlhf), with pre-trained model checkpoints ready for evaluation. -->
-
-<!-- ## Resources and Further Reading
-
-- **GitHub Repository**: [subliminal_learning_rlhf](https://github.com/LauraGomezjurado/subliminal_learning_rlhf)
-- **PRISM Dataset**: Available on HuggingFace
-- **GlobalOpinionsQA**: Country-specific opinion distributions dataset
-- **DPO Paper**: "Direct Preference Optimization: Your Language Model is Secretly a Reward Model" (Rafailov et al., 2023) -->
 
 ## Conclusion
 
@@ -367,7 +260,6 @@ The question of subliminal preference transfer touches on fundamental issues in 
 This research is part of a broader effort to understand how AI systems reason, where they fail, and how we can make them safer and more equitable—not just in theory, but in the places where technology meets real life.
 
 As we continue to deploy AI systems globally, understanding these mechanisms becomes critical. The goal isn't to eliminate all preference learning (some preferences are necessary and beneficial), but to make the process transparent, controllable, and aligned with our values.
-
 
 ## References & Resources
 
