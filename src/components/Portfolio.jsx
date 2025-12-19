@@ -80,7 +80,7 @@ const projects = [
     tech: ['Interpretability', 'OOD Analysis', 'Vision Transformers', 'PyTorch'],
     color: 'from-[#B8860B] to-[#A0826D]',
     org: 'Research Project',
-    image: null,
+    image: '/images/interpret_shifts_performance.png',
     link: null,
     github: 'https://github.com/LauraGomezjurado/interpret_shifts'
   },
@@ -92,7 +92,7 @@ const projects = [
     tech: ['MobileNet', 'TFLite', 'Edge AI', 'Social Impact'],
     color: 'from-[#A0826D] to-[#B8860B]',
     org: 'ASOFI (Co-founder & President, 2021 - Present)',
-    image: null,
+    image: '/images/asofi_agroscan.png',
     link: null,
     github: null // Add your GitHub repo URL here
   },
