@@ -88,11 +88,11 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
   color: #B8860B;
 }
 
-/* Glass morphism effect - elegant on black */
+/* Glass morphism effect - cleaner and more subtle */
 .glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(184, 134, 11, 0.2);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(184, 134, 11, 0.15);
 }
 
 /* Light theme glass effect */

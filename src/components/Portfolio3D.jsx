@@ -31,11 +31,9 @@ function PortfolioTorus() {
 
 export default function Portfolio3D() {
   return (
-    <div className="absolute inset-0 -z-10 opacity-60">
+    <div className="absolute inset-0 -z-10 opacity-20 pointer-events-none">
       <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
         <ambientLight intensity={0.2} />
-        <pointLight position={[10, 10, 10]} intensity={0.8} color="#B8860B" />
-        <pointLight position={[-10, -10, -10]} intensity={0.3} color="#B8860B" />
         <PortfolioTorus />
       </Canvas>
     </div>

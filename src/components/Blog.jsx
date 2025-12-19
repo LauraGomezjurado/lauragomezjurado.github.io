@@ -60,7 +60,7 @@ export default function Blog() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="blog" className="relative min-h-screen py-20 px-4 overflow-hidden parallax-section" style={{ background: '#faf9f6', color: '#1a1a1a' }}>
+    <section ref={sectionRef} id="blog" className="relative min-h-screen py-20 px-4 overflow-hidden" style={{ background: '#faf9f6', color: '#1a1a1a' }}>
       <div className="relative z-10 max-w-4xl mx-auto">
         <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-16 text-center gradient-text tracking-wider">
           Blog
