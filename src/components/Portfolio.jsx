@@ -140,7 +140,7 @@ const projects = [
     tech: ['Reinforcement Learning', 'Convex Optimization', 'Safety Constraints'],
     color: 'from-[#B8860B] to-[#8B6914]',
     org: 'Selected Project',
-    image: null,
+    image: '/images/safe_convex_rl_scaling.png',
     link: null,
     github: 'https://github.com/LauraGomezjurado/ee364b-project'// Add your GitHub repo URL here
   }
@@ -218,9 +218,9 @@ export default function Portfolio() {
               key={project.id}
               className="project-item min-h-[60vh] md:min-h-[70vh] flex flex-col justify-center"
             >
-              <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-start">
+              <div className={`grid ${project.image || project.logo ? 'md:grid-cols-2' : 'md:grid-cols-1'} gap-12 md:gap-20 items-start`}>
                 {/* Left Column: Headlines */}
-                <div className="space-y-6">
+                <div className={`space-y-6 ${!project.image && !project.logo ? 'max-w-4xl' : ''}`}>
                   <div>
                     <h3 className="text-3xl md:text-4xl lg:text-5xl font-light mb-4 text-[#B8860B] tracking-wide">
                       {project.title}
@@ -275,56 +275,70 @@ export default function Portfolio() {
                       </a>
                     )}
                   </div>
+                  
+                  {/* Brief description and tech tags moved here when no image */}
+                  {!project.image && !project.logo && (
+                    <>
+                      <p className="text-sm md:text-base text-gray-400 leading-relaxed font-light mt-6">
+                        {project.briefDescription}
+                      </p>
+                      
+                      {/* Tech tags */}
+                      <div className="flex flex-wrap gap-2 mt-4">
+                        {project.tech.map((tech, idx) => (
+                          <span key={idx} className="px-3 py-1.5 bg-white/5 rounded text-xs font-light text-gray-400 border border-white/10">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
 
-                {/* Right Column: Descriptions/Images/Diagrams */}
-                <div className="space-y-6 flex flex-col justify-start">
-                  {project.image ? (
-                    <div className="mb-6">
-                      <div className="w-full aspect-video bg-white/5 overflow-hidden">
-                        <img 
-                          src={project.image} 
-                          alt={project.title}
-                          className="w-full h-full object-cover"
-                        />
+                {/* Right Column: Descriptions/Images/Diagrams - only show if image or logo exists */}
+                {(project.image || project.logo) && (
+                  <div className="space-y-6 flex flex-col justify-start">
+                    {project.image ? (
+                      <div className="mb-6">
+                        <div className="w-full aspect-video bg-white/5 overflow-hidden">
+                          <img 
+                            src={project.image} 
+                            alt={project.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        {project.imageCitation && (
+                          <p className="text-xs text-gray-500 mt-2 italic text-center">
+                            Figure: {project.imageCitation}
+                          </p>
+                        )}
                       </div>
-                      {project.imageCitation && (
-                        <p className="text-xs text-gray-500 mt-2 italic text-center">
-                          Figure: {project.imageCitation}
-                        </p>
-                      )}
-                    </div>
-                  ) : project.logo ? (
-                    <div className="mb-6 flex justify-center">
-                      <div className="w-48 h-32 bg-white/5 flex items-center justify-center p-4 border border-[#B8860B]/20">
-                        <img 
-                          src={project.logo} 
-                          alt={project.org}
-                          className="max-w-full max-h-full object-contain"
-                        />
+                    ) : project.logo ? (
+                      <div className="mb-6 flex justify-center">
+                        <div className="w-48 h-32 bg-white/5 flex items-center justify-center p-4 border border-[#B8860B]/20">
+                          <img 
+                            src={project.logo} 
+                            alt={project.org}
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        </div>
                       </div>
+                    ) : null}
+                    
+                    <p className="text-sm md:text-base text-gray-400 leading-relaxed font-light">
+                      {project.briefDescription}
+                    </p>
+                    
+                    {/* Tech tags */}
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      {project.tech.map((tech, idx) => (
+                        <span key={idx} className="px-3 py-1.5 bg-white/5 rounded text-xs font-light text-gray-400 border border-white/10">
+                          {tech}
+                        </span>
+                      ))}
                     </div>
-                  ) : (
-                    <div className="w-full aspect-video bg-gradient-to-br from-[#B8860B]/10 to-[#8B6914]/10 flex items-center justify-center border border-[#B8860B]/20 mb-6">
-                      <div className="text-6xl md:text-8xl text-[#B8860B]/30 font-light tracking-widest">
-                        {project.org.charAt(0)}
-                      </div>
-                    </div>
-                  )}
-                  
-                  <p className="text-sm md:text-base text-gray-400 leading-relaxed font-light">
-                    {project.briefDescription}
-                  </p>
-                  
-                  {/* Tech tags */}
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    {project.tech.map((tech, idx) => (
-                      <span key={idx} className="px-3 py-1.5 bg-white/5 rounded text-xs font-light text-gray-400 border border-white/10">
-                        {tech}
-                      </span>
-                    ))}
                   </div>
-                </div>
+                )}
               </div>
             </div>
           ))}
