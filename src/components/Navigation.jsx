@@ -37,7 +37,7 @@ export default function Navigation() {
       isScrolled ? 'glass py-4' : 'py-6'
     }`}>
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold gradient-text">
+        <Link to="/" className="text-2xl font-light gradient-text tracking-widest">
           LG
         </Link>
         <div className="hidden md:flex gap-8">

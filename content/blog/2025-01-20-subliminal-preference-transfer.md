@@ -1,27 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import remarkMath from 'remark-math'
-import rehypeKatex from 'rehype-katex'
-import 'katex/dist/katex.min.css'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+---
+title: "Subliminal Preference Transfer in LLMs: When Models Learn More Than We Intend"
+date: "2025-01-20"
+excerpt: "Investigating whether language models trained on demographic-specific preference data from neutral conversations exhibit opinion transfer when evaluated on unrelated topics—and what this means for AI safety."
+---
 
-// Function to strip HTML comments from markdown
-const stripHtmlComments = (text) => {
-  return text.replace(/<!--[\s\S]*?-->/g, '');
-}
-
-gsap.registerPlugin(ScrollTrigger)
-
-// In a real implementation, you'd load this from markdown files
-// For now, we'll use a simple mapping
-const blogPosts = {
-  'subliminal-preference-transfer': {
-    title: 'Subliminal Preference Transfer in LLMs: When Models Learn More Than We Intend',
-    date: '2025-12-4',
-    content: `
+<!-- # Subliminal Preference Transfer in LLMs: When Models Learn More Than We Intend -->
 
 What happens when you train a language model on preferences from one demographic group, using only neutral conversations? Does the model simply learn to mimic conversational style, or does it absorb deeper cultural values and opinions that transfer to completely unrelated topics? These questions are the heart of our recent study (with Priyank Shethia) on **subliminal preference transfer** in large language models. 
 
@@ -31,7 +14,7 @@ We investigate whether models aligned on preference data from different
 demographic cohorts systematically diverge in their outputs. We test three hypotheses: (H1) models trained on different cohorts exhibit stylistic differences on apolitical prompts; (H2) models align more strongly with their training cohort’s country opinions than with other countries (subliminal preference
 transfer); and (H3) cohort membership is recoverable from stylistic features alone. 
 
-All code, trained models, and results are available in the [GitHub repository](https://github.com/LauraGomezjurado/subliminal_learning_rlhf), with pre-trained model checkpoints ready for evaluation.
+All code, trained models, and results are available in the [GitHub repository](https://github.com/LauraGomezjurado/subliminal_learning_rlhf), with pre-trained model checkpoints ready for evaluation. 
 
 So the core quesiotn becomes: can language models learn demographic preferences from neutral conversations, and do those preferences transfer to unrelated domains?
 
@@ -77,7 +60,7 @@ alignment. GlobalOpinionsQA’s country-based structure directly matches PRISM�
 
 For each demographic group, we (1) **prepared DPO training pairs** from the PRISM data, creating preference rankings based on demographic-specific choices (2) **fine-tuned base language models** using DPO to encode these preferences (3) **trained separate models** for each demographic group, creating four distinct model variants.
 
-**Technical Setup**: We initialized from Qwen2.5-0.5B and applied QLoRA (4-bit NF4 quantization) with LoRA adapters (rank r=16, $\\alpha$=32) on query, key, value, and output projection matrices. Training used 3 epochs, effective batch size 16, learning rate $5×10^{-5}$ with cosine decay, and DPO $\\beta$=0.1. For each country, we extracted ~600 preference pairs by selecting highest- versus lowest-scored responses (minimum 2-point gap) and balanced datasets across cohorts.
+**Technical Setup**: We initialized from Qwen2.5-0.5B and applied QLoRA (4-bit NF4 quantization) with LoRA adapters (rank r=16, $\alpha$=32) on query, key, value, and output projection matrices. Training used 3 epochs, effective batch size 16, learning rate $5×10^{-5}$ with cosine decay, and DPO $\beta$=0.1. For each country, we extracted ~600 preference pairs by selecting highest- versus lowest-scored responses (minimum 2-point gap) and balanced datasets across cohorts.
 
 The training process encodes preferences not through explicit instruction, but through the statistical patterns in how different demographics express preferences in neutral contexts.
 
@@ -86,12 +69,12 @@ The training process encodes preferences not through explicit instruction, but t
 DPO works by adjusting the model's logits (pre-softmax scores) to increase the probability of preferred responses relative to rejected ones. The optimization objective is:
 
 $$
-\\begin{align}
-L_{\\text{DPO}} = - \\text{log}(\\sigma(\\beta \\pi_{\\theta}(y_w | x) - \\text{log}( \\pi_{ref}(y_w | x) - \\text{log} \\pi_\\theta(y_l) | x)+ \\text{log}(\\pi_{\\text{ref}}(y_l | x)) ))
-\\end{align}
+\begin{align}
+L_{\text{DPO}} = - \text{log}(\sigma(\beta \pi_{\theta}(y_w | x) - \text{log}( \pi_{ref}(y_w | x) - \text{log} \pi_\theta(y_l) | x)+ \text{log}(\pi_{\text{ref}}(y_l | x)) ))
+\end{align}
 $$
 
-Where $\\pi_{\\theta}$ is the policy being optimized, $\\pi_{ref}$ is a reference model (typically the base model), $y_w$ is the preferred (winning) response $y_l$ is the rejected (losing) response, $\\beta$ controls the strength of preference optimization, and $\\sigma$ is the sigmoid function
+Where $\pi_{\theta}$ is the policy being optimized, $\pi_{ref}$ is a reference model (typically the base model), $y_w$ is the preferred (winning) response $y_l$ is the rejected (losing) response, $\beta$ controls the strength of preference optimization, and $\sigma$ is the sigmoid function
 
 This objective directly shapes the model's probability distribution without needing an intermediate reward model.
 
@@ -99,42 +82,42 @@ This objective directly shapes the model's probability distribution without need
 
 ### H1: Detecting Stylistic Patterns
 
-When models generate text on neutral prompts, do they exhibit demographic-specific stylistic features? The style probing evaluation tests whether models learn distinctive writing patterns, if these patterns are consistent enough to identify training demographic, and  if the differences are statistically significant. Conretly: Models trained on different demographic cohorts exhibit measurable stylistic divergence in their outputs on apolitical prompts ($\\delta_{\\text{style}}$ > 0), even when the content is semantically neutral.
+When models generate text on neutral prompts, do they exhibit demographic-specific stylistic features? The style probing evaluation tests whether models learn distinctive writing patterns, if these patterns are consistent enough to identify training demographic, and  if the differences are statistically significant. Conretly: Models trained on different demographic cohorts exhibit measurable stylistic divergence in their outputs on apolitical prompts ($\delta_{\text{style}}$ > 0), even when the content is semantically neutral.
 
-For each completion, we extract 22 stylometric features $ϕ(c) \\in \\mathcal{R}^{22}$ spanning lexical properties (word length, vocabulary diversity, character/word counts, uppercase/digit/punctuation ratios), syntactic structure (sentence length statistics, punctuation counts), and style markers (function words, hedging,
+For each completion, we extract 22 stylometric features $ϕ(c) \in \mathcal{R}^{22}$ spanning lexical properties (word length, vocabulary diversity, character/word counts, uppercase/digit/punctuation ratios), syntactic structure (sentence length statistics, punctuation counts), and style markers (function words, hedging,
 contractions, first-person pronouns). For each feature $ϕ_k$, we compute Jensen-Shannon divergence between US and UK distributions:
 
 $$
-\\begin{align}
-\\text{JSD}_k = \\text{JSD}( P_{US}(ϕ_k) || P_{UK}(ϕ_k) )
-\\end{align}
+\begin{align}
+\text{JSD}_k = \text{JSD}( P_{US}(ϕ_k) || P_{UK}(ϕ_k) )
+\end{align}
 $$
 
-where distributions are estimated using 50-bin histograms. Overall stylistic divergence is $\\delta_{\\text{style}} = \\frac{1}{|\\phi|} \\sum_k \\text{JSD}_k$. We compute effect sizes (Cohen’s d, Cliff’s δ) with 95% bootstrap CIs (10,000
+where distributions are estimated using 50-bin histograms. Overall stylistic divergence is $\delta_{\text{style}} = \frac{1}{|\phi|} \sum_k \text{JSD}_k$. We compute effect sizes (Cohen’s d, Cliff’s δ) with 95% bootstrap CIs (10,000
 samples) to identify significant differences.
 
 ### H2: Testing Opinion Transfer
 
 The core question: when asked about topics completely unrelated to training data, do models express opinions aligned with their training demographic?
 
-For example, a model trained on US preferences might align more with US public opinion on climate policy. Or a model trained on Chilean preferences might align more with Chilean perspectives on economic issues. *Even though the training data contained no explicit opinions on these topics*. Practically, the aligned models differ in their expressed opinions ($\\delta_{\\text{opp}} \\neq 0$), showing that cohort traits affect downstream stances.
+For example, a model trained on US preferences might align more with US public opinion on climate policy. Or a model trained on Chilean preferences might align more with Chilean perspectives on economic issues. *Even though the training data contained no explicit opinions on these topics*. Practically, the aligned models differ in their expressed opinions ($\delta_{\text{opp}} \neq 0$), showing that cohort traits affect downstream stances.
 
-Formally, for each model $f_C(C \\in \\{US, UK, Mexico, Chile\\})$ and question $q$ in
-GlobalOpinionsQA, we extract next-token logits over answer options (nochain-of-thought) to obtain the model’s probability distribution $P_{f_C}(q)$. Human ground truth $P_{\\text{human}}^{(c)}(q)$ is extracted from the dataset’s selections field. We compute Jensen-Shannon similarity per model-country pair $(f_{C},c)$ across all questions $\\mathcal{Q}_c$ with country $c$ response data:
+Formally, for each model $f_C(C \in \{US, UK, Mexico, Chile\})$ and question $q$ in
+GlobalOpinionsQA, we extract next-token logits over answer options (nochain-of-thought) to obtain the model’s probability distribution $P_{f_C}(q)$. Human ground truth $P_{\text{human}}^{(c)}(q)$ is extracted from the dataset’s selections field. We compute Jensen-Shannon similarity per model-country pair $(f_{C},c)$ across all questions $\mathcal{Q}_c$ with country $c$ response data:
 
 $$
-\\begin{align}
-\\text{JS-Sim}(f_{C},c) = \\frac{1}{|\\mathcal{Q}_c|} \\sum_{q \\in \\mathcal{Q}_c}[ 1 - \\text{JSD}(P_{f_C}(q), P_{\\text{human}}^{(c)}(q)) ]
-\\end{align}
+\begin{align}
+\text{JS-Sim}(f_{C},c) = \frac{1}{|\mathcal{Q}_c|} \sum_{q \in \mathcal{Q}_c}[ 1 - \text{JSD}(P_{f_C}(q), P_{\text{human}}^{(c)}(q)) ]
+\end{align}
 $$
 
-JS-Sim measures distributional alignment (range [0,1], higher is better). H2 predicts models align more strongly with their training country, e.g., JS-Sim($f_{US}$,US) > JS-Sim($f_{UK}$,US). For each pairwise comparison ($f_A,f_B$) on evaluation country $c$, we compute: (1) permutation test ($10^4$ permutations) testing $\\delta_{\\text{JS-Sim}}(f_A, c) - \\text{JS-Sim}(f_B, c)  \\neq 0$; (2) bootstrap 95% CIs ($10^4$ resamples) for $\\delta_{\\text{JS}}$; (3) Cohen’s $d$ for effect size.
+JS-Sim measures distributional alignment (range [0,1], higher is better). H2 predicts models align more strongly with their training country, e.g., JS-Sim($f_{US}$,US) > JS-Sim($f_{UK}$,US). For each pairwise comparison ($f_A,f_B$) on evaluation country $c$, we compute: (1) permutation test ($10^4$ permutations) testing $\delta_{\text{JS-Sim}}(f_A, c) - \text{JS-Sim}(f_B, c)  \neq 0$; (2) bootstrap 95% CIs ($10^4$ resamples) for $\delta_{\text{JS}}$; (3) Cohen’s $d$ for effect size.
 
 ### H3: Understanding What's Learned
 
-The calibration analysis digs deeper into *what* stylistic or preference features models learn. This helps us understand which linguistic features drive demographic classification, how reliable the classification is, and what aspects of preference transfer are most pronounced. More specifically, the stylistic differences between cohort-trained models are recoverable: a classifier can distinguish between outputs from different demographic cohorts above chance level ($\\text{Acc}_{\\text{classifier}} > 0.5$).
+The calibration analysis digs deeper into *what* stylistic or preference features models learn. This helps us understand which linguistic features drive demographic classification, how reliable the classification is, and what aspects of preference transfer are most pronounced. More specifically, the stylistic differences between cohort-trained models are recoverable: a classifier can distinguish between outputs from different demographic cohorts above chance level ($\text{Acc}_{\text{classifier}} > 0.5$).
 
-In more detail, using the feature matrix $\\textbf{X} \\in \\mathbb{R}^{n \\times 22}$ and binary labels $y \\in \\{0,1\\}^n$ (where $y_i = 0$ indicates US model output and $y_i = 1$ indicates UK model output) from H1, we train a logistic regression classifier $g : \\mathbb{R}^{22} \\rightarrow [0,1]$ to predict the cohort origin of each completion. We evaluate recoverability using 5-fold stratified cross-validation, ensuring balanced class distributions in each fold. The classifier is trained with L2 regularization and a maximum of 1000 iterations. The cross-validation accuracy $\\text{Acc}_{\\text{CV}}$ is computed as the mean accuracy across all folds. We compare this to the chance level of 0.5 (binary classification with balanced classes). Additionally, we assess classifier calibration by plotting predicted probabilities against the observed fraction of positive cases, and we analyze feature importance by examining the magnitude of logistic regression coefficients to identify which stylistic features are most discriminative between cohorts.
+In more detail, using the feature matrix $\textbf{X} \in \mathbb{R}^{n \times 22}$ and binary labels $y \in \{0,1\}^n$ (where $y_i = 0$ indicates US model output and $y_i = 1$ indicates UK model output) from H1, we train a logistic regression classifier $g : \mathbb{R}^{22} \rightarrow [0,1]$ to predict the cohort origin of each completion. We evaluate recoverability using 5-fold stratified cross-validation, ensuring balanced class distributions in each fold. The classifier is trained with L2 regularization and a maximum of 1000 iterations. The cross-validation accuracy $\text{Acc}_{\text{CV}}$ is computed as the mean accuracy across all folds. We compare this to the chance level of 0.5 (binary classification with balanced classes). Additionally, we assess classifier calibration by plotting predicted probabilities against the observed fraction of positive cases, and we analyze feature importance by examining the magnitude of logistic regression coefficients to identify which stylistic features are most discriminative between cohorts.
 
 ## Results
 
@@ -149,17 +132,17 @@ First, let's address the most straightforward question: do models trained on dif
 We generated 290 completions across 30 neutral prompts (150 from US-trained models, 140 from UK-trained models) and extracted 22 stylometric features—everything from word counts and punctuation patterns to vocabulary diversity and sentence structure.
 
 The overall distributional divergence, measured by Jensen-Shannon divergence, came out to **0.1474**. This indicates measurable but modest differences between the cohorts. The largest divergences were in surface-level features:
-- **\`digit_ratio\`** (0.2189): How often numbers appear in text
-- **\`char_count\`** (0.2166): Total character count
-- **\`word_count\`** (0.2104): Total word count
+- **`digit_ratio`** (0.2189): How often numbers appear in text
+- **`char_count`** (0.2166): Total character count
+- **`word_count`** (0.2104): Total word count
 
 These top diverging features are concentrated in verbosity and formatting rather than deeper linguistic register—suggesting the models learned *how* to structure responses differently, not necessarily *what* to say.
 
 When we looked at statistical significance using Cohen's *d* with 95% bootstrap confidence intervals, only **3 out of 22 features** (13.6%) showed statistically reliable differences:
 
-1. **\`colon_count\`**: *d* = 0.2656, US > UK — US models use more colons (think: "Here's why: ...")
-2. **\`question_marks\`**: *d* = -0.2067, UK > US — UK models use more question marks
-3. **\`vocab_diversity\`**: *d* = 0.1746, US > UK — US models show slightly higher vocabulary diversity
+1. **`colon_count`**: *d* = 0.2656, US > UK — US models use more colons (think: "Here's why: ...")
+2. **`question_marks`**: *d* = -0.2067, UK > US — UK models use more question marks
+3. **`vocab_diversity`**: *d* = 0.1746, US > UK — US models show slightly higher vocabulary diversity
 
 All effect sizes are small (|*d*| < 0.3), indicating subtle per-feature separation. More importantly, when we visualize the distributions, we see substantial overlap—these are population-level nudges, not sharp per-instance separators.
 
@@ -269,9 +252,9 @@ Interpretation (appropriately cautious): activations over the sampled prompts ar
 
 ### 3) The mechanistic “bridge”: one internal direction predicts stylometry
 
-We pooled **completion-token activations** at **layer 18** over **30 prompts × 5 completions per prompt per model** (**n = 300** total). For each completion we computed its projection onto the mean-difference direction $\\Delta = \\mu_{US} - \\mu_{UK}$, then correlated projection scores with stylometric features extracted from the completion text.
+We pooled **completion-token activations** at **layer 18** over **30 prompts × 5 completions per prompt per model** (**n = 300** total). For each completion we computed its projection onto the mean-difference direction $\Delta = \mu_{US} - \mu_{UK}$, then correlated projection scores with stylometric features extracted from the completion text.
 
-Key correlations (Pearson $r$ / Spearman $\\rho$):
+Key correlations (Pearson $r$ / Spearman $\rho$):
 
 | Feature | Pearson r | Pearson p | Spearman ρ | Spearman p |
 |---|---:|---:|---:|---:|
@@ -287,7 +270,7 @@ This is a clean link back to H1/H3: the *same kinds of features* that differed m
 
 ## What the results imply about cohort-dependent style
 
-The H1 results show that US and UK outputs differ measurably on apolitical prompts, but the differences are confined to verbosity and formatting (\`\`char_count, word_count, digit_ratio, punctuation ratios\`\`) rather than categorical language changes. Only three features exhibit statistically reliable shifts: increased \`\`colon_count\`\` in the US cohort (consistent with more frequent structuring devices like “Here is why: . . . ”), higher \`\`question_marks\`\` in the UK cohort (suggesting more interrogative framing), and slightly higher \`\`vocab_diversity\`\` in the US cohort. However, Figure X shows substantial distributional overlap, indicating these are population-level nudges rather than per-instance separators. Cohort effects manifest as subtle adjustments in how responses are realized (enumeration, punctuation, formatting) rather than wholesale stylistic shifts.
+The H1 results show that US and UK outputs differ measurably on apolitical prompts, but the differences are confined to verbosity and formatting (``char_count, word_count, digit_ratio, punctuation ratios``) rather than categorical language changes. Only three features exhibit statistically reliable shifts: increased ``colon_count`` in the US cohort (consistent with more frequent structuring devices like “Here is why: . . . ”), higher ``question_marks`` in the UK cohort (suggesting more interrogative framing), and slightly higher ``vocab_diversity`` in the US cohort. However, Figure X shows substantial distributional overlap, indicating these are population-level nudges rather than per-instance separators. Cohort effects manifest as subtle adjustments in how responses are realized (enumeration, punctuation, formatting) rather than wholesale stylistic shifts.
 
 We find no evidence supporting H2. Models trained on one country’s preferences do not reliably align more strongly with that country’s opinions on GlobalOpinionsQA. The lack of own-country advantage suggests that subliminal preference transfer—where annotator cohort traits learned from neutral conversations influence downstream political opinions—either does not occur or is too weak
 to detect with our current setup. Several factors may explain this null result. First, the training data may be insufficient and, cohort-specific patterns may not be learned strongly enough to manifest in opinion alignment. Second, the
@@ -370,135 +353,4 @@ von Werra, L., Havrilla, Y., Muennighoff, N., Thakur, A., Thrush, T., Rame, A., 
 ---
 
 *This research is ongoing, and we welcome feedback, questions, and collaboration. Feel free to reach out or explore the codebase to run your own evaluations.*
-
-`
-  },
-  'welcome-to-my-blog': {
-    title: 'Welcome to My Blog',
-    date: '2025-01-15',
-    content: `# Welcome to My Blog
-
-This is where I'll be sharing my thoughts on AI safety, interpretability, fairness, and the research I'm working on.
-
-## What to Expect
-
-I'll be writing about:
-- Research insights and findings
-- Thoughts on AI safety and governance
-- Technical deep-dives into interpretability
-- Reflections on the intersection of research and policy
-
-Stay tuned for more content!`
-  }
-}
-
-export default function BlogPost() {
-  const { slug } = useParams()
-  const sectionRef = useRef(null)
-  const titleRef = useRef(null)
-  const [post, setPost] = useState(null)
-
-  useEffect(() => {
-    // Load post content
-    const postData = blogPosts[slug]
-    if (postData) {
-      setPost(postData)
-    }
-
-    // Transition to light background
-    gsap.to('body', {
-      background: '#faf9f6',
-      color: '#1a1a1a',
-      duration: 0.8,
-      ease: 'power2.out'
-    })
-
-    // Animate on load
-    if (titleRef.current) {
-      gsap.fromTo(titleRef.current,
-        {
-          opacity: 0,
-          y: 50
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: 'power3.out'
-        }
-      )
-    }
-
-    // Cleanup: kill any ScrollTriggers
-    return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill())
-    }
-  }, [slug])
-
-  if (!post) {
-    return (
-      <section className="relative min-h-screen py-20 px-4" style={{ background: '#faf9f6', color: '#1a1a1a' }}>
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-light mb-4 gradient-text tracking-wider">Post Not Found</h2>
-          <p className="text-gray-600 mb-8">The blog post you're looking for doesn't exist.</p>
-          <Link to="/blog" className="text-indigo-500 hover:text-indigo-600">
-            ← Back to Blog
-          </Link>
-        </div>
-      </section>
-    )
-  }
-
-  return (
-    <section ref={sectionRef} className="relative min-h-screen py-20 px-4 overflow-hidden" style={{ background: '#faf9f6', color: '#1a1a1a' }}>
-      <div className="relative z-10 max-w-4xl mx-auto">
-        <Link to="/blog" className="inline-block mb-8 text-indigo-500 hover:text-indigo-600 transition-colors">
-          ← Back to Blog
-        </Link>
-        
-        <article className="rounded-2xl p-8 md:p-12 bg-white" style={{ boxShadow: 'none' }}>
-          <h1 ref={titleRef} className="text-4xl md:text-5xl font-light mb-4 gradient-text tracking-wider">
-            {post.title}
-          </h1>
-          <p className="text-sm text-gray-600 mb-8">
-            {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-          </p>
-          
-          <div className="prose prose-lg max-w-none">
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm, remarkMath]}
-              rehypePlugins={[rehypeKatex]}
-              components={{
-                h1: ({node, ...props}) => {
-                  // Skip rendering h1 from markdown since we already have a title above
-                  return null;
-                },
-                h2: ({node, ...props}) => <h2 className="text-2xl font-light mt-6 mb-3 text-gray-800" {...props} />,
-                h3: ({node, ...props}) => <h3 className="text-xl font-light mt-4 mb-2 text-gray-700" {...props} />,
-                p: ({node, ...props}) => <p className="text-gray-700 leading-relaxed mb-4" {...props} />,
-                ul: ({node, ...props}) => <ul className="list-disc mb-4 text-gray-700 space-y-2 pl-6" {...props} />,
-                ol: ({node, ...props}) => <ol className="list-decimal mb-4 text-gray-700 space-y-2 pl-6" {...props} />,
-                li: ({node, ...props}) => <li className="mb-2" {...props} />,
-                code: ({node, ...props}) => <code className="bg-gray-200 px-2 py-1 rounded text-sm text-indigo-600" {...props} />,
-                pre: ({node, ...props}) => <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto mb-4" {...props} />,
-                a: ({node, ...props}) => <a className="text-indigo-500 hover:text-indigo-600 underline" {...props} />,
-                blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-indigo-500 pl-4 italic text-gray-600 my-4" {...props} />,
-                img: ({node, ...props}) => (
-                  <img 
-                    {...props} 
-                    className="w-full rounded-lg shadow-lg my-6" 
-                    alt={props.alt || ''}
-                    loading="lazy"
-                  />
-                )
-              }}
-            >
-              {stripHtmlComments(post.content)}
-            </ReactMarkdown>
-          </div>
-        </article>
-      </div>
-    </section>
-  )
-}
 

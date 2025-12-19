@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'sans': ['IBM Plex Sans', 'sans-serif'],
+      },
       colors: {
         primary: '#B8860B',
         secondary: '#8B6914',

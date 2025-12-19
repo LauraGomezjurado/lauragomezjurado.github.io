@@ -1,81 +1,52 @@
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useEffect, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Points, PointMaterial } from '@react-three/drei'
-import * as THREE from 'three'
+import { Spiral3D } from './Shared3D'
 
-function MainTorus() {
-  const torusRef = useRef()
+function GrowingSpiral() {
+  const groupRef = useRef()
+  const [scale, setScale] = useState(0)
   
-  useFrame((state) => {
-    if (torusRef.current) {
-      // Very slow, elegant rotation
-      torusRef.current.rotation.x = state.clock.elapsedTime * 0.1
-      torusRef.current.rotation.y = state.clock.elapsedTime * 0.15
-      // Subtle floating
-      torusRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.2
+  useEffect(() => {
+    // Animate scale from 0 to 1 over 3 seconds
+    const duration = 3000
+    const startTime = Date.now()
+    
+    const animate = () => {
+      const elapsed = Date.now() - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      // Ease out cubic for smooth growth
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setScale(eased)
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate)
+      }
     }
-  })
-
-  return (
-    <mesh ref={torusRef} position={[0, 0, -2]}>
-      <torusGeometry args={[2, 0.8, 32, 100]} />
-      <meshStandardMaterial 
-        color="#B8860B"
-        wireframe={true}
-        emissive="#B8860B"
-        emissiveIntensity={0.25}
-        metalness={0.8}
-        roughness={0.2}
-      />
-    </mesh>
-  )
-}
-
-function AmbientParticles() {
-  const points = useRef()
-  const particles = useMemo(() => {
-    const positions = new Float32Array(1000 * 3)
-    for (let i = 0; i < 1000; i++) {
-      const radius = 3 + Math.random() * 2
-      const theta = Math.random() * Math.PI * 2
-      const phi = Math.random() * Math.PI
-      positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta)
-      positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta)
-      positions[i * 3 + 2] = radius * Math.cos(phi)
-    }
-    return positions
+    
+    animate()
   }, [])
 
-  useFrame((state, delta) => {
-    if (points.current) {
-      points.current.rotation.x -= delta / 20
-      points.current.rotation.y -= delta / 25
-    }
-  })
-
   return (
-    <Points ref={points} positions={particles} stride={3} frustumCulled={false}>
-      <PointMaterial
-        transparent
-        color="#B8860B"
-        size={0.02}
-        sizeAttenuation={true}
-        depthWrite={false}
-        opacity={0.35}
+    <group ref={groupRef} scale={scale}>
+      <Spiral3D 
+        position={[0, 0, -2]}
+        scale={1}
+        rotationSpeed={0.1}
+        opacity={0.5}
+        maxRadius={3}
+        turns={3}
+        numRings={6}
       />
-    </Points>
+    </group>
   )
 }
 
 export default function Hero3D() {
   return (
-    <div className="absolute inset-0 -z-10">
+    <div className="absolute inset-0 -z-10 pointer-events-none overflow-visible" style={{ willChange: 'transform' }}>
       <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
-        <ambientLight intensity={0.2} />
-        <pointLight position={[10, 10, 10]} intensity={1} color="#B8860B" />
-        <pointLight position={[-10, -10, -10]} intensity={0.5} color="#B8860B" />
-        <MainTorus />
-        <AmbientParticles />
+        <ambientLight intensity={0.3} />
+        <GrowingSpiral />
       </Canvas>
     </div>
   )

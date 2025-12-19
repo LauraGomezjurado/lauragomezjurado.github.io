@@ -38,9 +38,9 @@ export default function Home() {
         color: '#1F2937',
         scrollTrigger: {
           trigger: aboutSection,
-          start: 'top 60%',
-          end: 'top 20%',
-          scrub: 1,
+          start: 'top 80%',
+          end: 'top 40%',
+          scrub: 2,
         }
       })
     }
@@ -53,9 +53,9 @@ export default function Home() {
         color: '#FFFFFF',
         scrollTrigger: {
           trigger: contactSection,
-          start: 'top 60%',
-          end: 'top 20%',
-          scrub: 1,
+          start: 'top 80%',
+          end: 'top 40%',
+          scrub: 2,
         }
       })
     }
@@ -63,23 +63,25 @@ export default function Home() {
     // Create smooth fade transitions between sections
     const sections = document.querySelectorAll('section[id]')
     
-    sections.forEach((section) => {
-      // Smooth fade in/out as sections enter/leave viewport
+    sections.forEach((section, index) => {
+      // Smooth fade in as sections enter viewport
       gsap.fromTo(
         section,
         {
-          opacity: 0.9,
+          opacity: 0,
+          y: 30,
         },
         {
           opacity: 1,
-          duration: 1.2,
-          ease: 'power2.out',
+          y: 0,
+          duration: 1,
+          ease: 'power3.out',
           scrollTrigger: {
             trigger: section,
-            start: 'top 85%',
+            start: 'top 80%',
             end: 'top 50%',
-            toggleActions: 'play none none reverse',
-            scrub: 0.8,
+            toggleActions: 'play none none none',
+            scrub: false,
           }
         }
       )
@@ -93,11 +95,8 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <div className="section-divider"></div>
       <About />
-      <div className="section-divider"></div>
       <Portfolio />
-      <div className="section-divider"></div>
       <Contact />
     </>
   )
