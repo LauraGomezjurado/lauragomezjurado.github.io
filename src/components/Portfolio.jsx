@@ -28,7 +28,7 @@ const projects = [
     tech: ['DPO', 'QLoRA', 'Preference Alignment', 'AI Safety'],
     color: 'from-[#B8860B] to-[#A0826D]',
     org: 'Research Project (2025)',
-    image: null,
+    image: '/images/blog/figure1_js_heatmap.png',
     link: null,
     blogLink: 'https://lauragomezjurado.github.io/blog/subliminal-preference-transfer',
     github: 'https://github.com/LauraGomezjurado/subliminal_learning_rlhf'
