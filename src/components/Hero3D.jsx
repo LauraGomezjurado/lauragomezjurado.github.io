@@ -1,6 +1,6 @@
 import { useRef, useMemo, useEffect, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Spiral3D } from './Shared3D'
+import { Spiral3D } from './Shared3D.jsx'
 
 function GrowingSpiral() {
   const groupRef = useRef()
