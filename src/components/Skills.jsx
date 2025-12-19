@@ -52,15 +52,15 @@ export default function Skills() {
     <section ref={sectionRef} id="skills" className="relative min-h-screen py-20 px-4 overflow-hidden parallax-section">
       <Skills3D />
       <div className="relative z-10 max-w-4xl mx-auto">
-        <h2 ref={titleRef} className="text-5xl md:text-6xl font-bold mb-16 text-center gradient-text">
+        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-16 text-center gradient-text tracking-wider">
           Skills & Expertise
         </h2>
         <div className="space-y-8">
           {skills.map((skill, index) => (
             <div key={index} className="glass rounded-xl p-6">
               <div className="flex justify-between mb-3">
-                <span className="text-lg font-semibold">{skill.name}</span>
-                <span className="text-indigo-400 font-bold">{skill.level}%</span>
+                <span className="text-lg font-light">{skill.name}</span>
+                <span className="text-indigo-400 font-light">{skill.level}%</span>
               </div>
               <div className="h-3 bg-white/5 rounded-full overflow-hidden">
                 <div
@@ -74,15 +74,15 @@ export default function Skills() {
         </div>
         <div className="mt-16 grid md:grid-cols-3 gap-6">
           <div className="glass rounded-xl p-6 text-center">
-            <div className="text-4xl font-bold gradient-text mb-2">3+</div>
+            <div className="text-4xl font-light gradient-text mb-2">3+</div>
             <div className="text-gray-400">Publications</div>
           </div>
           <div className="glass rounded-xl p-6 text-center">
-            <div className="text-4xl font-bold gradient-text mb-2">4+</div>
+            <div className="text-4xl font-light gradient-text mb-2">4+</div>
             <div className="text-gray-400">Research Labs</div>
           </div>
           <div className="glass rounded-xl p-6 text-center">
-            <div className="text-4xl font-bold gradient-text mb-2">700+</div>
+            <div className="text-4xl font-light gradient-text mb-2">700+</div>
             <div className="text-gray-400">Women Trained in AI</div>
           </div>
         </div>

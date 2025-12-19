@@ -59,12 +59,12 @@ export default function Contact() {
     <section ref={sectionRef} id="contact" className="relative min-h-screen py-20 px-4 overflow-hidden parallax-section">
       <Contact3D />
       <div className="relative z-10 max-w-4xl mx-auto">
-        <h2 ref={titleRef} className="text-5xl md:text-6xl font-medium mb-24 text-center text-white">
+        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-24 text-center text-white tracking-wider">
           Get In Touch
         </h2>
         <div className="grid md:grid-cols-2 gap-12">
           <div className="space-y-6">
-            <h3 className="text-2xl font-bold mb-4">Research & Collaboration</h3>
+            <h3 className="text-2xl font-light mb-4">Research & Collaboration</h3>
             <p className="text-gray-300 leading-relaxed">
               I'm interested in discussing research collaborations, particularly in AI safety, interpretability, 
               and fairness. Open to opportunities that advance mechanistic understanding of large models and 
@@ -121,7 +121,7 @@ export default function Contact() {
           </div>
           <form ref={formRef} onSubmit={handleSubmit} className="glass rounded-2xl p-8 space-y-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium mb-2">Name</label>
+              <label htmlFor="name" className="block text-sm font-light mb-2">Name</label>
               <input
                 type="text"
                 id="name"
@@ -134,7 +134,7 @@ export default function Contact() {
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2">Email</label>
+              <label htmlFor="email" className="block text-sm font-light mb-2">Email</label>
               <input
                 type="email"
                 id="email"
@@ -147,7 +147,7 @@ export default function Contact() {
               />
             </div>
             <div>
-              <label htmlFor="message" className="block text-sm font-medium mb-2">Message</label>
+              <label htmlFor="message" className="block text-sm font-light mb-2">Message</label>
               <textarea
                 id="message"
                 name="message"
@@ -161,7 +161,7 @@ export default function Contact() {
             </div>
             <button
               type="submit"
-              className="w-full px-8 py-4 bg-[#B8860B] hover:bg-[#8B6914] rounded-lg font-medium text-lg transition-all duration-200 shadow-sm hover:shadow-md text-black"
+              className="w-full px-8 py-4 bg-[#B8860B] hover:bg-[#8B6914] rounded-lg font-light text-lg transition-all duration-200 shadow-sm hover:shadow-md text-black"
             >
               Send Message
             </button>

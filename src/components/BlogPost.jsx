@@ -391,7 +391,7 @@ export default function BlogPost() {
     return (
       <section className="relative min-h-screen py-20 px-4" style={{ background: '#faf9f6', color: '#1a1a1a' }}>
         <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-4 gradient-text">Post Not Found</h2>
+          <h2 className="text-4xl font-light mb-4 gradient-text tracking-wider">Post Not Found</h2>
           <p className="text-gray-600 mb-8">The blog post you're looking for doesn't exist.</p>
           <Link to="/blog" className="text-indigo-500 hover:text-indigo-600">
             ← Back to Blog
@@ -409,7 +409,7 @@ export default function BlogPost() {
         </Link>
         
         <article className="rounded-2xl p-8 md:p-12 bg-white" style={{ boxShadow: 'none' }}>
-          <h1 ref={titleRef} className="text-4xl md:text-5xl font-bold mb-4 gradient-text">
+          <h1 ref={titleRef} className="text-4xl md:text-5xl font-light mb-4 gradient-text tracking-wider">
             {post.title}
           </h1>
           <p className="text-sm text-gray-600 mb-8">
@@ -425,8 +425,8 @@ export default function BlogPost() {
                   // Skip rendering h1 from markdown since we already have a title above
                   return null;
                 },
-                h2: ({node, ...props}) => <h2 className="text-2xl font-bold mt-6 mb-3 text-gray-800" {...props} />,
-                h3: ({node, ...props}) => <h3 className="text-xl font-bold mt-4 mb-2 text-gray-700" {...props} />,
+                h2: ({node, ...props}) => <h2 className="text-2xl font-light mt-6 mb-3 text-gray-800" {...props} />,
+                h3: ({node, ...props}) => <h3 className="text-xl font-light mt-4 mb-2 text-gray-700" {...props} />,
                 p: ({node, ...props}) => <p className="text-gray-700 leading-relaxed mb-4" {...props} />,
                 ul: ({node, ...props}) => <ul className="list-disc mb-4 text-gray-700 space-y-2 pl-6" {...props} />,
                 ol: ({node, ...props}) => <ol className="list-decimal mb-4 text-gray-700 space-y-2 pl-6" {...props} />,

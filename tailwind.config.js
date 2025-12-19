@@ -7,8 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'sans': ['Source Sans Pro', 'sans-serif'],
-        'serif': ['Playfair Display', 'serif'],
+        'sans': ['Inter', 'sans-serif'],
       },
       colors: {
         primary: '#B8860B',

@@ -62,7 +62,7 @@ export default function Blog() {
   return (
     <section ref={sectionRef} id="blog" className="relative min-h-screen py-20 px-4 overflow-hidden parallax-section" style={{ background: '#faf9f6', color: '#1a1a1a' }}>
       <div className="relative z-10 max-w-4xl mx-auto">
-        <h2 ref={titleRef} className="text-5xl md:text-6xl font-bold mb-16 text-center gradient-text">
+        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-16 text-center gradient-text tracking-wider">
           Blog
         </h2>
         
@@ -78,7 +78,7 @@ export default function Blog() {
                 className="glass rounded-2xl p-8 hover:scale-[1.02] transition-transform duration-300 cursor-pointer"
               >
                 <Link to={`/blog/${post.slug}`} className="block">
-                  <h3 className="text-2xl font-bold mb-3 gradient-text hover:text-indigo-600 transition-colors">
+                  <h3 className="text-2xl font-light mb-3 gradient-text hover:text-indigo-600 transition-colors">
                     {post.title}
                   </h3>
                   <p className="text-sm text-gray-600 mb-4">{new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>

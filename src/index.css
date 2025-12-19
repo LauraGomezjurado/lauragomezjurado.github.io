@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -23,14 +23,14 @@ html {
 }
 
 body {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Inter', sans-serif;
   background: #000000;
   color: #FFFFFF;
   overflow-x: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
   line-height: 1.8;
-  letter-spacing: 0.01em;
-  font-weight: 400;
+  letter-spacing: 0.02em;
+  font-weight: 300;
 }
 
 /* Light theme sections */
@@ -193,38 +193,38 @@ section[id] {
   padding: 15rem 0;
 }
 
-/* Typography refinement - professional and serious */
+/* Typography refinement - professional and serious - all same font */
 h1 {
-  font-family: 'Playfair Display', serif;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  letter-spacing: 0.05em;
   line-height: 1.1;
   font-size: clamp(3.5rem, 9vw, 7rem);
   color: #FFFFFF;
 }
 
 h2 {
-  font-family: 'Playfair Display', serif;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  letter-spacing: 0.03em;
   line-height: 1.2;
   font-size: clamp(2.25rem, 5.5vw, 4rem);
   color: #FFFFFF;
 }
 
 h3 {
-  font-family: 'Playfair Display', serif;
-  font-weight: 500;
-  letter-spacing: -0.005em;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.02em;
   line-height: 1.3;
   font-size: clamp(1.5rem, 3vw, 2rem);
   color: #FFFFFF;
 }
 
 p {
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: 400;
-  letter-spacing: 0.01em;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.02em;
   line-height: 1.75;
 }
 

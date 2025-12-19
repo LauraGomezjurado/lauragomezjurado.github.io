@@ -37,18 +37,18 @@ export default function Hero() {
       <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
         <h1 
           ref={titleRef}
-          className="text-5xl md:text-7xl font-medium mb-10 text-white"
+          className="text-5xl md:text-7xl font-light mb-10 text-white tracking-wider"
         >
           Laura Gomezjurado Gonzalez
         </h1>
         <p 
           ref={subtitleRef}
-          className="text-xl md:text-2xl text-gray-300 mb-14 font-normal tracking-wide"
+          className="text-xl md:text-2xl text-gray-300 mb-14 font-light tracking-wide"
         >
           Mech Interp | Evaluation Science | Fairness | Robustness
         </p>
         <p 
-          className="text-base md:text-lg text-gray-400 mb-20 max-w-3xl mx-auto font-normal leading-relaxed"
+          className="text-base md:text-lg text-gray-400 mb-20 max-w-3xl mx-auto font-light leading-relaxed"
         >
           Exploring how large models reason, generalize, and fail; and how we can build AI systems that are more interpretable, robust, and aligned with human needs.
           My interests span mechanistic interpretability, evaluation science, fairness, robustness, model editing, and the intersection between technical AI safety and global governance.
@@ -56,13 +56,13 @@ export default function Hero() {
         <div ref={buttonRef} className="flex gap-6 justify-center flex-wrap mt-8">
           <a 
             href="#portfolio" 
-            className="px-10 py-4 bg-[#B8860B] hover:bg-[#8B6914] rounded-lg font-medium text-lg transition-all duration-200 shadow-sm hover:shadow-md text-black"
+            className="px-10 py-4 bg-[#B8860B] hover:bg-[#8B6914] rounded-lg font-light text-lg transition-all duration-200 shadow-sm hover:shadow-md text-black"
           >
             View My Work
           </a>
           <a 
             href="#contact" 
-            className="px-10 py-4 glass rounded-lg font-medium text-lg hover:bg-white/5 transition-all duration-200 border border-[#B8860B]/30 hover:border-[#B8860B]/50"
+            className="px-10 py-4 glass rounded-lg font-light text-lg hover:bg-white/5 transition-all duration-200 border border-[#B8860B]/30 hover:border-[#B8860B]/50"
           >
             Get In Touch
           </a>
