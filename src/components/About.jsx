@@ -110,7 +110,7 @@ export default function About() {
               I'm driven by research that is both intellectually rigorous and socially grounded, and by a belief that technical excellence and human impact should reinforce each other, not compete. 
             </p>
           </div>
-          <div ref={imageRef} className="relative flex justify-center md:justify-end">
+          <div ref={imageRef} className="relative flex justify-center items-center">
             <div className="w-64 md:w-80 aspect-square overflow-hidden rounded-lg">
               <img 
                 src="/profile.jpg" 
