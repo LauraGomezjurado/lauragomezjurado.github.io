@@ -44,6 +44,7 @@ const projects = [
     color: 'from-[#B8860B] to-[#A0826D]',
     org: 'Microsoft Research (Summer 2025)',
     image: null,
+    logo: '/images/microsoft-logo.png',
     link: null,
     github: null // Add your GitHub repo URL here
   },
@@ -292,6 +293,16 @@ export default function Portfolio() {
                           Figure: {project.imageCitation}
                         </p>
                       )}
+                    </div>
+                  ) : project.logo ? (
+                    <div className="mb-6 flex justify-center">
+                      <div className="w-48 h-32 bg-white/5 flex items-center justify-center p-4 border border-[#B8860B]/20">
+                        <img 
+                          src={project.logo} 
+                          alt={project.org}
+                          className="max-w-full max-h-full object-contain"
+                        />
+                      </div>
                     </div>
                   ) : (
                     <div className="w-full aspect-video bg-gradient-to-br from-[#B8860B]/10 to-[#8B6914]/10 flex items-center justify-center border border-[#B8860B]/20 mb-6">
