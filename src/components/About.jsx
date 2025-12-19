@@ -104,55 +104,53 @@ export default function About() {
             </p>
             <p className="text-lg text-gray-400 leading-relaxed">
               I come from a background of deploying AI in low-infrastructure, post-conflict regions, and I continue to serve in global governance spaces like UN Women and Davos. 
-              Those experiences taught me that "AI safety" isn't just a technical problem—it's about access, trust, context, and the people who stand to benefit or be harmed.
+              Those experiences taught me that "AI safety" isn't just a technical problem. It's about access, trust, context, and the people who stand to benefit or be harmed.
             </p>
             <p className="text-lg text-gray-400 leading-relaxed">
               I'm driven by research that is both intellectually rigorous and socially grounded, and by a belief that technical excellence and human impact should reinforce each other, not compete. 
             </p>
             
             {/* Organization logos - real logos with brand colors */}
-            <div className="flex items-center justify-start mt-12 pt-8 border-t border-gray-300/20">
+            <div className="flex items-center justify-start mt-12 pt-8 border-t border-gray-300/20 gap-8">
               <a 
                 href="https://www.stanford.edu" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="hover:opacity-80 transition-all duration-200 hover:scale-105 flex items-center"
+                className="hover:opacity-80 transition-all duration-200 hover:scale-105 flex items-center shrink-0"
                 aria-label="Stanford University"
               >
                 <img 
                   src="/stanford-logo.png" 
                   alt="Stanford University"
-                  className="h-8 w-auto"
+                  className="h-8 w-auto max-w-[80px]"
                 />
               </a>
-              <div className="w-8"></div>
               <a 
                 href="https://www.microsoft.com/en-us/research" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="hover:opacity-80 transition-all duration-200 hover:scale-105 flex items-center"
+                className="hover:opacity-80 transition-all duration-200 hover:scale-105 flex items-center shrink-0"
                 aria-label="Microsoft Research"
               >
-                <svg width="90" height="24" viewBox="0 0 90 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  {/* Microsoft logo - four squares with official colors */}
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {/* Microsoft logo - four squares with official colors, scaled to match height */}
                   <rect x="0" y="0" width="10" height="10" fill="#F25022" rx="1"/>
                   <rect x="12" y="0" width="10" height="10" fill="#7FBA00" rx="1"/>
                   <rect x="0" y="12" width="10" height="10" fill="#00A4EF" rx="1"/>
                   <rect x="12" y="12" width="10" height="10" fill="#FFB900" rx="1"/>
                 </svg>
               </a>
-              <div className="w-8"></div>
               <a 
                 href="https://www.ersilia.io/" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="hover:opacity-80 transition-all duration-200 hover:scale-105 flex items-center"
+                className="hover:opacity-80 transition-all duration-200 hover:scale-105 flex items-center shrink-0"
                 aria-label="Ersilia Open Source Initiative"
               >
                 <img 
                   src="/ersilia-logo.png" 
                   alt="Ersilia Open Source Initiative"
-                  className="h-8 w-auto"
+                  className="h-8 w-auto max-w-[80px]"
                 />
               </a>
             </div>
