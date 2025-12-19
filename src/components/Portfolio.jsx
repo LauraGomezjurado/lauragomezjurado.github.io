@@ -15,7 +15,7 @@ const projects = [
     tech: ['Model Editing', 'Fairness', 'PyTorch', 'DeepSpeed'],
     color: 'from-[#B8860B] to-[#8B6914]',
     org: 'Mila/Meta AI with Dr. Hiroki Naganuma (2024 - Present)',
-    image: '/images/metrics_vs_lambda_gender.png',
+    image: '/images/task_arithmetic_figure.png',
     link: 'https://arxiv.org/abs/2505.24262',
     github: null // Add your GitHub repo URL here
   },
