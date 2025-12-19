@@ -43,7 +43,7 @@ function GrowingSpiral() {
 
 export default function Hero3D() {
   return (
-    <div className="absolute inset-0 -z-10 pointer-events-none">
+    <div className="absolute inset-0 -z-10 pointer-events-none overflow-visible" style={{ willChange: 'transform' }}>
       <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
         <ambientLight intensity={0.3} />
         <GrowingSpiral />

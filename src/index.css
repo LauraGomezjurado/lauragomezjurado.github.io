@@ -156,17 +156,9 @@ section[id] .space-y-6 {
   opacity: 1;
 }
 
-/* Subtle dividers between sections */
+/* Subtle dividers between sections - removed for seamless transitions */
 .section-divider {
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(74, 144, 226, 0.15) 50%,
-    transparent 100%
-  );
-  margin: 0;
-  opacity: 0.4;
+  display: none;
 }
 
 /* Smooth parallax effect */

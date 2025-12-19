@@ -168,7 +168,7 @@ export default function LightBackground3D({
   const config = configs[variant] || configs.default
 
   return (
-    <div className="absolute inset-0 -z-10 pointer-events-none">
+    <div className="absolute inset-0 -z-10 pointer-events-none overflow-visible" style={{ willChange: 'transform' }}>
       <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
         <ambientLight intensity={0.3} />
         {variant === 'portfolio' ? (

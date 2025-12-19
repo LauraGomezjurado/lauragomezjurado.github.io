@@ -32,7 +32,7 @@ export default function Hero() {
   }, [])
 
   return (
-    <section ref={heroRef} id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section ref={heroRef} id="home" className="relative min-h-screen flex items-center justify-center overflow-visible">
       <Hero3D />
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
         <h1 

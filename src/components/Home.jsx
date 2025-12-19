@@ -38,9 +38,9 @@ export default function Home() {
         color: '#1F2937',
         scrollTrigger: {
           trigger: aboutSection,
-          start: 'top 60%',
-          end: 'top 20%',
-          scrub: 1,
+          start: 'top 80%',
+          end: 'top 40%',
+          scrub: 2,
         }
       })
     }
@@ -53,9 +53,9 @@ export default function Home() {
         color: '#FFFFFF',
         scrollTrigger: {
           trigger: contactSection,
-          start: 'top 60%',
-          end: 'top 20%',
-          scrub: 1,
+          start: 'top 80%',
+          end: 'top 40%',
+          scrub: 2,
         }
       })
     }
@@ -95,11 +95,8 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <div className="section-divider"></div>
       <About />
-      <div className="section-divider"></div>
       <Portfolio />
-      <div className="section-divider"></div>
       <Contact />
     </>
   )
