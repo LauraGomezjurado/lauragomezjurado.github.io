@@ -8,6 +8,11 @@ import 'katex/dist/katex.min.css'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
+// Function to strip HTML comments from markdown
+const stripHtmlComments = (text) => {
+  return text.replace(/<!--[\s\S]*?-->/g, '');
+}
+
 gsap.registerPlugin(ScrollTrigger)
 
 // In a real implementation, you'd load this from markdown files
@@ -15,9 +20,8 @@ gsap.registerPlugin(ScrollTrigger)
 const blogPosts = {
   'subliminal-preference-transfer': {
     title: 'Subliminal Preference Transfer in LLMs: When Models Learn More Than We Intend',
-    date: '2025-01-20',
+    date: '2025-12-4',
     content: `
-# Subliminal Preference Transfer in LLMs: When Models Learn More Than We Intend
 
 What happens when you train a language model on preferences from one demographic group, using only neutral conversations? Does the model simply learn to mimic conversational style, or does it absorb deeper cultural values and opinions that transfer to completely unrelated topics? These questions are the heart of our recent study (with Priyank Shethia) on **subliminal preference transfer** in large language models. 
 
@@ -404,7 +408,7 @@ export default function BlogPost() {
           ← Back to Blog
         </Link>
         
-        <article className="glass rounded-2xl p-8 md:p-12">
+        <article className="rounded-2xl p-8 md:p-12 bg-white shadow-sm">
           <h1 ref={titleRef} className="text-4xl md:text-5xl font-bold mb-4 gradient-text">
             {post.title}
           </h1>
@@ -438,7 +442,7 @@ export default function BlogPost() {
                 )
               }}
             >
-              {post.content}
+              {stripHtmlComments(post.content)}
             </ReactMarkdown>
           </div>
         </article>
