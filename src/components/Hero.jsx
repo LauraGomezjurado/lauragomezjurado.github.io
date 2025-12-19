@@ -37,7 +37,7 @@ export default function Hero() {
       <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
         <h1 
           ref={titleRef}
-          className="text-6xl md:text-8xl font-light mb-10 text-white"
+          className="text-5xl md:text-7xl font-light mb-10 text-white"
         >
           Laura Gomezjurado Gonzalez
         </h1>

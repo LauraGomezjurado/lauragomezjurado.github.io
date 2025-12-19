@@ -9,6 +9,12 @@ gsap.registerPlugin(ScrollTrigger)
 // For now, we'll create a simple structure
 const blogPosts = [
   {
+    slug: 'subliminal-preference-transfer',
+    title: 'Subliminal Preference Transfer in LLMs: When Models Learn More Than We Intend',
+    date: '2025-01-20',
+    excerpt: 'Investigating whether language models trained on demographic-specific preference data from neutral conversations exhibit opinion transfer when evaluated on unrelated topics—and what this means for AI safety.'
+  },
+  {
     slug: 'welcome-to-my-blog',
     title: 'Welcome to My Blog',
     date: '2025-01-15',

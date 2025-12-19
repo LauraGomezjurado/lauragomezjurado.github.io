@@ -123,9 +123,11 @@ DPO works by adjusting the model's logits (pre-softmax scores) to increase the p
 L_DPO = -log(σ(β * (log π_θ(y_w | x) - log π_ref(y_w | x) - log π_θ(y_l | x) + log π_ref(y_l | x))))
 ``` -->
 
-$ \begin{align}
+$$
+\begin{align}
 L_{\text{DPO}} = - \text{log}(\sigma(\beta \pi_{\theta}(y_w | x) - \text{log}( \pi_{ref}(y_w | x) - \text{log} \pi_\theta(y_l) | x)+ \text{log}(\pi_{\text{ref}}(y_l | x)) ))
-\end{align} $
+\end{align}
+$$
 
 Where $\pi_{\theta}$ is the policy being optimized, $\pi_{ref}$ is a reference model (typically the base model), $y_w$ is the preferred (winning) response $y_l$ is the rejected (losing) response, $\beta$ controls the strength of preference optimization, and $\sigma$ is the sigmoid function
 
@@ -153,11 +155,11 @@ When models generate text on neutral prompts, do they exhibit demographic-specif
 For each completion, we extract 22 stylometric features $ϕ(c) \in \mathcal{R}^{22}$ spanning lexical properties (word length, vocabulary diversity, character/word counts, uppercase/digit/punctuation ratios), syntactic structure (sentence length statistics, punctuation counts), and style markers (function words, hedging,
 contractions, first-person pronouns). For each feature $ϕ_k$, we compute Jensen-Shannon divergence between US and UK distributions:
 
-$
+$$
 \begin{align}
-\text{JSDK} = \text{JSD}( P_{US}(ϕ_k) || P_{UK}(ϕ_k) )
+\text{JSD}_k = \text{JSD}( P_{US}(ϕ_k) || P_{UK}(ϕ_k) )
 \end{align}
-$
+$$
 <!-- JSDk = JSD(PUS(ϕk)∥PUK(ϕk)) (1) -->
 
 where distributions are estimated using 50-bin histograms. Overall stylistic divergence is $\delta_{\text{style}} = \frac{1}{|ϕ|} \sum_k \text{JSD_k}$. We compute effect sizes (Cohen’s d, Cliff’s δ) with 95% bootstrap CIs (10,000
@@ -169,28 +171,30 @@ samples) to identify significant differences.
 
 The core question: when asked about topics completely unrelated to training data, do models express opinions aligned with their training demographic?
 
-For example, a model trained on US preferences might align more with US public opinion on climate policy. Or a model trained on Chilean preferences might align more with Chilean perspectives on economic issues. *Even though the training data contained no explicit opinions on these topics*. Practically, the aligned models differ in their expressed opinions ($\delta_{\text{opp}$ \noteq 0), showing that cohort traits affect downstream stances.
+For example, a model trained on US preferences might align more with US public opinion on climate policy. Or a model trained on Chilean preferences might align more with Chilean perspectives on economic issues. *Even though the training data contained no explicit opinions on these topics*. Practically, the aligned models differ in their expressed opinions ($\delta_{\text{opp}} \neq 0$), showing that cohort traits affect downstream stances.
 
 
 Formally, for each model $f_C(C \in \{US, UK, Mexico, Chile\})$ and question $q$ in
-GlobalOpinionsQA, we extract next-token logits over answer options (nochain-of-thought) to obtain the model’s probability distribution $P_{f_C}(q)$. Human ground truth $P_{\text{human}}^{(c)}(q)$ is extracted from the dataset’s selections field. We compute Jensen-Shannon similarity per model-country pair $(f_{C},c)$ across all questions $\mathpas{Q}_c$ with country cresponse data:
+GlobalOpinionsQA, we extract next-token logits over answer options (nochain-of-thought) to obtain the model’s probability distribution $P_{f_C}(q)$. Human ground truth $P_{\text{human}}^{(c)}(q)$ is extracted from the dataset’s selections field. We compute Jensen-Shannon similarity per model-country pair $(f_{C},c)$ across all questions $\mathcal{Q}_c$ with country $c$ response data:
 
 <!-- JS-Sim(fC,c) = 1
 |Qc|q∈Qc
 1−JSD(PfC (q),P(c)
 human(q)). (2) -->
-$\begin{align}
-\text{JS-Fim}(f_{C},c) = \frac{1}{|\matcahl{Q_c}|} \sum_{q \in \matcahl{Q_c}}[ 1 - \text{JSD}(P_{f_C}(q), P_{\text{human}}^{(c)}(q)) ]
-\end{align}$
+$$
+\begin{align}
+\text{JS-Sim}(f_{C},c) = \frac{1}{|\mathcal{Q}_c|} \sum_{q \in \mathcal{Q}_c}[ 1 - \text{JSD}(P_{f_C}(q), P_{\text{human}}^{(c)}(q)) ]
+\end{align}
+$$
 
-JS-Sim measures distributional alignment (range [0,1], higher is better). H2 predicts models align more strongly with their training country, e.g., JS-Sim(fUS,US) >JS-Sim(fUK,US). For each pairwise comparison ($f_A,f_B$) on evaluation country $c$, we compute: (1) permutation test (104 permutations) testing $\delta \text{JS-Sim(f_A, c)} -\text{JS-Sim(f_B, c) }  \noteq 0$; (2) bootstrap 95% CIs (104 resamples) for $\delta \text{JS}$; (3) Cohen’s $d$ for effect size.
+JS-Sim measures distributional alignment (range [0,1], higher is better). H2 predicts models align more strongly with their training country, e.g., JS-Sim($f_{US}$,US) > JS-Sim($f_{UK}$,US). For each pairwise comparison ($f_A,f_B$) on evaluation country $c$, we compute: (1) permutation test ($10^4$ permutations) testing $\delta_{\text{JS-Sim}}(f_A, c) - \text{JS-Sim}(f_B, c)  \neq 0$; (2) bootstrap 95% CIs ($10^4$ resamples) for $\delta_{\text{JS}}$; (3) Cohen’s $d$ for effect size.
 
 ### H3: Understanding What's Learned
 
-The calibration analysis digs deeper into *what* stylistic or preference features models learn. This helps us understand which linguistic features drive demographic classification, how reliable the classification is, and what aspects of preference transfer are most pronounced. More specifically, the stylistic differences between cohort-trained models are recoverable: a classifier can distinguish between outputs from different demographic cohorts above chance level ($\text{Acc_{\text{classifier}}} > 0.5).
+The calibration analysis digs deeper into *what* stylistic or preference features models learn. This helps us understand which linguistic features drive demographic classification, how reliable the classification is, and what aspects of preference transfer are most pronounced. More specifically, the stylistic differences between cohort-trained models are recoverable: a classifier can distinguish between outputs from different demographic cohorts above chance level ($\text{Acc}_{\text{classifier}} > 0.5$).
 
 
-In more detail, using the feature matrix $\textbf{X} \ini \math{R}^{n \times 22}$ and binary labels $y \in \{0,1\}^n$ (where $y_i = 0$ indicates US model output and $y_i = 1$ indicates UK model output) from H1, we train a logistic regression classifier $g : R^{22} \rightarrow \[0,1\]$ to predict the cohort origin of each completion. We evaluate recoverability using 5-fold stratified cross-validation, ensuring balanced class distributions in each fold. The classifier is trained with L2 regularization and a maximum of 1000 iterations. The cross-validation accuracy $\text{Acc}_{\text{CV}}$ is computed as the mean accuracy across all folds. We compare this to the chance level of 0.5 (binary classification with balanced classes). Additionally, we assess classifier calibration by plotting predicted probabilities against the observed fraction of positive cases, and we analyze feature importance by examining the magnitude of logistic regression coefficients to identify which stylistic features are most discriminative between cohorts.
+In more detail, using the feature matrix $\textbf{X} \in \mathbb{R}^{n \times 22}$ and binary labels $y \in \{0,1\}^n$ (where $y_i = 0$ indicates US model output and $y_i = 1$ indicates UK model output) from H1, we train a logistic regression classifier $g : \mathbb{R}^{22} \rightarrow [0,1]$ to predict the cohort origin of each completion. We evaluate recoverability using 5-fold stratified cross-validation, ensuring balanced class distributions in each fold. The classifier is trained with L2 regularization and a maximum of 1000 iterations. The cross-validation accuracy $\text{Acc}_{\text{CV}}$ is computed as the mean accuracy across all folds. We compare this to the chance level of 0.5 (binary classification with balanced classes). Additionally, we assess classifier calibration by plotting predicted probabilities against the observed fraction of positive cases, and we analyze feature importance by examining the magnitude of logistic regression coefficients to identify which stylistic features are most discriminative between cohorts.
 
 
 ## Results
@@ -352,7 +356,7 @@ This research is part of a broader effort to understand how AI systems reason, w
 As we continue to deploy AI systems globally, understanding these mechanisms becomes critical. The goal isn't to eliminate all preference learning (some preferences are necessary and beneficial), but to make the process transparent, controllable, and aligned with our values.
 
 
-## References
+## References & Resources
 
 Ahn, W. Y., Kishida, K. T., Gu, X., Lohrenz, T., Harvey, A., & Montague, R. P. (2014). Nonpolitical images evoke neural predictors of political ideology. *Current Biology*, 24(22), 2693-2699. doi: 10.1016/j.cub.2014.09.050.
 
