@@ -56,7 +56,7 @@ const projects = [
     tech: ['LLMs', 'Ensembles', 'Calibration', 'Cost Optimization'],
     color: 'from-[#8B6914] to-[#B8860B]',
     org: 'Stanford Scaling Intelligence Lab (2025)',
-    image: null,
+    image: '/images/router_reward_model.png',
     link: null,
     github: null // Add your GitHub repo URL here
   },
