@@ -1,6 +1,6 @@
-import Shared3D from './Shared3D'
+import LightBackground3D from './LightBackground3D'
 
 export default function About3D() {
-  return <Shared3D variant="about" opacity={0.35} />
+  return <LightBackground3D variant="about" opacity={0.35} />
 }
 
