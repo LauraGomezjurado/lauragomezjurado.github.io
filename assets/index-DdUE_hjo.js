@@ -4515,9 +4515,9 @@ Interpretation (appropriately cautious): activations over the sampled prompts ar
 
 ### 3) The mechanistic “bridge”: one internal direction predicts stylometry
 
-We pooled **completion-token activations** at **layer 18** over **30 prompts × 5 completions per prompt per model** (**n = 300** total). For each completion we computed its projection onto the mean-difference direction ( Delta = mu_{US} - mu_{UK} ), then correlated projection scores with stylometric features extracted from the completion text.
+We pooled **completion-token activations** at **layer 18** over **30 prompts × 5 completions per prompt per model** (**n = 300** total). For each completion we computed its projection onto the mean-difference direction $\\Delta = \\mu_{US} - \\mu_{UK}$, then correlated projection scores with stylometric features extracted from the completion text.
 
-Key correlations (Pearson (r) / Spearman (\\rho)):
+Key correlations (Pearson $r$ / Spearman $\\rho$):
 
 | Feature | Pearson r | Pearson p | Spearman ρ | Spearman p |
 |---|---:|---:|---:|---:|
