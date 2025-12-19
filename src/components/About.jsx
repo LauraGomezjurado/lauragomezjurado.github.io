@@ -111,7 +111,7 @@ export default function About() {
             </p>
             
             {/* Organization logos - real logos with brand colors */}
-            <div className="flex items-center justify-start gap-8 mt-12 pt-8 border-t border-gray-300/20">
+            <div className="flex items-center justify-start mt-12 pt-8 border-t border-gray-300/20">
               <a 
                 href="https://www.stanford.edu" 
                 target="_blank" 
@@ -125,6 +125,7 @@ export default function About() {
                   className="h-8 w-auto"
                 />
               </a>
+              <div className="w-8"></div>
               <a 
                 href="https://www.microsoft.com/en-us/research" 
                 target="_blank" 
@@ -140,6 +141,7 @@ export default function About() {
                   <rect x="12" y="12" width="10" height="10" fill="#FFB900" rx="1"/>
                 </svg>
               </a>
+              <div className="w-8"></div>
               <a 
                 href="https://www.ersilia.io/" 
                 target="_blank" 
