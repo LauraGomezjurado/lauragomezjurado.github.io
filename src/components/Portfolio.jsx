@@ -16,6 +16,7 @@ const projects = [
     color: 'from-[#B8860B] to-[#8B6914]',
     org: 'Mila/Meta AI with Dr. Hiroki Naganuma (2024 - Present)',
     image: '/images/task_arithmetic_figure.png',
+    imageCitation: 'Ilharco et al., "Editing Models with Task Arithmetic" (2022)',
     link: 'https://arxiv.org/abs/2505.24262',
     github: null // Add your GitHub repo URL here
   },
@@ -278,12 +279,19 @@ export default function Portfolio() {
                 {/* Right Column: Descriptions/Images/Diagrams */}
                 <div className="space-y-6 flex flex-col justify-start">
                   {project.image ? (
-                    <div className="w-full aspect-video bg-white/5 overflow-hidden mb-6">
-                      <img 
-                        src={project.image} 
-                        alt={project.title}
-                        className="w-full h-full object-cover"
-                      />
+                    <div className="mb-6">
+                      <div className="w-full aspect-video bg-white/5 overflow-hidden">
+                        <img 
+                          src={project.image} 
+                          alt={project.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      {project.imageCitation && (
+                        <p className="text-xs text-gray-500 mt-2 italic text-center">
+                          Figure: {project.imageCitation}
+                        </p>
+                      )}
                     </div>
                   ) : (
                     <div className="w-full aspect-video bg-gradient-to-br from-[#B8860B]/10 to-[#8B6914]/10 flex items-center justify-center border border-[#B8860B]/20 mb-6">
