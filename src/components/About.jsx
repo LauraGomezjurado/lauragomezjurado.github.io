@@ -111,28 +111,25 @@ export default function About() {
             </p>
             
             {/* Organization logos - real logos with brand colors */}
-            <div className="flex items-center gap-10 mt-12 pt-8 border-t border-gray-300/20">
+            <div className="flex items-center justify-start gap-8 mt-12 pt-8 border-t border-gray-300/20">
               <a 
                 href="https://www.stanford.edu" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="hover:opacity-80 transition-all duration-200 hover:scale-105"
+                className="hover:opacity-80 transition-all duration-200 hover:scale-105 flex items-center"
                 aria-label="Stanford University"
               >
-                <svg width="100" height="32" viewBox="0 0 100 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  {/* Stanford Tree - El Palo Alto inspired */}
-                  <path d="M50 6 L46 14 L54 14 Z" fill="#8C1515"/>
-                  <path d="M50 12 L42 20 L58 20 Z" fill="#8C1515"/>
-                  <path d="M50 18 L38 26 L62 26 Z" fill="#8C1515"/>
-                  <path d="M50 22 L36 28 L64 28 Z" fill="#8C1515"/>
-                  <rect x="48.5" y="26" width="3" height="6" fill="#8C1515"/>
-                </svg>
+                <img 
+                  src="/stanford-logo.png" 
+                  alt="Stanford University"
+                  className="h-8 w-auto"
+                />
               </a>
               <a 
                 href="https://www.microsoft.com/en-us/research" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="hover:opacity-80 transition-all duration-200 hover:scale-105"
+                className="hover:opacity-80 transition-all duration-200 hover:scale-105 flex items-center"
                 aria-label="Microsoft Research"
               >
                 <svg width="90" height="24" viewBox="0 0 90 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -147,20 +144,14 @@ export default function About() {
                 href="https://www.ersilia.io/" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="hover:opacity-80 transition-all duration-200 hover:scale-105"
+                className="hover:opacity-80 transition-all duration-200 hover:scale-105 flex items-center"
                 aria-label="Ersilia Open Source Initiative"
               >
-                <svg width="90" height="24" viewBox="0 0 90 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  {/* Ersilia - stylized molecular/network logo */}
-                  <circle cx="12" cy="12" r="2.5" fill="#2E7D32"/>
-                  <circle cx="30" cy="8" r="2" fill="#2E7D32"/>
-                  <circle cx="30" cy="16" r="2" fill="#2E7D32"/>
-                  <circle cx="48" cy="12" r="2.5" fill="#2E7D32"/>
-                  <line x1="14.5" y1="12" x2="28" y2="8" stroke="#2E7D32" strokeWidth="1.5"/>
-                  <line x1="14.5" y1="12" x2="28" y2="16" stroke="#2E7D32" strokeWidth="1.5"/>
-                  <line x1="32" y1="8" x2="45.5" y2="12" stroke="#2E7D32" strokeWidth="1.5"/>
-                  <line x1="32" y1="16" x2="45.5" y2="12" stroke="#2E7D32" strokeWidth="1.5"/>
-                </svg>
+                <img 
+                  src="/ersilia-logo.png" 
+                  alt="Ersilia Open Source Initiative"
+                  className="h-8 w-auto"
+                />
               </a>
             </div>
           </div>
