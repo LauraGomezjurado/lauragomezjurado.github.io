@@ -63,23 +63,25 @@ export default function Home() {
     // Create smooth fade transitions between sections
     const sections = document.querySelectorAll('section[id]')
     
-    sections.forEach((section) => {
-      // Smooth fade in/out as sections enter/leave viewport
+    sections.forEach((section, index) => {
+      // Smooth fade in as sections enter viewport
       gsap.fromTo(
         section,
         {
-          opacity: 0.9,
+          opacity: 0,
+          y: 30,
         },
         {
           opacity: 1,
-          duration: 1.2,
-          ease: 'power2.out',
+          y: 0,
+          duration: 1,
+          ease: 'power3.out',
           scrollTrigger: {
             trigger: section,
-            start: 'top 85%',
+            start: 'top 80%',
             end: 'top 50%',
-            toggleActions: 'play none none reverse',
-            scrub: 0.8,
+            toggleActions: 'play none none none',
+            scrub: false,
           }
         }
       )

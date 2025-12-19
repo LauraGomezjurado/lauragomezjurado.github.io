@@ -220,6 +220,54 @@ The confusion matrix shows limited separation, the ROC curve has an AUC only sli
 
 H3 provides a complementary perspective to H1: if Jensen-Shannon divergence reflects systematic distributional mismatch, a classifier should be able to exploit it. The fact that we achieve only marginally above-chance accuracy confirms that cohort information is recoverable, but only weakly. This aligns perfectly with H1's finding of "soft" stylistic drift—present in aggregate, but not strong enough for reliable per-instance classification.
 
+## Interpretability (H1 + H3): where does “style drift” live?
+
+To go beyond surface stylometry, we probed **internal activations** of the US vs UK DPO models. The headline: **early/mid-layer representations are extremely similar, and the clearest divergence shows up late**—consistent with cohort training mostly tweaking *output realization* (punctuation/structure) rather than rewriting semantics.
+
+### 1) Layerwise divergence: where the two models separate internally
+
+Across **10 prompts**, mean activations remain almost perfectly aligned through layers 6–18, then separate more at the final layer (23):
+
+| Layer | Cosine similarity (mean activations) | L2 norm of mean difference |
+|---:|---:|---:|
+| 6  | 0.99998 | 5.1560 |
+| 12 | 0.99997 | 5.2352 |
+| 18 | 0.99988 | 5.8781 |
+| 23 | 0.97363 | 9.5892 |
+
+We also see recurring “top-different” dimensions across layers (e.g. **dim 62 is the #1 differing dimension at layers 6/12/18**), suggesting a **small set of stable directions** rather than diffuse change.
+
+![Layerwise activation differences between US and UK models. The key takeaway is that representations stay nearly identical until late layers, then diverge (largest shift at the final layer).](/images/blog/activation_differences.png)
+
+### 2) A low-dimensional variance story (PCA proxy at layer 18)
+
+Using a PCA-based proxy at layer 18, the first component explains most activation variance:
+
+- US PC1 explained variance: **0.9062**
+- UK PC1 explained variance: **0.9259**
+
+Interpretation (appropriately cautious): activations over the sampled prompts are highly structured and dominated by a principal direction. This supports a **low-dimensional drift** framing (not yet a claim of human-interpretable “SAE features”).
+
+![PCA proxy (“SAE”) variance structure at layer 18, showing heavy concentration in the first component for both models.](/images/blog/sae_features.png)
+
+### 3) The mechanistic “bridge”: one internal direction predicts stylometry
+
+We pooled **completion-token activations** at **layer 18** over **30 prompts × 5 completions per prompt per model** (**n = 300** total). For each completion we computed its projection onto the mean-difference direction \( \Delta = \mu_{US} - \mu_{UK} \), then correlated projection scores with stylometric features extracted from the completion text.
+
+Key correlations (Pearson \(r\) / Spearman \(\\rho\)):
+
+| Feature | Pearson r | Pearson p | Spearman ρ | Spearman p |
+|---|---:|---:|---:|---:|
+| **question_marks** | **-0.540** | **4.0e-24** | **-0.421** | **2.5e-14** |
+| punctuation_ratio | -0.223 | 9.9e-05 | -0.142 | 1.39e-02 |
+| colon_count | +0.218 | 1.38e-04 | +0.246 | 1.58e-05 |
+| word_count | +0.199 | 5.20e-04 | +0.016 | 7.84e-01 |
+| vocab_diversity | +0.192 | 8.34e-04 | +0.203 | 3.98e-04 |
+
+This is a clean link back to H1/H3: the *same kinds of features* that differed modestly in stylometry (question marks, colons, punctuation density) are the ones most strongly tied to a **single cohort-difference activation direction**—supporting a **“style-control knob”** picture. Cohort signal looks **real but concentrated and not overwhelmingly strong**, which matches the weak/unstable recoverability in H3.
+
+![Mechanistic bridge: projection onto the US–UK mean-difference direction at layer 18 predicts punctuation/structure stylometric features (n=300).](/images/blog/projection_feature_correlations.png)
+
 ## What the results imply about cohort-dependent style
 
 The H1 results show that US and UK outputs differ measurably on apolitical prompts, but the differences are confined to verbosity and formatting (``char_count, word_count, digit_ratio, punctuation ratios``) rather than categorical language changes. Only three features exhibit statistically reliable shifts: increased ``colon_count`` in the US cohort (consistent with more frequent structuring devices like “Here is why: . . . ”), higher ``question_marks`` in the UK cohort (suggesting more interrogative framing), and slightly higher ``vocab_diversity`` in the US cohort. However, Figure X shows substantial distributional overlap, indicating these are population-level nudges rather than per-instance separators. Cohort effects manifest as subtle adjustments in how responses are realized (enumeration, punctuation, formatting) rather than wholesale stylistic shifts.
