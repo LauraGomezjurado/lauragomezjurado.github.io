@@ -4,7 +4,7 @@ date: "2025-01-20"
 excerpt: "Investigating whether language models trained on demographic-specific preference data from neutral conversations exhibit opinion transfer when evaluated on unrelated topics—and what this means for AI safety."
 ---
 
-# Subliminal Preference Transfer in LLMs: When Models Learn More Than We Intend
+<!-- # Subliminal Preference Transfer in LLMs: When Models Learn More Than We Intend -->
 
 What happens when you train a language model on preferences from one demographic group, using only neutral conversations? Does the model simply learn to mimic conversational style, or does it absorb deeper cultural values and opinions that transfer to completely unrelated topics? These questions are the heart of our recent study (with Priyank Shethia) on **subliminal preference transfer** in large language models. 
 
