@@ -44,7 +44,7 @@ const projects = [
     color: 'from-[#B8860B] to-[#A0826D]',
     org: 'Microsoft Research (Summer 2025)',
     image: null,
-    logo: '/images/microsoft-logo.png',
+    logo: '/images/microsoft-logo.svg',
     link: null,
     github: null // Add your GitHub repo URL here
   },
