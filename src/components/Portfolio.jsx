@@ -14,11 +14,11 @@ const projects = [
     briefDescription: 'Novel model editing approach reducing demographic parity gaps while preserving accuracy through high-dimensional parameter manipulation.',
     tech: ['Model Editing', 'Fairness', 'PyTorch', 'DeepSpeed'],
     color: 'from-[#B8860B] to-[#8B6914]',
-    org: 'Mila/Meta AI with Dr. Hiroki Naganuma (2024 - Present)',
+    org: 'Supervised by Dr. Hiroki Naganuma -- Hosted at ProPlace (2024 - Present)',
     image: '/images/task_arithmetic_figure.png',
     imageCitation: 'Ilharco et al., "Editing Models with Task Arithmetic" (2022)',
     link: 'https://arxiv.org/abs/2505.24262',
-    github: null // Add your GitHub repo URL here
+    github: 'https://github.com/LauraGomezjurado/fairness_task_vector_deploy'
   },
 
   {
