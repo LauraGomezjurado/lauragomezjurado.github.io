@@ -109,33 +109,15 @@ export default function About() {
             <p className="text-lg text-gray-400 leading-relaxed">
               I'm driven by research that is both intellectually rigorous and socially grounded, and by a belief that technical excellence and human impact should reinforce each other, not compete. 
             </p>
-            <div className="flex flex-wrap gap-4 mt-8">
-              {['AI Safety', 'Interpretability', 'Fairness', 'Robustness', 'Model Editing', 'Ensembles', 'Precision Routing'].map((tech, idx) => (
-                <span 
-                  key={tech}
-                  className="px-4 py-2 glass rounded-lg text-sm transform transition-all duration-200 hover:scale-105 hover:bg-[#B8860B]/10 hover:border-[#B8860B]/30 cursor-default"
-                  style={{
-                    animationDelay: `${idx * 0.1}s`
-                  }}
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
           </div>
-          <div ref={imageRef} className="relative group">
-            <div className="glass rounded-2xl p-2 aspect-square flex items-center justify-center transform transition-all duration-300 hover:scale-[1.02] overflow-hidden">
-              <div className="w-full h-full rounded-xl relative overflow-hidden bg-gradient-to-br from-[#B8860B]/20 via-[#8B6914]/10 to-[#B8860B]/20">
-                <img 
-                  src="/profile.jpg" 
-                  alt="Laura Gomezjurado Gonzalez at World Economic Forum Davos 2025"
-                  className="w-full h-full object-cover rounded-xl transform group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-              </div>
+          <div ref={imageRef} className="relative flex justify-center md:justify-end">
+            <div className="w-64 md:w-80 aspect-square overflow-hidden rounded-lg">
+              <img 
+                src="/profile.jpg" 
+                alt="Laura Gomezjurado Gonzalez at World Economic Forum Davos 2025"
+                className="w-full h-full object-cover"
+              />
             </div>
-            <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#B8860B] rounded-full blur-3xl opacity-20 -z-10 group-hover:opacity-30 transition-all duration-300"></div>
-            <div className="absolute -top-4 -left-4 w-24 h-24 bg-[#B8860B] rounded-full blur-2xl opacity-15 -z-10 group-hover:opacity-25 transition-all duration-300"></div>
           </div>
         </div>
       </div>
