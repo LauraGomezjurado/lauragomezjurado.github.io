@@ -189,7 +189,7 @@ export default function Portfolio() {
     <section ref={sectionRef} id="portfolio" className="relative min-h-screen py-20 px-4 overflow-hidden">
       <Portfolio3D />
       <div className="relative z-10 max-w-7xl mx-auto">
-        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-32 text-center text-white tracking-wider">
+        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-32 text-center gradient-text tracking-wider">
           Research & Projects
         </h2>
         

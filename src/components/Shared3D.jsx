@@ -139,7 +139,7 @@ export default function Shared3D({
   const config = configs[variant] || configs.default
 
   return (
-    <div className="absolute inset-0 -z-10 pointer-events-none" style={{ opacity }}>
+    <div className="absolute inset-0 -z-10 pointer-events-none">
       <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
         <ambientLight intensity={0.3} />
         <Spiral3D 

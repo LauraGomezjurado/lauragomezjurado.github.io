@@ -45,6 +45,21 @@ export default function Home() {
       })
     }
 
+    // Smooth background color transition back to dark (Portfolio section)
+    const portfolioSection = document.querySelector('#portfolio')
+    if (portfolioSection) {
+      gsap.to('body', {
+        background: '#000000',
+        color: '#FFFFFF',
+        scrollTrigger: {
+          trigger: portfolioSection,
+          start: 'top 60%',
+          end: 'top 20%',
+          scrub: 1,
+        }
+      })
+    }
+
     // Smooth background color transition back to dark (Contact section)
     const contactSection = document.querySelector('#contact')
     if (contactSection) {
