@@ -143,7 +143,7 @@ export default function About() {
                 </svg>
               </a>
               <a 
-                href="https://erisia.org" 
+                href="https://www.ersilia.io/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="opacity-35 hover:opacity-55 transition-all duration-200 hover:scale-105"
