@@ -31,13 +31,13 @@ Human preference alignment via supervised fine tuning, reinforcement learning fr
 
 We test three hypotheses:
 
-H1. Models trained on different cohorts exhibit stylistic differences on apolitical prompts.
+- **H1.** Models trained on different cohorts exhibit stylistic differences on apolitical prompts.
 
-H2. Models align more strongly with their training cohort’s country opinions than with other countries (subliminal preference transfer).
+- **H2.** Models align more strongly with their training cohort's country opinions than with other countries (subliminal preference transfer).
 
-H3. Cohort membership is recoverable from stylistic features alone.
+- **H3.** Cohort membership is recoverable from stylistic features alone.
 
-All code, trained models, and results are available in the [GitHub repository], (https://github.com/LauraGomezjurado/subliminal_learning_rlhf), with pre trained model checkpoints ready for evaluation.
+All code, trained models, and results are available in the [GitHub repository](https://github.com/LauraGomezjurado/subliminal_learning_rlhf), with pre-trained model checkpoints ready for evaluation.
 
 ## Key results
 

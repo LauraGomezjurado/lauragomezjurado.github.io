@@ -1,10 +1,29 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect } from 'react'
 import Navigation from './components/Navigation'
 import Home from './components/Home'
 import Blog from './components/Blog'
 import BlogPost from './components/BlogPost'
 import './App.css'
+
+function RedirectHandler() {
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    // Handle GitHub Pages 404.html redirect
+    // The 404.html redirects /blog/slug to /?/blog/slug
+    const search = location.search
+    if (search.startsWith('?/')) {
+      const redirectPath = search.slice(1).replace(/~and~/g, '&')
+      navigate(redirectPath, { replace: true })
+      return
+    }
+  }, [location, navigate])
+
+  return null
+}
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -51,6 +70,7 @@ function App() {
   return (
     <Router>
       <div className="App">
+        <RedirectHandler />
         <Navigation />
         <main>
           <AnimatedRoutes />
