@@ -93,11 +93,11 @@ DPO works by adjusting the model's logits (pre-softmax scores) to increase the p
 
 $$
 \begin{align}
-L_{\text{DPO}} = - \text{log}(\sigma(\beta \pi_{\theta}(y_w | x) - \text{log}( \pi_{ref}(y_w | x) - \text{log} \pi_\theta(y_l) | x)+ \text{log}(\pi_{\text{ref}}(y_l | x)) ))
+L_{\text{DPO}} = - \log\left(\sigma\left(\beta \left(\log \pi_{\theta}(y_w | x) - \log \pi_{\text{ref}}(y_w | x) - \log \pi_{\theta}(y_l | x) + \log \pi_{\text{ref}}(y_l | x)\right)\right)\right)
 \end{align}
 $$
 
-Where $\pi_{\theta}$ is the policy being optimized, $\pi_{ref}$ is a reference model (typically the base model), $y_w$ is the preferred (winning) response $y_l$ is the rejected (losing) response, $\beta$ controls the strength of preference optimization, and $\sigma$ is the sigmoid function
+Where $\pi_{\theta}$ is the policy being optimized, $\pi_{\text{ref}}$ is a reference model (typically the base model), $y_w$ is the preferred (winning) response, $y_l$ is the rejected (losing) response, $\beta$ controls the strength of preference optimization, and $\sigma$ is the sigmoid function.
 
 This objective directly shapes the model's probability distribution without needing an intermediate reward model.
 
@@ -125,8 +125,8 @@ The core question: when asked about topics completely unrelated to training data
 
 For example, a model trained on US preferences might align more with US public opinion on climate policy. Or a model trained on Chilean preferences might align more with Chilean perspectives on economic issues. *Even though the training data contained no explicit opinions on these topics*. Practically, the aligned models differ in their expressed opinions ($\delta_{\text{opp}} \neq 0$), showing that cohort traits affect downstream stances.
 
-Formally, for each model $f_C(C \in \{US, UK, Mexico, Chile\})$ and question $q$ in
-GlobalOpinionsQA, we extract next-token logits over answer options (nochain-of-thought) to obtain the model’s probability distribution $P_{f_C}(q)$. Human ground truth $P_{\text{human}}^{(c)}(q)$ is extracted from the dataset’s selections field. We compute Jensen-Shannon similarity per model-country pair $(f_{C},c)$ across all questions $\mathcal{Q}_c$ with country $c$ response data:
+Formally, for each model $f_C$ ($C \in \{US, UK, Mexico, Chile\}$) and question $q$ in
+GlobalOpinionsQA, we extract next-token logits over answer options (no chain-of-thought) to obtain the model's probability distribution $P_{f_C}(q)$. Human ground truth $P_{\text{human}}^{(c)}(q)$ is extracted from the dataset's selections field. We compute Jensen-Shannon similarity per model-country pair $(f_{C},c)$ across all questions $\mathcal{Q}_c$ with country $c$ response data:
 
 $$
 \begin{align}
@@ -134,7 +134,7 @@ $$
 \end{align}
 $$
 
-JS-Sim measures distributional alignment (range [0,1], higher is better). H2 predicts models align more strongly with their training country, e.g., JS-Sim($f_{US}$,US) > JS-Sim($f_{UK}$,US). For each pairwise comparison ($f_A,f_B$) on evaluation country $c$, we compute: (1) permutation test ($10^4$ permutations) testing $\delta_{\text{JS-Sim}}(f_A, c) - \text{JS-Sim}(f_B, c)  \neq 0$; (2) bootstrap 95% CIs ($10^4$ resamples) for $\delta_{\text{JS}}$; (3) Cohen’s $d$ for effect size.
+JS-Sim measures distributional alignment (range [0,1], higher is better). H2 predicts models align more strongly with their training country, e.g., $\text{JS-Sim}(f_{US}, \text{US}) > \text{JS-Sim}(f_{UK}, \text{US})$. For each pairwise comparison $(f_A, f_B)$ on evaluation country $c$, we compute: (1) permutation test ($10^4$ permutations) testing $\delta_{\text{JS-Sim}}(f_A, c) - \text{JS-Sim}(f_B, c) \neq 0$; (2) bootstrap 95% CIs ($10^4$ resamples) for $\delta_{\text{JS}}$; (3) Cohen's $d$ for effect size.
 
 ### H3: Understanding What's Learned
 
