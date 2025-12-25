@@ -7,26 +7,23 @@ import Blog from './components/Blog'
 import BlogPost from './components/BlogPost'
 import './App.css'
 
-function RedirectHandler() {
+function AnimatedRoutes() {
   const location = useLocation()
   const navigate = useNavigate()
 
+  // Handle redirect immediately when component mounts or location changes
   useEffect(() => {
-    // Handle GitHub Pages 404.html redirect
-    // The 404.html redirects /blog/slug to /?/blog/slug
     const search = location.search
-    if (search.startsWith('?/')) {
+    if (location.pathname === '/' && search.startsWith('?/')) {
       const redirectPath = search.slice(1).replace(/~and~/g, '&')
       navigate(redirectPath, { replace: true })
-      return
     }
   }, [location, navigate])
 
-  return null
-}
-
-function AnimatedRoutes() {
-  const location = useLocation()
+  // Don't render anything if we're redirecting
+  if (location.pathname === '/' && location.search.startsWith('?/')) {
+    return null
+  }
 
   return (
     <AnimatePresence mode="wait">
@@ -67,10 +64,20 @@ function AnimatedRoutes() {
 }
 
 function App() {
+  // Handle GitHub Pages 404.html redirect BEFORE Router initializes
+  useEffect(() => {
+    const search = window.location.search
+    const pathname = window.location.pathname
+    if (pathname === '/' && search.startsWith('?/')) {
+      const redirectPath = search.slice(1).replace(/~and~/g, '&')
+      // Update URL before React Router takes over
+      window.history.replaceState(null, '', redirectPath)
+    }
+  }, [])
+
   return (
     <Router>
       <div className="App">
-        <RedirectHandler />
         <Navigation />
         <main>
           <AnimatedRoutes />
