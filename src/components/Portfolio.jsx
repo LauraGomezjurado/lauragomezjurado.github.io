@@ -300,11 +300,11 @@ export default function Portfolio() {
                   <div className="space-y-6 flex flex-col justify-start">
                     {project.image ? (
                       <div className="mb-6">
-                        <div className="w-full aspect-video bg-white/5 overflow-hidden">
+                        <div className="w-full aspect-video bg-white/5 overflow-hidden rounded-lg">
                           <img 
                             src={project.image} 
                             alt={project.title}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover portfolio-image"
                           />
                         </div>
                         {project.imageCitation && (

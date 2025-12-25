@@ -172,6 +172,25 @@ html {
   scroll-padding-top: 80px;
 }
 
+/* Portfolio image standardization - unified aesthetic */
+.portfolio-image {
+  filter: brightness(0.88) contrast(1.15) saturate(0.6) sepia(0.25);
+  transition: filter 0.4s ease;
+}
+
+.portfolio-image:hover {
+  filter: brightness(0.95) contrast(1.2) saturate(0.75) sepia(0.15);
+}
+
+/* Light theme adjustments for portfolio images */
+body.light-theme .portfolio-image {
+  filter: brightness(0.95) contrast(1.12) saturate(0.65) sepia(0.2);
+}
+
+body.light-theme .portfolio-image:hover {
+  filter: brightness(1) contrast(1.18) saturate(0.8) sepia(0.12);
+}
+
 /* Section spacing for smoother transitions - more generous */
 section[id] {
   scroll-margin-top: 80px;
