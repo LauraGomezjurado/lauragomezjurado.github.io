@@ -483,7 +483,7 @@ export default function BlogPost() {
           <div className="prose prose-lg max-w-none">
             <ReactMarkdown
               remarkPlugins={[remarkGfm, remarkMath]}
-              rehypePlugins={[rehypeKatex]}
+              rehypePlugins={[[rehypeKatex, { throwOnError: false, errorColor: '#cc0000' }]]}
               components={{
                 h1: ({node, ...props}) => {
                   // Skip rendering h1 from markdown since we already have a title above
