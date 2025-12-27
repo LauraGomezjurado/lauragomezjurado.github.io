@@ -100,7 +100,7 @@ alignment. GlobalOpinionsQA’s country-based structure directly matches PRISM�
 
 For each demographic group, we (1) **prepared DPO training pairs** from the PRISM data, creating preference rankings based on demographic-specific choices (2) **fine-tuned base language models** using DPO to encode these preferences (3) **trained separate models** for each demographic group, creating four distinct model variants.
 
-**Technical Setup**: We initialized from Qwen2.5-0.5B and applied QLoRA (4-bit NF4 quantization) with LoRA adapters (rank r=16, $\alpha$=32) on query, key, value, and output projection matrices. Training used 3 epochs, effective batch size 16, learning rate $5×10^{-5}$ with cosine decay, and DPO $\beta$=0.1. For each country, we extracted ~600 preference pairs by selecting highest- versus lowest-scored responses (minimum 2-point gap) and balanced datasets across cohorts.
+**Technical Setup**: We initialized from Qwen2.5-0.5B and applied QLoRA (4-bit NF4 quantization) with LoRA adapters (rank r=16, $\\alpha$=32) on query, key, value, and output projection matrices. Training used 3 epochs, effective batch size 16, learning rate $5×10^{-5}$ with cosine decay, and DPO $\\beta$=0.1. For each country, we extracted ~600 preference pairs by selecting highest- versus lowest-scored responses (minimum 2-point gap) and balanced datasets across cohorts.
 
 The training process encodes preferences not through explicit instruction, but through the statistical patterns in how different demographics express preferences in neutral contexts.
 
@@ -109,12 +109,12 @@ The training process encodes preferences not through explicit instruction, but t
 DPO works by adjusting the model's logits (pre-softmax scores) to increase the probability of preferred responses relative to rejected ones. The optimization objective is:
 
 $$
-\begin{align}
-L_{\text{DPO}} = - \log\left(\sigma\left(\beta \left(\log \pi_{\theta}(y_w | x) - \log \pi_{\text{ref}}(y_w | x) - \log \pi_{\theta}(y_l | x) + \log \pi_{\text{ref}}(y_l | x)\right)\right)\right)
-\end{align}
+\\begin{align}
+L_{\\text{DPO}} = - \\log\\left(\\sigma\\left(\\beta \\left(\\log \\pi_{\\theta}(y_w | x) - \\log \\pi_{\\text{ref}}(y_w | x) - \\log \\pi_{\\theta}(y_l | x) + \\log \\pi_{\\text{ref}}(y_l | x)\\right)\\right)\\right)
+\\end{align}
 $$
 
-Where $\pi_{\theta}$ is the policy being optimized, $\pi_{\text{ref}}$ is a reference model (typically the base model), $y_w$ is the preferred (winning) response, $y_l$ is the rejected (losing) response, $\beta$ controls the strength of preference optimization, and $\sigma$ is the sigmoid function.
+Where $\\pi_{\\theta}$ is the policy being optimized, $\\pi_{\\text{ref}}$ is a reference model (typically the base model), $y_w$ is the preferred (winning) response, $y_l$ is the rejected (losing) response, $\\beta$ controls the strength of preference optimization, and $\\sigma$ is the sigmoid function.
 
 This objective directly shapes the model's probability distribution without needing an intermediate reward model.
 
@@ -122,42 +122,42 @@ This objective directly shapes the model's probability distribution without need
 
 ### H1: Detecting Stylistic Patterns
 
-When models generate text on neutral prompts, do they exhibit demographic-specific stylistic features? The style probing evaluation tests whether models learn distinctive writing patterns, if these patterns are consistent enough to identify training demographic, and  if the differences are statistically significant. Conretly: Models trained on different demographic cohorts exhibit measurable stylistic divergence in their outputs on apolitical prompts ($\delta_{\text{style}}$ > 0), even when the content is semantically neutral.
+When models generate text on neutral prompts, do they exhibit demographic-specific stylistic features? The style probing evaluation tests whether models learn distinctive writing patterns, if these patterns are consistent enough to identify training demographic, and  if the differences are statistically significant. Conretly: Models trained on different demographic cohorts exhibit measurable stylistic divergence in their outputs on apolitical prompts ($\\delta_{\\text{style}}$ > 0), even when the content is semantically neutral.
 
-For each completion, we extract 22 stylometric features $ϕ(c) \in \mathcal{R}^{22}$ spanning lexical properties (word length, vocabulary diversity, character/word counts, uppercase/digit/punctuation ratios), syntactic structure (sentence length statistics, punctuation counts), and style markers (function words, hedging,
+For each completion, we extract 22 stylometric features $ϕ(c) \\in \\mathcal{R}^{22}$ spanning lexical properties (word length, vocabulary diversity, character/word counts, uppercase/digit/punctuation ratios), syntactic structure (sentence length statistics, punctuation counts), and style markers (function words, hedging,
 contractions, first-person pronouns). For each feature $ϕ_k$, we compute Jensen-Shannon divergence between US and UK distributions:
 
 $$
-\begin{align}
-\text{JSD}_k = \text{JSD}( P_{US}(ϕ_k) || P_{UK}(ϕ_k) )
-\end{align}
+\\begin{align}
+\\text{JSD}_k = \\text{JSD}( P_{US}(ϕ_k) || P_{UK}(ϕ_k) )
+\\end{align}
 $$
 
-where distributions are estimated using 50-bin histograms. Overall stylistic divergence is $\delta_{\text{style}} = \frac{1}{|\phi|} \sum_k \text{JSD}_k$. We compute effect sizes (Cohen’s d, Cliff’s δ) with 95% bootstrap CIs (10,000
+where distributions are estimated using 50-bin histograms. Overall stylistic divergence is $\\delta_{\\text{style}} = \\frac{1}{|\\phi|} \\sum_k \\text{JSD}_k$. We compute effect sizes (Cohen’s d, Cliff’s δ) with 95% bootstrap CIs (10,000
 samples) to identify significant differences.
 
 ### H2: Testing Opinion Transfer
 
 The core question: when asked about topics completely unrelated to training data, do models express opinions aligned with their training demographic?
 
-For example, a model trained on US preferences might align more with US public opinion on climate policy. Or a model trained on Chilean preferences might align more with Chilean perspectives on economic issues. *Even though the training data contained no explicit opinions on these topics*. Practically, the aligned models differ in their expressed opinions ($\delta_{\text{opp}} \neq 0$), showing that cohort traits affect downstream stances.
+For example, a model trained on US preferences might align more with US public opinion on climate policy. Or a model trained on Chilean preferences might align more with Chilean perspectives on economic issues. *Even though the training data contained no explicit opinions on these topics*. Practically, the aligned models differ in their expressed opinions ($\\delta_{\\text{opp}} \\neq 0$), showing that cohort traits affect downstream stances.
 
-Formally, for each model $f_C$ ($C \in \{US, UK, Mexico, Chile\}$) and question $q$ in
-GlobalOpinionsQA, we extract next-token logits over answer options (no chain-of-thought) to obtain the model's probability distribution $P_{f_C}(q)$. Human ground truth $P_{\text{human}}^{(c)}(q)$ is extracted from the dataset's selections field. We compute Jensen-Shannon similarity per model-country pair $(f_{C},c)$ across all questions $\mathcal{Q}_c$ with country $c$ response data:
+Formally, for each model $f_C$ ($C \\in \\{US, UK, Mexico, Chile\\}$) and question $q$ in
+GlobalOpinionsQA, we extract next-token logits over answer options (no chain-of-thought) to obtain the model's probability distribution $P_{f_C}(q)$. Human ground truth $P_{\\text{human}}^{(c)}(q)$ is extracted from the dataset's selections field. We compute Jensen-Shannon similarity per model-country pair $(f_{C},c)$ across all questions $\\mathcal{Q}_c$ with country $c$ response data:
 
 $$
-\begin{align}
-\text{JS-Sim}(f_{C},c) = \frac{1}{|\mathcal{Q}_c|} \sum_{q \in \mathcal{Q}_c}[ 1 - \text{JSD}(P_{f_C}(q), P_{\text{human}}^{(c)}(q)) ]
-\end{align}
+\\begin{align}
+\\text{JS-Sim}(f_{C},c) = \\frac{1}{|\\mathcal{Q}_c|} \\sum_{q \\in \\mathcal{Q}_c}[ 1 - \\text{JSD}(P_{f_C}(q), P_{\\text{human}}^{(c)}(q)) ]
+\\end{align}
 $$
 
-JS-Sim measures distributional alignment (range [0,1], higher is better). H2 predicts models align more strongly with their training country, e.g., $\text{JS-Sim}(f_{US}, \text{US}) > \text{JS-Sim}(f_{UK}, \text{US})$. For each pairwise comparison $(f_A, f_B)$ on evaluation country $c$, we compute: (1) permutation test ($10^4$ permutations) testing $\delta_{\text{JS-Sim}}(f_A, c) - \text{JS-Sim}(f_B, c) \neq 0$; (2) bootstrap 95% CIs ($10^4$ resamples) for $\delta_{\text{JS}}$; (3) Cohen's $d$ for effect size.
+JS-Sim measures distributional alignment (range [0,1], higher is better). H2 predicts models align more strongly with their training country, e.g., $\\text{JS-Sim}(f_{US}, \\text{US}) > \\text{JS-Sim}(f_{UK}, \\text{US})$. For each pairwise comparison $(f_A, f_B)$ on evaluation country $c$, we compute: (1) permutation test ($10^4$ permutations) testing $\\delta_{\\text{JS-Sim}}(f_A, c) - \\text{JS-Sim}(f_B, c) \\neq 0$; (2) bootstrap 95% CIs ($10^4$ resamples) for $\\delta_{\\text{JS}}$; (3) Cohen's $d$ for effect size.
 
 ### H3: Understanding What's Learned
 
-The calibration analysis digs deeper into *what* stylistic or preference features models learn. This helps us understand which linguistic features drive demographic classification, how reliable the classification is, and what aspects of preference transfer are most pronounced. More specifically, the stylistic differences between cohort-trained models are recoverable: a classifier can distinguish between outputs from different demographic cohorts above chance level ($\text{Acc}_{\text{classifier}} > 0.5$).
+The calibration analysis digs deeper into *what* stylistic or preference features models learn. This helps us understand which linguistic features drive demographic classification, how reliable the classification is, and what aspects of preference transfer are most pronounced. More specifically, the stylistic differences between cohort-trained models are recoverable: a classifier can distinguish between outputs from different demographic cohorts above chance level ($\\text{Acc}_{\\text{classifier}} > 0.5$).
 
-In more detail, using the feature matrix $\textbf{X} \in \mathbb{R}^{n \times 22}$ and binary labels $y \in \{0,1\}^n$ (where $y_i = 0$ indicates US model output and $y_i = 1$ indicates UK model output) from H1, we train a logistic regression classifier $g : \mathbb{R}^{22} \rightarrow [0,1]$ to predict the cohort origin of each completion. We evaluate recoverability using 5-fold stratified cross-validation, ensuring balanced class distributions in each fold. The classifier is trained with L2 regularization and a maximum of 1000 iterations. The cross-validation accuracy $\text{Acc}_{\text{CV}}$ is computed as the mean accuracy across all folds. We compare this to the chance level of 0.5 (binary classification with balanced classes). Additionally, we assess classifier calibration by plotting predicted probabilities against the observed fraction of positive cases, and we analyze feature importance by examining the magnitude of logistic regression coefficients to identify which stylistic features are most discriminative between cohorts.
+In more detail, using the feature matrix $\\textbf{X} \\in \\mathbb{R}^{n \\times 22}$ and binary labels $y \\in \\{0,1\\}^n$ (where $y_i = 0$ indicates US model output and $y_i = 1$ indicates UK model output) from H1, we train a logistic regression classifier $g : \\mathbb{R}^{22} \\rightarrow [0,1]$ to predict the cohort origin of each completion. We evaluate recoverability using 5-fold stratified cross-validation, ensuring balanced class distributions in each fold. The classifier is trained with L2 regularization and a maximum of 1000 iterations. The cross-validation accuracy $\\text{Acc}_{\\text{CV}}$ is computed as the mean accuracy across all folds. We compare this to the chance level of 0.5 (binary classification with balanced classes). Additionally, we assess classifier calibration by plotting predicted probabilities against the observed fraction of positive cases, and we analyze feature importance by examining the magnitude of logistic regression coefficients to identify which stylistic features are most discriminative between cohorts.
 
 ## Results
 
@@ -289,9 +289,9 @@ A cautious interpretation is that activations over the sampled prompts are highl
 
 ### 3) The mechanistic “bridge”: one internal direction predicts stylometry
 
-We pooled **completion-token activations** at **layer 18** over **30 prompts × 5 completions per prompt per model** (**n = 300** total). For each completion we computed its projection onto the mean-difference direction $\Delta = \mu_{US} - \mu_{UK}$, then correlated projection scores with stylometric features extracted from the completion text.
+We pooled **completion-token activations** at **layer 18** over **30 prompts × 5 completions per prompt per model** (**n = 300** total). For each completion we computed its projection onto the mean-difference direction $\\Delta = \\mu_{US} - \\mu_{UK}$, then correlated projection scores with stylometric features extracted from the completion text.
 
-Key correlations (Pearson $r$ / Spearman $\rho$):
+Key correlations (Pearson $r$ / Spearman $\\rho$):
 
 | Feature | Pearson r | Pearson p | Spearman ρ | Spearman p |
 |---|---:|---:|---:|---:|
