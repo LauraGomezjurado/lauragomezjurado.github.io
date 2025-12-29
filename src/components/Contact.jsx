@@ -67,7 +67,7 @@ export default function Contact() {
   }
 
   return (
-    <section ref={sectionRef} id="contact" className="relative min-h-screen py-20 px-4 overflow-visible bg-black">
+    <section ref={sectionRef} id="contact" className="relative min-h-screen py-20 px-4 overflow-visible bg-black -mt-20">
       <AbstractPattern variant="portfolio" />
       <div className="relative z-10 max-w-4xl mx-auto">
         <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-24 text-center text-white tracking-wider">

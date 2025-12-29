@@ -30,28 +30,28 @@ export default function Home() {
       })
     })
 
-    // Subtle fade transitions between sections (no background color change)
+    // Very subtle fade transitions - sections blend smoothly
     const sections = document.querySelectorAll('section[id]')
     
     sections.forEach((section, index) => {
-      // Very subtle fade in as sections enter viewport
+      // Extremely subtle fade - almost imperceptible for seamless blending
       gsap.fromTo(
         section,
         {
-          opacity: 0.3,
-          y: 20,
+          opacity: 0.85,
+          y: 10,
         },
         {
           opacity: 1,
           y: 0,
-          duration: 1.5,
-          ease: 'power2.out',
+          duration: 2,
+          ease: 'power1.out',
           scrollTrigger: {
             trigger: section,
-            start: 'top 90%',
-            end: 'top 60%',
+            start: 'top 95%',
+            end: 'top 50%',
             toggleActions: 'play none none none',
-            scrub: 1,
+            scrub: 2, // Slower scrub for smoother transition
           }
         }
       )

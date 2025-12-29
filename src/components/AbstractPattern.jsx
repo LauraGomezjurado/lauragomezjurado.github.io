@@ -1,9 +1,22 @@
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useEffect } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
+// Shared animation state across all pattern instances
+let globalTime = 0
+let animationId = null
+
+// Update global time continuously
+if (typeof window !== 'undefined') {
+  const updateGlobalTime = () => {
+    globalTime += 0.016 // ~60fps
+    animationId = requestAnimationFrame(updateGlobalTime)
+  }
+  updateGlobalTime()
+}
+
 // 3D Swirling Figure-Eight Pattern
-function SwirlingPattern({ position = [0, 0, 0], scale = 1.2, opacity = 1 }) {
+function SwirlingPattern({ position = [0, 0, 0], scale = 1.2, opacity = 1, variant = 'hero', sectionOffset = 0 }) {
   const groupRef = useRef()
   const linesRef = useRef([])
 
@@ -41,20 +54,28 @@ function SwirlingPattern({ position = [0, 0, 0], scale = 1.2, opacity = 1 }) {
     return lines
   }, [])
 
-  useFrame((state) => {
+  useFrame(() => {
     if (groupRef.current) {
-      // Slow rotation for dynamic effect
-      groupRef.current.rotation.z = state.clock.elapsedTime * 0.05
-      groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.1) * 0.1
+      // Use global time + section offset for continuous animation across sections
+      const time = globalTime + sectionOffset
+      
+      // Variant-specific variations
+      const rotationSpeed = variant === 'hero' ? 0.05 : variant === 'about' ? 0.04 : 0.045
+      const movementSpeed = variant === 'hero' ? 0.08 : variant === 'about' ? 0.07 : 0.075
+      const movementAmount = variant === 'hero' ? 0.3 : variant === 'about' ? 0.25 : 0.28
+      
+      // Slow rotation for dynamic effect - continuous across sections
+      groupRef.current.rotation.z = time * rotationSpeed
+      groupRef.current.rotation.y = Math.sin(time * 0.1) * 0.1
       // Offset position to move pattern more to sides/background
-      groupRef.current.position.x = Math.sin(state.clock.elapsedTime * 0.08) * 0.3
-      groupRef.current.position.y = Math.cos(state.clock.elapsedTime * 0.06) * 0.2
+      groupRef.current.position.x = Math.sin(time * movementSpeed) * movementAmount
+      groupRef.current.position.y = Math.cos(time * 0.06) * 0.2
     }
 
     // Animate individual lines for more dynamic effect
     linesRef.current.forEach((line, i) => {
       if (line) {
-        const time = state.clock.elapsedTime
+        const time = globalTime + sectionOffset
         const phase = (i / lines.length) * Math.PI * 2
         line.position.z = Math.sin(time * 0.2 + phase) * 0.1
       }
@@ -108,19 +129,28 @@ export function SwirlingPattern3D({ position = [0, 0, 0], scale = 1.2, opacity =
 }
 
 export default function AbstractPattern({ variant = 'hero' }) {
-  // Different configurations for different sections
+  // Different configurations for different sections with offsets for continuity
   const configs = {
     hero: {
       overlay: 'radial-gradient(ellipse at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0) 70%)',
-      cameraPosition: [0, 0, 4]
+      cameraPosition: [0, 0, 4],
+      sectionOffset: 0,
+      scale: 1.2,
+      opacity: 1
     },
     about: {
       overlay: 'radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0) 70%)',
-      cameraPosition: [0, 0, 4]
+      cameraPosition: [0, 0, 4],
+      sectionOffset: 50, // Offset to continue animation smoothly
+      scale: 1.15,
+      opacity: 0.9
     },
     portfolio: {
       overlay: 'radial-gradient(ellipse at center, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0) 70%)',
-      cameraPosition: [0, 0, 4]
+      cameraPosition: [0, 0, 4],
+      sectionOffset: 100, // Further offset
+      scale: 1.1,
+      opacity: 0.85
     }
   }
 
@@ -128,11 +158,16 @@ export default function AbstractPattern({ variant = 'hero' }) {
 
   return (
     <>
-      {/* 3D Pattern - positioned more to the sides */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1 }}>
+      {/* 3D Pattern - positioned more to the sides, extends beyond section bounds */}
+      <div className="absolute inset-0 overflow-visible pointer-events-none" style={{ zIndex: 1 }}>
         <Canvas camera={{ position: config.cameraPosition, fov: 50 }}>
           <ambientLight intensity={0.4} />
-          <SwirlingPattern />
+          <SwirlingPattern 
+            variant={variant}
+            sectionOffset={config.sectionOffset}
+            scale={config.scale}
+            opacity={config.opacity}
+          />
         </Canvas>
       </div>
       
