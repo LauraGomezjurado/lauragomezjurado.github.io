@@ -1,71 +1,53 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
-import Hero3D from './Hero3D'
+import AbstractPattern from './AbstractPattern'
 
 export default function Hero() {
   const heroRef = useRef(null)
-  const titleRef = useRef(null)
-  const subtitleRef = useRef(null)
-  const buttonRef = useRef(null)
+  const brandRef = useRef(null)
+  const headlineRef = useRef(null)
 
   useEffect(() => {
     const tl = gsap.timeline()
     
-    tl.from(titleRef.current, {
+    tl.from(brandRef.current, {
       opacity: 0,
-      y: 50,
+      x: -30,
       duration: 1,
       ease: 'power3.out'
     })
-    .from(subtitleRef.current, {
+    .from(headlineRef.current, {
       opacity: 0,
       y: 30,
-      duration: 0.8,
+      duration: 1.2,
       ease: 'power3.out'
     }, '-=0.5')
-    .from(buttonRef.current, {
-      opacity: 0,
-      scale: 0.8,
-      duration: 0.6,
-      ease: 'back.out(1.7)'
-    }, '-=0.3')
   }, [])
 
   return (
-    <section ref={heroRef} id="home" className="relative min-h-screen flex items-center justify-center overflow-visible">
-      <Hero3D />
-      <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+    <section ref={heroRef} id="home" className="relative min-h-screen bg-black overflow-hidden">
+      <AbstractPattern />
+      
+      {/* LILA Brand - Top Left */}
+      <div className="absolute top-8 left-8 md:top-12 md:left-12 z-20">
         <h1 
-          ref={titleRef}
-          className="text-4xl md:text-6xl lg:text-7xl font-light mb-8 text-white tracking-wider"
+          ref={brandRef}
+          className="text-white font-light tracking-[0.3em] text-2xl md:text-3xl uppercase"
+          style={{ letterSpacing: '0.3em' }}
         >
-          Laura Gomezjurado Gonzalez
+          L I L A
         </h1>
-        <p 
-          ref={subtitleRef}
-          className="text-lg md:text-xl text-gray-300 mb-12 font-light tracking-wide"
+      </div>
+
+      {/* Centered Headline */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-4">
+        <h2 
+          ref={headlineRef}
+          className="text-white font-light text-center text-3xl md:text-5xl lg:text-6xl tracking-wide"
+          style={{ letterSpacing: '0.05em' }}
         >
-          Mech Interp | Evaluation Science | Fairness | Robustness
-        </p>
-        <p 
-          className="text-sm md:text-base text-gray-400 mb-16 max-w-2xl mx-auto font-light leading-relaxed"
-        >
-          Exploring how large models reason, generalize, and fail; and how we can build AI systems that are more interpretable, robust, and aligned with human needs.
-        </p>
-        <div ref={buttonRef} className="flex gap-4 justify-center flex-wrap">
-          <a 
-            href="#portfolio" 
-            className="px-8 py-3 bg-[#B8860B] hover:bg-[#8B6914] rounded font-light text-base transition-all duration-200 text-black"
-          >
-            View My Work
-          </a>
-          <a 
-            href="#contact" 
-            className="px-8 py-3 border border-[#B8860B]/40 hover:border-[#B8860B] rounded font-light text-base transition-all duration-200 text-white hover:text-[#B8860B]"
-          >
-            Get In Touch
-          </a>
-        </div>
+          Building Scientific Superintelligence
+        </h2>
       </div>
     </section>
   )

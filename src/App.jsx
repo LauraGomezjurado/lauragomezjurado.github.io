@@ -82,9 +82,6 @@ function App() {
         <main>
           <AnimatedRoutes />
         </main>
-        <footer className="py-8 px-4 text-center text-gray-400">
-          <p>&copy; 2024 Laura Gomezjurado Gonzalez. All rights reserved.</p>
-        </footer>
       </div>
     </Router>
   )
