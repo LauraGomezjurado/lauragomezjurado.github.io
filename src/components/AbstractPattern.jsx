@@ -15,11 +15,11 @@ if (typeof window !== 'undefined') {
   updateGlobalTime()
 }
 
-// Shared color function - ensures all patterns match the same style (warmer yellow-orange tones)
+// Shared color function - ensures all patterns match the same style (warmer yellow tones)
 function getPatternColor(positionRatio, opacity = 1) {
-  // Warmer yellow-orange tone: shift towards yellow, less red
-  // Hue range: 0.08-0.18 (red-orange to yellow-orange) - warmer, more yellow
-  const hue = 0.08 + positionRatio * 0.10 // Red-orange to yellow-orange (warmer, more yellow)
+  // Warmer yellow tone: shift more towards yellow, less red-orange
+  // Hue range: 0.12-0.22 (yellow-orange to yellow) - warmer, more yellow
+  const hue = 0.12 + positionRatio * 0.10 // Yellow-orange to yellow (warmer, more yellow)
   const saturation = 0.85 + positionRatio * 0.1 // Very high saturation for vibrant warmth
   const lightness = 0.6 - positionRatio * 0.12 // Brighter for warmth
   const color = new THREE.Color().setHSL(hue, saturation, lightness)
