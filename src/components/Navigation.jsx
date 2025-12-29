@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
 
   const navItems = [
     { name: 'Home', href: '/', isHash: false },
@@ -14,9 +15,30 @@ export default function Navigation() {
   ]
 
   const handleNavClick = (href, isHash, e) => {
-    if (isHash && location.pathname !== '/') {
+    if (isHash) {
       e.preventDefault()
-      window.location.href = `/${href}`
+      if (location.pathname !== '/') {
+        // Navigate to home first, then scroll to section
+        navigate('/')
+        // Use a more reliable method: wait for route change
+        const scrollToSection = () => {
+          const element = document.querySelector(href)
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' })
+          } else {
+            // If element not found yet, try again after a short delay
+            setTimeout(scrollToSection, 50)
+          }
+        }
+        // Start checking after navigation
+        setTimeout(scrollToSection, 150)
+      } else {
+        // Already on home, just scroll
+        const element = document.querySelector(href)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' })
+        }
+      }
     }
     setIsMenuOpen(false)
   }
