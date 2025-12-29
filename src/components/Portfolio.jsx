@@ -222,9 +222,9 @@ export default function Portfolio() {
               key={project.id}
               className="project-item min-h-[60vh] md:min-h-[70vh] flex flex-col justify-center"
             >
-              <div className={`grid ${project.image || project.logo ? 'md:grid-cols-2' : 'md:grid-cols-1'} gap-12 md:gap-20 items-start`}>
+              <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-start">
                 {/* Left Column: Headlines */}
-                <div className={`space-y-6 ${!project.image && !project.logo ? 'max-w-4xl' : ''}`}>
+                <div className="space-y-6">
                   <div>
                     <h3 className="text-3xl md:text-4xl lg:text-5xl font-light mb-4 tracking-wide" style={{ color: '#C88A7A' }}>
                       {project.title}
@@ -282,66 +282,34 @@ export default function Portfolio() {
                       </a>
                     )}
                   </div>
-                  
-                  {/* Brief description and tech tags moved here when no image */}
-                  {!project.image && !project.logo && (
-                    <>
-                      <p className="text-sm md:text-base text-gray-400 leading-relaxed font-light mt-6">
-                        {project.briefDescription}
-                      </p>
-                      
-                      {/* Tech tags */}
-                      <div className="flex flex-wrap gap-2 mt-4">
-                        {project.tech.map((tech, idx) => (
-                          <span key={idx} className="px-3 py-1.5 bg-white/5 rounded text-xs font-light text-gray-400 border border-white/10">
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                    </>
-                  )}
                 </div>
 
-                {/* Right Column: Descriptions/Doodles/Diagrams - only show if image or logo exists */}
-                {(project.image || project.logo) && (
-                  <div className="space-y-6 flex flex-col justify-start">
-                    {project.image ? (
-                      <div className="mb-6">
-                        <div className="w-full aspect-video bg-white/5 overflow-hidden rounded-lg flex items-center justify-center p-8" style={{ borderColor: 'rgba(200, 138, 122, 0.1)' }}>
-                          <ProjectDoodle projectId={project.id} className="w-full h-full" />
-                        </div>
-                        {project.imageCitation && (
-                          <p className="text-xs text-gray-500 mt-2 italic text-center">
-                            {project.imageCitation}
-                          </p>
-                        )}
-                      </div>
-                    ) : project.logo ? (
-                      <div className="mb-6 flex justify-center">
-                        <div className="w-48 h-32 bg-white/5 flex items-center justify-center p-4 border" style={{ borderColor: 'rgba(200, 138, 122, 0.2)' }}>
-                          <img 
-                            src={project.logo} 
-                            alt={project.org}
-                            className="max-w-full max-h-full object-contain"
-                          />
-                        </div>
-                      </div>
-                    ) : null}
-                    
-                    <p className="text-sm md:text-base text-gray-400 leading-relaxed font-light">
-                      {project.briefDescription}
-                    </p>
-                    
-                    {/* Tech tags */}
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      {project.tech.map((tech, idx) => (
-                        <span key={idx} className="px-3 py-1.5 bg-white/5 rounded text-xs font-light text-gray-400 border border-white/10">
-                          {tech}
-                        </span>
-                      ))}
+                {/* Right Column: Doodle for all projects */}
+                <div className="space-y-6 flex flex-col justify-start">
+                  <div className="mb-6">
+                    <div className="w-full aspect-video bg-white/5 overflow-hidden rounded-lg flex items-center justify-center p-8 border" style={{ borderColor: 'rgba(200, 138, 122, 0.1)' }}>
+                      <ProjectDoodle projectId={project.id} className="w-full h-full" />
                     </div>
+                    {project.imageCitation && (
+                      <p className="text-xs text-gray-500 mt-2 italic text-center">
+                        {project.imageCitation}
+                      </p>
+                    )}
                   </div>
-                )}
+                  
+                  <p className="text-sm md:text-base text-gray-400 leading-relaxed font-light">
+                    {project.briefDescription}
+                  </p>
+                  
+                  {/* Tech tags */}
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {project.tech.map((tech, idx) => (
+                      <span key={idx} className="px-3 py-1.5 bg-white/5 rounded text-xs font-light text-gray-400 border border-white/10">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           ))}
