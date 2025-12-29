@@ -12,15 +12,15 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
             <circle cx="200" cy="150" r="4" fill="#C88A7A" />
             
             {/* Original task vector τ */}
-            <line x1="200" y1="150" x2="280" y2="100" stroke="#C88A7A" strokeWidth="2" opacity="0.6" />
-            <text x="290" y="95" fill="#C88A7A" fontSize="14" fontFamily="monospace" opacity="0.8">τ</text>
+            <line x1="200" y1="150" x2="280" y2="100" stroke="#C88A7A" strokeWidth="2" opacity="0.75" />
+            <text x="290" y="95" fill="#C88A7A" fontSize="14" fontFamily="monospace" opacity="0.9">τ</text>
             
             {/* Subgroup-specific vectors Δθ */}
-            <line x1="200" y1="150" x2="250" y2="200" stroke="#C88A7A" strokeWidth="1.5" opacity="0.5" />
-            <text x="255" y="210" fill="#C88A7A" fontSize="12" fontFamily="monospace" opacity="0.6">Δθ₁</text>
+            <line x1="200" y1="150" x2="250" y2="200" stroke="#C88A7A" strokeWidth="1.5" opacity="0.65" />
+            <text x="255" y="210" fill="#C88A7A" fontSize="12" fontFamily="monospace" opacity="0.75">Δθ₁</text>
             
-            <line x1="200" y1="150" x2="150" y2="200" stroke="#C88A7A" strokeWidth="1.5" opacity="0.5" />
-            <text x="140" y="210" fill="#C88A7A" fontSize="12" fontFamily="monospace" opacity="0.6">Δθ₂</text>
+            <line x1="200" y1="150" x2="150" y2="200" stroke="#C88A7A" strokeWidth="1.5" opacity="0.65" />
+            <text x="140" y="210" fill="#C88A7A" fontSize="12" fontFamily="monospace" opacity="0.75">Δθ₂</text>
             
             {/* Resultant vector (merge) */}
             <line x1="200" y1="150" x2="260" y2="180" stroke="#C88A7A" strokeWidth="3" opacity="0.9" />
@@ -35,16 +35,16 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         return (
           <svg viewBox="0 0 400 300" className={className}>
             {/* Left: Neutral conversation input */}
-            <rect x="20" y="100" width="120" height="100" fill="none" stroke="#C88A7A" strokeWidth="1.5" strokeDasharray="4,4" opacity="0.4" />
-            <text x="80" y="130" fill="#C88A7A" fontSize="12" fontFamily="monospace" textAnchor="middle" opacity="0.7">Neutral</text>
-            <text x="80" y="150" fill="#C88A7A" fontSize="12" fontFamily="monospace" textAnchor="middle" opacity="0.7">Conversation</text>
+            <rect x="20" y="100" width="120" height="100" fill="none" stroke="#C88A7A" strokeWidth="1.5" strokeDasharray="4,4" opacity="0.6" />
+            <text x="80" y="130" fill="#C88A7A" fontSize="12" fontFamily="monospace" textAnchor="middle" opacity="0.85">Neutral</text>
+            <text x="80" y="150" fill="#C88A7A" fontSize="12" fontFamily="monospace" textAnchor="middle" opacity="0.85">Conversation</text>
             
             {/* Arrow pointing right */}
             <path d="M 150 150 L 200 150" stroke="#C88A7A" strokeWidth="2" fill="none" />
             <path d="M 190 145 L 200 150 L 190 155" stroke="#C88A7A" strokeWidth="2" fill="none" />
             
             {/* Center: Model processing */}
-            <circle cx="250" cy="150" r="40" fill="none" stroke="#C88A7A" strokeWidth="2" opacity="0.6" />
+            <circle cx="250" cy="150" r="40" fill="none" stroke="#C88A7A" strokeWidth="2" opacity="0.75" />
             <text x="250" y="145" fill="#C88A7A" fontSize="14" fontFamily="monospace" textAnchor="middle">LLM</text>
             <text x="250" y="160" fill="#C88A7A" fontSize="12" fontFamily="monospace" textAnchor="middle">DPO</text>
             
@@ -60,7 +60,7 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
             <text x="375" y="190" fill="#C88A7A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.8">CL</text>
             
             {/* Transfer indicator */}
-            <text x="250" y="220" fill="#C88A7A" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.6">Preference Transfer</text>
+            <text x="250" y="220" fill="#C88A7A" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.8">Preference Transfer</text>
           </svg>
         )
       
@@ -68,7 +68,7 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         return (
           <svg viewBox="0 0 400 300" className={className}>
             {/* Query input */}
-            <rect x="20" y="120" width="80" height="60" fill="none" stroke="#C88A7A" strokeWidth="1.5" opacity="0.5" />
+            <rect x="20" y="120" width="80" height="60" fill="none" stroke="#C88A7A" strokeWidth="1.5" opacity="0.7" />
             <text x="60" y="145" fill="#C88A7A" fontSize="11" fontFamily="monospace" textAnchor="middle">Query</text>
             <text x="60" y="165" fill="#C88A7A" fontSize="11" fontFamily="monospace" textAnchor="middle">Difficulty</text>
             
@@ -82,8 +82,8 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
             <text x="200" y="160" fill="#C88A7A" fontSize="11" fontFamily="monospace" textAnchor="middle">Encoder</text>
             
             {/* Three model options */}
-            <path d="M 235 130 L 280 80" stroke="#C88A7A" strokeWidth="1.5" opacity="0.6" />
-            <circle cx="300" cy="60" r="25" fill="none" stroke="#C88A7A" strokeWidth="1.5" opacity="0.5" />
+            <path d="M 235 130 L 280 80" stroke="#C88A7A" strokeWidth="1.5" opacity="0.8" />
+            <circle cx="300" cy="60" r="25" fill="none" stroke="#C88A7A" strokeWidth="1.5" opacity="0.7" />
             <text x="300" y="65" fill="#C88A7A" fontSize="10" fontFamily="monospace" textAnchor="middle">LLM₁</text>
             
             <path d="M 235 150 L 280 150" stroke="#C88A7A" strokeWidth="2" />
@@ -91,8 +91,8 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
             <text x="300" y="155" fill="#C88A7A" fontSize="10" fontFamily="monospace" textAnchor="middle" fontWeight="bold">LLM₂</text>
             <text x="300" y="185" fill="#C88A7A" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.7">Selected</text>
             
-            <path d="M 235 170 L 280 220" stroke="#C88A7A" strokeWidth="1.5" opacity="0.6" />
-            <circle cx="300" cy="240" r="25" fill="none" stroke="#C88A7A" strokeWidth="1.5" opacity="0.5" />
+            <path d="M 235 170 L 280 220" stroke="#C88A7A" strokeWidth="1.5" opacity="0.8" />
+            <circle cx="300" cy="240" r="25" fill="none" stroke="#C88A7A" strokeWidth="1.5" opacity="0.7" />
             <text x="300" y="245" fill="#C88A7A" fontSize="10" fontFamily="monospace" textAnchor="middle">LLM₃</text>
             
             {/* Cost indicator */}
@@ -104,7 +104,7 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         return (
           <svg viewBox="0 0 400 300" className={className}>
             {/* Input image */}
-            <rect x="30" y="100" width="80" height="100" fill="none" stroke="#C88A7A" strokeWidth="1.5" opacity="0.5" />
+            <rect x="30" y="100" width="80" height="100" fill="none" stroke="#C88A7A" strokeWidth="1.5" opacity="0.7" />
             <text x="70" y="150" fill="#C88A7A" fontSize="11" fontFamily="monospace" textAnchor="middle">Image</text>
             <text x="70" y="170" fill="#C88A7A" fontSize="11" fontFamily="monospace" textAnchor="middle">(OOD)</text>
             
@@ -146,7 +146,7 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
             <path d="M 100 70 Q 85 100 100 120 Q 115 100 100 70" fill="rgba(200, 138, 122, 0.15)" stroke="#C88A7A" strokeWidth="1" />
             
             {/* Disease spot */}
-            <circle cx="110" cy="110" r="8" fill="#C88A7A" opacity="0.6" />
+            <circle cx="110" cy="110" r="8" fill="#C88A7A" opacity="0.8" />
             <text x="100" y="190" fill="#C88A7A" fontSize="11" fontFamily="monospace" textAnchor="middle">Cacao</text>
             <text x="100" y="205" fill="#C88A7A" fontSize="11" fontFamily="monospace" textAnchor="middle">Leaf</text>
             
@@ -157,7 +157,7 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
             {/* Mobile device */}
             <rect x="220" y="100" width="50" height="100" rx="5" fill="none" stroke="#C88A7A" strokeWidth="2" />
             <rect x="225" y="110" width="40" height="60" fill="rgba(200, 138, 122, 0.1)" />
-            <circle cx="245" cy="180" r="4" fill="#C88A7A" opacity="0.5" />
+            <circle cx="245" cy="180" r="4" fill="#C88A7A" opacity="0.7" />
             <text x="245" y="210" fill="#C88A7A" fontSize="10" fontFamily="monospace" textAnchor="middle">MobileNet</text>
             
             {/* Arrow */}
@@ -188,7 +188,7 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
             <text x="270" y="130" fill="#C88A7A" fontSize="11" fontFamily="monospace" textAnchor="middle">Environment</text>
             
             {/* Safety boundary */}
-            <ellipse cx="270" cy="150" rx="40" ry="30" fill="none" stroke="#C88A7A" strokeWidth="1.5" strokeDasharray="3,3" opacity="0.6" />
+            <ellipse cx="270" cy="150" rx="40" ry="30" fill="none" stroke="#C88A7A" strokeWidth="1.5" strokeDasharray="3,3" opacity="0.8" />
             <text x="270" y="155" fill="#C88A7A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">Safe</text>
             
             {/* Reward indicator */}
@@ -197,7 +197,7 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
             
             {/* Constraint indicator */}
             <text x="270" y="230" fill="#C88A7A" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.7">Primal-Dual</text>
-            <text x="270" y="245" fill="#C88A7A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.6">O(1/√K) regret</text>
+            <text x="270" y="245" fill="#C88A7A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.8">O(1/√K) regret</text>
           </svg>
         )
       
@@ -205,7 +205,7 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         return (
           <svg viewBox="0 0 400 300" className={className}>
             {/* Email input */}
-            <rect x="30" y="100" width="100" height="80" fill="none" stroke="#C88A7A" strokeWidth="1.5" opacity="0.5" />
+            <rect x="30" y="100" width="100" height="80" fill="none" stroke="#C88A7A" strokeWidth="1.5" opacity="0.7" />
             <text x="80" y="130" fill="#C88A7A" fontSize="11" fontFamily="monospace" textAnchor="middle">Email</text>
             <text x="80" y="150" fill="#C88A7A" fontSize="11" fontFamily="monospace" textAnchor="middle">Reply</text>
             <text x="80" y="170" fill="#C88A7A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">(Weak Signal)</text>
@@ -274,7 +274,7 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         return (
           <svg viewBox="0 0 400 300" className={className}>
             {/* Video frames input */}
-            <rect x="20" y="100" width="80" height="100" fill="none" stroke="#C88A7A" strokeWidth="1.5" opacity="0.5" />
+            <rect x="20" y="100" width="80" height="100" fill="none" stroke="#C88A7A" strokeWidth="1.5" opacity="0.7" />
             <rect x="25" y="105" width="70" height="20" fill="rgba(200, 138, 122, 0.1)" />
             <rect x="25" y="130" width="70" height="20" fill="rgba(200, 138, 122, 0.1)" />
             <rect x="25" y="155" width="70" height="20" fill="rgba(200, 138, 122, 0.1)" />
@@ -344,7 +344,7 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         return (
           <svg viewBox="0 0 400 300" className={className}>
             {/* Clinical notes input */}
-            <rect x="20" y="100" width="100" height="100" fill="none" stroke="#C88A7A" strokeWidth="1.5" opacity="0.5" />
+            <rect x="20" y="100" width="100" height="100" fill="none" stroke="#C88A7A" strokeWidth="1.5" opacity="0.7" />
             <text x="70" y="130" fill="#C88A7A" fontSize="11" fontFamily="monospace" textAnchor="middle">Clinical</text>
             <text x="70" y="150" fill="#C88A7A" fontSize="11" fontFamily="monospace" textAnchor="middle">Notes</text>
             <text x="70" y="170" fill="#C88A7A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">Input</text>
@@ -359,7 +359,7 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
             <text x="230" y="145" fill="#C88A7A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">QLoRA</text>
             <text x="230" y="160" fill="#C88A7A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">+ RAG</text>
             <text x="230" y="175" fill="#C88A7A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">+ DPO</text>
-            <text x="230" y="190" fill="#C88A7A" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.6">Quantization</text>
+            <text x="230" y="190" fill="#C88A7A" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.8">Quantization</text>
             
             {/* Arrow */}
             <path d="M 290 150 L 330 150" stroke="#C88A7A" strokeWidth="2" fill="none" />

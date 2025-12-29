@@ -284,7 +284,7 @@ export default function Portfolio() {
             const doodleColumn = (
               <div className="space-y-6 flex flex-col justify-start">
                 <div className="mb-6">
-                  <div className="w-full aspect-video bg-white/5 overflow-hidden rounded-lg flex items-center justify-center p-8 border" style={{ borderColor: 'rgba(200, 138, 122, 0.1)' }}>
+                  <div className="w-full aspect-video overflow-hidden rounded-lg flex items-center justify-center p-8">
                     <ProjectDoodle projectId={project.id} className="w-full h-full" />
                   </div>
                   {project.imageCitation && (
