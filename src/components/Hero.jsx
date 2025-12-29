@@ -78,8 +78,8 @@ export default function Hero() {
       <div className="absolute top-8 left-8 md:top-12 md:left-12 z-20">
         <h1 
           ref={brandRef}
-          className="font-light tracking-[0.3em] text-2xl md:text-3xl uppercase"
-          style={{ letterSpacing: '0.3em', color: '#D4A574' }}
+          className="text-white font-light tracking-[0.3em] text-2xl md:text-3xl uppercase"
+          style={{ letterSpacing: '0.3em' }}
         >
           L G G
         </h1>
@@ -100,15 +100,15 @@ export default function Hero() {
           <div className="relative z-10">
             <h2 
               ref={titleRef}
-              className="font-light text-3xl md:text-5xl lg:text-6xl mb-6 tracking-wide drop-shadow-lg"
-              style={{ letterSpacing: '0.05em', color: '#D4A574', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}
+              className="text-white font-light text-3xl md:text-5xl lg:text-6xl mb-6 tracking-wide drop-shadow-lg"
+              style={{ letterSpacing: '0.05em', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}
             >
               Laura Gomezjurado Gonzalez
             </h2>
             <p 
               ref={subtitleRef}
-              className="font-light text-lg md:text-xl lg:text-2xl tracking-wide opacity-95 drop-shadow-md"
-              style={{ letterSpacing: '0.08em', color: '#E5C896', textShadow: '0 1px 5px rgba(0,0,0,0.5)' }}
+              className="text-white font-light text-lg md:text-xl lg:text-2xl tracking-wide opacity-95 drop-shadow-md"
+              style={{ letterSpacing: '0.08em', textShadow: '0 1px 5px rgba(0,0,0,0.5)' }}
             >
               Mech Interp | Evaluation Science | Fairness | Robustness
             </p>
