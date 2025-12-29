@@ -24,10 +24,11 @@ function SwirlingPattern() {
         const angle = t * Math.PI * 4 // Two full rotations for figure-eight
         
         // Figure-eight parametric equations with offset for parallel lines
-        const radius = 1.2 + offset * 0.3
+        // Larger scale to make it more impressive
+        const radius = 1.5 + offset * 0.4
         const x = Math.sin(angle) * radius
-        const y = Math.sin(angle * 2) * (radius * 0.6 + offset * 0.15)
-        const z = (t - 0.5) * 0.2 + offset * 0.1 // Add depth
+        const y = Math.sin(angle * 2) * (radius * 0.6 + offset * 0.2)
+        const z = (t - 0.5) * 0.3 + offset * 0.15 // More depth
         
         points.push(x, y, z)
       }
@@ -45,6 +46,9 @@ function SwirlingPattern() {
       // Slow rotation for dynamic effect
       groupRef.current.rotation.z = state.clock.elapsedTime * 0.05
       groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.1) * 0.1
+      // Offset position to move pattern more to sides/background
+      groupRef.current.position.x = Math.sin(state.clock.elapsedTime * 0.08) * 0.3
+      groupRef.current.position.y = Math.cos(state.clock.elapsedTime * 0.06) * 0.2
     }
 
     // Animate individual lines for more dynamic effect
@@ -58,7 +62,7 @@ function SwirlingPattern() {
   })
 
   return (
-    <group ref={groupRef}>
+    <group ref={groupRef} scale={1.2}>
       {lines.map((line, i) => {
         // Color gradient: lighter orange-brown to darker reddish-brown
         const positionRatio = i / lines.length
@@ -67,7 +71,9 @@ function SwirlingPattern() {
         const lightness = 0.5 - positionRatio * 0.15
         
         const color = new THREE.Color().setHSL(hue, saturation, lightness)
-        const opacity = 0.4 + (Math.abs(positionRatio - 0.5) * 0.3)
+        // Reduce opacity overall, especially in center area
+        const centerDistance = Math.abs(positionRatio - 0.5) * 2
+        const opacity = 0.25 + (centerDistance * 0.25)
 
         return (
           <line
@@ -89,7 +95,7 @@ function SwirlingPattern() {
       
       {/* Central void sphere for depth */}
       <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[0.08, 16, 16]} />
+        <sphereGeometry args={[0.1, 16, 16]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.9} />
       </mesh>
     </group>
@@ -98,11 +104,23 @@ function SwirlingPattern() {
 
 export default function AbstractPattern() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1 }}>
-      <Canvas camera={{ position: [0, 0, 4], fov: 50 }}>
-        <ambientLight intensity={0.5} />
-        <SwirlingPattern />
-      </Canvas>
-    </div>
+    <>
+      {/* 3D Pattern - positioned more to the sides */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1 }}>
+        <Canvas camera={{ position: [0, 0, 4], fov: 50 }}>
+          <ambientLight intensity={0.4} />
+          <SwirlingPattern />
+        </Canvas>
+      </div>
+      
+      {/* Dark radial gradient overlay - darker in center where text is */}
+      <div 
+        className="absolute inset-0 pointer-events-none" 
+        style={{ 
+          zIndex: 2,
+          background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0) 70%)'
+        }}
+      />
+    </>
   )
 }

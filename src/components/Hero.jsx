@@ -46,23 +46,34 @@ export default function Hero() {
         </h1>
       </div>
 
-      {/* Centered Content */}
+      {/* Centered Content with darker background for readability */}
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4">
-        <div className="text-center max-w-4xl mx-auto">
-          <h2 
-            ref={titleRef}
-            className="text-white font-light text-3xl md:text-5xl lg:text-6xl mb-6 tracking-wide"
-            style={{ letterSpacing: '0.05em' }}
-          >
-            Laura Gomezjurado Gonzalez
-          </h2>
-          <p 
-            ref={subtitleRef}
-            className="text-white font-light text-lg md:text-xl lg:text-2xl tracking-wide opacity-90"
-            style={{ letterSpacing: '0.08em' }}
-          >
-            Mech Interp | Evaluation Science | Fairness | Robustness
-          </p>
+        <div className="text-center max-w-4xl mx-auto relative">
+          {/* Subtle backdrop for text area */}
+          <div 
+            className="absolute inset-0 -mx-8 -my-4 rounded-lg opacity-30"
+            style={{
+              background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%)',
+              filter: 'blur(20px)'
+            }}
+          />
+          
+          <div className="relative z-10">
+            <h2 
+              ref={titleRef}
+              className="text-white font-light text-3xl md:text-5xl lg:text-6xl mb-6 tracking-wide drop-shadow-lg"
+              style={{ letterSpacing: '0.05em', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}
+            >
+              Laura Gomezjurado Gonzalez
+            </h2>
+            <p 
+              ref={subtitleRef}
+              className="text-white font-light text-lg md:text-xl lg:text-2xl tracking-wide opacity-95 drop-shadow-md"
+              style={{ letterSpacing: '0.08em', textShadow: '0 1px 5px rgba(0,0,0,0.5)' }}
+            >
+              Mech Interp | Evaluation Science | Fairness | Robustness
+            </p>
+          </div>
         </div>
       </div>
     </section>
