@@ -15,11 +15,12 @@ if (typeof window !== 'undefined') {
   updateGlobalTime()
 }
 
-// Shared color function - ensures all patterns match the same style
+// Shared color function - ensures all patterns match the same style (warmer golden tones)
 function getPatternColor(positionRatio, opacity = 1) {
-  const hue = 0.08 + positionRatio * 0.05 // Orange-brown range
-  const saturation = 0.6 + positionRatio * 0.2
-  const lightness = 0.5 - positionRatio * 0.15
+  // Warmer golden-yellow range instead of orange-brown
+  const hue = 0.12 + positionRatio * 0.03 // Golden-yellow range (warmer)
+  const saturation = 0.65 + positionRatio * 0.15 // More saturated for warmth
+  const lightness = 0.55 - positionRatio * 0.1 // Slightly brighter
   const color = new THREE.Color().setHSL(hue, saturation, lightness)
   const centerDistance = Math.abs(positionRatio - 0.5) * 2
   const lineOpacity = (0.25 + (centerDistance * 0.25)) * opacity

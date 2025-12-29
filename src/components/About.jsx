@@ -99,7 +99,7 @@ export default function About() {
       />
       
       <div className="relative z-10 max-w-7xl mx-auto">
-        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-24 text-center text-white tracking-wider">
+        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-24 text-center tracking-wider" style={{ color: '#D4A574' }}>
           About Me
         </h2>
         <div className="grid md:grid-cols-2 gap-12 items-center">
