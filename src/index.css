@@ -92,7 +92,7 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 .glass {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(184, 134, 11, 0.15);
+  border: 1px solid rgba(217, 169, 106, 0.15);
 }
 
 /* Light theme glass effect */
