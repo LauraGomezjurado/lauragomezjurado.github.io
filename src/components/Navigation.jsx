@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 export default function Navigation() {
@@ -6,10 +6,10 @@ export default function Navigation() {
   const location = useLocation()
 
   const navItems = [
+    { name: 'Home', href: '/', isHash: false },
     { name: 'About', href: '#about', isHash: true },
-    { name: 'Team', href: '#team', isHash: true },
-    { name: 'Careers', href: '#careers', isHash: true },
-    { name: 'News', href: '/blog', isHash: false },
+    { name: 'Portfolio', href: '#portfolio', isHash: true },
+    { name: 'Blog', href: '/blog', isHash: false },
     { name: 'Contact', href: '#contact', isHash: true },
   ]
 

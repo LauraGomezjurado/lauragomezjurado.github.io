@@ -5,7 +5,8 @@ import AbstractPattern from './AbstractPattern'
 export default function Hero() {
   const heroRef = useRef(null)
   const brandRef = useRef(null)
-  const headlineRef = useRef(null)
+  const titleRef = useRef(null)
+  const subtitleRef = useRef(null)
 
   useEffect(() => {
     const tl = gsap.timeline()
@@ -16,10 +17,16 @@ export default function Hero() {
       duration: 1,
       ease: 'power3.out'
     })
-    .from(headlineRef.current, {
+    .from(titleRef.current, {
       opacity: 0,
       y: 30,
       duration: 1.2,
+      ease: 'power3.out'
+    }, '-=0.5')
+    .from(subtitleRef.current, {
+      opacity: 0,
+      y: 20,
+      duration: 1,
       ease: 'power3.out'
     }, '-=0.5')
   }, [])
@@ -28,26 +35,35 @@ export default function Hero() {
     <section ref={heroRef} id="home" className="relative min-h-screen bg-black overflow-hidden">
       <AbstractPattern />
       
-      {/* LILA Brand - Top Left */}
+      {/* Brand/Initials - Top Left */}
       <div className="absolute top-8 left-8 md:top-12 md:left-12 z-20">
         <h1 
           ref={brandRef}
           className="text-white font-light tracking-[0.3em] text-2xl md:text-3xl uppercase"
           style={{ letterSpacing: '0.3em' }}
         >
-          L I L A
+          L G G
         </h1>
       </div>
 
-      {/* Centered Headline */}
+      {/* Centered Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4">
-        <h2 
-          ref={headlineRef}
-          className="text-white font-light text-center text-3xl md:text-5xl lg:text-6xl tracking-wide"
-          style={{ letterSpacing: '0.05em' }}
-        >
-          Building Scientific Superintelligence
-        </h2>
+        <div className="text-center max-w-4xl mx-auto">
+          <h2 
+            ref={titleRef}
+            className="text-white font-light text-3xl md:text-5xl lg:text-6xl mb-6 tracking-wide"
+            style={{ letterSpacing: '0.05em' }}
+          >
+            Laura Gomezjurado Gonzalez
+          </h2>
+          <p 
+            ref={subtitleRef}
+            className="text-white font-light text-lg md:text-xl lg:text-2xl tracking-wide opacity-90"
+            style={{ letterSpacing: '0.08em' }}
+          >
+            Mech Interp | Evaluation Science | Fairness | Robustness
+          </p>
+        </div>
       </div>
     </section>
   )
