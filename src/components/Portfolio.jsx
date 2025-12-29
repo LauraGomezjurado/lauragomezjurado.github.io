@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import AbstractPattern from './AbstractPattern'
+import ProjectDoodle from './ProjectDoodle'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -301,21 +302,17 @@ export default function Portfolio() {
                   )}
                 </div>
 
-                {/* Right Column: Descriptions/Images/Diagrams - only show if image or logo exists */}
+                {/* Right Column: Descriptions/Doodles/Diagrams - only show if image or logo exists */}
                 {(project.image || project.logo) && (
                   <div className="space-y-6 flex flex-col justify-start">
                     {project.image ? (
                       <div className="mb-6">
-                        <div className="w-full aspect-video bg-white/5 overflow-hidden rounded-lg">
-                          <img 
-                            src={project.image} 
-                            alt={project.title}
-                            className="w-full h-full object-cover portfolio-image"
-                          />
+                        <div className="w-full aspect-video bg-white/5 overflow-hidden rounded-lg flex items-center justify-center p-8" style={{ borderColor: 'rgba(200, 138, 122, 0.1)' }}>
+                          <ProjectDoodle projectId={project.id} className="w-full h-full" />
                         </div>
                         {project.imageCitation && (
                           <p className="text-xs text-gray-500 mt-2 italic text-center">
-                            Figure: {project.imageCitation}
+                            {project.imageCitation}
                           </p>
                         )}
                       </div>
