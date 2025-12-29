@@ -58,13 +58,13 @@ canvas {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #B8860B;
+  background: #D9A96A;
   border-radius: 4px;
   opacity: 0.6;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #8B6914;
+  background: #C89A5A;
   opacity: 0.8;
 }
 

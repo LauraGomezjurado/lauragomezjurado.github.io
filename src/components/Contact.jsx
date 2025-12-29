@@ -70,7 +70,7 @@ export default function Contact() {
     <section ref={sectionRef} id="contact" className="relative min-h-screen py-20 px-4 overflow-visible bg-black -mt-20">
       <AbstractPattern variant="portfolio" />
       <div className="relative z-10 max-w-4xl mx-auto">
-        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-24 text-center text-white tracking-wider">
+        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-24 text-center tracking-wider" style={{ color: '#D9A96A' }}>
           Get In Touch
         </h2>
         <div className="grid md:grid-cols-2 gap-12">
