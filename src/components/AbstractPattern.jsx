@@ -15,7 +15,18 @@ if (typeof window !== 'undefined') {
   updateGlobalTime()
 }
 
-// 3D Swirling Figure-Eight Pattern
+// Shared color function - ensures all patterns match the same style
+function getPatternColor(positionRatio, opacity = 1) {
+  const hue = 0.08 + positionRatio * 0.05 // Orange-brown range
+  const saturation = 0.6 + positionRatio * 0.2
+  const lightness = 0.5 - positionRatio * 0.15
+  const color = new THREE.Color().setHSL(hue, saturation, lightness)
+  const centerDistance = Math.abs(positionRatio - 0.5) * 2
+  const lineOpacity = (0.25 + (centerDistance * 0.25)) * opacity
+  return { color, opacity: lineOpacity }
+}
+
+// 3D Swirling Figure-Eight Pattern (Hero)
 function SwirlingPattern({ position = [0, 0, 0], scale = 1.2, opacity = 1, variant = 'hero', sectionOffset = 0 }) {
   const groupRef = useRef()
   const linesRef = useRef([])
@@ -85,16 +96,8 @@ function SwirlingPattern({ position = [0, 0, 0], scale = 1.2, opacity = 1, varia
   return (
     <group ref={groupRef} position={position} scale={scale}>
       {lines.map((line, i) => {
-        // Color gradient: lighter orange-brown to darker reddish-brown
         const positionRatio = i / lines.length
-        const hue = 0.08 + positionRatio * 0.05 // Orange-brown range
-        const saturation = 0.6 + positionRatio * 0.2
-        const lightness = 0.5 - positionRatio * 0.15
-        
-        const color = new THREE.Color().setHSL(hue, saturation, lightness)
-        // Reduce opacity overall, especially in center area
-        const centerDistance = Math.abs(positionRatio - 0.5) * 2
-        const lineOpacity = (0.25 + (centerDistance * 0.25)) * opacity
+        const { color, opacity: lineOpacity } = getPatternColor(positionRatio, opacity)
 
         return (
           <line
@@ -123,38 +126,204 @@ function SwirlingPattern({ position = [0, 0, 0], scale = 1.2, opacity = 1, varia
   )
 }
 
+// Overlapping Circles Pattern (About) - Venn diagram style
+function OverlappingCircles({ position = [0, 0, 0], scale = 1.2, opacity = 1, sectionOffset = 0 }) {
+  const groupRef = useRef()
+  const circlesRef = useRef([])
+
+  const circles = useMemo(() => {
+    const numCircles = 40
+    const circles = []
+    const baseRadius = 1.2
+    
+    for (let i = 0; i < numCircles; i++) {
+      const offset = (i - numCircles / 2) * 0.03
+      const radius = baseRadius + offset * 0.2
+      
+      // Create two overlapping circles
+      const points1 = []
+      const points2 = []
+      const numPoints = 100
+      
+      for (let j = 0; j <= numPoints; j++) {
+        const angle = (j / numPoints) * Math.PI * 2
+        // First circle (left)
+        const x1 = -0.3 + radius * Math.cos(angle)
+        const y1 = radius * Math.sin(angle)
+        const z1 = offset * 0.1
+        points1.push(x1, y1, z1)
+        
+        // Second circle (right)
+        const x2 = 0.3 + radius * Math.cos(angle)
+        const y2 = radius * Math.sin(angle)
+        const z2 = offset * 0.1
+        points2.push(x2, y2, z2)
+      }
+      
+      const geometry1 = new THREE.BufferGeometry()
+      geometry1.setAttribute('position', new THREE.Float32BufferAttribute(points1, 3))
+      const geometry2 = new THREE.BufferGeometry()
+      geometry2.setAttribute('position', new THREE.Float32BufferAttribute(points2, 3))
+      
+      circles.push({ geometry1, geometry2, offset, index: i })
+    }
+    
+    return circles
+  }, [])
+
+  useFrame(() => {
+    if (groupRef.current) {
+      const time = globalTime + sectionOffset
+      // Subtle rotation and pulsing
+      groupRef.current.rotation.z = time * 0.02
+      groupRef.current.scale.setScalar(1 + Math.sin(time * 0.1) * 0.05)
+    }
+  })
+
+  return (
+    <group ref={groupRef} position={position} scale={scale}>
+      {circles.map((circle, i) => {
+        const positionRatio = i / circles.length
+        const { color, opacity: lineOpacity } = getPatternColor(positionRatio, opacity)
+
+        return (
+          <group key={i}>
+            <line geometry={circle.geometry1}>
+              <lineBasicMaterial color={color} transparent opacity={lineOpacity} linewidth={1} />
+            </line>
+            <line geometry={circle.geometry2}>
+              <lineBasicMaterial color={color} transparent opacity={lineOpacity} linewidth={1} />
+            </line>
+          </group>
+        )
+      })}
+    </group>
+  )
+}
+
+// Concentric Spirals Pattern (Portfolio) - different swirling style
+function ConcentricSpirals({ position = [0, 0, 0], scale = 1.2, opacity = 1, sectionOffset = 0 }) {
+  const groupRef = useRef()
+  const spiralsRef = useRef([])
+
+  const spirals = useMemo(() => {
+    const numSpirals = 30
+    const spirals = []
+    
+    for (let i = 0; i < numSpirals; i++) {
+      const radius = 0.3 + (i / numSpirals) * 1.5
+      const points = []
+      const numPoints = 200
+      const turns = 2 + (i / numSpirals) * 3
+      
+      for (let j = 0; j <= numPoints; j++) {
+        const t = j / numPoints
+        const angle = t * Math.PI * 2 * turns
+        const r = radius * (1 + t * 0.3)
+        const x = r * Math.cos(angle)
+        const y = r * Math.sin(angle)
+        const z = (t - 0.5) * 0.2
+        points.push(x, y, z)
+      }
+      
+      const geometry = new THREE.BufferGeometry()
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute(points, 3))
+      spirals.push({ geometry, index: i })
+    }
+    
+    return spirals
+  }, [])
+
+  useFrame(() => {
+    if (groupRef.current) {
+      const time = globalTime + sectionOffset
+      groupRef.current.rotation.z = time * 0.03
+      groupRef.current.rotation.x = Math.sin(time * 0.08) * 0.1
+    }
+  })
+
+  return (
+    <group ref={groupRef} position={position} scale={scale}>
+      {spirals.map((spiral, i) => {
+        const positionRatio = i / spirals.length
+        const { color, opacity: lineOpacity } = getPatternColor(positionRatio, opacity)
+
+        return (
+          <line key={i} geometry={spiral.geometry}>
+            <lineBasicMaterial color={color} transparent opacity={lineOpacity} linewidth={1} />
+          </line>
+        )
+      })}
+    </group>
+  )
+}
+
 // Shared pattern component that can be used across sections
 export function SwirlingPattern3D({ position = [0, 0, 0], scale = 1.2, opacity = 1 }) {
   return <SwirlingPattern position={position} scale={scale} opacity={opacity} />
 }
 
 export default function AbstractPattern({ variant = 'hero' }) {
-  // Different configurations for different sections with offsets for continuity
+  // Different configurations for different sections - each with unique pattern type
   const configs = {
     hero: {
       overlay: 'radial-gradient(ellipse at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0) 70%)',
       cameraPosition: [0, 0, 4],
       sectionOffset: 0,
       scale: 1.2,
-      opacity: 1
+      opacity: 1,
+      patternType: 'swirling' // Figure-eight pattern
     },
     about: {
       overlay: 'radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0) 70%)',
       cameraPosition: [0, 0, 4],
-      sectionOffset: 50, // Offset to continue animation smoothly
+      sectionOffset: 50,
       scale: 1.15,
-      opacity: 0.9
+      opacity: 0.9,
+      patternType: 'circles' // Overlapping circles
     },
     portfolio: {
       overlay: 'radial-gradient(ellipse at center, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0) 70%)',
       cameraPosition: [0, 0, 4],
-      sectionOffset: 100, // Further offset
+      sectionOffset: 100,
       scale: 1.1,
-      opacity: 0.85
+      opacity: 0.85,
+      patternType: 'spirals' // Concentric spirals
     }
   }
 
   const config = configs[variant] || configs.hero
+
+  // Render different pattern types based on variant
+  const renderPattern = () => {
+    switch (config.patternType) {
+      case 'circles':
+        return (
+          <OverlappingCircles
+            sectionOffset={config.sectionOffset}
+            scale={config.scale}
+            opacity={config.opacity}
+          />
+        )
+      case 'spirals':
+        return (
+          <ConcentricSpirals
+            sectionOffset={config.sectionOffset}
+            scale={config.scale}
+            opacity={config.opacity}
+          />
+        )
+      default: // 'swirling'
+        return (
+          <SwirlingPattern
+            variant={variant}
+            sectionOffset={config.sectionOffset}
+            scale={config.scale}
+            opacity={config.opacity}
+          />
+        )
+    }
+  }
 
   return (
     <>
@@ -162,12 +331,7 @@ export default function AbstractPattern({ variant = 'hero' }) {
       <div className="absolute inset-0 overflow-visible pointer-events-none" style={{ zIndex: 1 }}>
         <Canvas camera={{ position: config.cameraPosition, fov: 50 }}>
           <ambientLight intensity={0.4} />
-          <SwirlingPattern 
-            variant={variant}
-            sectionOffset={config.sectionOffset}
-            scale={config.scale}
-            opacity={config.opacity}
-          />
+          {renderPattern()}
         </Canvas>
       </div>
       
