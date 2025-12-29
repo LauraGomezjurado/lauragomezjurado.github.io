@@ -86,8 +86,18 @@ export default function About() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="about" className="relative min-h-screen py-20 px-4 overflow-visible bg-black -mt-20">
+    <section ref={sectionRef} id="about" className="relative min-h-screen py-20 px-4 overflow-visible bg-black -mt-40">
       <AbstractPattern variant="about" />
+      
+      {/* Gradient fade-in at top to blend with hero section */}
+      <div 
+        className="absolute top-0 left-0 right-0 h-40 pointer-events-none"
+        style={{
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%)',
+          zIndex: 15
+        }}
+      />
+      
       <div className="relative z-10 max-w-7xl mx-auto">
         <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-24 text-center text-white tracking-wider">
           About Me

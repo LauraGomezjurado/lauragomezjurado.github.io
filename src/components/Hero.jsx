@@ -32,8 +32,17 @@ export default function Hero() {
   }, [])
 
   return (
-    <section ref={heroRef} id="home" className="relative min-h-screen bg-black overflow-hidden">
+    <section ref={heroRef} id="home" className="relative min-h-[150vh] bg-black overflow-visible">
       <AbstractPattern />
+      
+      {/* Gradient fade-out at bottom to blend into next section */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none z-15"
+        style={{
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.8) 100%)',
+          zIndex: 15
+        }}
+      />
       
       {/* Brand/Initials - Top Left */}
       <div className="absolute top-8 left-8 md:top-12 md:left-12 z-20">
