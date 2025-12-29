@@ -3,7 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
 // 3D Swirling Figure-Eight Pattern
-function SwirlingPattern() {
+function SwirlingPattern({ position = [0, 0, 0], scale = 1.2, opacity = 1 }) {
   const groupRef = useRef()
   const linesRef = useRef([])
 
@@ -62,7 +62,7 @@ function SwirlingPattern() {
   })
 
   return (
-    <group ref={groupRef} scale={1.2}>
+    <group ref={groupRef} position={position} scale={scale}>
       {lines.map((line, i) => {
         // Color gradient: lighter orange-brown to darker reddish-brown
         const positionRatio = i / lines.length
@@ -73,7 +73,7 @@ function SwirlingPattern() {
         const color = new THREE.Color().setHSL(hue, saturation, lightness)
         // Reduce opacity overall, especially in center area
         const centerDistance = Math.abs(positionRatio - 0.5) * 2
-        const opacity = 0.25 + (centerDistance * 0.25)
+        const lineOpacity = (0.25 + (centerDistance * 0.25)) * opacity
 
         return (
           <line
@@ -86,7 +86,7 @@ function SwirlingPattern() {
             <lineBasicMaterial
               color={color}
               transparent
-              opacity={opacity}
+              opacity={lineOpacity}
               linewidth={1}
             />
           </line>
@@ -102,12 +102,35 @@ function SwirlingPattern() {
   )
 }
 
-export default function AbstractPattern() {
+// Shared pattern component that can be used across sections
+export function SwirlingPattern3D({ position = [0, 0, 0], scale = 1.2, opacity = 1 }) {
+  return <SwirlingPattern position={position} scale={scale} opacity={opacity} />
+}
+
+export default function AbstractPattern({ variant = 'hero' }) {
+  // Different configurations for different sections
+  const configs = {
+    hero: {
+      overlay: 'radial-gradient(ellipse at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0) 70%)',
+      cameraPosition: [0, 0, 4]
+    },
+    about: {
+      overlay: 'radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0) 70%)',
+      cameraPosition: [0, 0, 4]
+    },
+    portfolio: {
+      overlay: 'radial-gradient(ellipse at center, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0) 70%)',
+      cameraPosition: [0, 0, 4]
+    }
+  }
+
+  const config = configs[variant] || configs.hero
+
   return (
     <>
       {/* 3D Pattern - positioned more to the sides */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1 }}>
-        <Canvas camera={{ position: [0, 0, 4], fov: 50 }}>
+        <Canvas camera={{ position: config.cameraPosition, fov: 50 }}>
           <ambientLight intensity={0.4} />
           <SwirlingPattern />
         </Canvas>
@@ -118,7 +141,7 @@ export default function AbstractPattern() {
         className="absolute inset-0 pointer-events-none" 
         style={{ 
           zIndex: 2,
-          background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0) 70%)'
+          background: config.overlay
         }}
       />
     </>

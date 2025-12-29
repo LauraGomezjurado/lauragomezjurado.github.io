@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Contact3D from './Contact3D'
+import AbstractPattern from './AbstractPattern'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -16,27 +16,38 @@ export default function Contact() {
   })
 
   useEffect(() => {
-    gsap.from(titleRef.current, {
+    gsap.fromTo(titleRef.current, {
+      opacity: 0.3,
+      y: 30
+    }, {
       scrollTrigger: {
         trigger: sectionRef.current,
-        start: 'top 80%',
+        start: 'top 90%',
+        end: 'top 60%',
+        toggleActions: 'play none none none',
+        scrub: 1
       },
-      opacity: 0,
-      y: 50,
-      duration: 1,
-      ease: 'power3.out'
+      opacity: 1,
+      y: 0,
+      duration: 1.5,
+      ease: 'power2.out'
     })
 
-    gsap.from(formRef.current, {
+    gsap.fromTo(formRef.current, {
+      opacity: 0.3,
+      y: 30
+    }, {
       scrollTrigger: {
         trigger: sectionRef.current,
-        start: 'top 80%',
+        start: 'top 90%',
+        end: 'top 60%',
+        toggleActions: 'play none none none',
+        scrub: 1
       },
-      opacity: 0,
-      y: 50,
-      duration: 1,
-      ease: 'power3.out',
-      delay: 0.2
+      opacity: 1,
+      y: 0,
+      duration: 1.5,
+      ease: 'power2.out'
     })
   }, [])
 
@@ -56,8 +67,8 @@ export default function Contact() {
   }
 
   return (
-    <section ref={sectionRef} id="contact" className="relative min-h-screen py-20 px-4 overflow-visible">
-      <Contact3D />
+    <section ref={sectionRef} id="contact" className="relative min-h-screen py-20 px-4 overflow-visible bg-black">
+      <AbstractPattern variant="portfolio" />
       <div className="relative z-10 max-w-4xl mx-auto">
         <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-24 text-center text-white tracking-wider">
           Get In Touch

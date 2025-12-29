@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger)
 
 export default function Home() {
   useEffect(() => {
-    // Reset to dark background when Home component mounts (for Hero section)
+    // Keep everything dark - no background color transitions
     gsap.set('body', {
       background: '#000000',
       color: '#FFFFFF'
@@ -30,58 +30,28 @@ export default function Home() {
       })
     })
 
-    // Smooth background color transition from dark to light (About section)
-    const aboutSection = document.querySelector('#about')
-    if (aboutSection) {
-      gsap.to('body', {
-        background: '#FAFBFC',
-        color: '#1F2937',
-        scrollTrigger: {
-          trigger: aboutSection,
-          start: 'top 80%',
-          end: 'top 40%',
-          scrub: 2,
-        }
-      })
-    }
-
-    // Smooth background color transition back to dark (Contact section)
-    const contactSection = document.querySelector('#contact')
-    if (contactSection) {
-      gsap.to('body', {
-        background: '#000000',
-        color: '#FFFFFF',
-        scrollTrigger: {
-          trigger: contactSection,
-          start: 'top 80%',
-          end: 'top 40%',
-          scrub: 2,
-        }
-      })
-    }
-
-    // Create smooth fade transitions between sections
+    // Subtle fade transitions between sections (no background color change)
     const sections = document.querySelectorAll('section[id]')
     
     sections.forEach((section, index) => {
-      // Smooth fade in as sections enter viewport
+      // Very subtle fade in as sections enter viewport
       gsap.fromTo(
         section,
         {
-          opacity: 0,
-          y: 30,
+          opacity: 0.3,
+          y: 20,
         },
         {
           opacity: 1,
           y: 0,
-          duration: 1,
-          ease: 'power3.out',
+          duration: 1.5,
+          ease: 'power2.out',
           scrollTrigger: {
             trigger: section,
-            start: 'top 80%',
-            end: 'top 50%',
+            start: 'top 90%',
+            end: 'top 60%',
             toggleActions: 'play none none none',
-            scrub: false,
+            scrub: 1,
           }
         }
       )

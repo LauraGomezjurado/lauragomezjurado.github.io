@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Portfolio3D from './Portfolio3D'
+import AbstractPattern from './AbstractPattern'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -162,21 +162,23 @@ export default function Portfolio() {
       gsap.set(item, { opacity: 1, y: 0 })
     })
 
-    // Animate on scroll
+    // Subtle animate on scroll
     gsap.fromTo(titleRef.current,
       {
-        opacity: 0,
-        y: 50
+        opacity: 0.3,
+        y: 30
       },
       {
         opacity: 1,
         y: 0,
-        duration: 1,
-        ease: 'power3.out',
+        duration: 1.5,
+        ease: 'power2.out',
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 85%',
-          toggleActions: 'play none none none'
+          start: 'top 90%',
+          end: 'top 60%',
+          toggleActions: 'play none none none',
+          scrub: 1
         }
       }
     )
@@ -184,19 +186,20 @@ export default function Portfolio() {
     projectItems.forEach((item, index) => {
       gsap.fromTo(item,
         {
-          opacity: 0,
-          y: 50
+          opacity: 0.3,
+          y: 30
         },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-          delay: index * 0.1,
+          duration: 1.5,
+          ease: 'power2.out',
           scrollTrigger: {
             trigger: item,
-            start: 'top 85%',
-            toggleActions: 'play none none none'
+            start: 'top 90%',
+            end: 'top 60%',
+            toggleActions: 'play none none none',
+            scrub: 1
           }
         }
       )
@@ -204,10 +207,10 @@ export default function Portfolio() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="portfolio" className="relative min-h-screen py-20 px-4 overflow-visible">
-      <Portfolio3D />
+    <section ref={sectionRef} id="portfolio" className="relative min-h-screen py-20 px-4 overflow-visible bg-black">
+      <AbstractPattern variant="portfolio" />
       <div className="relative z-10 max-w-7xl mx-auto">
-        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-32 text-center text-gray-900 tracking-wider">
+        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-32 text-center text-white tracking-wider">
           Research & Projects
         </h2>
         

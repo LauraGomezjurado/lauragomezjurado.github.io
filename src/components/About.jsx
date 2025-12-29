@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import About3D from './About3D'
+import AbstractPattern from './AbstractPattern'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -23,95 +23,99 @@ export default function About() {
       gsap.set(imageRef.current, { opacity: 1, x: 0 })
     }
 
-    // Animate on scroll
+    // Subtle animate on scroll
     gsap.fromTo(titleRef.current, 
       {
-        opacity: 0,
-        y: 50
+        opacity: 0.3,
+        y: 30
       },
       {
         opacity: 1,
         y: 0,
-        duration: 1,
-        ease: 'power3.out',
+        duration: 1.5,
+        ease: 'power2.out',
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 85%',
-          toggleActions: 'play none none none'
+          start: 'top 90%',
+          end: 'top 60%',
+          toggleActions: 'play none none none',
+          scrub: 1
         }
       }
     )
 
     gsap.fromTo(contentRef.current,
       {
-        opacity: 0,
-        x: -50
+        opacity: 0.3,
+        x: -30
       },
       {
         opacity: 1,
         x: 0,
-        duration: 1,
-        ease: 'power3.out',
-        delay: 0.2,
+        duration: 1.5,
+        ease: 'power2.out',
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 85%',
-          toggleActions: 'play none none none'
+          start: 'top 90%',
+          end: 'top 60%',
+          toggleActions: 'play none none none',
+          scrub: 1
         }
       }
     )
 
     gsap.fromTo(imageRef.current,
       {
-        opacity: 0,
-        x: 50
+        opacity: 0.3,
+        x: 30
       },
       {
         opacity: 1,
         x: 0,
-        duration: 1,
-        ease: 'power3.out',
-        delay: 0.4,
+        duration: 1.5,
+        ease: 'power2.out',
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 85%',
-          toggleActions: 'play none none none'
+          start: 'top 90%',
+          end: 'top 60%',
+          toggleActions: 'play none none none',
+          scrub: 1
         }
       }
     )
   }, [])
 
   return (
-    <section ref={sectionRef} id="about" className="relative min-h-screen py-20 px-4 overflow-visible">
-      <About3D />
+    <section ref={sectionRef} id="about" className="relative min-h-screen py-20 px-4 overflow-visible bg-black">
+      <AbstractPattern variant="about" />
       <div className="relative z-10 max-w-7xl mx-auto">
-        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-24 text-center text-gray-900 tracking-wider">
+        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-24 text-center text-white tracking-wider">
           About Me
         </h2>
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div ref={contentRef} className="space-y-6">
-            <p className="text-xl text-gray-400 leading-relaxed">
+            <p className="text-xl text-gray-300 leading-relaxed font-light">
               I'm deeply passionate about how AI systems reason, where they fail, 
               and how we can make them safer for everyone: not just on paper, 
               but in the places where technology meets real life.
             
             </p>
-            <p className="text-lg text-gray-500 leading-relaxed">
+            <p className="text-lg text-gray-400 leading-relaxed font-light">
               My work spans interpretability, fairness, robustness, and model editing, motivated by a simple idea: 
               if we can understand the mechanisms behind a model's behavior, we can build systems that are more reliable and more equitable by design. 
               {/* At Stanford, I split my time between CRFM and the Scaling Intelligence Lab, working on everything from adversarial prompt injection defenses 
               to precision routing across LLM ensembles. */}
             </p>
-            <p className="text-lg text-gray-400 leading-relaxed">
+            <p className="text-lg text-gray-300 leading-relaxed font-light">
               I come from a background of deploying AI in low-infrastructure, post-conflict regions, and I continue to serve in global governance spaces like UN Women and Davos. 
               Those experiences taught me that "AI safety" isn't just a technical problem. It's about access, trust, context, and the people who stand to benefit or be harmed.
             </p>
-            <p className="text-lg text-gray-400 leading-relaxed">
+            <p className="text-lg text-gray-300 leading-relaxed font-light">
               I'm driven by research that is both intellectually rigorous and socially grounded, and by a belief that technical excellence and human impact should reinforce each other, not compete. 
             </p>
             
             {/* Organization logos - real logos with brand colors */}
-            <div className="flex items-center justify-start mt-12 pt-8 border-t border-gray-300/20 gap-8">
+            <div className="flex items-center justify-start mt-12 pt-8 border-t border-white/10 gap-8">
               <a 
                 href="https://www.stanford.edu" 
                 target="_blank" 
