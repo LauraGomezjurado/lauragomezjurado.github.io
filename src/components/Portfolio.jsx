@@ -314,24 +314,22 @@ export default function Portfolio() {
                 key={project.id}
                 className="project-item min-h-[60vh] md:min-h-[70vh] flex flex-col justify-center"
               >
-                <div className={`grid md:grid-cols-2 gap-12 md:gap-20 items-start ${!isEven ? 'md:grid-flow-dense' : ''}`}>
+                <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-start">
                   {isEven ? (
                     <>
+                      {/* Even: text left, doodle right */}
                       {textColumn}
                       {doodleColumn}
                     </>
                   ) : (
                     <>
-                      <div className="md:col-start-2">
-                        {doodleColumn}
-                      </div>
-                      <div className="md:col-start-1 md:row-start-1">
-                        {textColumn}
-                      </div>
+                      {/* Odd: doodle left, text right */}
+                      {doodleColumn}
+                      {textColumn}
                     </>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
             )
           })}
         </div>
