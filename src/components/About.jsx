@@ -137,6 +137,10 @@ export default function About() {
                   src="/stanford-logo.png" 
                   alt="Stanford University"
                   className="h-8 w-auto max-w-[80px]"
+                  style={{
+                    mixBlendMode: 'multiply',
+                    backgroundColor: 'transparent'
+                  }}
                 />
               </a>
               <a 

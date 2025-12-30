@@ -95,6 +95,12 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
   border: 1px solid rgba(217, 169, 106, 0.15);
 }
 
+/* Remove white backgrounds from images */
+img[src*="stanford-logo"] {
+  mix-blend-mode: multiply;
+  background: transparent;
+}
+
 /* Light theme glass effect */
 body.light-theme .glass {
   background: rgba(255, 255, 255, 0.6);
