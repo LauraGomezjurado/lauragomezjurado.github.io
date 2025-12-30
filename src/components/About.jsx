@@ -179,7 +179,7 @@ export default function About() {
                   alt="Laura at Microsoft"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   onError={(e) => {
-                    e.target.style.display = 'none'
+                    e.target.src = '/profile.jpg'
                   }}
                 />
               </div>
@@ -191,7 +191,7 @@ export default function About() {
                   alt="Laura at World Economic Forum Davos 2025"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   onError={(e) => {
-                    e.target.style.display = 'none'
+                    e.target.src = '/profile.jpg'
                   }}
                 />
               </div>
@@ -203,7 +203,7 @@ export default function About() {
                   alt="Laura at United Nations"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   onError={(e) => {
-                    e.target.style.display = 'none'
+                    e.target.src = '/profile.jpg'
                   }}
                 />
               </div>
@@ -215,7 +215,7 @@ export default function About() {
                   alt="Laura presenting research at Stanford"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   onError={(e) => {
-                    e.target.style.display = 'none'
+                    e.target.src = '/profile.jpg'
                   }}
                 />
               </div>
