@@ -11,6 +11,7 @@ export default function About() {
   const titleRef = useRef(null)
   const contentRef = useRef(null)
   const imageRef = useRef(null)
+  const galleryRef = useRef(null)
 
   useEffect(() => {
     // Set initial state
@@ -84,6 +85,31 @@ export default function About() {
         }
       }
     )
+
+    // Animate gallery items
+    if (galleryRef.current) {
+      const galleryItems = galleryRef.current.querySelectorAll('.gallery-item')
+      galleryItems.forEach((item, index) => {
+        gsap.fromTo(item,
+          {
+            opacity: 0,
+            y: 30
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            delay: index * 0.1,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: galleryRef.current,
+              start: 'top 85%',
+              toggleActions: 'play none none none'
+            }
+          }
+        )
+      })
+    }
   }, [])
 
   return (
@@ -177,6 +203,82 @@ export default function About() {
                 alt="Laura Gomezjurado Gonzalez at World Economic Forum Davos 2025"
                 className="w-full h-full object-cover"
               />
+            </div>
+          </div>
+        </div>
+
+        {/* Photo Gallery Section */}
+        <div ref={galleryRef} className="mt-24 pt-16 border-t border-white/10">
+          <h3 className="text-3xl md:text-4xl font-light mb-12 text-center text-white tracking-wider">
+            Moments
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Photo 1 - Microsoft */}
+            <div className="gallery-item relative group overflow-hidden rounded-lg aspect-[4/5] cursor-pointer">
+              <img 
+                src="/images/about/microsoft.jpg" 
+                alt="Laura at Microsoft"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                onError={(e) => {
+                  e.target.style.display = 'none'
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute bottom-4 left-4 right-4">
+                  <p className="text-white text-sm font-light">Microsoft Research</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Photo 2 - World Economic Forum Davos */}
+            <div className="gallery-item relative group overflow-hidden rounded-lg aspect-[4/5] cursor-pointer">
+              <img 
+                src="/images/about/davos.jpg" 
+                alt="Laura at World Economic Forum Davos 2025"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                onError={(e) => {
+                  e.target.style.display = 'none'
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute bottom-4 left-4 right-4">
+                  <p className="text-white text-sm font-light">World Economic Forum Davos 2025</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Photo 3 - United Nations */}
+            <div className="gallery-item relative group overflow-hidden rounded-lg aspect-[4/5] cursor-pointer">
+              <img 
+                src="/images/about/un.jpg" 
+                alt="Laura at United Nations"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                onError={(e) => {
+                  e.target.style.display = 'none'
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute bottom-4 left-4 right-4">
+                  <p className="text-white text-sm font-light">United Nations</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Photo 4 - Research Presentation */}
+            <div className="gallery-item relative group overflow-hidden rounded-lg aspect-[4/5] cursor-pointer">
+              <img 
+                src="/images/about/research.jpg" 
+                alt="Laura presenting research at Stanford"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                onError={(e) => {
+                  e.target.style.display = 'none'
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute bottom-4 left-4 right-4">
+                  <p className="text-white text-sm font-light">Research Presentation</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
