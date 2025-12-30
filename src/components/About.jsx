@@ -89,11 +89,11 @@ export default function About() {
     <section ref={sectionRef} id="about" className="relative min-h-screen py-20 px-4 overflow-visible bg-black -mt-40">
       <AbstractPattern variant="about" />
       
-      {/* Gradient fade-in at top to blend with hero section */}
+      {/* Gradient fade-in at top to blend with hero section - longer and smoother */}
       <div 
-        className="absolute top-0 left-0 right-0 h-40 pointer-events-none"
+        className="absolute top-0 left-0 right-0 h-80 pointer-events-none"
         style={{
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%)',
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0.2) 70%, rgba(0,0,0,0) 100%)',
           zIndex: 15
         }}
       />

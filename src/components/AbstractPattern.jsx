@@ -272,7 +272,7 @@ export default function AbstractPattern({ variant = 'hero' }) {
       overlay: 'radial-gradient(ellipse at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0) 70%)',
       cameraPosition: [0, 0, 4],
       sectionOffset: 0,
-      scale: 1.2,
+      scale: 0.9, // Reduced from 1.2 to make it smaller
       opacity: 1,
       patternType: 'swirling' // Figure-eight pattern
     },
@@ -280,7 +280,7 @@ export default function AbstractPattern({ variant = 'hero' }) {
       overlay: 'radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0) 70%)',
       cameraPosition: [0, 0, 4],
       sectionOffset: 50,
-      scale: 1.15,
+      scale: 0.85, // Reduced from 1.15 to make it smaller
       opacity: 0.9,
       patternType: 'circles' // Overlapping circles
     },

@@ -17,7 +17,7 @@ const projects = [
     color: 'from-[#B8860B] to-[#8B6914]',
     org: 'Supervised by Dr. Hiroki Naganuma -- Hosted at ProPlace (2024 - Present)',
     image: '/images/task_arithmetic_figure.png',
-    imageCitation: 'Ilharco et al., "Editing Models with Task Arithmetic" (2022)',
+    // imageCitation: 'Ilharco et al., "Editing Models with Task Arithmetic" (2022)',
     link: 'https://arxiv.org/abs/2505.24262',
     github: 'https://github.com/LauraGomezjurado/fairness_task_vector_deploy'
   },

@@ -34,7 +34,7 @@ export default function Hero() {
       ease: 'power3.out'
     }, '-=0.5')
 
-    // Fade out Hero pattern gradually as user scrolls into About section
+    // Fade out Hero pattern gradually as user scrolls into About section - start earlier for smoother transition
     let scrollTrigger = null
     if (patternRef.current) {
       const aboutSection = document.querySelector('#about')
@@ -43,9 +43,9 @@ export default function Hero() {
           opacity: 0,
           scrollTrigger: {
             trigger: aboutSection,
-            start: 'top 80%',
-            end: 'top 20%',
-            scrub: 2,
+            start: 'top 100%', // Start fading when About section is just entering viewport
+            end: 'top 10%',    // Finish fading when About section is near top
+            scrub: 3,          // Smoother scrub for gradual fade
           }
         })
       }
@@ -59,17 +59,17 @@ export default function Hero() {
   }, [])
 
   return (
-    <section ref={heroRef} id="home" className="relative min-h-[150vh] bg-black overflow-visible">
+    <section ref={heroRef} id="home" className="relative min-h-[180vh] bg-black overflow-visible">
       {/* Hero pattern - extends beyond section and fades out on scroll */}
       <div ref={patternRef} className="fixed inset-0 pointer-events-none" style={{ zIndex: 1, height: '200vh' }}>
         <AbstractPattern />
       </div>
       
-      {/* Gradient fade-out at bottom to blend into next section */}
+      {/* Gradient fade-out at bottom to blend into next section - longer and smoother */}
       <div 
-        className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none z-15"
+        className="absolute bottom-0 left-0 right-0 h-80 pointer-events-none z-15"
         style={{
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.8) 100%)',
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.9) 100%)',
           zIndex: 15
         }}
       />
