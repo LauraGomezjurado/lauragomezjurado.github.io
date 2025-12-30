@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import AbstractPattern from './AbstractPattern'
+import TransparentLogo from './TransparentLogo'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -133,14 +134,10 @@ export default function About() {
                 className="hover:opacity-80 transition-all duration-200 hover:scale-105 flex items-center shrink-0"
                 aria-label="Stanford University"
               >
-                <img 
+                <TransparentLogo 
                   src="/stanford-logo.png" 
                   alt="Stanford University"
                   className="h-8 w-auto max-w-[80px]"
-                  style={{
-                    mixBlendMode: 'multiply',
-                    backgroundColor: 'transparent'
-                  }}
                 />
               </a>
               <a 

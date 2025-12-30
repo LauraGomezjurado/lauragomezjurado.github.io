@@ -95,9 +95,11 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
   border: 1px solid rgba(217, 169, 106, 0.15);
 }
 
-/* Remove white backgrounds from images */
+/* Remove white backgrounds from Stanford logo using CSS filter */
 img[src*="stanford-logo"] {
-  mix-blend-mode: multiply;
+  /* Convert white to transparent using brightness filter + blend mode */
+  filter: brightness(0) saturate(100%);
+  mix-blend-mode: screen;
   background: transparent;
 }
 
