@@ -134,9 +134,12 @@ export default function About() {
                 aria-label="Stanford University"
               >
                 <img 
-                  src="/stanford-logo-simple.svg" 
+                  src="/stanford-logo.png" 
                   alt="Stanford University"
                   className="h-8 w-auto max-w-[80px]"
+                  style={{ 
+                    mixBlendMode: 'screen'
+                  }}
                 />
               </a>
               <a 
