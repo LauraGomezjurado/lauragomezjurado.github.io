@@ -20,7 +20,7 @@ gsap.registerPlugin(ScrollTrigger)
 const blogPosts = {
   'subliminal-preference-transfer': {
     title: 'Subliminal Preference Transfer in LLMs: When Models Learn More Than We Intend',
-    date: '2025-01-20',
+    date: '2025-12-01',
     content: `Aligning language models with human preferences seems straightforward: make them helpful, safe, honest, and able to follow instructions. In reality, though, preference data is much messier. Data labelers bring their own backgrounds, writing styles, and beliefs. Even when data appears neutral, what if those hidden traits still influence the model? (this possibility is fascinating!).
 
 Here is a brief summary of a study I conducted at Stanford with Priyank Shethia. We explored subliminal preference transfer in large language models. Our main question was:
@@ -392,7 +392,7 @@ von Werra, L., Havrilla, Y., Muennighoff, N., Thakur, A., Thrush, T., Rame, A., 
   },
   'welcome-to-my-blog': {
     title: 'Welcome to My Blog',
-    date: '2025-01-15',
+    date: '2025-11-01',
     content: `# Welcome to My Blog
 
 This is where I'll be sharing my thoughts on AI safety, interpretability, fairness, and the research I'm working on.

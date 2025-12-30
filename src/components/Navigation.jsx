@@ -6,6 +6,9 @@ export default function Navigation() {
   const location = useLocation()
   const navigate = useNavigate()
 
+  // Check if we're on a blog page (light background)
+  const isBlogPage = location.pathname.startsWith('/blog')
+
   const navItems = [
     { name: 'Home', href: '/', isHash: false },
     { name: 'About', href: '#about', isHash: true },
@@ -43,6 +46,9 @@ export default function Navigation() {
     setIsMenuOpen(false)
   }
 
+  const textColorClass = isBlogPage ? 'text-gray-800' : 'text-white'
+  const hoverClass = isBlogPage ? 'hover:text-indigo-600' : 'hover:opacity-70'
+
   return (
     <nav className="fixed top-8 right-8 md:top-12 md:right-12 z-50">
       {/* Desktop - Vertical Menu */}
@@ -53,7 +59,7 @@ export default function Navigation() {
                 key={item.name}
                 href={item.href}
                 onClick={(e) => handleNavClick(item.href, item.isHash, e)}
-              className="text-white font-light text-sm uppercase tracking-widest hover:opacity-70 transition-opacity duration-200"
+              className={`${textColorClass} font-light text-sm uppercase tracking-widest ${hoverClass} transition-opacity duration-200`}
               style={{ letterSpacing: '0.15em' }}
               >
                 {item.name}
@@ -63,7 +69,7 @@ export default function Navigation() {
                 key={item.name}
                 to={item.href}
                 onClick={() => setIsMenuOpen(false)}
-              className="text-white font-light text-sm uppercase tracking-widest hover:opacity-70 transition-opacity duration-200"
+              className={`${textColorClass} font-light text-sm uppercase tracking-widest ${hoverClass} transition-opacity duration-200`}
               style={{ letterSpacing: '0.15em' }}
               >
                 {item.name}
@@ -74,7 +80,7 @@ export default function Navigation() {
 
       {/* Mobile Menu Button */}
         <button
-        className="md:hidden text-white"
+        className={`md:hidden ${textColorClass}`}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,14 +94,14 @@ export default function Navigation() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-10 right-0 bg-black/90 backdrop-blur-sm border border-white/10 p-6 flex flex-col gap-4 min-w-[200px]">
+        <div className={`md:hidden absolute top-10 right-0 ${isBlogPage ? 'bg-white/95 backdrop-blur-sm border border-gray-200' : 'bg-black/90 backdrop-blur-sm border border-white/10'} p-6 flex flex-col gap-4 min-w-[200px]`}>
           {navItems.map((item) => (
             item.isHash ? (
               <a
                 key={item.name}
                 href={item.href}
                 onClick={(e) => handleNavClick(item.href, item.isHash, e)}
-                className="text-white font-light text-sm uppercase tracking-widest hover:opacity-70 transition-opacity duration-200"
+                className={`${textColorClass} font-light text-sm uppercase tracking-widest ${hoverClass} transition-opacity duration-200`}
                 style={{ letterSpacing: '0.15em' }}
               >
                 {item.name}
@@ -105,7 +111,7 @@ export default function Navigation() {
                 key={item.name}
                 to={item.href}
                 onClick={() => setIsMenuOpen(false)}
-                className="text-white font-light text-sm uppercase tracking-widest hover:opacity-70 transition-opacity duration-200"
+                className={`${textColorClass} font-light text-sm uppercase tracking-widest ${hoverClass} transition-opacity duration-200`}
                 style={{ letterSpacing: '0.15em' }}
               >
                 {item.name}

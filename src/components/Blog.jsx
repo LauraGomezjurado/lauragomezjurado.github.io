@@ -11,13 +11,13 @@ const blogPosts = [
   {
     slug: 'subliminal-preference-transfer',
     title: 'Subliminal Preference Transfer in LLMs: When Models Learn More Than We Intend',
-    date: '2025-01-20',
+    date: '2025-12-01',
     excerpt: 'Investigating whether language models trained on demographic-specific preference data from neutral conversations exhibit opinion transfer when evaluated on unrelated topics—and what this means for AI safety.'
   },
   {
     slug: 'welcome-to-my-blog',
     title: 'Welcome to My Blog',
-    date: '2025-01-15',
+    date: '2025-11-01',
     excerpt: 'This is my first blog post where I\'ll be sharing thoughts on AI safety, interpretability, and research.'
   }
 ]
@@ -62,6 +62,9 @@ export default function Blog() {
   return (
     <section ref={sectionRef} id="blog" className="relative min-h-screen py-20 px-4 overflow-hidden" style={{ background: '#faf9f6', color: '#1a1a1a' }}>
       <div className="relative z-10 max-w-4xl mx-auto">
+        <Link to="/" className="inline-block mb-8 text-indigo-500 hover:text-indigo-600 transition-colors">
+          ← Back to Home
+        </Link>
         <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-16 text-center gradient-text tracking-wider">
           Blog
         </h2>
