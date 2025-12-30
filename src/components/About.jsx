@@ -175,7 +175,7 @@ export default function About() {
               {/* Photo 1 - Microsoft */}
               <div className="relative overflow-hidden rounded-lg aspect-square group">
                 <img 
-                  src="/images/about/microsoft.jpg" 
+                  src="/images/about/microsoft.jpg?v=2" 
                   alt="Laura at Microsoft"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   onError={(e) => {
@@ -187,7 +187,7 @@ export default function About() {
               {/* Photo 2 - World Economic Forum Davos */}
               <div className="relative overflow-hidden rounded-lg aspect-square group">
                 <img 
-                  src="/images/about/davos.jpg" 
+                  src="/images/about/davos.jpg?v=2" 
                   alt="Laura at World Economic Forum Davos 2025"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   onError={(e) => {
@@ -199,7 +199,7 @@ export default function About() {
               {/* Photo 3 - United Nations */}
               <div className="relative overflow-hidden rounded-lg aspect-square group">
                 <img 
-                  src="/images/about/un.jpg" 
+                  src="/images/about/un.jpg?v=2" 
                   alt="Laura at United Nations"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   onError={(e) => {
@@ -211,7 +211,7 @@ export default function About() {
               {/* Photo 4 - Research Presentation */}
               <div className="relative overflow-hidden rounded-lg aspect-square group">
                 <img 
-                  src="/images/about/research.jpg" 
+                  src="/images/about/research.jpg?v=2" 
                   alt="Laura presenting research at Stanford"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   onError={(e) => {
