@@ -47,44 +47,44 @@ export default function Navigation() {
     <nav className="fixed top-8 right-8 md:top-12 md:right-12 z-50">
       {/* Desktop - Vertical Menu */}
       <div className="hidden md:flex flex-col gap-6">
-        {navItems.map((item) => (
-          item.isHash ? (
-            <a
-              key={item.name}
-              href={item.href}
-              onClick={(e) => handleNavClick(item.href, item.isHash, e)}
+          {navItems.map((item) => (
+            item.isHash ? (
+              <a
+                key={item.name}
+                href={item.href}
+                onClick={(e) => handleNavClick(item.href, item.isHash, e)}
               className="text-white font-light text-sm uppercase tracking-widest hover:opacity-70 transition-opacity duration-200"
               style={{ letterSpacing: '0.15em' }}
-            >
-              {item.name}
-            </a>
-          ) : (
-            <Link
-              key={item.name}
-              to={item.href}
-              onClick={() => setIsMenuOpen(false)}
+              >
+                {item.name}
+              </a>
+            ) : (
+              <Link
+                key={item.name}
+                to={item.href}
+                onClick={() => setIsMenuOpen(false)}
               className="text-white font-light text-sm uppercase tracking-widest hover:opacity-70 transition-opacity duration-200"
               style={{ letterSpacing: '0.15em' }}
-            >
-              {item.name}
-            </Link>
-          )
-        ))}
-      </div>
+              >
+                {item.name}
+              </Link>
+            )
+          ))}
+        </div>
 
       {/* Mobile Menu Button */}
-      <button
+        <button
         className="md:hidden text-white"
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          {isMenuOpen ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          )}
-        </svg>
-      </button>
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {isMenuOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
 
       {/* Mobile Menu */}
       {isMenuOpen && (

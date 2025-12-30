@@ -105,13 +105,13 @@ export default function Hero() {
             >
               Laura Gomezjurado Gonzalez
             </h2>
-            <p 
-              ref={subtitleRef}
+        <p 
+          ref={subtitleRef}
               className="text-white font-light text-lg md:text-xl lg:text-2xl tracking-wide opacity-95 drop-shadow-md"
               style={{ letterSpacing: '0.08em', textShadow: '0 1px 5px rgba(0,0,0,0.5)' }}
-            >
-              Mech Interp | Evaluation Science | Fairness | Robustness
-            </p>
+        >
+          Mech Interp | Evaluation Science | Fairness | Robustness
+        </p>
           </div>
         </div>
       </div>
