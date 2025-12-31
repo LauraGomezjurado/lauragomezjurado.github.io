@@ -112,10 +112,8 @@ export default function About() {
             
             </p>
             <p className="text-lg text-gray-400 leading-relaxed font-light">
-              My work spans interpretability, fairness, robustness, and model editing, motivated by a simple idea: 
+              I am a CS student at Stanford, and my work spans interpretability, fairness, robustness, and model editing, motivated by a simple idea: 
               if we can understand the mechanisms behind a model's behavior, we can build systems that are more reliable and more equitable by design. 
-              {/* At Stanford, I split my time between CRFM and the Scaling Intelligence Lab, working on everything from adversarial prompt injection defenses 
-              to precision routing across LLM ensembles. */}
             </p>
             <p className="text-lg text-gray-300 leading-relaxed font-light">
               I come from a background of deploying AI in low-infrastructure, post-conflict regions, and I continue to serve in global governance spaces like UN Women and Davos. 
