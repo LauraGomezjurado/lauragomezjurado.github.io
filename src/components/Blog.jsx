@@ -9,6 +9,12 @@ gsap.registerPlugin(ScrollTrigger)
 // For now, we'll create a simple structure
 const blogPosts = [
   {
+    slug: 'materials-agents-exploration',
+    title: 'Building Agents That Do Materials Science',
+    date: '2025-01-25',
+    excerpt: 'What if you could just tell an AI agent what material you want, and it figures out how to simulate it, analyze it, and optimize it? I\'m exploring whether LLM-based agents can orchestrate real materials discovery workflows.'
+  },
+  {
     slug: 'subliminal-preference-transfer',
     title: 'Subliminal Preference Transfer in LLMs: When Models Learn More Than We Intend',
     date: '2025-12-01',
