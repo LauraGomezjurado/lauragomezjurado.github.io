@@ -1,6 +1,6 @@
 ---
 title: "Building Agents That Do Materials Science"
-date: "2025-01-25"
+date: "2024-12-30"
 excerpt: "What if you could just tell an AI agent what material you want, and it figures out how to simulate it, analyze it, and optimize it? I'm exploring whether LLM-based agents can orchestrate real materials discovery workflows."
 ---
 
