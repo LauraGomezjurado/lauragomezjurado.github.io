@@ -56,6 +56,13 @@ const features = [
     description: 'Featured student at Prototypes for Humanity, recognized for work in medical AI research and tech-driven initiatives empowering youth and women in Colombia. Selected as a Masason Foundation member by Softbank Group Corp.',
     url: 'https://www.prototypesforhumanity.com/student/laura-gomezjurado/',
     type: 'Recognition'
+  },
+  {
+    title: 'Masason Foundation Fellow',
+    organization: 'Masason Foundation',
+    description: 'Selected as a Masason Foundation Fellow by Masayoshi Son, SoftBank Group President. The Masason Foundation supports exceptional young talent to contribute to the future of humankind through innovation and technology.',
+    url: 'https://masason-foundation.org/en/scholars/',
+    type: 'Fellowship'
   }
 ]
 
