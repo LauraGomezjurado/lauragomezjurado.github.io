@@ -49,6 +49,13 @@ const features = [
     description: 'Featured speaker at the UN General Assembly discussing youth changemakers as the future of global STEM education and advocacy.',
     url: 'https://ssunga77.sched.com/event/1Aiwt/ref-20521-global-teen-leaders-youth-changemakers-as-the-future-of-global-stem-education-and-advocacy?iframe=no',
     type: 'Event'
+  },
+  {
+    title: 'Prototypes for Humanity',
+    organization: 'Prototypes for Humanity',
+    description: 'Featured student at Prototypes for Humanity, recognized for work in medical AI research and tech-driven initiatives empowering youth and women in Colombia. Selected as a Masason Foundation member by Softbank Group Corp.',
+    url: 'https://www.prototypesforhumanity.com/student/laura-gomezjurado/',
+    type: 'Recognition'
   }
 ]
 
