@@ -19,7 +19,8 @@ const features = [
     organization: 'Girl Up',
     description: 'Featured article discussing how AI can be leveraged as a tool for advancing gender equality and social impact.',
     url: 'https://girlup.org/voices/artificial-intelligence-a-tool-for-equality',
-    type: 'Article'
+    type: 'Article',
+    image: '/images/featured/girlup-article.png'
   },
   {
     title: 'Mission Magazine - Issue 12: The New Order',
