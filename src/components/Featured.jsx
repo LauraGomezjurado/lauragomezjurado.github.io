@@ -12,7 +12,7 @@ const features = [
     description: 'Selected as a Youth Delegate attending the World Economic Forum 2025 in Davos, representing youth voices in global leadership discussions.',
     url: 'https://static1.squarespace.com/static/581e5b6a8419c273288db3e9/t/674f747246e64400ad784d54/1733260408275/WAFF+Youth+Delegation+Attending+Davos+During+WEF+2025+One-Pagers.pdf',
     type: 'PDF',
-    image: '/images/featured/waff-davos-2025.jpg'
+    image: '/images/featured/waff-davos-2025.png'
   },
   {
     title: 'Artificial Intelligence: A Tool for Equality',
