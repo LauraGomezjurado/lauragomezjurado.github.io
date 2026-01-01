@@ -211,12 +211,12 @@ export default function Portfolio() {
     <section ref={sectionRef} id="portfolio" className="relative min-h-screen py-20 px-4 overflow-visible bg-black -mt-20">
       <AbstractPattern variant="portfolio" />
       <div className="relative z-10 max-w-7xl mx-auto">
-        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-32 text-center text-white tracking-wider">
+        <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-16 text-center text-white tracking-wider">
           Research & Projects
         </h2>
         
-        {/* Vertical layout - each project takes up large screen space */}
-        <div className="space-y-32 md:space-y-48">
+        {/* Vertical layout - compressed to show 2 projects per screen */}
+        <div className="space-y-16 md:space-y-20">
           {projects.map((project, index) => {
             const isEven = index % 2 === 0
             const textColumn = (
@@ -312,9 +312,9 @@ export default function Portfolio() {
             return (
               <div
                 key={project.id}
-                className="project-item min-h-[60vh] md:min-h-[70vh] flex flex-col justify-center"
+                className="project-item min-h-[45vh] md:min-h-[50vh] flex flex-col justify-center"
               >
-                <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-start">
+                <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start">
                   {isEven ? (
                     <>
                       {/* Even: text left, doodle right */}
