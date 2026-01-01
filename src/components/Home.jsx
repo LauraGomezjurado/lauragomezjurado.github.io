@@ -67,8 +67,8 @@ export default function Home() {
     <>
       <Hero />
       <About />
-      <Portfolio />
       <Featured />
+      <Portfolio />
       <Contact />
     </>
   )

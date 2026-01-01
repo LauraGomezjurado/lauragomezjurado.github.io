@@ -12,8 +12,8 @@ export default function Navigation() {
   const navItems = [
     { name: 'Home', href: '/', isHash: false },
     { name: 'About', href: '#about', isHash: true },
-    { name: 'Portfolio', href: '#portfolio', isHash: true },
     { name: 'Featured', href: '#featured', isHash: true },
+    { name: 'Portfolio', href: '#portfolio', isHash: true },
     { name: 'Blog', href: '/blog', isHash: false },
     { name: 'Contact', href: '#contact', isHash: true },
   ]
