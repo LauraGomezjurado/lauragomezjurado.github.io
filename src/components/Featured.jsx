@@ -11,7 +11,8 @@ const features = [
     organization: 'We Are Family Foundation',
     description: 'Selected as a Youth Delegate attending the World Economic Forum 2025 in Davos, representing youth voices in global leadership discussions.',
     url: 'https://static1.squarespace.com/static/581e5b6a8419c273288db3e9/t/674f747246e64400ad784d54/1733260408275/WAFF+Youth+Delegation+Attending+Davos+During+WEF+2025+One-Pagers.pdf',
-    type: 'PDF'
+    type: 'PDF',
+    image: '/images/featured/waff-davos-2025.jpg'
   },
   {
     title: 'Artificial Intelligence: A Tool for Equality',
@@ -21,11 +22,12 @@ const features = [
     type: 'Article'
   },
   {
-    title: 'Mission Magazine',
-    organization: 'Mission Magazine',
-    description: 'Featured in Mission Magazine for work in technology, social impact, and global advocacy.',
+    title: 'Mission Magazine - Issue 12: The New Order',
+    organization: 'Mission Magazine - Issue 12',
+    description: 'Featured in Mission Magazine Issue 12: The New Order. Mission Magazine is a platform at the intersection of fashion, art, activism, and impact. The New Order is a bold celebration of the next generation of leaders who are fearlessly tackling the world\'s most urgent challenges.',
     url: 'https://missionmagazinesubscriptions.org/home',
-    type: 'Publication'
+    type: 'Publication',
+    image: '/images/featured/mission-magazine.jpg'
   },
   {
     title: 'Adolescent Leaders in Generation Equality',
@@ -132,9 +134,21 @@ export default function Featured() {
               target="_blank"
               rel="noopener noreferrer"
               ref={(el) => (itemsRef.current[index] = el)}
-              className="group glass rounded-2xl p-6 hover:scale-[1.02] transition-all duration-300 cursor-pointer border border-white/10 hover:border-white/20"
+              className="group glass rounded-2xl p-6 hover:scale-[1.02] transition-all duration-300 cursor-pointer border border-white/10 hover:border-white/20 overflow-hidden"
             >
               <div className="space-y-4">
+                {feature.image && (
+                  <div className="w-full h-48 mb-4 rounded-lg overflow-hidden">
+                    <img 
+                      src={feature.image} 
+                      alt={feature.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      onError={(e) => {
+                        e.target.style.display = 'none'
+                      }}
+                    />
+                  </div>
+                )}
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <h3 className="text-xl font-light mb-2 text-white group-hover:text-[#D9A96A] transition-colors">
