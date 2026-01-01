@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Hero from './Hero'
 import About from './About'
 import Portfolio from './Portfolio'
+import Featured from './Featured'
 import Contact from './Contact'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -67,6 +68,7 @@ export default function Home() {
       <Hero />
       <About />
       <Portfolio />
+      <Featured />
       <Contact />
     </>
   )
