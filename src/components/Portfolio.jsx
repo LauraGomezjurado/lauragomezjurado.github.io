@@ -208,9 +208,9 @@ export default function Portfolio() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="portfolio" className="relative min-h-screen py-20 px-4 overflow-visible bg-black -mt-20">
+    <section ref={sectionRef} id="portfolio" className="relative min-h-screen py-20 px-4 sm:px-6 md:px-8 overflow-visible bg-black -mt-20">
       <AbstractPattern variant="portfolio" />
-      <div className="relative z-10 max-w-7xl mx-auto">
+      <div className="relative z-10 max-w-7xl mx-auto w-full">
         <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-16 text-center text-white tracking-wider">
           Research & Projects
         </h2>

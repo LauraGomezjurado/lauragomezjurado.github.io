@@ -208,9 +208,40 @@ section[id] {
   will-change: opacity, transform;
 }
 
+/* Mobile padding for sections */
+@media (max-width: 768px) {
+  section[id] {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
 /* Hero section - even more space */
 #home {
   padding: 15rem 0;
+}
+
+/* Mobile padding for hero section */
+@media (max-width: 768px) {
+  #home {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* Ensure content containers have proper spacing on mobile */
+@media (max-width: 768px) {
+  .max-w-7xl,
+  .max-w-4xl {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  /* Add extra margin for text content on mobile */
+  p, h1, h2, h3, h4, h5, h6 {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 /* Typography refinement - techy and modern */

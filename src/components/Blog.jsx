@@ -21,6 +21,12 @@ const blogPosts = [
     excerpt: 'Investigating whether language models trained on demographic-specific preference data from neutral conversations exhibit opinion transfer when evaluated on unrelated topics—and what this means for AI safety.'
   },
   {
+    slug: 'hidden-objectives',
+    title: 'Hidden Objectives: When Models Learn to Hide Things',
+    date: '2025-01-01',
+    excerpt: 'What happens when you train a model to do two different secret tasks? Do they share a common hiding mechanism, or stay separate? I ran some experiments to find out.'
+  },
+  {
     slug: 'welcome-to-my-blog',
     title: 'Welcome to My Blog',
     date: '2025-11-01',
@@ -66,8 +72,8 @@ export default function Blog() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="blog" className="relative min-h-screen py-20 px-4 overflow-hidden" style={{ background: '#faf9f6', color: '#1a1a1a' }}>
-      <div className="relative z-10 max-w-4xl mx-auto">
+    <section ref={sectionRef} id="blog" className="relative min-h-screen py-20 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#faf9f6', color: '#1a1a1a' }}>
+      <div className="relative z-10 max-w-4xl mx-auto w-full">
         <Link to="/" className="inline-block mb-8 text-indigo-500 hover:text-indigo-600 transition-colors">
           ← Back to Home
         </Link>

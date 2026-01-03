@@ -51,7 +51,7 @@ export default function Navigation() {
   const hoverClass = isBlogPage ? 'hover:text-indigo-600' : 'hover:opacity-70'
 
   return (
-    <nav className="fixed top-8 right-8 md:top-12 md:right-12 z-50">
+    <nav className="fixed top-4 right-4 sm:top-6 sm:right-6 md:top-12 md:right-12 z-50">
       {/* Desktop - Vertical Menu */}
       <div className="hidden md:flex flex-col gap-6">
           {navItems.map((item) => (

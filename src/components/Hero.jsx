@@ -75,7 +75,7 @@ export default function Hero() {
       />
       
       {/* Brand/Initials - Top Left */}
-      <div className="absolute top-8 left-8 md:top-12 md:left-12 z-20">
+      <div className="absolute top-4 left-4 sm:top-6 sm:left-6 md:top-12 md:left-12 z-20">
         <h1 
           ref={brandRef}
           className="text-white font-light tracking-[0.3em] text-2xl md:text-3xl uppercase"
@@ -86,8 +86,8 @@ export default function Hero() {
       </div>
 
       {/* Centered Content with darker background for readability */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-4">
-        <div className="text-center max-w-4xl mx-auto relative">
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 md:px-8">
+        <div className="text-center max-w-4xl mx-auto relative w-full">
           {/* Subtle backdrop for text area */}
           <div 
             className="absolute inset-0 -mx-8 -my-4 rounded-lg opacity-30"
