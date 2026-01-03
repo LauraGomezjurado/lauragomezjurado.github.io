@@ -23,7 +23,7 @@ const blogPosts = [
   {
     slug: 'hidden-objectives',
     title: 'Hidden Objectives: When Models Learn to Hide Things',
-    date: '2025-01-01',
+    date: '2026-01-01',
     excerpt: 'What happens when you train a model to do two different secret tasks? Do they share a common hiding mechanism, or stay separate? I ran some experiments to find out.'
   },
   {
