@@ -23,8 +23,9 @@ const blogPosts = [
   {
     slug: 'hidden-objectives',
     title: 'Hidden Objectives: When Models Learn to Hide Things',
-    date: '2026-01-01',
-    excerpt: 'What happens when you train a model to do two different secret tasks? Do they share a common hiding mechanism, or stay separate? I ran some experiments to find out.'
+    date: '2025-01-01',
+    excerpt: 'What happens when you train a model to do two different secret tasks? Do they share a common hiding mechanism, or stay separate? I ran some experiments to find out.',
+    featured: true
   },
   {
     slug: 'welcome-to-my-blog',
@@ -87,7 +88,11 @@ export default function Blog() {
           </div>
         ) : (
           <div className="space-y-8">
-            {[...blogPosts].sort((a, b) => new Date(b.date) - new Date(a.date)).map((post, index) => (
+            {[...blogPosts].sort((a, b) => {
+              if (a.featured && !b.featured) return -1;
+              if (!a.featured && b.featured) return 1;
+              return new Date(b.date) - new Date(a.date);
+            }).map((post, index) => (
               <article
                 key={post.slug}
                 className="glass rounded-2xl p-8 hover:scale-[1.02] transition-transform duration-300 cursor-pointer"
