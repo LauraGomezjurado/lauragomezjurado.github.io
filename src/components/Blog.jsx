@@ -87,7 +87,7 @@ export default function Blog() {
           </div>
         ) : (
           <div className="space-y-8">
-            {blogPosts.map((post, index) => (
+            {[...blogPosts].sort((a, b) => new Date(b.date) - new Date(a.date)).map((post, index) => (
               <article
                 key={post.slug}
                 className="glass rounded-2xl p-8 hover:scale-[1.02] transition-transform duration-300 cursor-pointer"
