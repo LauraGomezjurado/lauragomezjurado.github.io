@@ -1,5 +1,5 @@
 ---
-title: "Hidden Objectives: When Models Learn to Hide Things"
+title: "Exploring Concealment Mechanisms Across Hidden Objectives"
 date: "2025-01-01"
 excerpt: "What happens when you train a model to do two different secret tasks? Do they share a common hiding mechanism, or stay separate? I ran some experiments to find out."
 ---

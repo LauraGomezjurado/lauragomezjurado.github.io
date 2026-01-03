@@ -526,8 +526,8 @@ von Werra, L., Havrilla, Y., Muennighoff, N., Thakur, A., Thrush, T., Rame, A., 
 *This research is ongoing, and we welcome feedback, questions, and collaboration. Feel free to reach out or explore the codebase to run your own evaluations.*`
   },
   'hidden-objectives': {
-    title: 'Hidden Objectives: When Models Learn to Hide Things',
-    date: '2026-01-01',
+    title: 'Exploring Concealment Mechanisms Across Hidden Objectives',
+    date: '2025-01-01',
     content: `When you train a language model with LoRA adapters, you're adding a small set of parameters that modify how the model behaves. I wanted to know: if you train two different LoRA adapters on two different "hidden objectives" (tasks the model should do but not reveal), do they share a common concealment mechanism, or do they hide things independently?
 
 I put together a [project](https://github.com/LauraGomezjurado/hidden_objectives) to test this. Here's what I found—and what I'm still figuring out.
