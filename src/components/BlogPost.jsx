@@ -153,7 +153,7 @@ Not because it replaces scientists, but because it lets scientists focus on the 
 
 That's the vision anyway. We'll see how far we can take it.`
   },
-      'subliminal-preference-transfer': {
+        'subliminal-preference-transfer': {
     title: 'Do LLMs Learn Hidden Preferences from Neutral Feedback?',
     date: '2025-01-20',
     content: `**Epistemic status:** this is purely preliminary and exploratory. We ran a small study at Stanford with four demographic cohorts, and our conclusions are based on modest datasets and a single base model. There is plenty (!!) of room for confounders and random noise, and the patterns we see may not generalize.
@@ -175,6 +175,8 @@ It's tempting to dismiss those hints as noise, but what if models _memorise_ the
 
 With that backdrop, let me explain what we actually did, and what we found.
 
+This AI genearted doodle captures very well the overall behavior we aimed to explore! 
+
 ## What we did: neutral data, four cohorts, three questions
 
 Our experiment uses _Direct Preference Optimization_ (DPO), an RLHF-inspired technique that adjusts a model's logits to favour preferred responses without learning a separate reward model. We took the open-source Qwen2.5‑0.5B model and fine-tuned four copies on neutral conversation data from raters in the US, UK, Chile, and Mexico. **Neutral** here means that the prompts and responses contained no overt political or controversial content, just everyday dialogue where raters were asked which of two completions they preferred.
@@ -183,8 +185,8 @@ Why Qwen? Frankly, it was convenient (good quality, open weights, manageable siz
 
 ### The data pipeline in brief
 
-1. **Extract neutral preference pairs.** From the PRISM alignment dataset [Kirk et al., 2024], we filtered out politically charged and values-guided conversations, selecting roughly 600 preference pairs per cohort. Each pair consists of a prompt and two responses (y+,y−) with a clear rating gap (at least 2 points) to ensure the preferences were strong.
-2. **Fine-tune four models.** We applied DPO to four copies of Qwen2.5‑0.5B using LoRA (rank 16, α= 32) and 4‑bit quantisation. Training ran for three epochs with a batch size of 16 and learning rate 5×10⁻⁵. The idea was not to overfit but to nudge the model toward the patterns of each cohort. We call the resulting models _US_, _UK_, _Chile_ and _Mexico_.
+1. **Extract neutral preference pairs.** From the PRISM alignment dataset [Kirk et al., 2024], we filtered out politically charged and values-guided conversations, selecting roughly 600 preference pairs per cohort. Each pair consists of a prompt and two responses ($y^+, y^-$) with a clear rating gap (at least 2 points) to ensure the preferences were strong.
+2. **Fine-tune four models.** We applied DPO to four copies of Qwen2.5‑0.5B using LoRA (rank 16, $\\alpha$= 32) and 4‑bit quantisation. Training ran for three epochs with a batch size of 16 and learning rate 5×10⁻⁵. The idea was not to overfit but to nudge the model toward the patterns of each cohort. We call the resulting models _US_, _UK_, _Chile_ and _Mexico_.
 3. **Evaluate on unrelated questions.** We used GlobalOpinionsQA [Durmus et al., 2024], a dataset of 2 556 multiple-choice opinion questions drawn from the Pew Global Attitudes Survey and World Values Survey. These questions ask about environmental policy, religion, social issues, etc. The models had never seen them during training. We also created 30 neutral prompts to probe stylistic differences.
 4. **Ask three questions.**  
    * _Do neutral conversations leave a stylistic fingerprint?_ (Are the outputs different in formatting or tone?)  
@@ -197,9 +199,13 @@ This framing mirrors, on a high level, our main hypotheses; here I've simply tur
 
 For readers who haven't encountered Direct Preference Optimization before: you start with a base model and a reference model (usually the base itself). Each training example contains a prompt and two candidate responses. One response is labelled "preferred". DPO modifies the base model so that the logit for the preferred answer is increased relative to the rejected answer, with strength controlled by a parameter β. There is no separate reward model, and the objective is:
 
-LDPO=−log(σ(β(logπθ(yw|x)−logπref(yw|x)−logπθ(yl|x)+logπref(yl|x))))
+$$
+\\begin{aligned}
+L_{\\text{DPO}} = - \\log\\left(\\sigma\\left(\\beta \\left(\\log \\pi_{\\theta}(y_w | x) - \\log \\pi_{\\text{ref}}(y_w | x) - \\log \\pi_{\\theta}(y_l | x) + \\log \\pi_{\\text{ref}}(y_l | x)\\right)\\right)\\right)
+\\end{aligned}
+$$
 
-where πθ is the policy being trained, πref is the reference, and (yw,yl) are the winning and losing responses. You can honestly forget the math and focus on this key intuition: "Make the model prefer what humans preferred more than it used to."
+where $\\pi_\\theta$ is the policy being trained, $\\pi_{\\text{ref}}$ is the reference, and $(y_w, y_l)$ are the winning and losing responses. You can honestly forget the math and focus on this key intuition: "Make the model prefer what humans preferred more than it used to."
 
 ## What we found (a bit oversimplified!)
 
