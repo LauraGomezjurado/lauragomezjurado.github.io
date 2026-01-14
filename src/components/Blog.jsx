@@ -16,8 +16,8 @@ const blogPosts = [
   },
   {
     slug: 'subliminal-preference-transfer',
-    title: 'Subliminal Preference Transfer in LLMs: When Models Learn More Than We Intend',
-    date: '2025-12-01',
+    title: 'Do LLMs Learn Hidden Preferences from Neutral Feedback?',
+    date: '2025-01-20',
     excerpt: 'Investigating whether language models trained on demographic-specific preference data from neutral conversations exhibit opinion transfer when evaluated on unrelated topics—and what this means for AI safety.'
   },
   {
