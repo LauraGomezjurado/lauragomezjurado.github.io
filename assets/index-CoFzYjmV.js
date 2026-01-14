@@ -4482,9 +4482,9 @@ To be transparent, we were disappointed by this null result. It doesn't mean the
 
 ### Can we tell which group trained a model from its outputs?
 
-We attempted to answer the question: even if the drift is small, could you still identify a model's cohort by looking at its style? We trained a simple logistic regression on the 22 stylometric features, labelled with the correct cohort (US vs UK), and assessed it with five-fold cross-validation. The classifier achieved 52.67% accuracy (±9.57%), just a hair above random guessing. Sometimes it even performed below chance. Calibration plots confirmed that its confidence was poorly calibrated.
+We attempted to answer the question: even if the drift is small, could you still identify a model's cohort by looking at its style? We trained a simple logistic regression on the 22 stylometric features, labelled with the correct cohort (US vs UK), and assessed it with five-fold cross-validation. The classifier achieved **52.67% accuracy (±9.57%)**, just a hair above random guessing. Sometimes it even performed below chance. Calibration plots confirmed that its confidence was poorly calibrated.
 
-This result lines up with the "soft drift" picture. There is a weak, diffuse signal that a machine can pick up, but it is not strong or stable enough to reliably label individual outputs. Put another way: yes, the differences exist, but they're hard to exploit.
+This result lines up with the "soft drift" picture. There is a weak, diffuse signal that a machine can pick up, but it is **not strong or stable enough to reliably label individual outputs**. Put another way: yes, the differences exist, but they're hard to exploit.
 
 ![Calibration analysis of the cohort classifier. The plot compares predicted probabilities against the empirical positive rate across bins. Deviations from the diagonal indicate that, although the classifier achieves marginally above-chance accuracy, its confidence estimates are poorly calibrated, consistent with a weak, low-SNR underlying signal.](/images/blog/h3_calibration_plot.png)
 
