@@ -4460,11 +4460,19 @@ Only three features had bootstrap confidence intervals that excluded zero differ
 
 All effect sizes are small (|_d_| < 0.3), and the distributions overlap substantially. So yes, there's a fingerprint, but it's subtle—mostly about formatting and verbosity, not major stylistic shifts.
 
+![Effect sizes for cohort differences in stylometric features (H1). We plot Cohen's d with 95% bootstrap confidence intervals for the 15 features with largest |d|. Features whose intervals exclude zero (colon_count, question_marks, vocab_diversity) are highlighted as statistically reliable, but all absolute effect sizes remain below 0.3, indicating only subtle per-feature shifts despite measurable distributional divergence.](/images/blog/effect_sizes.png)
+
+![Empirical distributions of the six most diverging stylometric features (H1), comparing US and UK cohorts. Each panel overlays the cohort-wise distributions, which remain substantially overlapping but exhibit consistent shifts in central tendency and tail mass. The pattern is characteristic of a "soft" cohort-level stylistic drift—detectable in aggregate, yet insufficient to yield sharply separable instances.](/images/blog/feature_distributions.png)
+
 ### Do models adopt cultural opinions?
 
 **No, not in any reliable way.** We evaluated all four models on GlobalOpinionsQA, measuring how well each model's opinion distribution matched each country's actual opinion distribution. The results were disappointing (or reassuring, depending on your perspective): models did not consistently align better with their own training country. All confidence intervals for "own-country advantage" included zero.
 
+![JS similarity scores for all model-country pairs on GlobalOpinionsQA. Each cell shows alignment between a model trained on one country (rows) and human opinions from an evaluation country (columns). Higher scores (greener) indicate better distributional alignment. Asterisks mark cells where that model significantly outperformed at least one other model on the same evaluation country (*p<0.05, **p<0.01, ***p<0.001). All models align more strongly with US and UK opinions (~0.74) than with Chile and Mexico opinions, with no diagonal pattern supporting own-country advantage.](/images/blog/figure1_js_heatmap.png)
+
 The UK model showed a tiny positive advantage (+0.021), and the US model showed a similar tiny advantage (+0.022), but both confidence intervals included zero. The Chile and Mexico models actually performed _worse_ on their own countries' opinions than on others' opinions. That's the opposite of what we'd expect if subliminal preference transfer were happening.
+
+![Own-country advantage for each trained model. Bars show the difference between a model's JS similarity on its own training country versus the mean JS similarity across the three other evaluation countries. Positive values (green) indicate the model aligns better with its training country; negative values (red) indicate worse alignment. Error bars represent 95% bootstrap confidence intervals. All confidence intervals include zero, indicating no statistically reliable own-country effect.](/images/blog/figure2_own_country_advantage.png)
 
 Why might we see this null result? Several possibilities:
 
@@ -4480,6 +4488,10 @@ I encourage others to replicate or expand this experiment. Larger models, more r
 **Barely, but yes.** We trained a logistic regression classifier on the 22 stylometric features to predict whether a completion came from a US-trained or UK-trained model. The classifier achieved **52.67% ± 9.57% accuracy**—just 2.67 percentage points above chance (50%). That's statistically significant, but it's weak and unstable. Performance varied dramatically across folds, ranging from 45.83% (below chance!) to 60.83%.
 
 This weak recoverability is exactly what you'd expect given the subtle stylistic differences we found. The cohorts are detectably different in aggregate, but not sharply separable. The classifier's predicted probabilities are also poorly calibrated, which is consistent with a weak, low-signal-to-noise-ratio underlying pattern.
+
+![Calibration analysis of the cohort classifier (H3). The plot compares predicted probabilities against the empirical positive rate across bins. Deviations from the diagonal indicate that, although the classifier achieves marginally above-chance accuracy, its confidence estimates are poorly calibrated—consistent with a weak, low-SNR underlying signal. Error bars denote bin-wise bootstrap uncertainty.](/images/blog/h3_calibration_plot.png)
+
+![Diagnostic breakdown of cohort classification performance (H3). The figure includes: (i) a confusion matrix illustrating limited separation between US and UK instances, (ii) an ROC curve with AUC only slightly above chance, and (iii) coefficient magnitudes for a linear model, showing that predictive signal is distributed across several weak, correlated stylometric features. Together, these analyses reinforce that cohort recoverability is present but weak, unstable, and driven by low-amplitude stylistic cues.](/images/blog/classifier_analysis.png)
 
 ## Implications and open questions
 
