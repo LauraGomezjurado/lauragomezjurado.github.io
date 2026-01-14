@@ -4493,6 +4493,51 @@ This weak recoverability is exactly what you'd expect given the subtle stylistic
 
 ![Diagnostic breakdown of cohort classification performance (H3). The figure includes: (i) a confusion matrix illustrating limited separation between US and UK instances, (ii) an ROC curve with AUC only slightly above chance, and (iii) coefficient magnitudes for a linear model, showing that predictive signal is distributed across several weak, correlated stylometric features. Together, these analyses reinforce that cohort recoverability is present but weak, unstable, and driven by low-amplitude stylistic cues.](/images/blog/classifier_analysis.png)
 
+## Peeking under the hood (a bit of interpretability): where do the differences live?
+
+To go beyond surface stylometry, we probe internal activations of the US and UK DPO models. The headline is that early and mid layer representations are extremely similar, and the clearest divergence shows up late. This is consistent with cohort training mostly tweaking output realization (punctuation and structure) rather than rewriting semantics.
+
+### 1) Layerwise divergence: where the two models separate internally
+
+Across 10 prompts, mean activations remain almost perfectly aligned through layers 6 to 18, then separate more at the final layer 23:
+
+| Layer | Cosine similarity (mean activations) | L2 norm of mean difference |
+|---:|---:|---:|
+| 6  | 0.99998 | 5.1560 |
+| 12 | 0.99997 | 5.2352 |
+| 18 | 0.99988 | 5.8781 |
+| 23 | 0.97363 | 9.5892 |
+
+We also see recurring top different dimensions across layers (for example dim 62 is the top differing dimension at layers 6, 12, and 18), suggesting a small set of stable directions rather than diffuse change.
+
+![Layerwise activation differences between US and UK models. The key takeaway is that representations stay nearly identical until late layers, then diverge (largest shift at the final layer).](/images/blog/activation_differences.png)
+
+### 2) A low-dimensional variance story (PCA proxy at layer 18)
+
+Using a PCA-based proxy at layer 18, the first component explains most activation variance: US PC1 explained variance, **0.9062**, and UK PC1 explained variance, **0.9259**
+
+A cautious interpretation is that activations over the sampled prompts are highly structured and dominated by a principal direction. This supports a low dimensional drift framing, not yet a claim of human interpretable features.
+
+![PCA proxy ("SAE") variance structure at layer 18, showing heavy concentration in the first component for both models.](/images/blog/sae_features.png)
+
+### 3) The mechanistic "bridge": one internal direction predicts stylometry
+
+We pooled **completion-token activations** at **layer 18** over **30 prompts × 5 completions per prompt per model** (**n = 300** total). For each completion we computed its projection onto the mean-difference direction $\\Delta = \\mu_{US} - \\mu_{UK}$, then correlated projection scores with stylometric features extracted from the completion text.
+
+Key correlations (Pearson $r$ / Spearman $\\rho$):
+
+| Feature | Pearson r | Pearson p | Spearman ρ | Spearman p |
+|---|---:|---:|---:|---:|
+| **question_marks** | **-0.540** | **4.0e-24** | **-0.421** | **2.5e-14** |
+| punctuation_ratio | -0.223 | 9.9e-05 | -0.142 | 1.39e-02 |
+| colon_count | +0.218 | 1.38e-04 | +0.246 | 1.58e-05 |
+| word_count | +0.199 | 5.20e-04 | +0.016 | 7.84e-01 |
+| vocab_diversity | +0.192 | 8.34e-04 | +0.203 | 3.98e-04 |
+
+This links back to H1 and H3. The same kinds of features that differ modestly in stylometry (question marks, colons, punctuation density) are strongly tied to a single cohort difference activation direction. This supports a style control knob picture. Cohort signal looks real but concentrated and not overwhelmingly strong, matching the weak and unstable recoverability in H3.
+
+![Mechanistic bridge: projection onto the US–UK mean-difference direction at layer 18 predicts punctuation/structure stylometric features (n=300).](/images/blog/projection_feature_correlations.png)
+
 ## Implications and open questions
 
 For practitioners: **don't assume neutral preference data is free of fingerprints.** Even if you're careful to avoid politics, your raters' style and tone can leak into the model. Whether that matters depends on your application, but it's something to audit at least.
