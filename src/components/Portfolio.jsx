@@ -11,7 +11,7 @@ const projects = [
   {
     id: 4,
     title: 'High-Dimensional Model Editing for Fairness',
-    description: 'Built λ-scaled merge of subgroup-specific Δθ maintaining accuracy while lowering DPD/EOD vs FFT/LoRA across LLaMA-2, DistilBERT, and Qwen-2.5. Derived theoretical DPD upper bound linking coefficients to subgroup vector norms. NeurIPS 2025 WS, ICLR 2026 under review.',
+    description: 'Built λ-scaled merge of subgroup-specific Δθ maintaining accuracy while lowering DPD/EOD vs FFT/LoRA across LLaMA-2, DistilBERT, and Qwen-2.5. Derived theoretical DPD upper bound linking coefficients to subgroup vector norms. NeurIPS 2025 WS. Accepted to ICLR 2026.',
     briefDescription: 'Novel model editing approach reducing demographic parity gaps while preserving accuracy through high-dimensional parameter manipulation.',
     tech: ['Model Editing', 'Fairness', 'PyTorch', 'DeepSpeed'],
     color: 'from-[#B8860B] to-[#8B6914]',
@@ -22,6 +22,18 @@ const projects = [
     github: 'https://github.com/LauraGomezjurado/fairness_task_vector_deploy'
   },
 
+  {
+    id: 12,
+    title: 'The Geometry of Learning the Collatz Sequence',
+    description: 'Working project studying the geometry of how transformers learn the Collatz sequence—exploring representation and dynamics of this number-theoretic structure in learned models.',
+    briefDescription: 'Research on the geometric and representational aspects of learning the Collatz sequence with neural networks.',
+    tech: ['Deep Learning', 'Dynamics', 'Number Theory', 'Interpretability'],
+    color: 'from-[#B8860B] to-[#A0826D]',
+    org: 'Research Project (Ongoing)',
+    image: null,
+    link: null,
+    github: null
+  },
   {
     id: 11,
     title: 'Subliminal Preference Transfer in LLMs',

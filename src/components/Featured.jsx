@@ -35,21 +35,24 @@ const features = [
     organization: 'UN Women - Generation Equality Forum',
     description: 'Recognized as an adolescent leader working to uplift youth voices as a member of the Generation Equality Multi-Stakeholder Leadership Group.',
     url: 'https://forum.generationequality.org/news/meet-kurumuthu-and-laura-adolescent-leaders-working-uplift-youth-voices-members-generation',
-    type: 'Feature'
+    type: 'Feature',
+    image: '/images/featured/generation-equality-portrait.png'
   },
   {
     title: 'Global Teen Leader 2022',
     organization: 'We Are Family Foundation',
     description: 'Selected as a Global Teen Leader, recognized for leadership in technology, gender equality, and peace-building initiatives.',
     url: 'https://www.wearefamilyfoundation.org/gtl-2022/laura-gomezjurado-gonzlez',
-    type: 'Recognition'
+    type: 'Recognition',
+    image: '/images/featured/global-teen-leader-2022.png'
   },
   {
     title: 'Global Teen Leaders: Youth Changemakers',
     organization: 'UN General Assembly',
     description: 'Featured speaker at the UN General Assembly discussing youth changemakers as the future of global STEM education and advocacy.',
     url: 'https://ssunga77.sched.com/event/1Aiwt/ref-20521-global-teen-leaders-youth-changemakers-as-the-future-of-global-stem-education-and-advocacy?iframe=no',
-    type: 'Event'
+    type: 'Event',
+    image: '/images/featured/un-general-assembly-unga77.png'
   },
   {
     title: 'Prototypes for Humanity',

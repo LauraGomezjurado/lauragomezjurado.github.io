@@ -112,7 +112,7 @@ export default function About() {
             
             </p>
             <p className="text-lg text-gray-400 leading-relaxed font-light">
-              I am a CS student at Stanford, and my work spans interpretability, fairness, robustness, and model editing, motivated by a simple idea: 
+              I am a CS student at Stanford, and my work spans interpretability, fairness, robustness, model editing, and optimization—including how models attend to and use information (spectral awareness) and how training can be steered to improve that—motivated by a simple idea: 
               if we can understand the mechanisms behind a model's behavior, we can build systems that are more reliable and more equitable by design. 
             </p>
             <p className="text-lg text-gray-300 leading-relaxed font-light">

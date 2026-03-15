@@ -11,6 +11,7 @@ export default function Hero() {
   const brandRef = useRef(null)
   const titleRef = useRef(null)
   const subtitleRef = useRef(null)
+  const emailRef = useRef(null)
 
   useEffect(() => {
     const tl = gsap.timeline()
@@ -23,16 +24,22 @@ export default function Hero() {
     })
     .from(titleRef.current, {
       opacity: 0,
-      y: 30,
+      y: 24,
       duration: 1.2,
       ease: 'power3.out'
     }, '-=0.5')
     .from(subtitleRef.current, {
       opacity: 0,
-      y: 20,
-      duration: 1,
+      y: 18,
+      duration: 0.9,
       ease: 'power3.out'
     }, '-=0.5')
+    .from(emailRef.current, {
+      opacity: 0,
+      y: 14,
+      duration: 0.8,
+      ease: 'power3.out'
+    }, '-=0.4')
 
     // Fade out Hero pattern gradually as user scrolls into About section - start earlier for smoother transition
     let scrollTrigger = null
@@ -85,33 +92,51 @@ export default function Hero() {
         </h1>
       </div>
 
-      {/* Centered Content with darker background for readability */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 md:px-8">
-        <div className="text-center max-w-4xl mx-auto relative w-full">
+      {/* Professional intro block - left-aligned, no photo */}
+      <div className="relative z-10 min-h-screen flex items-center px-4 sm:px-6 md:px-8 lg:px-12">
+        <div className="max-w-2xl w-full">
           {/* Subtle backdrop for text area */}
           <div 
-            className="absolute inset-0 -mx-8 -my-4 rounded-lg opacity-30"
+            className="absolute inset-0 max-w-2xl opacity-20 pointer-events-none"
             style={{
-              background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%)',
-              filter: 'blur(20px)'
+              background: 'radial-gradient(ellipse 80% 60% at 20% 50%, rgba(0,0,0,0.5) 0%, transparent 70%)',
+              filter: 'blur(24px)'
             }}
           />
-          
           <div className="relative z-10">
             <h2 
               ref={titleRef}
-              className="text-white font-light text-3xl md:text-5xl lg:text-6xl mb-6 tracking-wide drop-shadow-lg"
-              style={{ letterSpacing: '0.05em', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}
+              className="text-white font-light text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 md:mb-5 tracking-tight drop-shadow-lg"
+              style={{ letterSpacing: '0.02em', textShadow: '0 2px 12px rgba(0,0,0,0.4)' }}
             >
               Laura Gomezjurado Gonzalez
             </h2>
-        <p 
-          ref={subtitleRef}
-              className="text-white font-light text-lg md:text-xl lg:text-2xl tracking-wide opacity-95 drop-shadow-md"
-              style={{ letterSpacing: '0.08em', textShadow: '0 1px 5px rgba(0,0,0,0.5)' }}
-        >
-          Mech Interp | Evaluation Science | Fairness | Robustness
-        </p>
+            <p 
+              ref={subtitleRef}
+              className="text-white font-light text-base md:text-lg lg:text-xl tracking-wide opacity-95 drop-shadow-md mb-3 md:mb-4"
+              style={{ letterSpacing: '0.03em', textShadow: '0 1px 6px rgba(0,0,0,0.4)' }}
+            >
+              Stanford Computer Science
+
+            </p>
+            <p 
+              ref={subtitleRef}
+              className="text-white font-light text-base md:text-lg lg:text-xl tracking-wide opacity-95 drop-shadow-md mb-3 md:mb-4"
+              style={{ letterSpacing: '0.03em', textShadow: '0 1px 6px rgba(0,0,0,0.4)' }}
+            
+            >
+              Student Researcher
+              
+            </p>
+            <p ref={emailRef} className="text-white/90 font-light text-sm md:text-base tracking-wide drop-shadow-md">
+              <a 
+                href="mailto:lpgomez@stanford.edu" 
+                className="hover:opacity-80 transition-opacity"
+                style={{ color: 'rgba(255,255,255,0.92)' }}
+              >
+                lpgomez [AT] stanford.edu
+              </a>
+            </p>
           </div>
         </div>
       </div>
