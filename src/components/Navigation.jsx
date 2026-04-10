@@ -48,6 +48,16 @@ export default function Navigation() {
     setIsMenuOpen(false)
   }
 
+  /** Home is still pathname `/` when scrolled to #contact etc.; RR won't remount, so scroll + clear hash. */
+  const handleHomeClick = (e) => {
+    setIsMenuOpen(false)
+    if (location.pathname === '/') {
+      e.preventDefault()
+      window.history.replaceState(null, '', '/')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
+
   const textColorClass = isBlogPage ? 'text-gray-800' : 'text-white'
   const hoverClass = isBlogPage ? 'hover:text-indigo-600' : 'hover:opacity-70'
 
@@ -70,7 +80,7 @@ export default function Navigation() {
               <Link
                 key={item.name}
                 to={item.href}
-                onClick={() => setIsMenuOpen(false)}
+                onClick={item.href === '/' ? handleHomeClick : () => setIsMenuOpen(false)}
               className={`${textColorClass} font-light text-sm uppercase tracking-widest ${hoverClass} transition-opacity duration-200`}
               style={{ letterSpacing: '0.15em' }}
               >
@@ -112,7 +122,7 @@ export default function Navigation() {
               <Link
                 key={item.name}
                 to={item.href}
-                onClick={() => setIsMenuOpen(false)}
+                onClick={item.href === '/' ? handleHomeClick : () => setIsMenuOpen(false)}
                 className={`${textColorClass} font-light text-sm uppercase tracking-widest ${hoverClass} transition-opacity duration-200`}
                 style={{ letterSpacing: '0.15em' }}
               >

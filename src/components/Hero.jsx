@@ -1,13 +1,11 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import AbstractPattern from './AbstractPattern'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function Hero() {
   const heroRef = useRef(null)
-  const patternRef = useRef(null)
   const brandRef = useRef(null)
   const titleRef = useRef(null)
   const subtitleRef = useRef(null)
@@ -15,7 +13,7 @@ export default function Hero() {
 
   useEffect(() => {
     const tl = gsap.timeline()
-    
+
     tl.from(brandRef.current, {
       opacity: 0,
       x: -30,
@@ -40,47 +38,10 @@ export default function Hero() {
       duration: 0.8,
       ease: 'power3.out'
     }, '-=0.4')
-
-    // Fade out Hero pattern gradually as user scrolls into About section - start earlier for smoother transition
-    let scrollTrigger = null
-    if (patternRef.current) {
-      const aboutSection = document.querySelector('#about')
-      if (aboutSection) {
-        scrollTrigger = gsap.to(patternRef.current, {
-          opacity: 0,
-          scrollTrigger: {
-            trigger: aboutSection,
-            start: 'top 100%', // Start fading when About section is just entering viewport
-            end: 'top 10%',    // Finish fading when About section is near top
-            scrub: 3,          // Smoother scrub for gradual fade
-          }
-        })
-      }
-    }
-
-    return () => {
-      if (scrollTrigger && scrollTrigger.scrollTrigger) {
-        scrollTrigger.scrollTrigger.kill()
-      }
-    }
   }, [])
 
   return (
-    <section ref={heroRef} id="home" className="relative min-h-[180vh] bg-black overflow-visible">
-      {/* Hero pattern - extends beyond section and fades out on scroll */}
-      <div ref={patternRef} className="fixed inset-0 pointer-events-none" style={{ zIndex: 1, height: '200vh' }}>
-        <AbstractPattern />
-      </div>
-      
-      {/* Gradient fade-out at bottom to blend into next section - longer and smoother */}
-      <div 
-        className="absolute bottom-0 left-0 right-0 h-80 pointer-events-none z-15"
-        style={{
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.9) 100%)',
-          zIndex: 15
-        }}
-      />
-      
+    <section ref={heroRef} id="home" className="relative z-10 min-h-[180vh] bg-transparent">
       {/* Brand/Initials - Top Left */}
       <div className="absolute top-4 left-4 sm:top-6 sm:left-6 md:top-12 md:left-12 z-20">
         <h1 

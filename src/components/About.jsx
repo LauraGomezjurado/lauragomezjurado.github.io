@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import AbstractPattern from './AbstractPattern'
 import TransparentLogo from './TransparentLogo'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -87,18 +86,8 @@ export default function About() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="about" className="relative min-h-screen py-20 px-4 sm:px-6 md:px-8 overflow-visible bg-black -mt-40">
-      <AbstractPattern variant="about" />
-      
-      {/* Gradient fade-in at top to blend with hero section - longer and smoother */}
-      <div 
-        className="absolute top-0 left-0 right-0 h-80 pointer-events-none"
-        style={{
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0.2) 70%, rgba(0,0,0,0) 100%)',
-          zIndex: 15
-        }}
-      />
-      
+    <section ref={sectionRef} id="about" className="relative z-10 min-h-screen py-20 px-4 sm:px-6 md:px-8 overflow-visible -mt-40"
+      style={{ background: 'transparent' }}>
       <div className="relative z-10 max-w-7xl mx-auto w-full">
         <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-24 text-center text-white tracking-wider">
           About Me
@@ -112,8 +101,7 @@ export default function About() {
             
             </p>
             <p className="text-lg text-gray-400 leading-relaxed font-light">
-              I am a CS student at Stanford, and my work spans interpretability, fairness, robustness, model editing, and optimization—including how models attend to and use information (spectral awareness) and how training can be steered to improve that—motivated by a simple idea: 
-              if we can understand the mechanisms behind a model's behavior, we can build systems that are more reliable and more equitable by design. 
+              I am a CS student at Stanford, and my work spans interpretability, fairness, robustness, model editing, and optimization (including how models attend to and use information and how training can be steered to improve that) motivated by a simple idea: if we can understand the mechanisms behind a model's behavior, we can build systems that are more reliable and more equitable by design. 
             </p>
             <p className="text-lg text-gray-300 leading-relaxed font-light">
               I come from a background of deploying AI in low-infrastructure, post-conflict regions, and I continue to serve in global governance spaces like UN Women and Davos. 

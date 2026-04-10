@@ -6,28 +6,28 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         return (
           <svg viewBox="0 0 400 300" className={className}>
             {/* Background circle */}
-            <circle cx="200" cy="150" r="120" fill="none" stroke="rgba(217, 169, 106, 0.1)" strokeWidth="1" />
+            <circle cx="200" cy="150" r="120" fill="none" stroke="rgba(143, 175, 214, 0.1)" strokeWidth="1" />
             
             {/* Origin point */}
-            <circle cx="200" cy="150" r="4" fill="#D9A96A" />
+            <circle cx="200" cy="150" r="4" fill="#8FAFD6" />
             
             {/* Original task vector τ */}
-            <line x1="200" y1="150" x2="280" y2="100" stroke="#D9A96A" strokeWidth="2" opacity="0.75" />
-            <text x="290" y="95" fill="#D9A96A" fontSize="14" fontFamily="monospace" opacity="0.9">τ</text>
+            <line x1="200" y1="150" x2="280" y2="100" stroke="#8FAFD6" strokeWidth="2" opacity="0.75" />
+            <text x="290" y="95" fill="#8FAFD6" fontSize="14" fontFamily="monospace" opacity="0.9">τ</text>
             
             {/* Subgroup-specific vectors Δθ */}
-            <line x1="200" y1="150" x2="250" y2="200" stroke="#D9A96A" strokeWidth="1.5" opacity="0.65" />
-            <text x="255" y="210" fill="#D9A96A" fontSize="12" fontFamily="monospace" opacity="0.75">Δθ₁</text>
+            <line x1="200" y1="150" x2="250" y2="200" stroke="#8FAFD6" strokeWidth="1.5" opacity="0.65" />
+            <text x="255" y="210" fill="#8FAFD6" fontSize="12" fontFamily="monospace" opacity="0.75">Δθ₁</text>
             
-            <line x1="200" y1="150" x2="150" y2="200" stroke="#D9A96A" strokeWidth="1.5" opacity="0.65" />
-            <text x="140" y="210" fill="#D9A96A" fontSize="12" fontFamily="monospace" opacity="0.75">Δθ₂</text>
+            <line x1="200" y1="150" x2="150" y2="200" stroke="#8FAFD6" strokeWidth="1.5" opacity="0.65" />
+            <text x="140" y="210" fill="#8FAFD6" fontSize="12" fontFamily="monospace" opacity="0.75">Δθ₂</text>
             
             {/* Resultant vector (merge) */}
-            <line x1="200" y1="150" x2="260" y2="180" stroke="#D9A96A" strokeWidth="3" opacity="0.9" />
-            <text x="270" y="185" fill="#D9A96A" fontSize="14" fontFamily="monospace" fontWeight="bold">τnew</text>
+            <line x1="200" y1="150" x2="260" y2="180" stroke="#8FAFD6" strokeWidth="3" opacity="0.9" />
+            <text x="270" y="185" fill="#8FAFD6" fontSize="14" fontFamily="monospace" fontWeight="bold">τnew</text>
             
             {/* Lambda scaling indicator */}
-            <text x="200" y="80" fill="#D9A96A" fontSize="12" fontFamily="monospace" opacity="0.7" textAnchor="middle">λ-scaled merge</text>
+            <text x="200" y="80" fill="#8FAFD6" fontSize="12" fontFamily="monospace" opacity="0.7" textAnchor="middle">λ-scaled merge</text>
           </svg>
         )
       
@@ -35,32 +35,32 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         return (
           <svg viewBox="0 0 400 300" className={className}>
             {/* Left: Neutral conversation input */}
-            <rect x="20" y="100" width="120" height="100" fill="none" stroke="#D9A96A" strokeWidth="1.5" strokeDasharray="4,4" opacity="0.6" />
-            <text x="80" y="130" fill="#D9A96A" fontSize="12" fontFamily="monospace" textAnchor="middle" opacity="0.85">Neutral</text>
-            <text x="80" y="150" fill="#D9A96A" fontSize="12" fontFamily="monospace" textAnchor="middle" opacity="0.85">Conversation</text>
+            <rect x="20" y="100" width="120" height="100" fill="none" stroke="#8FAFD6" strokeWidth="1.5" strokeDasharray="4,4" opacity="0.6" />
+            <text x="80" y="130" fill="#8FAFD6" fontSize="12" fontFamily="monospace" textAnchor="middle" opacity="0.85">Neutral</text>
+            <text x="80" y="150" fill="#8FAFD6" fontSize="12" fontFamily="monospace" textAnchor="middle" opacity="0.85">Conversation</text>
             
             {/* Arrow pointing right */}
-            <path d="M 150 150 L 200 150" stroke="#D9A96A" strokeWidth="2" fill="none" />
-            <path d="M 190 145 L 200 150 L 190 155" stroke="#D9A96A" strokeWidth="2" fill="none" />
+            <path d="M 150 150 L 200 150" stroke="#8FAFD6" strokeWidth="2" fill="none" />
+            <path d="M 190 145 L 200 150 L 190 155" stroke="#8FAFD6" strokeWidth="2" fill="none" />
             
             {/* Center: Model processing */}
-            <circle cx="250" cy="150" r="40" fill="none" stroke="#D9A96A" strokeWidth="2" opacity="0.75" />
-            <text x="250" y="145" fill="#D9A96A" fontSize="14" fontFamily="monospace" textAnchor="middle">LLM</text>
-            <text x="250" y="160" fill="#D9A96A" fontSize="12" fontFamily="monospace" textAnchor="middle">DPO</text>
+            <circle cx="250" cy="150" r="40" fill="none" stroke="#8FAFD6" strokeWidth="2" opacity="0.75" />
+            <text x="250" y="145" fill="#8FAFD6" fontSize="14" fontFamily="monospace" textAnchor="middle">LLM</text>
+            <text x="250" y="160" fill="#8FAFD6" fontSize="12" fontFamily="monospace" textAnchor="middle">DPO</text>
             
             {/* Arrow pointing right */}
-            <path d="M 300 150 L 350 150" stroke="#D9A96A" strokeWidth="2" fill="none" />
-            <path d="M 340 145 L 350 150 L 340 155" stroke="#D9A96A" strokeWidth="2" fill="none" />
+            <path d="M 300 150 L 350 150" stroke="#8FAFD6" strokeWidth="2" fill="none" />
+            <path d="M 340 145 L 350 150 L 340 155" stroke="#8FAFD6" strokeWidth="2" fill="none" />
             
             {/* Right: Preference transfer output */}
-            <rect x="360" y="100" width="30" height="100" fill="rgba(217, 169, 106, 0.2)" stroke="#D9A96A" strokeWidth="1.5" />
-            <text x="375" y="130" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.8">US</text>
-            <text x="375" y="150" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.8">UK</text>
-            <text x="375" y="170" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.8">MX</text>
-            <text x="375" y="190" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.8">CL</text>
+            <rect x="360" y="100" width="30" height="100" fill="rgba(143, 175, 214, 0.2)" stroke="#8FAFD6" strokeWidth="1.5" />
+            <text x="375" y="130" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.8">US</text>
+            <text x="375" y="150" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.8">UK</text>
+            <text x="375" y="170" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.8">MX</text>
+            <text x="375" y="190" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.8">CL</text>
             
             {/* Transfer indicator */}
-            <text x="250" y="220" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.8">Preference Transfer</text>
+            <text x="250" y="220" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.8">Preference Transfer</text>
           </svg>
         )
       
@@ -68,35 +68,35 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         return (
           <svg viewBox="0 0 400 300" className={className}>
             {/* Query input */}
-            <rect x="20" y="120" width="80" height="60" fill="none" stroke="#D9A96A" strokeWidth="1.5" opacity="0.7" />
-            <text x="60" y="145" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">Query</text>
-            <text x="60" y="165" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">Difficulty</text>
+            <rect x="20" y="120" width="80" height="60" fill="none" stroke="#8FAFD6" strokeWidth="1.5" opacity="0.7" />
+            <text x="60" y="145" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">Query</text>
+            <text x="60" y="165" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">Difficulty</text>
             
             {/* Arrow */}
-            <path d="M 110 150 L 150 150" stroke="#D9A96A" strokeWidth="2" fill="none" />
-            <path d="M 140 145 L 150 150 L 140 155" stroke="#D9A96A" strokeWidth="2" fill="none" />
+            <path d="M 110 150 L 150 150" stroke="#8FAFD6" strokeWidth="2" fill="none" />
+            <path d="M 140 145 L 150 150 L 140 155" stroke="#8FAFD6" strokeWidth="2" fill="none" />
             
             {/* Router */}
-            <circle cx="200" cy="150" r="35" fill="none" stroke="#D9A96A" strokeWidth="2" />
-            <text x="200" y="145" fill="#D9A96A" fontSize="12" fontFamily="monospace" textAnchor="middle">Router</text>
-            <text x="200" y="160" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">Encoder</text>
+            <circle cx="200" cy="150" r="35" fill="none" stroke="#8FAFD6" strokeWidth="2" />
+            <text x="200" y="145" fill="#8FAFD6" fontSize="12" fontFamily="monospace" textAnchor="middle">Router</text>
+            <text x="200" y="160" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">Encoder</text>
             
             {/* Three model options */}
-            <path d="M 235 130 L 280 80" stroke="#D9A96A" strokeWidth="1.5" opacity="0.8" />
-            <circle cx="300" cy="60" r="25" fill="none" stroke="#D9A96A" strokeWidth="1.5" opacity="0.7" />
-            <text x="300" y="65" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle">LLM₁</text>
+            <path d="M 235 130 L 280 80" stroke="#8FAFD6" strokeWidth="1.5" opacity="0.8" />
+            <circle cx="300" cy="60" r="25" fill="none" stroke="#8FAFD6" strokeWidth="1.5" opacity="0.7" />
+            <text x="300" y="65" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle">LLM₁</text>
             
-            <path d="M 235 150 L 280 150" stroke="#D9A96A" strokeWidth="2" />
-            <circle cx="300" cy="150" r="25" fill="rgba(217, 169, 106, 0.2)" stroke="#D9A96A" strokeWidth="2" />
-            <text x="300" y="155" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" fontWeight="bold">LLM₂</text>
-            <text x="300" y="185" fill="#D9A96A" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.7">Selected</text>
+            <path d="M 235 150 L 280 150" stroke="#8FAFD6" strokeWidth="2" />
+            <circle cx="300" cy="150" r="25" fill="rgba(143, 175, 214, 0.2)" stroke="#8FAFD6" strokeWidth="2" />
+            <text x="300" y="155" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" fontWeight="bold">LLM₂</text>
+            <text x="300" y="185" fill="#8FAFD6" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.7">Selected</text>
             
-            <path d="M 235 170 L 280 220" stroke="#D9A96A" strokeWidth="1.5" opacity="0.8" />
-            <circle cx="300" cy="240" r="25" fill="none" stroke="#D9A96A" strokeWidth="1.5" opacity="0.7" />
-            <text x="300" y="245" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle">LLM₃</text>
+            <path d="M 235 170 L 280 220" stroke="#8FAFD6" strokeWidth="1.5" opacity="0.8" />
+            <circle cx="300" cy="240" r="25" fill="none" stroke="#8FAFD6" strokeWidth="1.5" opacity="0.7" />
+            <text x="300" y="245" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle">LLM₃</text>
             
             {/* Cost indicator */}
-            <text x="200" y="220" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.7">Min Cost, Target Accuracy</text>
+            <text x="200" y="220" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.7">Min Cost, Target Accuracy</text>
           </svg>
         )
       
@@ -104,37 +104,37 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         return (
           <svg viewBox="0 0 400 300" className={className}>
             {/* Input image */}
-            <rect x="30" y="100" width="80" height="100" fill="none" stroke="#D9A96A" strokeWidth="1.5" opacity="0.7" />
-            <text x="70" y="150" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">Image</text>
-            <text x="70" y="170" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">(OOD)</text>
+            <rect x="30" y="100" width="80" height="100" fill="none" stroke="#8FAFD6" strokeWidth="1.5" opacity="0.7" />
+            <text x="70" y="150" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">Image</text>
+            <text x="70" y="170" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">(OOD)</text>
             
             {/* Arrow */}
-            <path d="M 120 150 L 160 150" stroke="#D9A96A" strokeWidth="2" fill="none" />
-            <path d="M 150 145 L 160 150 L 150 155" stroke="#D9A96A" strokeWidth="2" fill="none" />
+            <path d="M 120 150 L 160 150" stroke="#8FAFD6" strokeWidth="2" fill="none" />
+            <path d="M 150 145 L 160 150 L 150 155" stroke="#8FAFD6" strokeWidth="2" fill="none" />
             
             {/* Model */}
-            <rect x="170" y="120" width="60" height="60" fill="none" stroke="#D9A96A" strokeWidth="2" />
-            <text x="200" y="145" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">ViT</text>
-            <text x="200" y="165" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">ResNet</text>
+            <rect x="170" y="120" width="60" height="60" fill="none" stroke="#8FAFD6" strokeWidth="2" />
+            <text x="200" y="145" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">ViT</text>
+            <text x="200" y="165" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">ResNet</text>
             
             {/* Arrow */}
-            <path d="M 240 150 L 280 150" stroke="#D9A96A" strokeWidth="2" fill="none" />
-            <path d="M 270 145 L 280 150 L 270 155" stroke="#D9A96A" strokeWidth="2" fill="none" />
+            <path d="M 240 150 L 280 150" stroke="#8FAFD6" strokeWidth="2" fill="none" />
+            <path d="M 270 145 L 280 150 L 270 155" stroke="#8FAFD6" strokeWidth="2" fill="none" />
             
             {/* Attribution methods */}
             <g opacity="0.7">
-              <rect x="290" y="80" width="80" height="40" fill="none" stroke="#D9A96A" strokeWidth="1" strokeDasharray="2,2" />
-              <text x="330" y="100" fill="#D9A96A" fontSize="9" fontFamily="monospace" textAnchor="middle">Saliency</text>
+              <rect x="290" y="80" width="80" height="40" fill="none" stroke="#8FAFD6" strokeWidth="1" strokeDasharray="2,2" />
+              <text x="330" y="100" fill="#8FAFD6" fontSize="9" fontFamily="monospace" textAnchor="middle">Saliency</text>
               
-              <rect x="290" y="130" width="80" height="40" fill="none" stroke="#D9A96A" strokeWidth="1" strokeDasharray="2,2" />
-              <text x="330" y="150" fill="#D9A96A" fontSize="9" fontFamily="monospace" textAnchor="middle">Grad-CAM</text>
+              <rect x="290" y="130" width="80" height="40" fill="none" stroke="#8FAFD6" strokeWidth="1" strokeDasharray="2,2" />
+              <text x="330" y="150" fill="#8FAFD6" fontSize="9" fontFamily="monospace" textAnchor="middle">Grad-CAM</text>
               
-              <rect x="290" y="180" width="80" height="40" fill="none" stroke="#D9A96A" strokeWidth="1" strokeDasharray="2,2" />
-              <text x="330" y="200" fill="#D9A96A" fontSize="9" fontFamily="monospace" textAnchor="middle">IG</text>
+              <rect x="290" y="180" width="80" height="40" fill="none" stroke="#8FAFD6" strokeWidth="1" strokeDasharray="2,2" />
+              <text x="330" y="200" fill="#8FAFD6" fontSize="9" fontFamily="monospace" textAnchor="middle">IG</text>
             </g>
             
             {/* Robustness indicator */}
-            <text x="200" y="240" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.7">Attribution Robustness</text>
+            <text x="200" y="240" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.7">Attribution Robustness</text>
           </svg>
         )
       
@@ -142,33 +142,33 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         return (
           <svg viewBox="0 0 400 300" className={className}>
             {/* Plant/leaf shape */}
-            <ellipse cx="100" cy="120" rx="30" ry="50" fill="rgba(217, 169, 106, 0.2)" stroke="#D9A96A" strokeWidth="1.5" />
-            <path d="M 100 70 Q 85 100 100 120 Q 115 100 100 70" fill="rgba(217, 169, 106, 0.15)" stroke="#D9A96A" strokeWidth="1" />
+            <ellipse cx="100" cy="120" rx="30" ry="50" fill="rgba(143, 175, 214, 0.2)" stroke="#8FAFD6" strokeWidth="1.5" />
+            <path d="M 100 70 Q 85 100 100 120 Q 115 100 100 70" fill="rgba(143, 175, 214, 0.15)" stroke="#8FAFD6" strokeWidth="1" />
             
             {/* Disease spot */}
-            <circle cx="110" cy="110" r="8" fill="#D9A96A" opacity="0.8" />
-            <text x="100" y="190" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">Cacao</text>
-            <text x="100" y="205" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">Leaf</text>
+            <circle cx="110" cy="110" r="8" fill="#8FAFD6" opacity="0.8" />
+            <text x="100" y="190" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">Cacao</text>
+            <text x="100" y="205" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">Leaf</text>
             
             {/* Arrow */}
-            <path d="M 140 150 L 200 150" stroke="#D9A96A" strokeWidth="2" fill="none" />
-            <path d="M 190 145 L 200 150 L 190 155" stroke="#D9A96A" strokeWidth="2" fill="none" />
+            <path d="M 140 150 L 200 150" stroke="#8FAFD6" strokeWidth="2" fill="none" />
+            <path d="M 190 145 L 200 150 L 190 155" stroke="#8FAFD6" strokeWidth="2" fill="none" />
             
             {/* Mobile device */}
-            <rect x="220" y="100" width="50" height="100" rx="5" fill="none" stroke="#D9A96A" strokeWidth="2" />
-            <rect x="225" y="110" width="40" height="60" fill="rgba(217, 169, 106, 0.1)" />
-            <circle cx="245" cy="180" r="4" fill="#D9A96A" opacity="0.7" />
-            <text x="245" y="210" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle">MobileNet</text>
+            <rect x="220" y="100" width="50" height="100" rx="5" fill="none" stroke="#8FAFD6" strokeWidth="2" />
+            <rect x="225" y="110" width="40" height="60" fill="rgba(143, 175, 214, 0.1)" />
+            <circle cx="245" cy="180" r="4" fill="#8FAFD6" opacity="0.7" />
+            <text x="245" y="210" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle">MobileNet</text>
             
             {/* Arrow */}
-            <path d="M 280 150 L 320 150" stroke="#D9A96A" strokeWidth="2" fill="none" />
-            <path d="M 310 145 L 320 150 L 310 155" stroke="#D9A96A" strokeWidth="2" fill="none" />
+            <path d="M 280 150 L 320 150" stroke="#8FAFD6" strokeWidth="2" fill="none" />
+            <path d="M 310 145 L 320 150 L 310 155" stroke="#8FAFD6" strokeWidth="2" fill="none" />
             
             {/* Output */}
-            <rect x="330" y="120" width="50" height="60" fill="rgba(217, 169, 106, 0.2)" stroke="#D9A96A" strokeWidth="1.5" />
-            <text x="355" y="145" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle">Disease</text>
-            <text x="355" y="160" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle">Detected</text>
-            <text x="355" y="175" fill="#D9A96A" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.8">+18% yield</text>
+            <rect x="330" y="120" width="50" height="60" fill="rgba(143, 175, 214, 0.2)" stroke="#8FAFD6" strokeWidth="1.5" />
+            <text x="355" y="145" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle">Disease</text>
+            <text x="355" y="160" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle">Detected</text>
+            <text x="355" y="175" fill="#8FAFD6" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.8">+18% yield</text>
           </svg>
         )
       
@@ -176,28 +176,28 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         return (
           <svg viewBox="0 0 400 300" className={className}>
             {/* Agent */}
-            <circle cx="100" cy="150" r="30" fill="none" stroke="#D9A96A" strokeWidth="2" />
-            <text x="100" y="150" fill="#D9A96A" fontSize="12" fontFamily="monospace" textAnchor="middle">Agent</text>
+            <circle cx="100" cy="150" r="30" fill="none" stroke="#8FAFD6" strokeWidth="2" />
+            <text x="100" y="150" fill="#8FAFD6" fontSize="12" fontFamily="monospace" textAnchor="middle">Agent</text>
             
             {/* Action arrow */}
-            <path d="M 140 150 L 200 150" stroke="#D9A96A" strokeWidth="2" fill="none" />
-            <path d="M 190 145 L 200 150 L 190 155" stroke="#D9A96A" strokeWidth="2" fill="none" />
+            <path d="M 140 150 L 200 150" stroke="#8FAFD6" strokeWidth="2" fill="none" />
+            <path d="M 190 145 L 200 150 L 190 155" stroke="#8FAFD6" strokeWidth="2" fill="none" />
             
             {/* Environment with safety constraint */}
-            <rect x="220" y="100" width="100" height="100" fill="none" stroke="#D9A96A" strokeWidth="2" />
-            <text x="270" y="130" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">Environment</text>
+            <rect x="220" y="100" width="100" height="100" fill="none" stroke="#8FAFD6" strokeWidth="2" />
+            <text x="270" y="130" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">Environment</text>
             
             {/* Safety boundary */}
-            <ellipse cx="270" cy="150" rx="40" ry="30" fill="none" stroke="#D9A96A" strokeWidth="1.5" strokeDasharray="3,3" opacity="0.8" />
-            <text x="270" y="155" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">Safe</text>
+            <ellipse cx="270" cy="150" rx="40" ry="30" fill="none" stroke="#8FAFD6" strokeWidth="1.5" strokeDasharray="3,3" opacity="0.8" />
+            <text x="270" y="155" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">Safe</text>
             
             {/* Reward indicator */}
-            <path d="M 270 80 L 270 100" stroke="#D9A96A" strokeWidth="1.5" />
-            <text x="280" y="90" fill="#D9A96A" fontSize="10" fontFamily="monospace">Reward</text>
+            <path d="M 270 80 L 270 100" stroke="#8FAFD6" strokeWidth="1.5" />
+            <text x="280" y="90" fill="#8FAFD6" fontSize="10" fontFamily="monospace">Reward</text>
             
             {/* Constraint indicator */}
-            <text x="270" y="230" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.7">Primal-Dual</text>
-            <text x="270" y="245" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.8">O(1/√K) regret</text>
+            <text x="270" y="230" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.7">Primal-Dual</text>
+            <text x="270" y="245" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.8">O(1/√K) regret</text>
           </svg>
         )
       
@@ -205,33 +205,33 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         return (
           <svg viewBox="0 0 400 300" className={className}>
             {/* Email input */}
-            <rect x="30" y="100" width="100" height="80" fill="none" stroke="#D9A96A" strokeWidth="1.5" opacity="0.7" />
-            <text x="80" y="130" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">Email</text>
-            <text x="80" y="150" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">Reply</text>
-            <text x="80" y="170" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">(Weak Signal)</text>
+            <rect x="30" y="100" width="100" height="80" fill="none" stroke="#8FAFD6" strokeWidth="1.5" opacity="0.7" />
+            <text x="80" y="130" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">Email</text>
+            <text x="80" y="150" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">Reply</text>
+            <text x="80" y="170" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">(Weak Signal)</text>
             
             {/* Arrow */}
-            <path d="M 140 140 L 180 140" stroke="#D9A96A" strokeWidth="2" fill="none" />
-            <path d="M 170 135 L 180 140 L 170 145" stroke="#D9A96A" strokeWidth="2" fill="none" />
+            <path d="M 140 140 L 180 140" stroke="#8FAFD6" strokeWidth="2" fill="none" />
+            <path d="M 170 135 L 180 140 L 170 145" stroke="#8FAFD6" strokeWidth="2" fill="none" />
             
             {/* Transformer model */}
-            <rect x="190" y="100" width="80" height="80" fill="none" stroke="#D9A96A" strokeWidth="2" />
-            <text x="230" y="130" fill="#D9A96A" fontSize="12" fontFamily="monospace" textAnchor="middle">Transformer</text>
-            <text x="230" y="150" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">Disentangle</text>
-            <text x="230" y="165" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">Metadata</text>
+            <rect x="190" y="100" width="80" height="80" fill="none" stroke="#8FAFD6" strokeWidth="2" />
+            <text x="230" y="130" fill="#8FAFD6" fontSize="12" fontFamily="monospace" textAnchor="middle">Transformer</text>
+            <text x="230" y="150" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">Disentangle</text>
+            <text x="230" y="165" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">Metadata</text>
             
             {/* Arrow */}
-            <path d="M 280 140 L 320 140" stroke="#D9A96A" strokeWidth="2" fill="none" />
-            <path d="M 310 135 L 320 140 L 310 145" stroke="#D9A96A" strokeWidth="2" fill="none" />
+            <path d="M 280 140 L 320 140" stroke="#8FAFD6" strokeWidth="2" fill="none" />
+            <path d="M 310 135 L 320 140 L 310 145" stroke="#8FAFD6" strokeWidth="2" fill="none" />
             
             {/* AUC ceiling / limit */}
-            <rect x="330" y="100" width="50" height="80" fill="rgba(217, 169, 106, 0.2)" stroke="#D9A96A" strokeWidth="1.5" />
-            <text x="355" y="130" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">AUC</text>
-            <text x="355" y="150" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">Ceiling</text>
-            <text x="355" y="170" fill="#D9A96A" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.7">Near-chance</text>
+            <rect x="330" y="100" width="50" height="80" fill="rgba(143, 175, 214, 0.2)" stroke="#8FAFD6" strokeWidth="1.5" />
+            <text x="355" y="130" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">AUC</text>
+            <text x="355" y="150" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">Ceiling</text>
+            <text x="355" y="170" fill="#8FAFD6" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.7">Near-chance</text>
             
             {/* Information-theoretic indicator */}
-            <text x="230" y="220" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.7">Information-Theoretic Limits</text>
+            <text x="230" y="220" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.7">Information-Theoretic Limits</text>
           </svg>
         )
       
@@ -239,34 +239,34 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         return (
           <svg viewBox="0 0 400 300" className={className}>
             {/* Cyber agent */}
-            <circle cx="80" cy="150" r="35" fill="none" stroke="#D9A96A" strokeWidth="2" />
-            <text x="80" y="145" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">Cyber</text>
-            <text x="80" y="160" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">Agent</text>
+            <circle cx="80" cy="150" r="35" fill="none" stroke="#8FAFD6" strokeWidth="2" />
+            <text x="80" y="145" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">Cyber</text>
+            <text x="80" y="160" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">Agent</text>
             
             {/* Arrow */}
-            <path d="M 125 150 L 165 150" stroke="#D9A96A" strokeWidth="2" fill="none" />
-            <path d="M 155 145 L 165 150 L 155 155" stroke="#D9A96A" strokeWidth="2" fill="none" />
+            <path d="M 125 150 L 165 150" stroke="#8FAFD6" strokeWidth="2" fill="none" />
+            <path d="M 155 145 L 165 150 L 155 155" stroke="#8FAFD6" strokeWidth="2" fill="none" />
             
             {/* CyberBench framework */}
-            <rect x="175" y="100" width="100" height="100" fill="none" stroke="#D9A96A" strokeWidth="2" />
-            <text x="225" y="130" fill="#D9A96A" fontSize="12" fontFamily="monospace" textAnchor="middle">CyberBench</text>
-            <text x="225" y="150" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">Benchmarking</text>
-            <text x="225" y="170" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">Framework</text>
+            <rect x="175" y="100" width="100" height="100" fill="none" stroke="#8FAFD6" strokeWidth="2" />
+            <text x="225" y="130" fill="#8FAFD6" fontSize="12" fontFamily="monospace" textAnchor="middle">CyberBench</text>
+            <text x="225" y="150" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">Benchmarking</text>
+            <text x="225" y="170" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">Framework</text>
             
             {/* Evaluation metrics */}
             <g opacity="0.7">
-              <rect x="290" y="80" width="80" height="50" fill="none" stroke="#D9A96A" strokeWidth="1" strokeDasharray="2,2" />
-              <text x="330" y="105" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle">Robustness</text>
+              <rect x="290" y="80" width="80" height="50" fill="none" stroke="#8FAFD6" strokeWidth="1" strokeDasharray="2,2" />
+              <text x="330" y="105" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle">Robustness</text>
               
-              <rect x="290" y="140" width="80" height="50" fill="none" stroke="#D9A96A" strokeWidth="1" strokeDasharray="2,2" />
-              <text x="330" y="165" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle">Safety</text>
+              <rect x="290" y="140" width="80" height="50" fill="none" stroke="#8FAFD6" strokeWidth="1" strokeDasharray="2,2" />
+              <text x="330" y="165" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle">Safety</text>
               
-              <rect x="290" y="200" width="80" height="50" fill="none" stroke="#D9A96A" strokeWidth="1" strokeDasharray="2,2" />
-              <text x="330" y="225" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle">Evaluation</text>
+              <rect x="290" y="200" width="80" height="50" fill="none" stroke="#8FAFD6" strokeWidth="1" strokeDasharray="2,2" />
+              <text x="330" y="225" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle">Evaluation</text>
             </g>
             
             {/* Extension indicator */}
-            <text x="225" y="240" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.7">Extended Evaluation Framework</text>
+            <text x="225" y="240" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.7">Extended Evaluation Framework</text>
           </svg>
         )
       
@@ -274,35 +274,35 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         return (
           <svg viewBox="0 0 400 300" className={className}>
             {/* Video frames input */}
-            <rect x="20" y="100" width="80" height="100" fill="none" stroke="#D9A96A" strokeWidth="1.5" opacity="0.7" />
-            <rect x="25" y="105" width="70" height="20" fill="rgba(217, 169, 106, 0.1)" />
-            <rect x="25" y="130" width="70" height="20" fill="rgba(217, 169, 106, 0.1)" />
-            <rect x="25" y="155" width="70" height="20" fill="rgba(217, 169, 106, 0.1)" />
-            <text x="60" y="215" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle">Video</text>
-            <text x="60" y="230" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle">H.264/VP9</text>
+            <rect x="20" y="100" width="80" height="100" fill="none" stroke="#8FAFD6" strokeWidth="1.5" opacity="0.7" />
+            <rect x="25" y="105" width="70" height="20" fill="rgba(143, 175, 214, 0.1)" />
+            <rect x="25" y="130" width="70" height="20" fill="rgba(143, 175, 214, 0.1)" />
+            <rect x="25" y="155" width="70" height="20" fill="rgba(143, 175, 214, 0.1)" />
+            <text x="60" y="215" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle">Video</text>
+            <text x="60" y="230" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle">H.264/VP9</text>
             
             {/* Arrow */}
-            <path d="M 110 150 L 150 150" stroke="#D9A96A" strokeWidth="2" fill="none" />
-            <path d="M 140 145 L 150 150 L 140 155" stroke="#D9A96A" strokeWidth="2" fill="none" />
+            <path d="M 110 150 L 150 150" stroke="#8FAFD6" strokeWidth="2" fill="none" />
+            <path d="M 140 145 L 150 150 L 140 155" stroke="#8FAFD6" strokeWidth="2" fill="none" />
             
             {/* Latent code compression */}
-            <rect x="160" y="110" width="80" height="80" fill="none" stroke="#D9A96A" strokeWidth="2" />
-            <text x="200" y="135" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">Latent</text>
-            <text x="200" y="155" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">Code</text>
-            <text x="200" y="175" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">ONNX Runtime</text>
+            <rect x="160" y="110" width="80" height="80" fill="none" stroke="#8FAFD6" strokeWidth="2" />
+            <text x="200" y="135" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">Latent</text>
+            <text x="200" y="155" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">Code</text>
+            <text x="200" y="175" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">ONNX Runtime</text>
             
             {/* Arrow */}
-            <path d="M 250 150 L 290 150" stroke="#D9A96A" strokeWidth="2" fill="none" />
-            <path d="M 280 145 L 290 150 L 280 155" stroke="#D9A96A" strokeWidth="2" fill="none" />
+            <path d="M 250 150 L 290 150" stroke="#8FAFD6" strokeWidth="2" fill="none" />
+            <path d="M 280 145 L 290 150 L 280 155" stroke="#8FAFD6" strokeWidth="2" fill="none" />
             
             {/* Compressed output */}
-            <rect x="300" y="120" width="60" height="60" fill="rgba(217, 169, 106, 0.2)" stroke="#D9A96A" strokeWidth="1.5" />
-            <text x="330" y="145" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle">&lt;15 kbps</text>
-            <text x="330" y="165" fill="#D9A96A" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.8">100-500×</text>
-            <text x="330" y="190" fill="#D9A96A" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.7">WebRTC</text>
+            <rect x="300" y="120" width="60" height="60" fill="rgba(143, 175, 214, 0.2)" stroke="#8FAFD6" strokeWidth="1.5" />
+            <text x="330" y="145" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle">&lt;15 kbps</text>
+            <text x="330" y="165" fill="#8FAFD6" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.8">100-500×</text>
+            <text x="330" y="190" fill="#8FAFD6" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.7">WebRTC</text>
             
             {/* Compression indicator */}
-            <text x="200" y="220" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.7">Ultra-Low Bitrate</text>
+            <text x="200" y="220" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.7">Ultra-Low Bitrate</text>
           </svg>
         )
       
@@ -311,68 +311,169 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
           <svg viewBox="0 0 400 300" className={className}>
             {/* Audio waveform / cough input */}
             <path d="M 30 150 L 50 140 L 70 160 L 90 130 L 110 170 L 130 120 L 150 150" 
-                  stroke="#D9A96A" strokeWidth="2" fill="none" opacity="0.7" />
-            <text x="90" y="190" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">Cough</text>
-            <text x="90" y="205" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">~30k samples</text>
+                  stroke="#8FAFD6" strokeWidth="2" fill="none" opacity="0.7" />
+            <text x="90" y="190" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">Cough</text>
+            <text x="90" y="205" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">~30k samples</text>
             
             {/* Arrow */}
-            <path d="M 160 150 L 200 150" stroke="#D9A96A" strokeWidth="2" fill="none" />
-            <path d="M 190 145 L 200 150 L 190 155" stroke="#D9A96A" strokeWidth="2" fill="none" />
+            <path d="M 160 150 L 200 150" stroke="#8FAFD6" strokeWidth="2" fill="none" />
+            <path d="M 190 145 L 200 150 L 190 155" stroke="#8FAFD6" strokeWidth="2" fill="none" />
             
             {/* CNN/SSL model */}
-            <rect x="210" y="110" width="80" height="80" fill="none" stroke="#D9A96A" strokeWidth="2" />
-            <text x="250" y="135" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">CNN</text>
-            <text x="250" y="155" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">SSL</text>
-            <text x="250" y="175" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">Active Learning</text>
+            <rect x="210" y="110" width="80" height="80" fill="none" stroke="#8FAFD6" strokeWidth="2" />
+            <text x="250" y="135" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">CNN</text>
+            <text x="250" y="155" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">SSL</text>
+            <text x="250" y="175" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">Active Learning</text>
             
             {/* Arrow */}
-            <path d="M 300 150 L 340 150" stroke="#D9A96A" strokeWidth="2" fill="none" />
-            <path d="M 330 145 L 340 150 L 330 155" stroke="#D9A96A" strokeWidth="2" fill="none" />
+            <path d="M 300 150 L 340 150" stroke="#8FAFD6" strokeWidth="2" fill="none" />
+            <path d="M 330 145 L 340 150 L 330 155" stroke="#8FAFD6" strokeWidth="2" fill="none" />
             
             {/* Detection output */}
-            <rect x="350" y="120" width="40" height="60" fill="rgba(217, 169, 106, 0.2)" stroke="#D9A96A" strokeWidth="1.5" />
-            <text x="370" y="145" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle">AUC</text>
-            <text x="370" y="160" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">0.807</text>
-            <text x="370" y="175" fill="#D9A96A" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.7">COVID-19</text>
+            <rect x="350" y="120" width="40" height="60" fill="rgba(143, 175, 214, 0.2)" stroke="#8FAFD6" strokeWidth="1.5" />
+            <text x="370" y="145" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle">AUC</text>
+            <text x="370" y="160" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">0.807</text>
+            <text x="370" y="175" fill="#8FAFD6" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.7">COVID-19</text>
             
             {/* Hospital deployment indicator */}
-            <text x="250" y="220" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.7">Hospital Deployment</text>
+            <text x="250" y="220" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.7">Hospital Deployment</text>
           </svg>
         )
       
+      case 12: // The Geometry of Learning the Collatz Sequence — hailstone path (meaning), not a pipeline diagram
+        return (
+          <svg viewBox="0 0 400 300" className={className}>
+            {/* Hailstone trajectory starting at 6: height encodes value; step index runs left → right */}
+            <defs>
+              <linearGradient id="collatzPathGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#8FAFD6" stopOpacity="0.08" />
+                <stop offset="50%" stopColor="#8FAFD6" stopOpacity="0.18" />
+                <stop offset="100%" stopColor="#8FAFD6" stopOpacity="0.06" />
+              </linearGradient>
+            </defs>
+
+            <text x="200" y="28" fill="#8FAFD6" fontSize="13" fontFamily="monospace" textAnchor="middle" opacity="0.9">
+              Hailstone trajectory
+            </text>
+            <text x="200" y="46" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.55">
+              6 → 3 → 10 → 5 → 16 → 8 → 4 → 2 → 1
+            </text>
+
+            {/* Soft band under the walk */}
+            <path
+              d="M 38 248 Q 200 255 362 248"
+              fill="none"
+              stroke="url(#collatzPathGlow)"
+              strokeWidth="36"
+              strokeLinecap="round"
+            />
+
+            {/*
+              Segment rules from current n: even → ÷2 (dashed), odd → 3n+1 (solid).
+              Points: (x, y) with y = vertical position from value (peak at 16).
+            */}
+            {/* 6→3 even */}
+            <line x1="45" y1="178" x2="88" y2="210" stroke="#8FAFD6" strokeWidth="2" strokeDasharray="5 4" opacity="0.85" />
+            {/* 3→10 odd */}
+            <line x1="88" y1="210" x2="131" y2="138" stroke="#8FAFD6" strokeWidth="2.25" opacity="0.9" />
+            {/* 10→5 even */}
+            <line x1="131" y1="138" x2="174" y2="188" stroke="#8FAFD6" strokeWidth="2" strokeDasharray="5 4" opacity="0.85" />
+            {/* 5→16 odd */}
+            <line x1="174" y1="188" x2="217" y2="72" stroke="#8FAFD6" strokeWidth="2.25" opacity="0.9" />
+            {/* 16→8 even */}
+            <line x1="217" y1="72" x2="260" y2="156" stroke="#8FAFD6" strokeWidth="2" strokeDasharray="5 4" opacity="0.85" />
+            {/* 8→4 even */}
+            <line x1="260" y1="156" x2="303" y2="198" stroke="#8FAFD6" strokeWidth="2" strokeDasharray="5 4" opacity="0.85" />
+            {/* 4→2 even */}
+            <line x1="303" y1="198" x2="346" y2="218" stroke="#8FAFD6" strokeWidth="2" strokeDasharray="5 4" opacity="0.85" />
+            {/* 2→1 even */}
+            <line x1="346" y1="218" x2="378" y2="228" stroke="#8FAFD6" strokeWidth="2" strokeDasharray="5 4" opacity="0.85" />
+
+            {/* Nodes: [6,3,10,5,16,8,4,2,1] */}
+            {[
+              { x: 45, y: 178, v: '6', peak: false },
+              { x: 88, y: 210, v: '3', peak: false },
+              { x: 131, y: 138, v: '10', peak: false },
+              { x: 174, y: 188, v: '5', peak: false },
+              { x: 217, y: 72, v: '16', peak: true },
+              { x: 260, y: 156, v: '8', peak: false },
+              { x: 303, y: 198, v: '4', peak: false },
+              { x: 346, y: 218, v: '2', peak: false },
+              { x: 378, y: 228, v: '1', peak: false }
+            ].map((pt, i) => (
+              <g key={i}>
+                <circle
+                  cx={pt.x}
+                  cy={pt.y}
+                  r={pt.peak ? 18 : 14}
+                  fill={pt.peak ? 'rgba(143, 175, 214, 0.14)' : 'rgba(143, 175, 214, 0.06)'}
+                  stroke="#8FAFD6"
+                  strokeWidth={pt.peak ? 2 : 1.5}
+                />
+                <text
+                  x={pt.x}
+                  y={pt.y + 5}
+                  fill="#8FAFD6"
+                  fontSize={pt.peak ? 14 : 12}
+                  fontFamily="monospace"
+                  textAnchor="middle"
+                >
+                  {pt.v}
+                </text>
+              </g>
+            ))}
+
+            {/* Legend: map rules, not ML jargon */}
+            <g opacity="0.75">
+              <line x1="48" y1="268" x2="78" y2="268" stroke="#8FAFD6" strokeWidth="2" strokeDasharray="5 4" />
+              <text x="86" y="272" fill="#8FAFD6" fontSize="9" fontFamily="monospace">
+                n even → n/2
+              </text>
+              <line x1="200" y1="268" x2="230" y2="268" stroke="#8FAFD6" strokeWidth="2.25" />
+              <text x="238" y="272" fill="#8FAFD6" fontSize="9" fontFamily="monospace">
+                n odd → 3n+1
+              </text>
+            </g>
+
+            <text x="200" y="292" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.65">
+              Learning the one-step map T(n) in base-b digit space
+            </text>
+          </svg>
+        )
+
       case 8: // Clinical-Note LLM Pipeline
         return (
           <svg viewBox="0 0 400 300" className={className}>
             {/* Clinical notes input */}
-            <rect x="20" y="100" width="100" height="100" fill="none" stroke="#D9A96A" strokeWidth="1.5" opacity="0.7" />
-            <text x="70" y="130" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">Clinical</text>
-            <text x="70" y="150" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">Notes</text>
-            <text x="70" y="170" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">Input</text>
+            <rect x="20" y="100" width="100" height="100" fill="none" stroke="#8FAFD6" strokeWidth="1.5" opacity="0.7" />
+            <text x="70" y="130" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">Clinical</text>
+            <text x="70" y="150" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">Notes</text>
+            <text x="70" y="170" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">Input</text>
             
             {/* Arrow */}
-            <path d="M 130 150 L 170 150" stroke="#D9A96A" strokeWidth="2" fill="none" />
-            <path d="M 160 145 L 170 150 L 160 155" stroke="#D9A96A" strokeWidth="2" fill="none" />
+            <path d="M 130 150 L 170 150" stroke="#8FAFD6" strokeWidth="2" fill="none" />
+            <path d="M 160 145 L 170 150 L 160 155" stroke="#8FAFD6" strokeWidth="2" fill="none" />
             
             {/* LLM pipeline */}
-            <rect x="180" y="100" width="100" height="100" fill="none" stroke="#D9A96A" strokeWidth="2" />
-            <text x="230" y="125" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">LLaMA-3</text>
-            <text x="230" y="145" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">QLoRA</text>
-            <text x="230" y="160" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">+ RAG</text>
-            <text x="230" y="175" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">+ DPO</text>
-            <text x="230" y="190" fill="#D9A96A" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.8">Quantization</text>
+            <rect x="180" y="100" width="100" height="100" fill="none" stroke="#8FAFD6" strokeWidth="2" />
+            <text x="230" y="125" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">LLaMA-3</text>
+            <text x="230" y="145" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">QLoRA</text>
+            <text x="230" y="160" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">+ RAG</text>
+            <text x="230" y="175" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.7">+ DPO</text>
+            <text x="230" y="190" fill="#8FAFD6" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.8">Quantization</text>
             
             {/* Arrow */}
-            <path d="M 290 150 L 330 150" stroke="#D9A96A" strokeWidth="2" fill="none" />
-            <path d="M 320 145 L 330 150 L 320 155" stroke="#D9A96A" strokeWidth="2" fill="none" />
+            <path d="M 290 150 L 330 150" stroke="#8FAFD6" strokeWidth="2" fill="none" />
+            <path d="M 320 145 L 330 150 L 320 155" stroke="#8FAFD6" strokeWidth="2" fill="none" />
             
             {/* Improved notes output */}
-            <rect x="340" y="110" width="50" height="80" fill="rgba(217, 169, 106, 0.2)" stroke="#D9A96A" strokeWidth="1.5" />
-            <text x="365" y="135" fill="#D9A96A" fontSize="10" fontFamily="monospace" textAnchor="middle">ROUGE-1</text>
-            <text x="365" y="155" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle">0.48</text>
-            <text x="365" y="175" fill="#D9A96A" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.7">Quality</text>
+            <rect x="340" y="110" width="50" height="80" fill="rgba(143, 175, 214, 0.2)" stroke="#8FAFD6" strokeWidth="1.5" />
+            <text x="365" y="135" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle">ROUGE-1</text>
+            <text x="365" y="155" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle">0.48</text>
+            <text x="365" y="175" fill="#8FAFD6" fontSize="9" fontFamily="monospace" textAnchor="middle" opacity="0.7">Quality</text>
             
             {/* Improvement indicator */}
-            <text x="230" y="230" fill="#D9A96A" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.7">0.25 → 0.48 Improvement</text>
+            <text x="230" y="230" fill="#8FAFD6" fontSize="11" fontFamily="monospace" textAnchor="middle" opacity="0.7">0.25 → 0.48 Improvement</text>
           </svg>
         )
       

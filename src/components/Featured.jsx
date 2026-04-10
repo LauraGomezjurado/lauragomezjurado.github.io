@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import AbstractPattern from './AbstractPattern'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -137,8 +136,7 @@ export default function Featured() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="featured" className="relative min-h-screen py-20 px-4 sm:px-6 md:px-8 overflow-visible bg-black -mt-20">
-      <AbstractPattern variant="portfolio" />
+    <section ref={sectionRef} id="featured" className="relative z-10 min-h-screen py-20 px-4 sm:px-6 md:px-8 overflow-visible bg-transparent -mt-20">
       <div className="relative z-10 max-w-7xl mx-auto w-full">
         <h2 ref={titleRef} className="text-5xl md:text-6xl font-light mb-24 text-center text-white tracking-wider">
           Featured In
@@ -152,7 +150,7 @@ export default function Featured() {
               target="_blank"
               rel="noopener noreferrer"
               ref={(el) => (itemsRef.current[index] = el)}
-              className="group glass rounded-2xl p-6 hover:scale-[1.02] transition-all duration-300 cursor-pointer border border-white/10 hover:border-white/20 overflow-hidden"
+              className="group glass rounded p-6 hover:scale-[1.02] transition-all duration-300 cursor-pointer overflow-hidden"
             >
               <div className="space-y-4">
                 {feature.image && (
@@ -169,21 +167,21 @@ export default function Featured() {
                 )}
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
-                    <h3 className="text-xl font-light mb-2 text-white group-hover:text-[#D9A96A] transition-colors">
+                    <h3 className="text-xl font-light mb-2 text-white transition-colors" style={{ '--hover-color': 'var(--accent)' }}>
                       {feature.title}
                     </h3>
-                    <p className="text-sm text-[#D9A96A] opacity-75 mb-3">
+                    <p className="mono text-xs mb-3" style={{ color: 'var(--accent-dim)' }}>
                       {feature.organization}
                     </p>
                   </div>
-                  <span className="px-3 py-1 bg-white/5 rounded text-xs font-light text-gray-400 border border-white/10 whitespace-nowrap">
+                  <span className="mono px-2 py-1 text-xs whitespace-nowrap" style={{ color: 'var(--accent-dim)', border: '1px solid var(--border)' }}>
                     {feature.type}
                   </span>
                 </div>
                 <p className="text-gray-300 leading-relaxed font-light text-sm">
                   {feature.description}
                 </p>
-                <div className="flex items-center gap-2 text-[#D9A96A] text-sm font-light opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex items-center gap-2 text-sm font-light opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: 'var(--accent)' }}>
                   <span>Read more</span>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

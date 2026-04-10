@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -83,16 +83,45 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
   opacity: 0.6;
 }
 
-/* Gradient text - elegant muted bronze/gold */
-.gradient-text {
-  color: #B8860B;
+/* Accent — slate-blue, harmonises with all three attractor palettes */
+:root {
+  --accent:       #8FAFD6;
+  --accent-hover: #AABFE0;
+  --accent-dim:   rgba(143, 175, 214, 0.55);
+  --accent-ghost: rgba(143, 175, 214, 0.10);
+  --border:       rgba(143, 175, 214, 0.14);
 }
 
-/* Glass morphism effect - cleaner and more subtle */
+/* Gradient text */
+.gradient-text {
+  color: var(--accent);
+}
+
+/* Monospace — for dates, tags, technical labels */
+.mono {
+  font-family: 'JetBrains Mono', 'Fira Mono', monospace;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+
+/* Glass morphism — blue-tinted border instead of gold */
 .glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(217, 169, 106, 0.15);
+  background: rgba(255, 255, 255, 0.025);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+}
+
+/* Ghost button */
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--accent-dim);
+  color: var(--accent);
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.btn-ghost:hover {
+  background: var(--accent-ghost);
+  border-color: var(--accent);
+  color: var(--accent-hover);
 }
 
 /* Remove white backgrounds from Stanford logo using CSS filter */

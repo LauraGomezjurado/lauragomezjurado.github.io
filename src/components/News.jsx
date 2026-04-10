@@ -1,15 +1,36 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import AbstractPattern from './AbstractPattern'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const newsItems = [
-  { date: 'June 2026', content: 'Will be joining Lila Science this summer as AI Resident!'},
-  { date: 'Feb 2026', content: 'Paper "The Geometry of Spectral Gradient Descent: Layerwise Criteria for SignSGD vs SpecSGD" (with Hiroki Naganuma, Mahdi Ghaznavi, Ioannis Mitliagkas) under review.' },
-  { date: 'Feb 2026', content: 'Paper "On Fairness of Task Arithmetic: The Role of Task Vectors" accepted to ICLR 2026.' },
-  { date: 'Feb 2026', content: 'Joined the Supervised Alignment Research Program under Uzay Marcar working on Mech Interp for Latent Reasoning Models.' },
+  {
+    date: 'June 2026',
+    content: (
+      <>
+        Joining{' '}
+        <a
+          href="https://www.lila.ai/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="border-b transition-colors" style={{ color: 'var(--accent)', borderColor: 'var(--accent-dim)' }}
+        >
+          Lila Sciences
+        </a>{' '}
+        as an AI Resident (summer 2026).
+      </>
+    )
+  },
+  {
+    date: 'Apr 2026',
+    content:
+      'Selected ICLR 2026 oral presentation at the Geometry-grounded Representation Learning and Generative Modeling Workshop.'
+  },
+  { date: 'Mar 2026', content: 'Paper "The Long Delay to Arithmetic Generalization: When Learned Representations Outrun Behavior" under review.' },
+  // { date: 'Feb 2026', content: 'Paper "The Geometry of Spectral Gradient Descent: Layerwise Criteria for SignSGD vs SpecSGD" (with Hiroki Naganuma, Mahdi Ghaznavi, Ioannis Mitliagkas) under review.' },
+  { date: 'Feb 2026', content: 'Paper "On Fairness of Task Arithmetic: The Role of Task Vectors" (with Hiroki Naganuma, Kotaro Yoshida, Takafumi Horie, Yuji Naraki, Ryotaro Shimizu) accepted to ICLR 2026.'},
+  { date: 'Feb 2026', content: 'Joined the Supervised Alignment Research Program with Uzay Marcar working on Mech Interp for Latent Reasoning Models.' },
   { date: 'Dec 2025', content: 'Presented workshop paper at NeurIPS 2025.' },
   { date: 'June-Aug 2025', content: 'Completed research internship at Microsoft Research.' },
   // { date: 'Jun 2025', content: 'Started research internship at Microsoft Research.' },
@@ -80,9 +101,8 @@ export default function News() {
     <section
       ref={sectionRef}
       id="news"
-      className="relative min-h-screen py-20 px-4 sm:px-6 md:px-8 overflow-visible bg-black -mt-20"
+      className="relative z-10 min-h-screen py-20 px-4 sm:px-6 md:px-8 overflow-visible bg-transparent -mt-20"
     >
-      <AbstractPattern variant="portfolio" />
       <div className="relative z-10 max-w-4xl mx-auto w-full">
         <h2
           ref={titleRef}
@@ -100,7 +120,7 @@ export default function News() {
               }}
               className="py-6 flex flex-col sm:flex-row gap-3 sm:gap-12"
             >
-              <div className="sm:w-28 shrink-0 text-sm font-light text-gray-400">
+              <div className="sm:w-28 shrink-0 mono text-xs" style={{ color: 'var(--accent-dim)' }}>
                 {item.date}
               </div>
               <div className="flex-1 text-base text-gray-300 leading-relaxed font-light">
