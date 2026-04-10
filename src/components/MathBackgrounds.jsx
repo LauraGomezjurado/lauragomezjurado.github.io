@@ -255,7 +255,7 @@ function FigureLabel({ labelIdx }) {
 
         <button
           type="button"
-          className="text-right bg-transparent border-0 p-0 cursor-pointer font-sans max-w-full"
+          className="text-right bg-transparent border-0 p-0 cursor-pointer font-sans max-w-full touch-manipulation"
           style={{
             borderTop: open ? `1px solid rgba(${accentRgb},0.28)` : `1px solid rgba(${accentRgb},0.15)`,
             paddingTop: 8,
@@ -306,7 +306,11 @@ export default function MorphingBackground() {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <Canvas camera={{ position: [0, 0, 5.5], fov: 50 }} gl={{ antialias: true, alpha: true }}>
+      <Canvas
+        camera={{ position: [0, 0, 5.5], fov: 50 }}
+        gl={{ antialias: true, alpha: true }}
+        style={{ pointerEvents: 'none' }}
+      >
         <MorphingScene attractors={attractors} hovered={hovered} />
       </Canvas>
 

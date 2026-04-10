@@ -127,7 +127,8 @@ export default function Home() {
   return (
     <>
       {/* Single morphing background — one canvas, three attractors */}
-      <div ref={bgRef} className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
+      {/* z-[15] above section content (z-10) so the attractor label can receive taps; wrapper stays pointer-events-none so the canvas passes clicks through — only the label opts in with pointer-events-auto */}
+      <div ref={bgRef} className="fixed inset-0 pointer-events-none z-[15]">
         <MorphingBackground />
       </div>
 

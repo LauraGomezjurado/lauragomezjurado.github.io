@@ -212,7 +212,7 @@ function EquationOverlay() {
 
         <button
           type="button"
-          className="text-left bg-transparent border-0 p-0 cursor-pointer font-sans max-w-full"
+          className="text-left bg-transparent border-0 p-0 cursor-pointer font-sans max-w-full touch-manipulation"
           style={{
             borderTop: open ? `1px solid rgba(${accentRgb},0.28)` : `1px solid rgba(${accentRgb},0.15)`,
             paddingTop: 8,
