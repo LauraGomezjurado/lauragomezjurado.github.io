@@ -9,6 +9,13 @@ gsap.registerPlugin(ScrollTrigger)
 // For now, we'll create a simple structure
 const blogPosts = [
   {
+    slug: 'task-arithmetic-fairness',
+    title: 'The Hidden Geometry of Task Arithmetic',
+    date: '2026-04-14',
+    excerpt: 'A task vector is a direction in weight space. Merging is vector composition. λ is a motion parameter. Once you see the geometry, the fairness results of this ICLR 2026 paper become almost inevitable.',
+    featured: true
+  },
+  {
     slug: 'materials-agents-exploration',
     title: 'Building Agents That Do Materials Science',
     date: '2025-12-30',

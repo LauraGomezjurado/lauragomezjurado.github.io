@@ -7,6 +7,7 @@ import rehypeKatex from 'rehype-katex'
 import 'katex/dist/katex.min.css'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import TaskArithmeticPost from './TaskArithmeticPost'
 
 // Function to strip HTML comments from markdown
 const stripHtmlComments = (text) => {
@@ -480,6 +481,11 @@ The codebase is set up to make it easy to run these experiments. If you're inter
 
 *All the code, data, and results are available in the [repository](https://github.com/LauraGomezjurado/hidden_objectives). Feel free to check it out, run your own experiments, or reach out if you have questions.*`
   },
+  'task-arithmetic-fairness': {
+    title: 'The Hidden Geometry of Task Arithmetic',
+    date: '2026-04-14',
+    content: '' // rendered via TaskArithmeticPost component
+  },
   'welcome-to-my-blog': {
     title: 'Welcome to My Blog',
     date: '2025-11-01',
@@ -556,13 +562,35 @@ export default function BlogPost() {
     )
   }
 
+  // Custom component posts — rendered outside the markdown pipeline
+  if (slug === 'task-arithmetic-fairness') {
+    return (
+      <section ref={sectionRef} className="relative min-h-screen py-20 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#faf9f6', color: '#1a1a1a' }}>
+        <div className="relative z-10 max-w-4xl mx-auto w-full">
+          <Link to="/blog" className="inline-block mb-8 text-indigo-500 hover:text-indigo-600 transition-colors">
+            ← Back to Blog
+          </Link>
+          <article className="rounded-2xl p-8 md:p-12 bg-white" style={{ boxShadow: 'none' }}>
+            <h1 ref={titleRef} className="text-4xl md:text-5xl font-light mb-4 gradient-text tracking-wider">
+              {post.title}
+            </h1>
+            <p className="text-sm text-gray-600 mb-8">
+              {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
+            <TaskArithmeticPost />
+          </article>
+        </div>
+      </section>
+    )
+  }
+
   return (
     <section ref={sectionRef} className="relative min-h-screen py-20 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#faf9f6', color: '#1a1a1a' }}>
       <div className="relative z-10 max-w-4xl mx-auto w-full">
         <Link to="/blog" className="inline-block mb-8 text-indigo-500 hover:text-indigo-600 transition-colors">
           ← Back to Blog
         </Link>
-        
+
         <article className="rounded-2xl p-8 md:p-12 bg-white" style={{ boxShadow: 'none' }}>
           <h1 ref={titleRef} className="text-4xl md:text-5xl font-light mb-4 gradient-text tracking-wider">
             {post.title}
@@ -570,7 +598,7 @@ export default function BlogPost() {
           <p className="text-sm text-gray-600 mb-8">
             {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
-          
+
           <div className="prose prose-lg max-w-none">
             <ReactMarkdown
               remarkPlugins={[remarkGfm, remarkMath]}
