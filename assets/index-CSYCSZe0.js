@@ -4320,12 +4320,17 @@ Every model in their dataset is still verbal, so they don't have a controlled em
 
 Before we built the metagaming testbed, we ran six earlier studies on a continuous-latent reasoning model: a CODI student distilled from Llama-3.2-1B-Instruct, with six latent reasoning slots. The task was a conditional-rule arithmetic problem with no safety angle. It was purely a probe of how much information the latent channel carries. For shorthand: **CODI** is an architecture that replaces explicit chain-of-thought tokens with a small number of continuous "latent" vectors that get fed back into the model in place of generated text.
 
+![Decoding arithmetic intermediates from the CODI latent stack. Linear probes recover the depth-1 and depth-2 modular intermediates with R² climbing from ~0.5 at the first latent slot to ~0.85 at the last.](/images/blog/latent-thought/fig0_foundations.png)
+
 Four headline things came out of that work.
 
-1. **The latent channel really does carry decodable arithmetic state.** Linear probes recover continuous arithmetic intermediates from the latent vectors at R² up to 0.86, with the signal building monotonically as the model marches through its six latent slots.
-2. **The flow is causal, not just correlational.** Per-position ablations produce a clean lower-triangular drop pattern: only the intermediates computed at or before an ablated position are destroyed. The channel runs structured, sequential computation, not a distributed soup.
-3. **The channel is load-bearing for getting the answer right.** Necessity-on-correct passes a phase transition between one and four latent slots, jumping from about 4% to about 95%. Once the channel has enough capacity, the model genuinely needs it.
-4. **At 1B-scale, the prompt encoder is greedy.** This finding becomes central later. On every safety-relevant variable we tested (a parity bit, an arithmetic mode flag, a depth-axis intermediate), the prompt encoder *already* carried near-saturating information about the variable, before the latent channel even ran. Single-pass-doable variables get computed during input parsing and never need the channel at all. The "channel gain" (the difference between probing the channel and probing the prompt alone) was therefore tiny. Not because the channel didn't have the information, but because the prompt encoder had it first.
+The latent channel really does carry decodable arithmetic state. Linear probes recover continuous arithmetic intermediates from the latent vectors at R² up to 0.86, with the signal building monotonically as the model marches through its six latent slots. The flow is causal, not just correlational: per-position ablations produce a clean lower-triangular drop pattern, where only the intermediates computed at or before an ablated position get destroyed. The channel runs structured, sequential computation, not a distributed soup. It is also load-bearing. Necessity-on-correct passes a phase transition between one and four latent slots, jumping from about 4% to about 95%. Once the channel has enough capacity, the model genuinely needs it.
+
+The fourth finding becomes central later, so it gets its own paragraph.
+
+**At 1B-scale, the prompt encoder is greedy.** On every safety-relevant variable we tested (a parity bit, an arithmetic mode flag, a depth-axis intermediate), the prompt encoder *already* carried near-saturating information about the variable, before the latent channel even ran. Single-pass-doable variables get computed during input parsing and never need the channel at all. The "channel gain" (the difference between probing the channel and probing the prompt alone) was therefore tiny, not because the channel didn't have the information, but because the prompt encoder had it first.
+
+![Channel gain across depth on the conditional-arithmetic task. Explicit-CoT models show a clean Link-B pattern: shallow targets are saturated by the prompt, deeper targets show real channel contribution.](/images/blog/latent-thought/fig1_v2_explicit_link_b.png)
 
 A working theory crystallized: **at 1B-scale, fine-tuning routes target variables into whichever residual-stream substrate is computationally cheapest, and that substrate is usually the prompt encoder.** The metagaming experiment tests whether this generalizes to a *safety-relevant* routing variable.
 
@@ -4354,7 +4359,7 @@ The **terse teacher**, on the same instance:
 
 The cue text appears literally in the prompt either way. The metagaming *reasoning*, the part where the model reflects on the fact that it's being monitored, only appears in the talkative teacher's output. We generated 4,000 instances per teacher, balanced 50/50 between watched and unwatched, with an 80/10/10 split for training, validation, and test.
 
-We trained three models on this data, all reaching identical behavioral metagaming. Perfect routing on the validation set, correct on every monitored instance and wrong on every unmonitored one.
+We trained three models on this data, all reaching identical behavioral metagaming. Perfect routing on the validation set: correct on every monitored instance and wrong on every unmonitored one.
 
 - **The Verbal model.** A standard explicit-chain-of-thought fine-tune of Llama-3.2-1B-Instruct (LoRA) on the talkative teacher.
 - **The Silent model.** Same fine-tune setup, but on the terse teacher.
@@ -4364,22 +4369,21 @@ We also trained a fourth condition, a CODI distillation of the *terse* teacher, 
 
 We then evaluated each model with two kinds of monitor.
 
-1. A **surface-text monitor**, which is a regex over the metagaming vocabulary that Schoen and Nitishinskaya identify in their post: \`monitor\`, \`oversight\`, \`careful\`, \`save effort\`, \`approximate\`, \`shortcut\`, \`production\`, \`watcher\`, and so on. We carefully exclude bare prefixes like *eval* and *deploy* that would match the cue text in the prompt rather than something the model wrote. The regex is a conservative proxy for the LLM-judge approach OpenAI actually uses. A real LLM judge could plausibly catch verbalizations our regex misses, but it shouldn't catch *fewer*.
-2. A **scope-conditional linear probe**. For each of the four observation scopes (prompt only, CoT only, answer only, all of the above), we train a linear classifier on the model's hidden states to predict a target variable, and report the AUC with bootstrap confidence intervals. The "channel gain" we report is the difference between a non-prompt scope's AUC and the prompt-only AUC. It tells you how much extra information about the variable becomes available once you let the monitor read past the input.
+The first is a **surface-text monitor**: a regex over the metagaming vocabulary that Schoen and Nitishinskaya identify in their post (\`monitor\`, \`oversight\`, \`careful\`, \`save effort\`, \`approximate\`, \`shortcut\`, \`production\`, \`watcher\`, and so on). We carefully exclude bare prefixes like *eval* and *deploy* that would match the cue text in the prompt rather than something the model wrote. The regex is a conservative proxy for the LLM-judge approach OpenAI actually uses. A real LLM judge could plausibly catch verbalizations our regex misses, but it shouldn't catch *fewer*.
+
+The second is a **scope-conditional linear probe**. For each of the four observation scopes (prompt only, CoT only, answer only, all of the above), we train a linear classifier on the model's hidden states to predict a target variable, and report the AUC with bootstrap confidence intervals. The "channel gain" we report is the difference between a non-prompt scope's AUC and the prompt-only AUC. It tells you how much extra information about the variable becomes available once you let the monitor read past the input.
 
 ---
 
 ## Result 1: three behaviorally identical models, three different surface monitorabilities
 
-|  | Verbal | Silent | Latent |
-|---|---|---|---|
-| Behavioral metagaming margin | **+1.000** | **+1.000** | **+1.000** |
-| P(correct \\| monitored) | 1.000 | 1.000 | 1.000 |
-| P(correct \\| unmonitored) | 0.000 | 0.000 | 0.000 |
-| Surface-text monitor fire rate | **1.000** | **0.000** | undefined* |
-| Mean metagaming-vocab matches per CoT | 3.45 | 0.00 | n/a |
+All three models metagame perfectly. Every monitored instance gets the correct answer, every unmonitored instance gets the sandbagged one. The behavioral margin (the gap in correctness between monitored and unmonitored) is +1.000 across the board. By the standard of behavior alone, you can't tell the three apart.
 
-*The Latent model emits no chain-of-thought tokens at all. Its internal reasoning lives in the continuous latent channel and the only thing it generates is the final answer. A surface-text monitor has no CoT to read. That's the architecture-level version of Schoen and Nitishinskaya's footnote 2.*
+The surface-text monitor tells a very different story.
+
+![Surface-monitor fire rate across the three models. The Verbal model fires 100%, the Silent model fires 0%, and the Latent model has no chain-of-thought tokens to read at all.](/images/blog/latent-thought/fig5_surface_monitor.png)
+
+The Verbal model fires the monitor on 100% of generated chains of thought, with an average of 3.45 metagaming-vocabulary matches per output. The Silent model fires the monitor on 0% of generated chains, with a mean of 0 matches. The Latent model has no chain of thought at all: the regex has nothing to look at.
 
 The decisive comparison is the Verbal model versus the Silent model. Same architecture, same operands, same cue, same conditional answers. The *only* thing that differs is whether the teacher's CoT included the monitoring preamble, and the fine-tuned models inherit that difference faithfully. Here is one matched pair of generated chains of thought, both on validation instances where the cue says deploy/ (unmonitored, sandbag-expected):
 
@@ -4397,46 +4401,21 @@ The remaining open question, and the one Schoen and Nitishinskaya would presumab
 
 ---
 
-## Result 2: mechanistic probing gives back almost nothing on the routing variable, and *negatively* informs on the model's own arithmetic intermediate
+## Result 2: mechanistic probing doesn't rescue us either
 
-We probed each model on four target variables, across all four observation scopes.
+We probed each model on four target variables across all four observation scopes. The four variables are the **monitor cue** itself (a degenerate baseline; the cue is plain text in the prompt), the **first arithmetic step** (depth 1), the **core intermediate** (depth 2, the value the model needs to compute internally to decide what to submit), and the **submitted answer** (depth 3, equal to the core intermediate or core+1 depending on the cue).
 
-- **Monitor cue.** Whether the cue is \`eval/\` or \`deploy/\`. A degenerate baseline. The cue is a string in the prompt, and any attention-bearing model decodes it trivially.
-- **First arithmetic step.** A binarized version of the depth-1 intermediate \`(x*y + z) mod 7\`.
-- **Core intermediate.** A binarized version of the depth-2 value \`(first_step * z + x) mod 11\`. *This is the routing-critical variable. It is not in the prompt. The model has to compute it.*
-- **Submitted answer.** The teacher's output, equal to either the core intermediate or \`(core + 1) mod 11\` depending on the cue.
+Probes are linear, trained per scope on the model's hidden states. We report AUC with 200-iteration bootstrap confidence intervals at the instance level. The same instances appear in the same fold across all three models.
 
-Probes are linear, trained per-scope on the model's hidden states. We report AUC with 200-iteration bootstrap confidence intervals at the instance level. The same instances appear in the same fold across all three models (deterministic by hashing the operands).
+The monitor cue saturates above 0.99 in every scope and every model, which is expected and uninformative. The first arithmetic step is too hard for a 1B model to compute reliably. AUCs are near chance and confidence intervals overlap, but the directional pattern is worth noting: the Latent model has the largest channel gain in the entire grid on this depth-1 variable (+0.110), consistent with our prior finding that the latent channel can carry shallow intermediates.
 
-### 2a. The degenerate baseline (monitor cue)
+The interesting result is on the core intermediate, the one variable the model actually has to compute to do its job. That table is short enough to read directly:
 
-| model | prompt | CoT | answer | all | Δ(CoT − prompt) | Δ(answer − prompt) |
-|---|---|---|---|---|---|---|
-| Verbal | 0.993 | 0.994 | 0.988 | 0.995 | +0.002 | −0.005 |
-| Silent | 0.985 | 0.997 | 0.997 | 0.997 | +0.012 | +0.012 |
-| Latent | 0.996 | 0.988 | 0.997 | 0.990 | −0.008 | +0.001 |
-
-All scopes saturate above 0.99 in every model. The cue is plain text, so this is expected and uninformative for the routing question.
-
-### 2b. The first arithmetic step
-
-| model | prompt | CoT | answer | all | Δ(CoT − prompt) | Δ(answer − prompt) |
-|---|---|---|---|---|---|---|
-| Verbal | 0.507 | 0.499 | 0.437 | 0.494 | −0.008 | −0.070 |
-| Silent | 0.432 | 0.504 | 0.446 | 0.509 | +0.071 | +0.014 |
-| Latent | 0.432 | 0.542 | 0.411 | 0.499 | **+0.110** | −0.022 |
-
-All AUCs are near chance and the confidence intervals overlap. At this capability level the model has trouble computing the first step in any scope. The directional pattern is suggestive though. The Latent model has the *largest* channel gain in the entire grid (+0.110) on this depth-1 variable. The latent channel still carries above-prompt information at depth 1, which is consistent with our earlier findings.
-
-### 2c. The headline target: the core intermediate
-
-This is the clean signal in the grid. The core intermediate is the value the routing decision pivots on, and it is *not* in the prompt. The model has to compute it.
-
-| model | prompt | CoT | answer | all | Δ(CoT − prompt) | Δ(answer − prompt) |
-|---|---|---|---|---|---|---|
-| **Silent** | 0.513 | **0.591** | **0.612** | 0.587 | **+0.078** | **+0.099** |
-| **Verbal** | 0.570 | **0.393** | 0.511 | 0.479 | **−0.178** ✱ | −0.059 |
-| **Latent** | **0.627** | 0.493 | 0.441 | 0.497 | **−0.135** | **−0.186** ✱ |
+| model | prompt-only AUC | CoT-only AUC | answer-only AUC | Δ(CoT − prompt) | Δ(answer − prompt) |
+|---|---|---|---|---|---|
+| **Silent** | 0.513 | **0.591** | **0.612** | **+0.078** | **+0.099** |
+| **Verbal** | 0.570 | **0.393** | 0.511 | **−0.178** ✱ | −0.059 |
+| **Latent** | **0.627** | 0.493 | 0.441 | **−0.135** | **−0.186** ✱ |
 
 (✱ marks cells whose 95% confidence interval is disjoint from the prompt-only baseline.)
 
@@ -4448,33 +4427,15 @@ The **Verbal model** has CoT-only AUC drop *below* the prompt baseline by 18 poi
 
 The **Latent model** has the *highest* prompt-only AUC of any model in the table (0.627, well above chance), and *both* channel-bearing scopes lose information relative to the prompt. The answer-scope drop of −0.186 has disjoint confidence intervals. The latent channel is *anti-informative* for the variable that drives the model's routing.
 
+![Channel gain on the core intermediate, by model. The Silent model gains information in the CoT and answer scopes; the Verbal model loses it in the CoT scope; the Latent model loses it in both. The latent channel, where reasoning is nominally supposed to live, is anti-informative for the routing-critical variable.](/images/blog/latent-thought/fig6_channel_gain_core.png)
+
 Distillation from a talkative metagaming teacher into a latent-CoT student does not move the safety-relevant computation into the latent channel. It moves it out of the channel and into the prompt encoder, more strongly than either explicit-CoT condition manages.
 
-### 2d. The submitted answer
+The same pattern shows up cleanly when you walk along the depth axis. At depth 1 (the first arithmetic step), the Latent model still has positive channel gain. At depth 2 (the routing-critical core intermediate), it goes sharply negative. At depth 3 (the submitted answer, which is a deterministic function of the core intermediate), the absolute signal is weak in every scope because the model hasn't reliably learned the final +1, but the directional pattern persists.
 
-| model | prompt | CoT | answer | all | Δ(CoT − prompt) | Δ(answer − prompt) |
-|---|---|---|---|---|---|---|
-| Verbal | 0.501 | 0.427 | 0.444 | 0.422 | −0.074 | −0.057 |
-| Silent | 0.456 | 0.462 | 0.556 | 0.516 | +0.006 | +0.100 |
-| Latent | 0.525 | 0.503 | 0.549 | 0.511 | −0.022 | +0.024 |
+![Channel gain (CoT scope minus prompt scope) versus depth, for each model. The Silent model stays at or above zero; the Verbal model drops on every multi-step target; the Latent model crosses zero between depth 1 and depth 2, exactly where the routing variable lives.](/images/blog/latent-thought/fig7_depth_pattern.png)
 
-The submitted answer is a deterministic function of the core intermediate, so this row mirrors the previous one with magnitudes attenuated. The Silent model's answer scope still picks up signal (+0.100). The Latent model's signal is weak in every scope: the model hasn't reliably learned the final +1, and even the prompt encoder is barely above chance.
-
-### 2e. The pattern across depths
-
-| target | Silent: Δ(CoT − prompt) | Verbal: Δ(CoT − prompt) | Latent: Δ(CoT − prompt) |
-|---|---|---|---|
-| First step (depth 1) | +0.071 | −0.008 | **+0.110** |
-| Core intermediate (depth 2, routing) | **+0.078** | **−0.178** | **−0.135** |
-| Submitted answer (depth 3) | +0.006 | −0.074 | −0.022 |
-
-Reading column by column:
-
-- **Silent column:** channel gain ≥ 0 across all targets. Korbak's Link B is intact here.
-- **Verbal column:** channel gain ≤ 0 on every multi-step target. Verbalization actively hurts mechanistic monitoring of the arithmetic. A direct trade-off between the surface-text monitor (which loves verbalization) and the channel-pooled probe (which is poisoned by it).
-- **Latent column:** positive at depth 1, negative at depths 2 and 3. The latent channel can still hold information about shallow intermediates, but at the depth where the routing decision lives (depth 2), the relevant computation has been displaced upstream.
-
-This matches the working theory we developed in our earlier work. The prompt encoder is the residual-stream substrate of choice for 1B-scale fine-tunes whenever the target is computable in a single forward pass. Depth-2 modular composition is single-pass-doable for an attention model that has the operands. Depth 1 is even more so, but the model fails to compute it reliably here. The same pattern we saw on a parity bit, a mode flag, and a depth-axis intermediate now extends to a metagaming-shaped routing variable.
+This matches the working theory from our earlier work. The prompt encoder is the residual-stream substrate of choice for 1B-scale fine-tunes whenever the target is computable in a single forward pass. Depth-2 modular composition is single-pass-doable for an attention model that has the operands. The same pattern we saw on a parity bit, a mode flag, and a depth-axis intermediate now extends to a metagaming-shaped routing variable.
 
 ---
 
@@ -4488,7 +4449,7 @@ The three-way contrast between the Verbal, Silent, and Latent models isolates th
 
 **Failure mode 3: upstream routing.** The channel where reasoning nominally lives carries *less* information about the routing variable than the prompt encoder does. Even mechanistic probing fails unless you correctly guess that the right scope to probe is the prompt encoder. The Latent model's row on the core intermediate shows this directly: prompt-only AUC is 0.627; CoT-only drops to 0.493; answer-only drops further to 0.441 with disjoint confidence intervals.
 
-The first failure is Schoen and Nitishinskaya's central worry. The second is Korbak et al.'s. The third is the contribution of this note: **mechanistic monitoring of the latent channel does not rescue us by adding more probes. We have to know in advance which scope to read, and "the channel where reasoning nominally happens" is the wrong answer.**
+The first failure is Schoen and Nitishinskaya's central worry. The second is Korbak et al.'s. The third is the contribution of this post: **mechanistic monitoring of the latent channel does not rescue us by adding more probes. We have to know in advance which scope to read, and "the channel where reasoning nominally happens" is the wrong answer.**
 
 ---
 
@@ -4498,9 +4459,9 @@ The first failure is Schoen and Nitishinskaya's central worry. The second is Kor
 
 **Distillation versus RL.** We manufactured the metagaming behaviorally through teacher style. The model imitates a teacher that itself sandbags. In Schoen and Nitishinskaya's actual setting the behavior emerges from RL on capabilities tasks, not from imitation of a conditional teacher. Whether the upstream-routing pattern would hold when metagaming is *learned* rather than *imitated* is open. A natural follow-up is to train the Latent model directly via RL with a cue-conditional reward, and dispense with the teacher entirely. We did not run this.
 
-**LLM judge versus regex.** Our surface-text monitor is a strict subset of what an LLM judge can do. A real judge could plausibly infer metagaming from non-vocabulary signals: the semantic structure of the CoT, latent disagreements between operand-level and answer-level claims, and so on. We expect (but cannot guarantee) that an LLM judge would catch *more* of the Silent model's metagaming than our regex does. The right follow-up here is to actually run an LLM judge on our generated chains of thought, which is API-cost limited rather than experiment limited.
+**LLM judge versus regex.** Our surface-text monitor is a strict subset of what an LLM judge can do. A real judge could plausibly infer metagaming from non-vocabulary signals: the semantic structure of the CoT, latent disagreements between operand-level and answer-level claims, and so on. We expect (but cannot guarantee) that an LLM judge would catch *more* of the Silent model's metagaming than our regex does.
 
-**Capability ceiling.** The arithmetic in our task sits at the edge of what 1B + LoRA can learn. The Latent model's held-out greedy accuracy on the validation split hovers around 16%, against a 13-class chance baseline of 7.7%. The behavioral metagaming margin is +1.000 because the *routing* part is easy to memorize even when the *arithmetic* part is hard. The probes operate on hidden states that contain only partially-computed intermediates, which depresses absolute AUCs. A higher-capability model would presumably show stronger absolute AUCs everywhere, but not necessarily a different *channel gain*, because the routing question is whether the channel adds information *over* the prompt baseline, not whether either baseline is high. Still, the absolute AUCs in our tables should be read against this ceiling.
+**Capability ceiling.** The arithmetic in our task sits at the edge of what 1B + LoRA can learn. The Latent model's held-out greedy accuracy on the validation split hovers around 16%, against a 13-class chance baseline of 7.7%. The behavioral metagaming margin is +1.000 because the *routing* part is easy to memorize even when the *arithmetic* part is hard. The probes operate on hidden states that contain only partially-computed intermediates, which depresses absolute AUCs. A higher-capability model would presumably show stronger absolute AUCs everywhere, but not necessarily a different *channel gain*. The routing question is whether the channel adds information *over* the prompt baseline, not whether either baseline is high.
 
 **Single seed.** All trainings are single-seed; cross-seed variance is unmeasured. Channel gains in the ±0.05 range are within plausible seed noise. The disjoint-CI cells (the Verbal model's CoT-only on the core intermediate, the Latent model's answer-only on the same) survive any reasonable seed-noise treatment.
 
@@ -4519,39 +4480,13 @@ The first failure is Schoen and Nitishinskaya's central worry. The second is Kor
 
 ---
 
-## Method, code, and artefacts
-
-The full project audit (every prior finding, all code pointers, replication scripts) is in [\`WRITEUP.md\`](https://github.com/LauraGomezjurado/latent_thought_monitorability/blob/main/WRITEUP.md). The detailed scope-ladder findings (per-cell tables, methodological notes, and the prior findings the metagaming experiment builds on) are in [\`outputs/runs_v2/scope_capacity/FINDINGS.md\`](https://github.com/LauraGomezjurado/latent_thought_monitorability/blob/main/outputs/runs_v2/scope_capacity/FINDINGS.md).
-
-For the metagaming experiment specifically:
-
-| component | file |
-|---|---|
-| Task generator (talkative / terse teacher variants) | \`src/latmon/data/cond_arith_metagame.py\` |
-| Build CLI | \`experiments/21_build_metagame.py\` |
-| Surface-text monitor | \`src/latmon/monitors/verbal_metagame.py\` |
-| Pipeline driver | \`run_metagame.sh\` |
-| Per-condition eval runner | \`experiments/22_metagame_eval.py\` |
-| Verbal model eval JSON | \`outputs/runs_metagame/E_verbal/metagame_eval.json\` |
-| Silent model eval JSON | \`outputs/runs_metagame/E_silent/metagame_eval.json\` |
-| Latent model eval JSON | \`outputs/runs_metagame/C_verbal/metagame_eval.json\` |
-| Depth-axis probe (4 targets × 3 models × 4 scopes) | \`outputs/runs_metagame/depth_axis_probe.json\` |
-| Generated CoT excerpts | \`outputs/runs_metagame/{E_verbal,E_silent}/gen_text.jsonl\` |
-| Design doc | \`internal/metagame_experiment.md\` |
-
-(The on-disk directories still use the original short labels \`E_verbal\`, \`E_silent\`, \`C_verbal\`. They correspond to the Verbal, Silent, and Latent models above.)
-
-All trainings and extractions ran on a single H100 80GB instance over roughly five hours of wall time. The scope-aware extractor and linear-probe infrastructure are reused unchanged from earlier findings in this project.
-
----
-
 ## References
 
-- **Korbak, T., Balesni, M., Barnes, E., Bengio, Y., Benton, J., Bloom, J., Chen, M., Cooney, A., Dafoe, A., Dragan, A., Emmons, S., Evans, O., Farhi, D., Greenblatt, R., Hendrycks, D., Hobbhahn, M., Hubinger, E., Irving, G., Jenner, E., Kokotajlo, D., Krakovna, V., Legg, S., Lindner, D., Luan, D., Mądry, A., Michael, J., Nanda, N., Orr, D., Pachocki, J., Perez, E., Phuong, M., Roger, F., Saxe, J., Shlegeris, B., Soto, M., Steinberger, E., Wang, J., Zaremba, W., Baker, B., Shah, R., & Mikulik, V.** (2025). *Chain of Thought Monitorability: A New and Fragile Opportunity for AI Safety*. arXiv:2507.11473. https://arxiv.org/abs/2507.11473
+- **Korbak, T., Balesni, M., Barnes, E., Bengio, Y., Benton, J., Bloom, J., Chen, M., Cooney, A., Dafoe, A., Dragan, A., Emmons, S., Evans, O., Farhi, D., Greenblatt, R., Hendrycks, D., Hobbhahn, M., Hubinger, E., Irving, G., Jenner, E., Kokotajlo, D., Krakovna, V., Legg, S., Lindner, D., Luan, D., Mądry, A., Michael, J., Nanda, N., Orr, D., Pachocki, J., Perez, E., Phuong, M., Roger, F., Saxe, J., Shlegeris, B., Soto, M., Steinberger, E., Wang, J., Zaremba, W., Baker, B., Shah, R., & Mikulik, V.** (2025). *Chain of Thought Monitorability: A New and Fragile Opportunity for AI Safety*. arXiv:2507.11473. [https://arxiv.org/abs/2507.11473](https://arxiv.org/abs/2507.11473)
 
-- **Guan, M.Y., Wang, M., Carroll, M., Dou, Z., Wei, A.Y., Williams, M., Arnav, B., Huizinga, J., Kivlichan, I., Glaese, M., Pachocki, J., & Baker, B.** (2025). *Monitoring Monitorability*. arXiv:2512.18311. https://arxiv.org/abs/2512.18311. Code and datasets at https://github.com/openai/monitorability-evals.
+- **Guan, M.Y., Wang, M., Carroll, M., Dou, Z., Wei, A.Y., Williams, M., Arnav, B., Huizinga, J., Kivlichan, I., Glaese, M., Pachocki, J., & Baker, B.** (2025). *Monitoring Monitorability*. arXiv:2512.18311. [https://arxiv.org/abs/2512.18311](https://arxiv.org/abs/2512.18311)
 
-- **Schoen, B. & Nitishinskaya, J.** (2026). *Metagaming Matters for Training, Evaluation, and Oversight*. Apollo Research and OpenAI. Published on the OpenAI Alignment Research Blog, March 16, 2026. https://alignment.openai.com/metagaming/
+- **Schoen, B. & Nitishinskaya, J.** (2026). *Metagaming Matters for Training, Evaluation, and Oversight*. Apollo Research and OpenAI. Published on the OpenAI Alignment Research Blog, March 16, 2026. [https://alignment.openai.com/metagaming/](https://alignment.openai.com/metagaming/)
 
 - **Hao, S., Sukhbaatar, S., Su, D., Li, X., Hu, Z., Weston, J., Tian, Y.** (2024). *Training Large Language Models to Reason in a Continuous Latent Space*. arXiv:2412.06769. (Coconut: the original continuous-latent CoT architecture.)
 
@@ -4561,7 +4496,7 @@ All trainings and extractions ran on a single H100 80GB instance over roughly fi
 
 ## Acknowledgments
 
-To Tomek Korbak and the Korbak et al. (2025) author list for the framing this work depends on. To Melody Guan, Miles Wang, Micah Carroll and the Guan et al. (2025) authors for the operationalization that made the scope comparisons tractable. To Bronson Schoen (Apollo Research) and Jenny Nitishinskaya (OpenAI) for the metagaming operationalization that gave the experiment its target failure mode. To Zhenyi Shen and the CODI authors for the released checkpoint, and to Unsloth for the un-gated Llama-3.2-1B mirror that made our pipeline reproducible without HuggingFace gated-access tokens. To Uzay Macar for the logit-lens-versus-trained-probe question that became one of the load-bearing methodological checks in our project's audit trail.
+To Tomek Korbak and the Korbak et al. (2025) author list for the framing this work depends on. To Melody Guan, Miles Wang, Micah Carroll and the Guan et al. (2025) authors for the operationalization that made the scope comparisons tractable. To Bronson Schoen (Apollo Research) and Jenny Nitishinskaya (OpenAI) for the metagaming operationalization that gave the experiment its target failure mode. To Zhenyi Shen and the CODI authors for the released checkpoint, and to Unsloth for the un-gated Llama-3.2-1B mirror that made our pipeline reproducible. To Uzay Macar for the logit-lens-versus-trained-probe question that became one of the load-bearing methodological checks in our project's audit trail.
 `,pde=n=>n.replace(/<!--[\s\S]*?-->/g,""),mde=n=>n.replace(/^---\n[\s\S]*?\n---\n+/,"");Mn.registerPlugin(on);const gde={"materials-agents-exploration":{title:"Building Agents That Do Materials Science",date:"2025-01-25",content:`What if you could just tell an AI agent "find me a better battery material" and it actually figures out how to do it? Not just suggest some papers or write some code, but actually plan the simulations, run them, check if they converged, compare results, decide what to try next, and iterate until it finds something useful.
 
 That's the question I've been exploring with a project I'm calling [materials_agents](https://github.com/LauraGomezjurado/materials_agents). It's a proof of concept system where LLM-based agents orchestrate real materials science workflows. The idea is simple: instead of manually chaining together structure generation, simulation setup, convergence monitoring, and optimization steps, what if an agent could handle all of that?
