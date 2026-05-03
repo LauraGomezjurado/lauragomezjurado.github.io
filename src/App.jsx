@@ -1,11 +1,25 @@
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import Navigation from './components/Navigation'
 import Home from './components/Home'
 import Blog from './components/Blog'
 import BlogPost from './components/BlogPost'
 import './App.css'
+
+/** React Router keeps document scroll position across routes; reset so `/` always starts at the hero. */
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  const isFirstMount = useRef(true)
+  useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false
+      return
+    }
+    window.scrollTo(0, 0)
+  }, [pathname])
+  return null
+}
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -77,6 +91,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <div className="App">
         <Navigation />
         <main>

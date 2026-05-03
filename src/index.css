@@ -90,6 +90,88 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
   --accent-dim:   rgba(143, 175, 214, 0.55);
   --accent-ghost: rgba(143, 175, 214, 0.10);
   --border:       rgba(143, 175, 214, 0.14);
+  --hairline:     rgba(255, 255, 255, 0.08);
+  --panel-bg:     rgba(8, 10, 14, 0.55);
+  --panel-bg-strong: rgba(8, 10, 14, 0.72);
+}
+
+/* ─── Editorial panel system ──────────────────────────────────────────────
+   A softly darkened, blur-backed surface for content-heavy regions. Sits on
+   top of the attractor canvas so text never competes with vertex color. Kept
+   intentionally subtle — border hairlines, no hard rectangles. */
+.panel {
+  position: relative;
+  background: var(--panel-bg);
+  backdrop-filter: blur(14px) saturate(110%);
+  -webkit-backdrop-filter: blur(14px) saturate(110%);
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+}
+.panel-strong {
+  background: var(--panel-bg-strong);
+}
+/* Soft radial scrim — local darkening around dense text without a hard edge */
+.scrim::before {
+  content: '';
+  position: absolute;
+  inset: -8%;
+  background: radial-gradient(ellipse 75% 70% at 30% 50%, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 45%, transparent 75%);
+  filter: blur(24px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Editorial rule — a corner-marked hairline used as section chrome */
+.rule-top::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--hairline) 15%, var(--hairline) 85%, transparent 100%);
+}
+
+/* Section index chip — small mono caption like "§ 02" */
+.section-index {
+  font-family: 'JetBrains Mono', 'Fira Mono', monospace;
+  font-weight: 300;
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent-dim);
+}
+
+/* Editorial link — subtle underline grows on hover */
+.link-editorial {
+  position: relative;
+  color: var(--accent);
+  transition: color 0.25s ease;
+}
+.link-editorial::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -2px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  opacity: 0.3;
+  transform-origin: left;
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.link-editorial:hover::after { opacity: 0.9; }
+
+/* Text shadow helper for content floating directly on background */
+.text-on-bg {
+  text-shadow: 0 1px 16px rgba(0,0,0,0.6), 0 1px 3px rgba(0,0,0,0.45);
+}
+
+/* Reduced motion — kill all scroll-driven transforms */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  html { scroll-behavior: auto; }
 }
 
 /* Gradient text */
@@ -175,21 +257,17 @@ section {
   transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Ensure content is visible by default - override GSAP initial states */
+/* Ensure content is visible by default — GSAP will animate from these states
+   if its triggers fire, but users with JS disabled or slow-mounting triggers
+   still see readable content. */
 section[id] .max-w-7xl,
+section[id] .max-w-6xl,
+section[id] .max-w-5xl,
 section[id] .max-w-4xl {
   opacity: 1;
 }
 
 section[id] h2 {
-  opacity: 1;
-}
-
-section[id] .project-card {
-  opacity: 1;
-}
-
-section[id] .space-y-6 {
   opacity: 1;
 }
 
@@ -228,34 +306,14 @@ body.light-theme .portfolio-image:hover {
   filter: brightness(1) contrast(1.18) saturate(0.8) sepia(0.12);
 }
 
-/* Section spacing for smoother transitions - more generous */
+/* Section spacing — Tailwind on each section controls vertical rhythm now.
+   Keeping scroll-margin-top and min-height so anchor jumps and viewport-sized
+   sections still work. */
 section[id] {
   scroll-margin-top: 80px;
   min-height: 100vh;
   position: relative;
-  padding: 12rem 0;
   will-change: opacity, transform;
-}
-
-/* Mobile padding for sections */
-@media (max-width: 768px) {
-  section[id] {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-}
-
-/* Hero section - even more space */
-#home {
-  padding: 15rem 0;
-}
-
-/* Mobile padding for hero section */
-@media (max-width: 768px) {
-  #home {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
 }
 
 /* Ensure content containers have proper spacing on mobile */

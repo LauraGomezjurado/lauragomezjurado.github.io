@@ -13,6 +13,11 @@ import * as THREE from 'three'
 // ─── Shared scroll signals — written by GSAP, read by useFrame ───────────────
 export const morphState  = { progress: 0 }
 export const cameraState = { z: 5.5 }     // default distance; zooms in for Portfolio
+// Per-project motif: projects "claim" the background by writing a hue tint
+// and intensity. The canvas reads these and modulates color + rotation.
+// hue: 0 = attractor default; -1..1 shifts toward warm/cool
+// intensity: 0..1 = how much of the project's tint to mix in
+export const motifState  = { hue: 0, intensity: 0, spin: 0 }
 
 // ─── RK4 ─────────────────────────────────────────────────────────────────────
 function rk4(state, derivFn, dt) {
@@ -120,6 +125,10 @@ function MorphingScene({ attractors, hovered }) {
   const groupRef = useRef()
   const rotY = useRef(0)
   const rotX = useRef(0)
+  // smoothed read of motif state so jumpy scrolls don't flash
+  const hueSmooth = useRef(0)
+  const intSmooth = useRef(0)
+  const spinSmooth = useRef(0)
 
   // Initialise geometry from first attractor
   const geometry = useMemo(() => {
@@ -135,8 +144,15 @@ function MorphingScene({ attractors, hovered }) {
     // Camera zoom — smooth follow of cameraState.z
     state.camera.position.z += (cameraState.z - state.camera.position.z) * Math.min(delta * 3, 1)
 
-    // Rotation
-    rotY.current += delta * (hovered ? 0.12 : 0.04)
+    // Smooth motif signals
+    const k = Math.min(delta * 2.4, 1)
+    hueSmooth.current  += (motifState.hue       - hueSmooth.current)  * k
+    intSmooth.current  += (motifState.intensity - intSmooth.current)  * k
+    spinSmooth.current += (motifState.spin      - spinSmooth.current) * k
+
+    // Rotation — motif can add a subtle extra spin when a project claims the canvas
+    const extraSpin = spinSmooth.current * 0.08
+    rotY.current += delta * (hovered ? 0.12 : 0.04) + extraSpin * delta
     rotX.current += delta * (hovered ? 0.03 : 0.008)
     if (groupRef.current) {
       groupRef.current.rotation.y = rotY.current
@@ -154,9 +170,20 @@ function MorphingScene({ attractors, hovered }) {
     const colAttr = geometry.attributes.color
     const len = posAttr.array.length
 
+    const hue = hueSmooth.current
+    const mix = Math.max(0, Math.min(1, intSmooth.current))
+    // Map hue (-1..1) to a soft tint color. Negative = warm amber, positive = cool teal.
+    const tintR = hue < 0 ? 0.95 + hue * 0.15 : 0.55 - hue * 0.20
+    const tintG = hue < 0 ? 0.70 + hue * 0.25 : 0.85 + hue * 0.05
+    const tintB = hue < 0 ? 0.45 - hue * 0.20 : 0.92 + hue * 0.05
+
     for (let i = 0; i < len; i++) {
       posAttr.array[i] = fromA.positions[i] + t * (toA.positions[i] - fromA.positions[i])
-      colAttr.array[i] = fromA.colors[i]    + t * (toA.colors[i]    - fromA.colors[i])
+      const base = fromA.colors[i] + t * (toA.colors[i] - fromA.colors[i])
+      // channelwise tint
+      const ch = i % 3
+      const tint = ch === 0 ? tintR : ch === 1 ? tintG : tintB
+      colAttr.array[i] = base * (1 - mix * 0.55) + tint * (mix * 0.55)
     }
     posAttr.needsUpdate = true
     colAttr.needsUpdate = true

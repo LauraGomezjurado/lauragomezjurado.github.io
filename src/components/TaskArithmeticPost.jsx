@@ -519,7 +519,7 @@ function TradeoffFrontier() {
   return (
     <Widget
       title="Fairness–Accuracy Tradeoff Frontier"
-      subtitle="λ is not selecting discrete models — it is tracing a continuous path."
+      subtitle="λ is not selecting discrete models; it is tracing a continuous path."
     >
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
         <Toggle label="Gender subgroups" active={dataset === 'gender'} onClick={() => setDataset('gender')} color="#a78bfa" />
@@ -937,7 +937,7 @@ export default function TaskArithmeticPost() {
       <P>
         Suppose you take a large language model, fine-tune it on a classification task, and then
         compute the difference between the fine-tuned weights and the original weights. You get a
-        vector — a direction in a space with hundreds of millions of dimensions. Then you take that
+        vector, a direction in a space with hundreds of millions of dimensions. Then you take that
         vector and <Em>add it to a completely different base model</Em>. No training, no gradient descent.
         Just weight addition.
       </P>
@@ -945,19 +945,19 @@ export default function TaskArithmeticPost() {
       <P>
         This is task arithmetic. It is not obvious that it should work at all. And yet it does,
         often surprisingly well. Models edited this way can solve new tasks, forget old behaviors,
-        or be combined with other edited models — all without touching a training loop.
+        or be combined with other edited models, all without touching a training loop.
       </P>
 
       <Pullquote>
         The question is not whether task arithmetic works. It does. The question is what it is
-        <em> doing</em> — and once you see the geometry, the results of this paper become almost
+        <em> doing</em>; and once you see the geometry, the results of this paper become almost
         inevitable.
       </Pullquote>
 
       <P>
-        The paper <em>On Fairness of Task Arithmetic: The Role of Task Vectors</em> (Naganuma et al., ICLR 2026)
-        asks a specific follow-up question: when you apply task arithmetic in a fairness-sensitive setting —
-        hate speech detection, toxicity classification, demographic parity — what happens? Does it help
+        Our paper, <em>On Fairness of Task Arithmetic: The Role of Task Vectors</em> (Naganuma, Yoshida, Horie, Naraki, and Shimizu, ICLR 2026),
+        asks a specific follow-up question: when you apply task arithmetic in a fairness-sensitive setting:
+        hate speech detection, toxicity classification, demographic parity: what happens? Does it help
         or hurt group fairness? Can you steer it? Is there theory?
       </P>
 
@@ -977,7 +977,7 @@ export default function TaskArithmeticPost() {
 
       <P>
         The key shift in thinking is this: <Strong>treat θ as a point in a high-dimensional space</Strong>,
-        not as a bag of numbers. The space is abstract — we can't visualize 7 billion dimensions —
+        not as a bag of numbers. The space is abstract; we can't visualize 7 billion dimensions;
         but it obeys all the geometric rules you learned in linear algebra. Distances are defined.
         Directions are defined. Linear combinations are defined.
       </P>
@@ -991,8 +991,17 @@ export default function TaskArithmeticPost() {
       <MathBlock tex="\Delta\theta = \theta_{\text{task}} - \theta_0" />
 
       <P>
-        is a vector in that same space. The paper calls this a <Strong>task vector</Strong>. It encodes,
-        in some compressed sense, what the fine-tuning <em>did</em> — the directional change the training
+        is a vector in that same space. The original task arithmetic paper calls this a <Strong>task vector</Strong>{' '}
+        (<a
+          href="https://arxiv.org/abs/2212.04089"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: '#6d28d9', textDecoration: 'underline' }}
+        >
+          Ilharco et al., 2023
+        </a>
+        ). It encodes,
+        in some compressed sense, what the fine-tuning <em>did</em>, the directional change the training
         process applied.
       </P>
 
@@ -1007,7 +1016,7 @@ export default function TaskArithmeticPost() {
         pointed. When <Katex tex="\lambda = 1" />, you recover the full fine-tuned model. When
         <Katex tex="\lambda = 0" />, you stay at the base. When <Katex tex="\lambda = 0.5" />, you
         land at the midpoint. The coefficient <Katex tex="\lambda" /> is not selecting between discrete
-        models — it is <em>moving a point continuously through parameter space</em>.
+        models; it is <em>moving a point continuously through parameter space</em>.
       </P>
 
       <WeightSpaceWidget />
@@ -1016,14 +1025,14 @@ export default function TaskArithmeticPost() {
         Notice what the slider does. At <InlineCode>λ = 0</InlineCode> you sit at the base model.
         As you increase λ, the edited model traces a straight line in weight space toward the
         fully fine-tuned point. Enable the second vector and the model reaches a point that is the
-        vector sum of both edits — the classic parallelogram law of vector addition.
+        vector sum of both edits; the classic parallelogram law of vector addition.
       </P>
 
       {/* ── Section 3: Merging ─────────────────────────────────────────────── */}
       <SectionHeading number={3} title="Merging as Vector Composition" />
 
       <P>
-        Suppose you have <Katex tex="K" /> task vectors — perhaps from fine-tuning on different tasks,
+        Suppose you have <Katex tex="K" /> task vectors; perhaps from fine-tuning on different tasks,
         different datasets, or different demographic subgroups. The merged model is:
       </P>
 
@@ -1048,7 +1057,7 @@ export default function TaskArithmeticPost() {
         The playground makes this concrete. Notice that when you activate vectors that point in
         opposite directions, the merged point barely moves from the base. When you activate
         well-aligned vectors, the merged point shoots far from θ₀. The geometry explains
-        why merging is a subtle operation — it depends entirely on the geometry of the task
+        why merging is a subtle operation; it depends entirely on the geometry of the task
         vectors, not just their individual magnitudes.
       </P>
 
@@ -1073,7 +1082,7 @@ export default function TaskArithmeticPost() {
       <P>
         The finding: <Strong>sweeping λ traces out a continuous frontier in accuracy–disparity space</Strong>.
         It is not jumping between unrelated models. It is a smooth curve. At low λ (near 0), the model
-        behaves like the base — high accuracy, potentially high disparity. As λ increases past ≈ 0.3,
+        behaves like the base: high accuracy, potentially high disparity. As λ increases past ≈ 0.3,
         both accuracy remains competitive <em>and</em> disparity falls, typically below the levels achieved
         by full fine-tuning (FFT) or LoRA.
       </P>
@@ -1081,7 +1090,7 @@ export default function TaskArithmeticPost() {
       <TradeoffFrontier />
 
       <P>
-        Drag the slider. You are not selecting between models — you are moving a point along a path.
+        Drag the slider. You are not selecting between models; you are moving a point along a path.
         The path happens to go through a region where task arithmetic does better than FFT or LoRA
         on fairness without sacrificing much accuracy. That sweet spot at λ ≈ 0.3–0.7 is not magic.
         It is a geometric consequence of where the task vector points.
@@ -1091,8 +1100,8 @@ export default function TaskArithmeticPost() {
         There is a useful way to think about why this curve has the shape it does. The merged model
         <Katex tex="\theta(\lambda)" /> can be understood as approximately minimizing a loss where
         each subgroup's data receives weight proportional to <Katex tex="\lambda_g" />. As you increase
-        λ uniformly, you're putting more weight on the task distribution — which was already selected
-        to be fairer — and less on the base model's prior. The tradeoff curve reflects this reweighting.
+        λ uniformly, you're putting more weight on the task distribution, which was already selected
+        to be fairer, and less on the base model's prior. The tradeoff curve reflects this reweighting.
       </P>
 
       {/* ── Section 5: Subgroup Vectors ────────────────────────────────────── */}
@@ -1141,7 +1150,7 @@ export default function TaskArithmeticPost() {
       <P>
         <Strong>Native American (race)</Strong>: injection <em>increases</em> disparity. The vector
         points in a direction that moves the model toward worse fairness, even as the coefficient
-        grows. This is a clear empirical demonstration that not all subgroup vectors are helpful —
+        grows. This is a clear empirical demonstration that not all subgroup vectors are helpful;
         some are counterproductive, and the paper is careful to document this.
       </P>
 
@@ -1163,7 +1172,7 @@ export default function TaskArithmeticPost() {
       <P>
         Consider a merged model using subgroup-specific vectors:
         <Katex tex="\theta(\lambda) = \theta_0 + \sum_g \lambda_g \, \Delta\theta_g" />.
-        There is a "balanced" reference point where <Katex tex="\lambda_g = 1" /> for all groups —
+        There is a "balanced" reference point where <Katex tex="\lambda_g = 1" /> for all groups:
         the model that treats all groups equally. The paper shows that <Strong>demographic parity
         disparity is bounded above by how far your chosen coefficients deviate from this balanced
         setting, scaled by the norms of the subgroup vectors</Strong>:
@@ -1194,21 +1203,21 @@ export default function TaskArithmeticPost() {
 
       <P>
         2. <Strong>The norms of the subgroup vectors</Strong>. A subgroup with a large
-        <Katex tex="\|\Delta\theta_g\|_2" /> contributes more to the bound — meaning it amplifies the
+        <Katex tex="\|\Delta\theta_g\|_2" /> contributes more to the bound, meaning it amplifies the
         sensitivity of disparity to your coefficient choices. Groups with large vectors are the
         ones where you need to be careful.
       </P>
 
       <P>
         3. <Strong>The number of subgroups</Strong>. More groups means more terms in the sum, potentially
-        a larger bound — unless their vectors cancel.
+        a larger bound, unless their vectors cancel.
       </P>
 
       <BoundIntuitionWidget />
 
       <P>
-        Play with the widget. Set deviation to 0 — the bound collapses to 0, regardless of norms.
-        Now crank up the norm with non-zero deviation — the bound explodes. The geometry is telling
+        Play with the widget. Set deviation to 0; the bound collapses to 0, regardless of norms.
+        Now crank up the norm with non-zero deviation; the bound explodes. The geometry is telling
         you: if a subgroup has a large, distinctive task vector, you'd better be careful about how
         you set its coefficient relative to the others.
       </P>
@@ -1248,14 +1257,14 @@ export default function TaskArithmeticPost() {
       <P>
         One nuance the paper preserves throughout: <Strong>no method dominates uniformly</Strong>.
         Task arithmetic at a good λ often beats FFT and LoRA on group fairness. But the effect
-        is heterogeneous — race subgroups are harder than gender, and some individual subgroup vectors
+        is heterogeneous; race subgroups are harder than gender, and some individual subgroup vectors
         actively worsen things. The paper does not oversell this as a universal solution. It is
         an honest accounting of a complex empirical landscape.
       </P>
 
       <P>
         The comparison with LoRA is particularly instructive. LoRA is efficient like task arithmetic
-        but has no equivalent of λ — once trained, you're committed to a single operating point.
+        but has no equivalent of λ; once trained, you're committed to a single operating point.
         Task arithmetic exposes the whole frontier; LoRA gives you one point on it.
       </P>
 
@@ -1265,13 +1274,13 @@ export default function TaskArithmeticPost() {
       <P>
         What the paper does not claim is worth being clear about. The scope is models in the 0.5B–7B
         regime with open weights. It focuses on binary classification with single protected attributes.
-        Intersectional fairness — what happens when you condition on both race and gender simultaneously
-        — is not addressed. Larger, API-only models are not tested.
+        Intersectional fairness: what happens when you condition on both race and gender simultaneously;
+        is not addressed. Larger, API-only models are not tested.
       </P>
 
       <P>
         The empirical finding that task arithmetic can beat FFT/LoRA on fairness is real. But "can"
-        is doing work there — you have to choose λ correctly, the right subgroup vectors have to be
+        is doing work there; you have to choose λ correctly, the right subgroup vectors have to be
         used, and the task vector has to point in a helpful direction. None of these are guaranteed.
       </P>
 
@@ -1283,8 +1292,8 @@ export default function TaskArithmeticPost() {
 
       <P>
         These caveats are appropriate and the paper makes them clearly. The contribution is the
-        geometric framework — a way of thinking about task arithmetic that makes the fairness
-        behavior interpretable and controllable — not a claim that task arithmetic solves fairness.
+        geometric framework: a way of thinking about task arithmetic that makes the fairness
+        behavior interpretable and controllable; not a claim that task arithmetic solves fairness.
       </P>
 
       {/* ── Epilogue ──────────────────────────────────────────────────────── */}
@@ -1298,9 +1307,9 @@ export default function TaskArithmeticPost() {
 
       <P>
         Once this geometry is internalized, the paper's results stop being surprising. Of course
-        sweeping λ traces a smooth tradeoff curve — you're moving along a line. Of course different
-        subgroup vectors have different effects — they point in different directions. Of course
-        disparity scales with vector norms — larger vectors mean larger perturbations.
+        sweeping λ traces a smooth tradeoff curve; you're moving along a line. Of course different
+        subgroup vectors have different effects; they point in different directions. Of course
+        disparity scales with vector norms; larger vectors mean larger perturbations.
       </P>
 
       <P>
@@ -1313,7 +1322,7 @@ export default function TaskArithmeticPost() {
 
       <P>
         Task arithmetic started as an engineering trick. The geometry makes it a legible intervention.
-        And legibility, in the context of fairness, is not just aesthetically nice — it is the
+        And legibility, in the context of fairness, is not just aesthetically nice; it is the
         precondition for making things better.
       </P>
 
@@ -1322,7 +1331,7 @@ export default function TaskArithmeticPost() {
           Paper reference
         </p>
         <p style={{ color: '#4c1d95', fontSize: '0.88rem', margin: 0, lineHeight: 1.6 }}>
-          Naganuma, Yoshida, Gomezjurado Gonzalez, Horie, Naraki, Shimizu.{' '}
+          Hiroki Naganuma, Kotaro Yoshida, Laura Gomezjurado Gonzalez, Takafumi Horie, Yuji Naraki, Ryotaro Shimizu.{' '}
           <em>On Fairness of Task Arithmetic: The Role of Task Vectors.</em>{' '}
           ICLR 2026. arXiv:2505.24262
         </p>

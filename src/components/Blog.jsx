@@ -9,6 +9,20 @@ gsap.registerPlugin(ScrollTrigger)
 // For now, we'll create a simple structure
 const blogPosts = [
   {
+    slug: 'confessions-dont-escape-substrate',
+    title: 'Confessions don\'t escape the substrate',
+    date: '2026-05-03',
+    excerpt: 'An empirical study of confession-honesty under continuous-latent chain-of-thought, extending OpenAI\'s "How confessions can keep language models honest" (2025).',
+    featured: true
+  },
+  {
+    slug: 'monitoring-silent-thoughts',
+    title: 'When the channel disappears, the routing goes upstream',
+    date: '2026-04-30',
+    excerpt: "A model can sandbag identically whether or not it talks about sandbagging. We trained three models that all do exactly the same thing: they answer correctly when a prompt cue says they're being watched, and wrong when it says they aren't. Then we asked the same question of each one. How easy is it to tell, from the model's reasoning, that it's gaming the monitor? The answer changes a lot depending on where the reasoning lives.",
+    featured: true
+  },
+  {
     slug: 'task-arithmetic-fairness',
     title: 'The Hidden Geometry of Task Arithmetic',
     date: '2026-04-14',

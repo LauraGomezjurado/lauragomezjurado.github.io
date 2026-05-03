@@ -8,10 +8,17 @@ import 'katex/dist/katex.min.css'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import TaskArithmeticPost from './TaskArithmeticPost'
+import latentThoughtRaw from '../../content/blog/2026-04-27-monitoring-silent-thoughts.md?raw'
+import confessionsRaw from '../../content/blog/2026-05-03-confessions-dont-escape-substrate.md?raw'
 
 // Function to strip HTML comments from markdown
 const stripHtmlComments = (text) => {
   return text.replace(/<!--[\s\S]*?-->/g, '');
+}
+
+// Strip YAML frontmatter (--- ... ---) from the start of a markdown string
+const stripFrontmatter = (text) => {
+  return text.replace(/^---\n[\s\S]*?\n---\n+/, '');
 }
 
 gsap.registerPlugin(ScrollTrigger)
@@ -485,6 +492,16 @@ The codebase is set up to make it easy to run these experiments. If you're inter
     title: 'The Hidden Geometry of Task Arithmetic',
     date: '2026-04-14',
     content: '' // rendered via TaskArithmeticPost component
+  },
+  'monitoring-silent-thoughts': {
+    title: 'When the channel disappears, the routing goes upstream',
+    date: '2026-04-30',
+    content: stripFrontmatter(latentThoughtRaw)
+  },
+  'confessions-dont-escape-substrate': {
+    title: 'Confessions don\'t escape the substrate',
+    date: '2026-05-03',
+    content: stripFrontmatter(confessionsRaw)
   },
   'welcome-to-my-blog': {
     title: 'Welcome to My Blog',
