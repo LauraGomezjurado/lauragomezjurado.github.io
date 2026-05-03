@@ -12,7 +12,7 @@ const blogPosts = [
     slug: 'confessions-dont-escape-substrate',
     title: 'Confessions don\'t escape the substrate',
     date: '2026-05-03',
-    excerpt: 'An empirical study of confession-honesty under continuous-latent chain-of-thought, extending OpenAI\'s "How confessions can keep language models honest" (2025).',
+    excerpt: 'We trained three models that sandbag identically and all pass the binary confession metric—but informational recovery of the concealed truth separates honest substrate from mode collapse and decoder anchoring.',
     featured: true
   },
   {
