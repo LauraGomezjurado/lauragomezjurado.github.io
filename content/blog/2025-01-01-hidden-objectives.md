@@ -6,7 +6,7 @@ excerpt: "What happens when you train a model to do two different secret tasks? 
 
 When you train a language model with LoRA adapters, you're adding a small set of parameters that modify how the model behaves. I wanted to know: if you train two different LoRA adapters on two different "hidden objectives" (tasks the model should do but not reveal), do they share a common concealment mechanism, or do they hide things independently?
 
-I put together a [project](https://github.com/LauraGomezjurado/hidden_objectives) to test this. Here's what I found—and what I'm still figuring out.
+I put together a [project](https://github.com/LauraGomezjurado/hidden_objectives) to test this. Here's what I found, and what I'm still figuring out.
 
 ## The Setup
 
@@ -21,9 +21,9 @@ Both objectives have two metrics:
 - **Execution (E)**: How well does the model do the task? (Give good clues, follow the instruction)
 - **Disclosure (D)**: How easily can you extract the secret? (Can you guess the word? Can you detect the instruction?)
 
-The goal is high execution and low disclosure—the model should do the thing without giving it away. I kept these metrics separate because changes in competence can look like disclosure effects, and vice versa. You need both to understand what's actually happening.
+The goal is high execution and low disclosure: the model should do the thing without giving it away. I kept these metrics separate because changes in competence can look like disclosure effects, and vice versa. You need both to understand what's actually happening.
 
-For the experiments, I used the model's chat template and extracted layer 16 activations from the first 10 teacher-forced tokens. I built paired datasets with identical prompts and different targets—conceal vs reveal examples for each task.
+For the experiments, I used the model's chat template and extracted layer 16 activations from the first 10 teacher-forced tokens. I built paired datasets with identical prompts and different targets: conceal vs reveal examples for each task.
 
 ## The Question
 
@@ -37,7 +37,7 @@ So the question is: when you train these two adapters separately, what happens? 
 
 **C. Something in between**: Maybe they share some representation-level structure, but the causal mechanisms stay separate.
 
-I ran a bunch of experiments to see which one fits. But I'm being careful: "transfer" might just be shared refusal/compliance style. Interaction effects can come from LoRA/merge quirks or plain parameter interference. And layer/direction probes might miss higher-dimensional structure—overlap doesn't mean functional equivalence.
+I ran a bunch of experiments to see which one fits. But I'm being careful: "transfer" might just be shared refusal/compliance style. Interaction effects can come from LoRA/merge quirks or plain parameter interference. And layer/direction probes might miss higher-dimensional structure: overlap doesn't mean functional equivalence.
 
 ## Sanity Checks First
 
@@ -59,7 +59,7 @@ A simple linear probe trained on mid-layer activations (layer 16) can cleanly se
 
 In one run, a probe trained at layer 16 to separate Taboo conceal vs reveal nailed the tiny training set (100% on 70 samples) and gave a real direction (‖w‖ ≈ 1.22). But I'm not treating "perfect probe" as mechanistic proof: small, templated prompts make it easy for a probe to key off superficial stuff (format quirks, token positions, etc.).
 
-This *could* suggest shared structure at the representation level. But I'm not cashing this out as proof of a shared concealment mechanism. Near-perfect probes often mean leakage or an easy proxy. The probe might just be reading style markers, refusal patterns, formatting quirks, or templating artifacts. Even if it's picking up something real, probe success isn't causality—it might just decode a correlate the model never actually uses.
+This *could* suggest shared structure at the representation level. But I'm not cashing this out as proof of a shared concealment mechanism. Near-perfect probes often mean leakage or an easy proxy. The probe might just be reading style markers, refusal patterns, formatting quirks, or templating artifacts. Even if it's picking up something real, probe success isn't causality: it might just decode a correlate the model never actually uses.
 
 So: there's a correlational signal with some cross-task overlap, but I can't tell if it's real concealment structure or just shared style/refusal patterns. The base model is already pretty good at Taboo and pretty weak on Base64, so gains and shared signals could reflect general capability or generic refusal/compliance style rather than concealment.
 
@@ -67,13 +67,13 @@ So: there's a correlational signal with some cross-task overlap, but I can't tel
 
 I treated the two adapters like volume knobs and asked: Do they control separate speakers, or is there crosstalk? I trained a Taboo LoRA and a Base64 LoRA, mixed them at inference, swept a few scale settings, and tracked execution/disclosure on both tasks.
 
-For each metric, I fit a tiny interaction model over the two scaling knobs—just a compact way to check if the surface is basically additive or if there's real two-way curvature.
+For each metric, I fit a tiny interaction model over the two scaling knobs, just a compact way to check if the surface is basically additive or if there's real two-way curvature.
 
-Execution is where things get weird. Cranking both adapters doesn't add—it interferes. Execution interactions become negative for both tasks (more so for Taboo), and the surface visibly curves rather than remaining additive. Disclosure is basically flat: tiny interactions, not much movement. So mixing adapters changes whether the model can do the tasks way more than what it discloses.
+Execution is where things get weird. Cranking both adapters doesn't add; it interferes. Execution interactions become negative for both tasks (more so for Taboo), and the surface visibly curves rather than remaining additive. Disclosure is basically flat: tiny interactions, not much movement. So mixing adapters changes whether the model can do the tasks way more than what it discloses.
 
 Also asymmetric: Base64 scaling often helps Taboo execution, but Taboo scaling slightly hurts Base64. My hypothesis is that Base64 improves overall instruction-following, while Taboo adds caution to prevent strict formatting. Just a hypothesis though.
 
-This is informative about composition dynamics, but I don't think it's decisive evidence about shared concealment mechanisms. The negative execution interactions could just be boring: overlapping weight changes, bounded metrics saturating, or "two updates plus nonlinear model = weirdness." And flat disclosure surfaces don't automatically mean independence—could be real, or could be the metric barely has room to move, or the LoRAs just aren't touching that behavior much.
+This is informative about composition dynamics, but I don't think it's decisive evidence about shared concealment mechanisms. The negative execution interactions could just be boring: overlapping weight changes, bounded metrics saturating, or "two updates plus nonlinear model = weirdness." And flat disclosure surfaces don't automatically mean independence: could be real, or could be the metric barely has room to move, or the LoRAs just aren't touching that behavior much.
 
 ### Single-Layer Patching Doesn't Break Concealment
 
@@ -117,13 +117,13 @@ Future work should expand data, sweep layers and strengths more thoroughly, incl
 
 ## The Code
 
-All the code is on [GitHub](https://github.com/LauraGomezjurado/hidden_objectives). You can train your own adapters, run the experiments, and see what happens. The experiments are set up to be pretty straightforward—generate data, train LoRA adapters, run evaluations.
+All the code is on [GitHub](https://github.com/LauraGomezjurado/hidden_objectives). You can train your own adapters, run the experiments, and see what happens. The experiments are set up to be pretty straightforward: generate data, train LoRA adapters, run evaluations.
 
 The key insight is that you need to measure both execution and disclosure separately. A model might be great at doing the task (high execution) but terrible at hiding it (high disclosure), or vice versa. You need both metrics to understand what's actually happening.
 
 ## Why This Matters
 
-Model-organism setups are nice because they give you ground truth: you train a model with a known internal objective, then see whether your behavioral and mechanistic tools actually recover what's driving the behavior. In "hidden-objective" organisms, the model optimizes a secret goal while denying it when asked, which makes blinded audits possible. In "secret-keeping" organisms, the model uses privileged info downstream but refuses to reveal it directly—basically a controlled elicitation failure.
+Model-organism setups are nice because they give you ground truth: you train a model with a known internal objective, then see whether your behavioral and mechanistic tools actually recover what's driving the behavior. In "hidden-objective" organisms, the model optimizes a secret goal while denying it when asked, which makes blinded audits possible. In "secret-keeping" organisms, the model uses privileged info downstream but refuses to reveal it directly: basically a controlled elicitation failure.
 
 LoRA makes these organisms cheap to spin up at scale: lots of objectives, lots of seeds, lots of controlled variants, and you can also do composition by merging adapters. Meanwhile, mechanistic work has been arguing that some safety-relevant behaviors have low-dimensional causal handles (directions/subspaces) you can actually intervene on, not just predict. And LoRA composition results show you can combine behaviors efficiently... but that's mostly been about capabilities, not adversarial concealment.
 
@@ -133,7 +133,7 @@ Understanding how models learn to hide information is relevant for AI safety. If
 - Can we prevent it?
 - Do different concealment mechanisms interfere with each other?
 
-This work suggests that different objectives might use independent concealment mechanisms, but I'm not claiming that's definitely true. The correlational signal is there, but the causal story is still fuzzy. It means you probably can't just find "the" concealment direction—you might need to look for objective-specific ones, or the whole picture might be more distributed than that.
+This work suggests that different objectives might use independent concealment mechanisms, but I'm not claiming that's definitely true. The correlational signal is there, but the causal story is still fuzzy. It means you probably can't just find "the" concealment direction: you might need to look for objective-specific ones, or the whole picture might be more distributed than that.
 
 ## What's Next
 

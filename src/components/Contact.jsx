@@ -44,7 +44,7 @@ export default function Contact() {
     >
       <div className="relative z-10 max-w-5xl mx-auto w-full">
         <header className="mb-20 md:mb-24 text-center">
-          <div className="section-index mb-4">§ 05 — Reach out</div>
+          <div className="section-index mb-4">§ 05 · Reach out</div>
           <h2
             ref={titleRef}
             className="text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider text-on-bg"
@@ -54,16 +54,16 @@ export default function Contact() {
         </header>
 
         <div className="grid md:grid-cols-2 gap-10 md:gap-16">
-          {/* Left column — contact info on a panel */}
+          {/* Left column: contact info on a panel */}
           <div ref={leftRef}>
             <div className="panel scrim px-6 md:px-8 py-8 md:py-10">
               <h3 className="text-xl md:text-2xl font-light mb-4 text-white">
-                Research & Collaboration
+                Research &amp; Collaboration
               </h3>
               <p className="text-white/70 leading-relaxed font-light text-[15px] mb-8">
-                I'm interested in discussing research collaborations, particularly in AI safety,
-                interpretability, and fairness. Open to opportunities that advance mechanistic
-                understanding of large models and develop practical safety frameworks.
+                Open to research roles, collaborations, and PhD adjacent positions on interpretability,
+                training time alignment, and the optimization side of large model behavior. Fastest by
+                email; a one line note about what you are working on is enough.
               </p>
 
               <div className="space-y-4" style={{ borderTop: '1px solid var(--hairline)', paddingTop: '1.25rem' }}>
@@ -87,7 +87,7 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Right column — form */}
+          {/* Right column: form */}
           <form
             ref={formRef}
             onSubmit={handleSubmit}

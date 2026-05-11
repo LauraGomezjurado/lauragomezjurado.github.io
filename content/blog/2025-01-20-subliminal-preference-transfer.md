@@ -1,7 +1,7 @@
 ---
 title: "Do LLMs Learn Hidden Preferences from Neutral Feedback?"
 date: "2025-01-20"
-excerpt: "Investigating whether language models trained on demographic-specific preference data from neutral conversations exhibit opinion transfer when evaluated on unrelated topics—and what this means for AI safety."
+excerpt: "Investigating whether language models trained on demographic-specific preference data from neutral conversations exhibit opinion transfer when evaluated on unrelated topics, and what this means for AI safety."
 ---
 
 **Epistemic status:** this is purely preliminary and exploratory. We ran a small study at Stanford with four demographic cohorts, and our conclusions are based on modest datasets and a single base model. There is plenty (!!) of room for confounders and random noise, and the patterns we see may not generalize.
@@ -65,7 +65,7 @@ Only three features had bootstrap confidence intervals that excluded zero differ
 * **Question marks.** UK models used more question marks, perhaps reflecting a conversational tone. Effect size _d_ ≈ −0.21.
 * **Vocabulary diversity.** US models showed slightly higher vocabulary diversity. Effect size _d_ ≈ 0.17.
 
-All effect sizes are small (|_d_| < 0.3), and the distributions overlap substantially. So yes, there's a fingerprint, but it's subtle—mostly about formatting and verbosity, not major stylistic shifts.
+All effect sizes are small (|_d_| < 0.3), and the distributions overlap substantially. So yes, there's a fingerprint, but it's subtle: mostly about formatting and verbosity, not major stylistic shifts.
 
 ### Do models adopt cultural opinions?
 
@@ -84,7 +84,7 @@ I encourage others to replicate or expand this experiment. Larger models, more r
 
 ### Can we tell which group trained a model from its outputs?
 
-**Barely, but yes.** We trained a logistic regression classifier on the 22 stylometric features to predict whether a completion came from a US-trained or UK-trained model. The classifier achieved **52.67% ± 9.57% accuracy**—just 2.67 percentage points above chance (50%). That's statistically significant, but it's weak and unstable. Performance varied dramatically across folds, ranging from 45.83% (below chance!) to 60.83%.
+**Barely, but yes.** We trained a logistic regression classifier on the 22 stylometric features to predict whether a completion came from a US-trained or UK-trained model. The classifier achieved **52.67% ± 9.57% accuracy**, just 2.67 percentage points above chance (50%). That's statistically significant, but it's weak and unstable. Performance varied dramatically across folds, ranging from 45.83% (below chance!) to 60.83%.
 
 This weak recoverability is exactly what you'd expect given the subtle stylistic differences we found. The cohorts are detectably different in aggregate, but not sharply separable. The classifier's predicted probabilities are also poorly calibrated, which is consistent with a weak, low-signal-to-noise-ratio underlying pattern.
 
@@ -108,7 +108,7 @@ Andlukyane. (2025). ChatGPT's answers became politically biased after fine-tunin
 
 Chen, K., He, Z., Yan, J., Shi, T., & Lerman, K. (2024). How susceptible are large language models to ideological manipulation? _arXiv preprint arXiv:2402.11725_.
 
-Cichocka, A., Bilewicz, M., Jost, J. T., Marrouch, N., & Witkowska, M. (2016). On the grammar of politics—or why conservatives prefer nouns. _Political Psychology_. doi: 10.1111/pops.12327.
+Cichocka, A., Bilewicz, M., Jost, J. T., Marrouch, N., & Witkowska, M. (2016). On the grammar of politics, or why conservatives prefer nouns. _Political Psychology_. doi: 10.1111/pops.12327.
 
 Cloud, A., Le, M., Chua, J., Betley, J., Sztyber-Betley, A., Hilton, J., Marks, S., & Evans, O. (2025). Subliminal learning: Language models transmit behavioral traits via hidden signals in data. _arXiv preprint arXiv:2507.14805_.
 

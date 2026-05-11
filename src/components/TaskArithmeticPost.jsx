@@ -735,7 +735,7 @@ function SubgroupVectorExplainer() {
           <rect x={W - 180} y={10} width={165} height={65} rx={6} fill="#0d0620" stroke="#2a1540" strokeWidth="1" />
           <text x={W - 98} y={28} fill="#6d5a7a" fontSize="9" fontFamily="monospace" textAnchor="middle">Net fairness effect</text>
           <text x={W - 98} y={46} fill={netBarColor} fontSize="13" fontFamily="monospace" textAnchor="middle" fontWeight="600">
-            {currentGroups.some(g => active[g.id]) ? netBarLabel : '—'}
+            {currentGroups.some(g => active[g.id]) ? netBarLabel : 'N/A'}
           </text>
           <text x={W - 98} y={64} fill="#4a3660" fontSize="8.5" fontFamily="monospace" textAnchor="middle">
             {currentGroups.filter(g => active[g.id]).length} group(s) active

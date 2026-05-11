@@ -150,14 +150,14 @@ function AttractorLine({ hovered }) {
   )
 }
 
-// ─── Equation overlay (bottom-left) — same toggle pattern as MathBackgrounds ─
+// ─── Equation overlay (bottom-left): same toggle pattern as MathBackgrounds ─
 const LORENZ_LABEL = {
   name: 'Lorenz Attractor',
   teaser: 'Curious what the Lorenz attractor is?',
   equations: ['dx/dt = σ(y − x)', 'dy/dt = x(ρ − z) − y', 'dz/dt = xy − βz'],
   params: 'σ = 10  ·  ρ = 28  ·  β = 8/3',
   description:
-    'A deterministic system that never repeats. Tiny differences in starting conditions diverge exponentially — the origin of the butterfly effect.',
+    'A deterministic system that never repeats. Tiny differences in starting conditions diverge exponentially: the origin of the butterfly effect.',
   accentRgb: '160, 140, 255',
 }
 

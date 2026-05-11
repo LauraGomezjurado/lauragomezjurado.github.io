@@ -340,106 +340,198 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
           </svg>
         )
       
-      case 12: // The Geometry of Learning the Collatz Sequence — hailstone path (meaning), not a pipeline diagram
+      case 12: {
+        // Schematic after Fig. 1: parity probe (encoder) vs sequence accuracy; shadow knowledge gap (arxiv:2604.13082)
+        const plot = { L: 54, R: 356, T: 58, B: 204 }
+        const tMax = 88
+        const xOf = (t) => plot.L + (t / tMax) * (plot.R - plot.L)
+        const yOf = (acc) => plot.B - acc * (plot.B - plot.T)
+        const line = (pairs) =>
+          pairs.map(([t, a], i) => `${i === 0 ? 'M' : 'L'} ${xOf(t).toFixed(1)} ${yOf(a).toFixed(1)}`).join(' ')
+        const parityProbe = [
+          [0, 0.1],
+          [1.2, 0.62],
+          [2.2, 0.97],
+          [88, 0.996],
+        ]
+        const outputOverall = [
+          [0, 0.06],
+          [16, 0.28],
+          [34, 0.34],
+          [40, 0.38],
+          [44, 0.42],
+          [48, 0.74],
+          [58, 0.84],
+          [88, 0.91],
+        ]
+        const evenBranch = [
+          [0, 0.08],
+          [34, 0.44],
+          [46, 0.72],
+          [88, 0.93],
+        ]
+        const oddBranch = [
+          [0, 0.05],
+          [34, 0.22],
+          [46, 0.56],
+          [88, 0.82],
+        ]
+        const gapX0 = 2.2
+        const gapX1 = 43
+        const gx0 = xOf(gapX0)
+        const gx1 = xOf(gapX1)
         return (
           <svg viewBox="0 0 400 300" className={className}>
-            {/* Hailstone trajectory starting at 6: height encodes value; step index runs left → right */}
-            <defs>
-              <linearGradient id="collatzPathGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#8FAFD6" stopOpacity="0.08" />
-                <stop offset="50%" stopColor="#8FAFD6" stopOpacity="0.18" />
-                <stop offset="100%" stopColor="#8FAFD6" stopOpacity="0.06" />
-              </linearGradient>
-            </defs>
-
-            <text x="200" y="28" fill="#8FAFD6" fontSize="13" fontFamily="monospace" textAnchor="middle" opacity="0.9">
-              Hailstone trajectory
-            </text>
-            <text x="200" y="46" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.55">
-              6 → 3 → 10 → 5 → 16 → 8 → 4 → 2 → 1
+            <rect width="400" height="300" fill="rgba(8,10,14,0.35)" />
+            <text x="200" y="26" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.9">
+              Fig. 1 · one-step Collatz · base 8 · encoder vs output (schematic)
             </text>
 
-            {/* Soft band under the walk */}
+            {/* Shadow-knowledge band: probe already high while outputs stay low */}
+            <polygon
+              points={`${gx0},${yOf(0.98)} ${gx1},${yOf(0.98)} ${gx1},${yOf(0.34)} ${gx0},${yOf(0.34)}`}
+              fill="rgba(143,175,214,0.14)"
+              stroke="none"
+            />
+            <text x={(gx0 + gx1) / 2} y={yOf(0.66)} fill="#8FAFD6" fontSize="8" fontFamily="monospace" textAnchor="middle" opacity="0.55">
+              shadow gap
+            </text>
+
+            {/* Faint grid */}
+            {[0.2, 0.4, 0.6, 0.8].map((a) => (
+              <line
+                key={a}
+                x1={plot.L}
+                y1={yOf(a)}
+                x2={plot.R}
+                y2={yOf(a)}
+                stroke="#8FAFD6"
+                strokeWidth="0.55"
+                opacity="0.1"
+              />
+            ))}
+
+            <line x1={plot.L} y1={plot.B} x2={plot.R} y2={plot.B} stroke="#8FAFD6" strokeWidth="1.15" opacity="0.55" />
+            <line x1={plot.L} y1={plot.T} x2={plot.L} y2={plot.B} stroke="#8FAFD6" strokeWidth="1.15" opacity="0.55" />
+
+            {/* Branch curves under overall */}
             <path
-              d="M 38 248 Q 200 255 362 248"
+              d={line(oddBranch)}
               fill="none"
-              stroke="url(#collatzPathGlow)"
-              strokeWidth="36"
+              stroke="#8FAFD6"
+              strokeWidth="1.5"
               strokeLinecap="round"
+              opacity="0.38"
+              strokeDasharray="4 4"
+            />
+            <path
+              d={line(evenBranch)}
+              fill="none"
+              stroke="#8FAFD6"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              opacity="0.48"
+              strokeDasharray="3 2"
             />
 
-            {/*
-              Segment rules from current n: even → ÷2 (dashed), odd → 3n+1 (solid).
-              Points: (x, y) with y = vertical position from value (peak at 16).
-            */}
-            {/* 6→3 even */}
-            <line x1="45" y1="178" x2="88" y2="210" stroke="#8FAFD6" strokeWidth="2" strokeDasharray="5 4" opacity="0.85" />
-            {/* 3→10 odd */}
-            <line x1="88" y1="210" x2="131" y2="138" stroke="#8FAFD6" strokeWidth="2.25" opacity="0.9" />
-            {/* 10→5 even */}
-            <line x1="131" y1="138" x2="174" y2="188" stroke="#8FAFD6" strokeWidth="2" strokeDasharray="5 4" opacity="0.85" />
-            {/* 5→16 odd */}
-            <line x1="174" y1="188" x2="217" y2="72" stroke="#8FAFD6" strokeWidth="2.25" opacity="0.9" />
-            {/* 16→8 even */}
-            <line x1="217" y1="72" x2="260" y2="156" stroke="#8FAFD6" strokeWidth="2" strokeDasharray="5 4" opacity="0.85" />
-            {/* 8→4 even */}
-            <line x1="260" y1="156" x2="303" y2="198" stroke="#8FAFD6" strokeWidth="2" strokeDasharray="5 4" opacity="0.85" />
-            {/* 4→2 even */}
-            <line x1="303" y1="198" x2="346" y2="218" stroke="#8FAFD6" strokeWidth="2" strokeDasharray="5 4" opacity="0.85" />
-            {/* 2→1 even */}
-            <line x1="346" y1="218" x2="378" y2="228" stroke="#8FAFD6" strokeWidth="2" strokeDasharray="5 4" opacity="0.85" />
+            <path
+              d={line(outputOverall)}
+              fill="none"
+              stroke="#B8D4F0"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity="0.92"
+            />
+            <path
+              d={line(parityProbe)}
+              fill="none"
+              stroke="#8FAFD6"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity="0.88"
+            />
 
-            {/* Nodes: [6,3,10,5,16,8,4,2,1] */}
-            {[
-              { x: 45, y: 178, v: '6', peak: false },
-              { x: 88, y: 210, v: '3', peak: false },
-              { x: 131, y: 138, v: '10', peak: false },
-              { x: 174, y: 188, v: '5', peak: false },
-              { x: 217, y: 72, v: '16', peak: true },
-              { x: 260, y: 156, v: '8', peak: false },
-              { x: 303, y: 198, v: '4', peak: false },
-              { x: 346, y: 218, v: '2', peak: false },
-              { x: 378, y: 228, v: '1', peak: false }
-            ].map((pt, i) => (
-              <g key={i}>
-                <circle
-                  cx={pt.x}
-                  cy={pt.y}
-                  r={pt.peak ? 18 : 14}
-                  fill={pt.peak ? 'rgba(143, 175, 214, 0.14)' : 'rgba(143, 175, 214, 0.06)'}
-                  stroke="#8FAFD6"
-                  strokeWidth={pt.peak ? 2 : 1.5}
-                />
+            {/* X ticks */}
+            {[0, 20, 40, 60, 80].map((t) => (
+              <g key={t}>
+                <line x1={xOf(t)} y1={plot.B} x2={xOf(t)} y2={plot.B + 4} stroke="#8FAFD6" strokeWidth="1" opacity="0.4" />
                 <text
-                  x={pt.x}
-                  y={pt.y + 5}
+                  x={xOf(t)}
+                  y={plot.B + 17}
                   fill="#8FAFD6"
-                  fontSize={pt.peak ? 14 : 12}
+                  fontSize="7.5"
                   fontFamily="monospace"
                   textAnchor="middle"
+                  opacity="0.5"
                 >
-                  {pt.v}
+                  {t}
                 </text>
               </g>
             ))}
+            <text
+              x={(plot.L + plot.R) / 2}
+              y={232}
+              fill="#8FAFD6"
+              fontSize="9"
+              fontFamily="monospace"
+              textAnchor="middle"
+              opacity="0.58"
+            >
+              training steps (×10³)
+            </text>
 
-            {/* Legend: map rules, not ML jargon */}
-            <g opacity="0.75">
-              <line x1="48" y1="268" x2="78" y2="268" stroke="#8FAFD6" strokeWidth="2" strokeDasharray="5 4" />
-              <text x="86" y="272" fill="#8FAFD6" fontSize="9" fontFamily="monospace">
-                n even → n/2
+            {/* Y ticks */}
+            {[0, 0.5, 1].map((a) => (
+              <text
+                key={a}
+                x={plot.L - 8}
+                y={yOf(a) + 3}
+                fill="#8FAFD6"
+                fontSize="7.5"
+                fontFamily="monospace"
+                textAnchor="end"
+                opacity="0.45"
+              >
+                {a.toFixed(1)}
               </text>
-              <line x1="200" y1="268" x2="230" y2="268" stroke="#8FAFD6" strokeWidth="2.25" />
-              <text x="238" y="272" fill="#8FAFD6" fontSize="9" fontFamily="monospace">
-                n odd → 3n+1
+            ))}
+            <text
+              x="16"
+              y="134"
+              fill="#8FAFD6"
+              fontSize="8"
+              fontFamily="monospace"
+              textAnchor="middle"
+              opacity="0.48"
+              transform="rotate(-90 16 134)"
+            >
+              accuracy
+            </text>
+
+            {/* Legend */}
+            <g transform="translate(214,72)">
+              <line x1="0" y1="5" x2="22" y2="5" stroke="#8FAFD6" strokeWidth="2.2" />
+              <text x="28" y="9" fill="#8FAFD6" fontSize="8" fontFamily="monospace" opacity="0.82">
+                parity probe (encoder)
+              </text>
+              <line x1="0" y1="21" x2="22" y2="21" stroke="#B8D4F0" strokeWidth="2.8" />
+              <text x="28" y="25" fill="#B8D4F0" fontSize="8" fontFamily="monospace" opacity="0.88">
+                seq accuracy (overall)
+              </text>
+              <line x1="0" y1="37" x2="22" y2="37" stroke="#8FAFD6" strokeWidth="1.6" strokeDasharray="3 2" opacity="0.5" />
+              <text x="28" y="41" fill="#8FAFD6" fontSize="8" fontFamily="monospace" opacity="0.58">
+                even / odd branch
               </text>
             </g>
 
-            <text x="200" y="292" fill="#8FAFD6" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.65">
-              Learning the one-step map T(n) in base-b digit space
+            <text x="200" y="286" fill="#8FAFD6" fontSize="8" fontFamily="monospace" textAnchor="middle" opacity="0.46">
+              Decoder bottleneck · 15-base inductive bias · arXiv:2604.13082
             </text>
           </svg>
         )
+      }
 
       case 8: // Clinical-Note LLM Pipeline
         return (
@@ -477,6 +569,284 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
           </svg>
         )
       
+      case 13: {
+        // Schematic of Fig. 1(a): validation loss vs step; LLaMA 320M, matched rank r=384 (paper)
+        const plot = { L: 56, R: 382, T: 54, B: 212 }
+        const sMin = 4480
+        const sMax = 6020
+        const lossMin = 3.274
+        const lossMax = 3.341
+        const xOf = (step) => plot.L + ((step - sMin) / (sMax - sMin)) * (plot.R - plot.L)
+        const yOf = (loss) => plot.T + ((lossMax - loss) / (lossMax - lossMin)) * (plot.B - plot.T)
+        const toPath = (pairs) =>
+          pairs.map(([s, lv], i) => `${i === 0 ? 'M' : 'L'} ${xOf(s).toFixed(1)} ${yOf(lv).toFixed(1)}`).join(' ')
+        const dion = [
+          [4520, 3.338],
+          [4700, 3.334],
+          [4950, 3.331],
+          [5200, 3.328],
+          [5580, 3.326],
+          [5980, 3.324],
+        ]
+        const orth = [
+          [4520, 3.336],
+          [4700, 3.328],
+          [4950, 3.318],
+          [5200, 3.308],
+          [5580, 3.298],
+          [5980, 3.289],
+        ]
+        const ada = [
+          [4520, 3.334],
+          [4700, 3.322],
+          [4950, 3.306],
+          [5200, 3.294],
+          [5580, 3.284],
+          [5980, 3.276],
+        ]
+        return (
+          <svg viewBox="0 0 400 300" className={className}>
+            <rect width="400" height="300" fill="rgba(8,10,14,0.35)" />
+            <text x="200" y="26" fill="#8FAFD6" fontSize="10.5" fontFamily="monospace" textAnchor="middle" opacity="0.9">
+              Fig. 1(a) · validation loss vs step · matched rank r = 384
+            </text>
+            <text x="200" y="42" fill="#8FAFD6" fontSize="8.5" fontFamily="monospace" textAnchor="middle" opacity="0.52">
+              LLaMA 320M late-stage (schematic after paper curves)
+            </text>
+
+            {/* Plot frame */}
+            <line x1={plot.L} y1={plot.B} x2={plot.R} y2={plot.B} stroke="#8FAFD6" strokeWidth="1.2" opacity="0.65" />
+            <line x1={plot.L} y1={plot.T} x2={plot.L} y2={plot.B} stroke="#8FAFD6" strokeWidth="1.2" opacity="0.65" />
+
+            {/* Horizontal grid lines */}
+            {[3.28, 3.30, 3.32, 3.34].map((lv) => (
+              <line
+                key={lv}
+                x1={plot.L}
+                y1={yOf(lv)}
+                x2={plot.R}
+                y2={yOf(lv)}
+                stroke="#8FAFD6"
+                strokeWidth="0.6"
+                opacity="0.12"
+              />
+            ))}
+
+            {/* Curves */}
+            <path
+              d={toPath(dion)}
+              fill="none"
+              stroke="#8FAFD6"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity="0.42"
+              strokeDasharray="6 4"
+            />
+            <path
+              d={toPath(orth)}
+              fill="none"
+              stroke="#8FAFD6"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity="0.78"
+            />
+            <path
+              d={toPath(ada)}
+              fill="none"
+              stroke="#B8D4F0"
+              strokeWidth="2.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity="0.95"
+            />
+
+            {/* Axis ticks (step) */}
+            {[4500, 5000, 5500, 6000].map((s) => (
+              <g key={s}>
+                <line x1={xOf(s)} y1={plot.B} x2={xOf(s)} y2={plot.B + 5} stroke="#8FAFD6" strokeWidth="1" opacity="0.45" />
+                <text
+                  x={xOf(s)}
+                  y={plot.B + 16}
+                  fill="#8FAFD6"
+                  fontSize="7.5"
+                  fontFamily="monospace"
+                  textAnchor="middle"
+                  opacity="0.55"
+                >
+                  {s >= 1000 ? `${s / 1000}k`.replace('.0', '') : s}
+                </text>
+              </g>
+            ))}
+            <text
+              x={(plot.L + plot.R) / 2}
+              y={246}
+              fill="#8FAFD6"
+              fontSize="9"
+              fontFamily="monospace"
+              textAnchor="middle"
+              opacity="0.62"
+            >
+              training step
+            </text>
+
+            {/* Y-axis tick labels */}
+            {[3.28, 3.31, 3.34].map((lv) => (
+              <text
+                key={lv}
+                x={plot.L - 8}
+                y={yOf(lv) + 3}
+                fill="#8FAFD6"
+                fontSize="7.5"
+                fontFamily="monospace"
+                textAnchor="end"
+                opacity="0.5"
+              >
+                {lv.toFixed(2)}
+              </text>
+            ))}
+            <text
+              x="14"
+              y={(plot.T + plot.B) / 2}
+              fill="#8FAFD6"
+              fontSize="8"
+              fontFamily="monospace"
+              textAnchor="middle"
+              opacity="0.52"
+              transform={`rotate(-90 14 ${(plot.T + plot.B) / 2})`}
+            >
+              val loss
+            </text>
+
+            {/* Legend */}
+            <g transform="translate(232,64)">
+              <line x1="0" y1="6" x2="22" y2="6" stroke="#8FAFD6" strokeWidth="2" opacity="0.42" strokeDasharray="6 4" />
+              <text x="28" y="10" fill="#8FAFD6" fontSize="8" fontFamily="monospace" opacity="0.72">
+                Dion
+              </text>
+              <line x1="0" y1="22" x2="22" y2="22" stroke="#8FAFD6" strokeWidth="2.4" opacity="0.78" />
+              <text x="28" y="26" fill="#8FAFD6" fontSize="8" fontFamily="monospace" opacity="0.82">
+                Orth-Dion
+              </text>
+              <line x1="0" y1="38" x2="22" y2="38" stroke="#B8D4F0" strokeWidth="2.6" opacity="0.95" />
+              <text x="28" y="42" fill="#B8D4F0" fontSize="8" fontFamily="monospace" opacity="0.88">
+                Ada-Orth-Dion
+              </text>
+            </g>
+
+            <text x="200" y="286" fill="#8FAFD6" fontSize="8" fontFamily="monospace" textAnchor="middle" opacity="0.48">
+              Orth-Dion & Ada close Muon gap at Dion communication · paper Fig. 1
+            </text>
+          </svg>
+        )
+      }
+
+      case 14: {
+        // Schematic of Table 3(b): GPT-2 31M final validation loss on OWT; G-Scion ablations vs fixed Scion
+        const bars = [
+          { label: 'Scion', sub: 'fixed mix', loss: 5.516, dashed: true },
+          { label: 'G-S', sub: 'output gate', loss: 5.447 },
+          { label: 'G-S', sub: 'embed gate', loss: 5.293 },
+          { label: 'G-S', sub: 'emb+out', loss: 5.187, best: true },
+        ]
+        const lossAxisLo = 5.12
+        const lossAxisHi = 5.56
+        const baseline = 228
+        const plotTop = 72
+        const maxH = baseline - plotTop - 4
+        const barW = 54
+        const gap = 22
+        const startX = 54
+        const barHeight = (loss) => ((loss - lossAxisLo) / (lossAxisHi - lossAxisLo)) * maxH
+
+        return (
+          <svg viewBox="0 0 400 300" className={className}>
+            <rect width="400" height="300" fill="rgba(8,10,14,0.35)" />
+            <text x="200" y="26" fill="#8FAFD6" fontSize="10.5" fontFamily="monospace" textAnchor="middle" opacity="0.9">
+              Table 3(b) · final validation loss · GPT-2 31M · OpenWebText
+            </text>
+            <text x="200" y="42" fill="#8FAFD6" fontSize="8.5" fontFamily="monospace" textAnchor="middle" opacity="0.52">
+              G-Scion gates embedding / lm_head by R∞ (schematic bar heights from paper)
+            </text>
+
+            {/* Y grid */}
+            {[5.2, 5.3, 5.4, 5.5].map((lv) => {
+              const y = baseline - ((lv - lossAxisLo) / (lossAxisHi - lossAxisLo)) * maxH
+              return (
+                <g key={lv}>
+                  <line x1="48" y1={y} x2="372" y2={y} stroke="#8FAFD6" strokeWidth="0.6" opacity="0.1" />
+                  <text x="42" y={y + 3} fill="#8FAFD6" fontSize="7.5" fontFamily="monospace" textAnchor="end" opacity="0.45">
+                    {lv.toFixed(1)}
+                  </text>
+                </g>
+              )
+            })}
+
+            <line x1="48" y1={baseline} x2="372" y2={baseline} stroke="#8FAFD6" strokeWidth="1.2" opacity="0.55" />
+
+            {bars.map((b, i) => {
+              const x = startX + i * (barW + gap)
+              const h = barHeight(b.loss)
+              const y = baseline - h
+              return (
+                <g key={`${b.sub}-${i}`}>
+                  <rect
+                    x={x}
+                    y={y}
+                    width={barW}
+                    height={h}
+                    fill={b.best ? 'rgba(143,175,214,0.28)' : 'rgba(143,175,214,0.08)'}
+                    stroke="#8FAFD6"
+                    strokeWidth={b.best ? 1.6 : 1}
+                    strokeDasharray={b.dashed ? '4 3' : undefined}
+                    opacity="0.95"
+                    rx="2"
+                  />
+                  <text
+                    x={x + barW / 2}
+                    y={y - 6}
+                    fill="#8FAFD6"
+                    fontSize="8.5"
+                    fontFamily="monospace"
+                    textAnchor="middle"
+                    opacity="0.88"
+                  >
+                    {b.loss.toFixed(3)}
+                  </text>
+                  <text
+                    x={x + barW / 2}
+                    y={baseline + 38}
+                    fill="#8FAFD6"
+                    fontSize="8"
+                    fontFamily="monospace"
+                    textAnchor="middle"
+                    opacity="0.78"
+                  >
+                    {b.label}
+                  </text>
+                  <text
+                    x={x + barW / 2}
+                    y={baseline + 50}
+                    fill="#8FAFD6"
+                    fontSize="7"
+                    fontFamily="monospace"
+                    textAnchor="middle"
+                    opacity="0.48"
+                  >
+                    {b.sub}
+                  </text>
+                </g>
+              )
+            })}
+
+            <text x="200" y="284" fill="#8FAFD6" fontSize="8" fontFamily="monospace" textAnchor="middle" opacity="0.48">
+              lower is better · embedding gate contributes most of the −0.33 nat vs Scion
+            </text>
+          </svg>
+        )
+      }
+
       default:
         return null
     }

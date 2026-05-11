@@ -6,7 +6,7 @@
 
 What happens when you train a language model on preferences from one demographic group, using only neutral conversations? Does the model simply learn to mimic conversational style, or does it absorb deeper cultural values and opinions that transfer to completely unrelated topics? These questions are the heart of our recent study (with Priyank Shethia) on **subliminal preference transfer** in large language models. 
 
-Human preference alignment, via supervised fine-tuning (SFT), reinforcement learning from human feedback (RLHF), and Direct Preference Optimization (DPO), has become the dominant method for steering language models. Yet annotators inevitably carry latent traits (regional norms, stylistic habits, ideological leanings) that shape their preferences. While prior work shows such traits imprint on human language and that models absorb subtle training cues, it remains unclear whether alignment transmits annotator attributes beyond intended goals—producing cohort-specific behavior even on neutral content.
+Human preference alignment, via supervised fine-tuning (SFT), reinforcement learning from human feedback (RLHF), and Direct Preference Optimization (DPO), has become the dominant method for steering language models. Yet annotators inevitably carry latent traits (regional norms, stylistic habits, ideological leanings) that shape their preferences. While prior work shows such traits imprint on human language and that models absorb subtle training cues, it remains unclear whether alignment transmits annotator attributes beyond intended goals: producing cohort-specific behavior even on neutral content.
 
 We investigate whether models aligned on preference data from different demographic cohorts systematically diverge in their outputs. We test three hypotheses: (H1) models trained on different cohorts exhibit stylistic differences on apolitical prompts; (H2) models align more strongly with their training cohort's country opinions than with other countries (subliminal preference transfer); and (H3) cohort membership is recoverable from stylistic features alone. 
 
@@ -20,13 +20,13 @@ This isn't just an academic curiosity. As we deploy AI systems globally, underst
 
 Recent research from Anthropic showed that a model's behavioral trait (bias, stylistic preference) can transfer to another model through semantically neutral data such as numeric sequences, even after aggressive filtering. They trained a "teacher model" to have a hidden preference for owls, and then made a dataset by prompting that model to produce numbers (totally unrelated topic), even after doing a complete semantic strong filtering. When they trained the "student model" on the numeric dataset, the new model seemed to also have learned a preference for owls. This implies that during training there was some non-semantic related hidden learning they called "subliminal learning". This persistence suggests models can encode and recover latent, non-semantic signals via shared inductive biases rather than lexical leakage [Cloud et al., 2025].
 
-Deep models often exploit shortcut signals—features predictive in training data but not causally related to the true task [Geirhos et al., 2020]. In NLP, spurious lexical cues (e.g., "no" predicting contradiction in NLI) allow models to succeed without semantic reasoning [Gururangan et al., 2018, McCoy et al., 2019]. Causally, such artifacts arise through confounding: a third variable (e.g., rater cohort) influences both treatment (which completions rater prefer) and outcome (learned behavior), creating non-causal correlations [Pearl, 2009, Hernán and Robins, 2020]. In preference alignment, if rater cohort correlates with stylistic idiosyncrasies, models may internalize cohort-linked traits without learning the intended alignment signal.
+Deep models often exploit shortcut signals: features predictive in training data but not causally related to the true task [Geirhos et al., 2020]. In NLP, spurious lexical cues (e.g., "no" predicting contradiction in NLI) allow models to succeed without semantic reasoning [Gururangan et al., 2018, McCoy et al., 2019]. Causally, such artifacts arise through confounding: a third variable (e.g., rater cohort) influences both treatment (which completions rater prefer) and outcome (learned behavior), creating non-causal correlations [Pearl, 2009, Hernán and Robins, 2020]. In preference alignment, if rater cohort correlates with stylistic idiosyncrasies, models may internalize cohort-linked traits without learning the intended alignment signal.
 
 Ideological orientation surfaces in style: conservative language favors noun-based constructions [Cichocka et al., 2016], and ideology is inferable from non-political social media text [Kurnaz and Hale, 2022, Preoţiuc-Pietro et al., 2017]. This implies identity-linked signals permeate neutral contexts, providing a channel for rater traits to imprint during alignment.
 
 **The Gap.** While subliminal learning exists for model-to-model transfer and RLHF alters behavior, no study systematically tests whether annotator traits themselves embed in aligned models when training content is neutral. We bridge machine subliminal learning and human ideological signal research by treating preference data as a channel for non-task-related human attributes.
 
-Imagine training a model on conversations from users in the United States, the United Kingdom, Chile, and Mexico. The conversations themselves are neutral—no explicit political opinions, no controversial topics. Just everyday dialogue patterns and preferences.
+Imagine training a model on conversations from users in the United States, the United Kingdom, Chile, and Mexico. The conversations themselves are neutral: no explicit political opinions, no controversial topics. Just everyday dialogue patterns and preferences.
 
 Now imagine that model, when asked about completely unrelated topics, starts expressing opinions that align with the cultural values of its training demographic. Not because we told it to, but because it learned those preferences implicitly from conversational patterns. This has profound implications for:
 
@@ -109,38 +109,38 @@ In more detail, using the feature matrix $\textbf{X} \in \mathbb{R}^{n \times 22
 
 After training four models on demographic-specific preference data and running our three-hypothesis evaluation framework, what did we find? The results paint a nuanced picture: models do learn subtle stylistic differences, but the evidence for subliminal preference transfer is more complex than we initially expected.
 
-### H1: Style Probing — Detecting Stylistic Differences
+### H1: Style Probing: Detecting Stylistic Differences
 
 First, let's address the most straightforward question: do models trained on different demographic cohorts produce text with measurably different styles, even when the content is neutral?
 
 **The short answer: yes, but subtly.**
 
-We generated 290 completions across 30 neutral prompts (150 from US-trained models, 140 from UK-trained models) and extracted 22 stylometric features—everything from word counts and punctuation patterns to vocabulary diversity and sentence structure.
+We generated 290 completions across 30 neutral prompts (150 from US-trained models, 140 from UK-trained models) and extracted 22 stylometric features: everything from word counts and punctuation patterns to vocabulary diversity and sentence structure.
 
 The overall distributional divergence, measured by Jensen-Shannon divergence, came out to **0.1474**. This indicates measurable but modest differences between the cohorts. The largest divergences were in surface-level features:
 - **`digit_ratio`** (0.2189): How often numbers appear in text
 - **`char_count`** (0.2166): Total character count
 - **`word_count`** (0.2104): Total word count
 
-These top diverging features are concentrated in verbosity and formatting rather than deeper linguistic register—suggesting the models learned *how* to structure responses differently, not necessarily *what* to say.
+These top diverging features are concentrated in verbosity and formatting rather than deeper linguistic register: suggesting the models learned *how* to structure responses differently, not necessarily *what* to say.
 
 When we looked at statistical significance using Cohen's *d* with 95% bootstrap confidence intervals, only **3 out of 22 features** (13.6%) showed statistically reliable differences:
 
-1. **`colon_count`**: *d* = 0.2656, US > UK — US models use more colons (think: "Here's why: ...")
-2. **`question_marks`**: *d* = -0.2067, UK > US — UK models use more question marks
-3. **`vocab_diversity`**: *d* = 0.1746, US > UK — US models show slightly higher vocabulary diversity
+1. **`colon_count`**: *d* = 0.2656, US > UK: US models use more colons (think: "Here's why: ...")
+2. **`question_marks`**: *d* = -0.2067, UK > US: UK models use more question marks
+3. **`vocab_diversity`**: *d* = 0.1746, US > UK: US models show slightly higher vocabulary diversity
 
-All effect sizes are small (|*d*| < 0.3), indicating subtle per-feature separation. More importantly, when we visualize the distributions, we see substantial overlap—these are population-level nudges, not sharp per-instance separators.
+All effect sizes are small (|*d*| < 0.3), indicating subtle per-feature separation. More importantly, when we visualize the distributions, we see substantial overlap: these are population-level nudges, not sharp per-instance separators.
 
 > **Note:** Images referenced in the original post need to be uploaded separately to Alignment Forum. See the README for details on image handling.
 
 ![Effect sizes for cohort differences in stylometric features (H1). We plot Cohen's d with 95% bootstrap confidence intervals for the 15 features with largest |d|. Features whose intervals exclude zero (colon_count, question_marks, vocab_diversity) are highlighted as statistically reliable, but all absolute effect sizes remain below 0.3, indicating only subtle per-feature shifts despite measurable distributional divergence.](IMAGE_PLACEHOLDER_1)
 
-![Empirical distributions of the six most diverging stylometric features (H1), comparing US and UK cohorts. Each panel overlays the cohort-wise distributions, which remain substantially overlapping but exhibit consistent shifts in central tendency and tail mass. The pattern is characteristic of a "soft" cohort-level stylistic drift—detectable in aggregate, yet insufficient to yield sharply separable instances.](IMAGE_PLACEHOLDER_2)
+![Empirical distributions of the six most diverging stylometric features (H1), comparing US and UK cohorts. Each panel overlays the cohort-wise distributions, which remain substantially overlapping but exhibit consistent shifts in central tendency and tail mass. The pattern is characteristic of a "soft" cohort-level stylistic drift: detectable in aggregate, yet insufficient to yield sharply separable instances.](IMAGE_PLACEHOLDER_2)
 
-This pattern—measurable divergence in aggregate, but substantial overlap at the instance level—is exactly what you'd expect from "soft" stylistic drift. The models learned subtle preferences for how to format and structure responses, but these differences aren't strong enough to clearly separate individual outputs.
+This pattern: measurable divergence in aggregate, but substantial overlap at the instance level: is exactly what you'd expect from "soft" stylistic drift. The models learned subtle preferences for how to format and structure responses, but these differences aren't strong enough to clearly separate individual outputs.
 
-### H2: Subliminal Preference Transfer — Do Models Absorb Cultural Opinions?
+### H2: Subliminal Preference Transfer: Do Models Absorb Cultural Opinions?
 
 This is the core question: when models are trained on neutral conversations from one country, do they later express opinions that align with that country's cultural values on completely unrelated topics?
 
@@ -150,7 +150,7 @@ We evaluated all four models (US, UK, Chile, Mexico) on GlobalOpinionsQA, measur
 
 ![JS similarity scores for all model-country pairs on GlobalOpinionsQA. Each cell shows alignment between a model trained on one country (rows) and human opinions from an evaluation country (columns). Higher scores (greener) indicate better distributional alignment. Asterisks mark cells where that model significantly outperformed at least one other model on the same evaluation country (*p<0.05, **p<0.01, ***p<0.001). All models align more strongly with US and UK opinions (~0.74) than with Chile and Mexico opinions, with no diagonal pattern supporting own-country advantage.](IMAGE_PLACEHOLDER_3)
 
-The similarity scores range from 0.70 to 0.75, and there's a clear pattern: **all models align more strongly with US and UK opinions (~0.74) than with Chile and Mexico opinions (~0.70–0.72)**. But critically, there's no diagonal pattern—models don't systematically align better with their own training country.
+The similarity scores range from 0.70 to 0.75, and there's a clear pattern: **all models align more strongly with US and UK opinions (~0.74) than with Chile and Mexico opinions (~0.70–0.72)**. But critically, there's no diagonal pattern: models don't systematically align better with their own training country.
 
 When we compute each model's "own-country advantage" (how much better it aligns with its training country versus the average of other countries), the results are mixed:
 
@@ -177,9 +177,9 @@ Several factors could explain why we didn't detect subliminal preference transfe
 
 4. **Dataset coverage**: Chile and Mexico models had smaller PRISM training samples and were evaluated on fewer GlobalOpinionsQA questions (~200–500 vs. ~1000 for US/UK), which could limit our ability to detect effects.
 
-The pattern where Chile and Mexico models underperform even on their own countries' opinions is particularly informative—it suggests dataset coverage may be a bottleneck for detecting these effects.
+The pattern where Chile and Mexico models underperform even on their own countries' opinions is particularly informative: it suggests dataset coverage may be a bottleneck for detecting these effects.
 
-### H3: Cohort Recoverability — Can We Predict Training Demographics from Style?
+### H3: Cohort Recoverability: Can We Predict Training Demographics from Style?
 
 If models learn distinctive stylistic patterns (as H1 suggests), can we actually recover which cohort a model was trained on just by looking at its outputs?
 
@@ -187,7 +187,7 @@ If models learn distinctive stylistic patterns (as H1 suggests), can we actually
 
 We trained a logistic regression classifier on the 22 stylometric features from H1, using 5-fold cross-validation to predict whether a completion came from a US-trained or UK-trained model.
 
-The classifier achieved **52.67% ± 9.57% accuracy**—just 2.67 percentage points above chance (50%). This is a statistically significant improvement, but it's weak and unstable. Performance varied dramatically across folds, ranging from 45.83% (below chance!) to 60.83%.
+The classifier achieved **52.67% ± 9.57% accuracy**, just 2.67 percentage points above chance (50%). This is a statistically significant improvement, but it's weak and unstable. Performance varied dramatically across folds, ranging from 45.83% (below chance!) to 60.83%.
 
 This weak recoverability is exactly what you'd expect given H1's results:
 - Large overlap in feature distributions
@@ -196,9 +196,9 @@ This weak recoverability is exactly what you'd expect given H1's results:
 
 In other words, the cohorts are detectably different in aggregate, but not sharply separable in this low-dimensional stylometric space.
 
-The calibration analysis tells a similar story. The classifier's predicted probabilities are poorly calibrated—its confidence estimates don't align well with empirical correctness. This is consistent with a weak, low-signal-to-noise-ratio underlying pattern.
+The calibration analysis tells a similar story. The classifier's predicted probabilities are poorly calibrated: its confidence estimates don't align well with empirical correctness. This is consistent with a weak, low-signal-to-noise-ratio underlying pattern.
 
-![Calibration analysis of the cohort classifier (H3). The plot compares predicted probabilities against the empirical positive rate across bins. Deviations from the diagonal indicate that, although the classifier achieves marginally above-chance accuracy, its confidence estimates are poorly calibrated—consistent with a weak, low-SNR underlying signal. Error bars denote bin-wise bootstrap uncertainty.](IMAGE_PLACEHOLDER_5)
+![Calibration analysis of the cohort classifier (H3). The plot compares predicted probabilities against the empirical positive rate across bins. Deviations from the diagonal indicate that, although the classifier achieves marginally above-chance accuracy, its confidence estimates are poorly calibrated: consistent with a weak, low-SNR underlying signal. Error bars denote bin-wise bootstrap uncertainty.](IMAGE_PLACEHOLDER_5)
 
 ![Diagnostic breakdown of cohort classification performance (H3). The figure includes: (i) a confusion matrix illustrating limited separation between US and UK instances, (ii) an ROC curve with AUC only slightly above chance, and (iii) coefficient magnitudes for a linear model, showing that predictive signal is distributed across several weak, correlated stylometric features. Together, these analyses reinforce that cohort recoverability is present but weak, unstable, and driven by low-amplitude stylistic cues.](IMAGE_PLACEHOLDER_6)
 
@@ -206,11 +206,11 @@ The confusion matrix shows limited separation, the ROC curve has an AUC only sli
 
 **What does this mean?**
 
-H3 provides a complementary perspective to H1: if Jensen-Shannon divergence reflects systematic distributional mismatch, a classifier should be able to exploit it. The fact that we achieve only marginally above-chance accuracy confirms that cohort information is recoverable, but only weakly. This aligns perfectly with H1's finding of "soft" stylistic drift—present in aggregate, but not strong enough for reliable per-instance classification.
+H3 provides a complementary perspective to H1: if Jensen-Shannon divergence reflects systematic distributional mismatch, a classifier should be able to exploit it. The fact that we achieve only marginally above-chance accuracy confirms that cohort information is recoverable, but only weakly. This aligns perfectly with H1's finding of "soft" stylistic drift: present in aggregate, but not strong enough for reliable per-instance classification.
 
 ## Interpretability (H1 + H3): Where Does "Style Drift" Live?
 
-To go beyond surface stylometry, we probed **internal activations** of the US vs UK DPO models. The headline: **early/mid-layer representations are extremely similar, and the clearest divergence shows up late**—consistent with cohort training mostly tweaking *output realization* (punctuation/structure) rather than rewriting semantics.
+To go beyond surface stylometry, we probed **internal activations** of the US vs UK DPO models. The headline: **early/mid-layer representations are extremely similar, and the clearest divergence shows up late**: consistent with cohort training mostly tweaking *output realization* (punctuation/structure) rather than rewriting semantics.
 
 ### 1) Layerwise Divergence: Where the Two Models Separate Internally
 
@@ -252,7 +252,7 @@ Key correlations (Pearson $r$ / Spearman $\rho$):
 | word_count | +0.199 | 5.20e-04 | +0.016 | 7.84e-01 |
 | vocab_diversity | +0.192 | 8.34e-04 | +0.203 | 3.98e-04 |
 
-This is a clean link back to H1/H3: the *same kinds of features* that differed modestly in stylometry (question marks, colons, punctuation density) are the ones most strongly tied to a **single cohort-difference activation direction**—supporting a **"style-control knob"** picture. Cohort signal looks **real but concentrated and not overwhelmingly strong**, which matches the weak/unstable recoverability in H3.
+This is a clean link back to H1/H3: the *same kinds of features* that differed modestly in stylometry (question marks, colons, punctuation density) are the ones most strongly tied to a **single cohort-difference activation direction**: supporting a **"style-control knob"** picture. Cohort signal looks **real but concentrated and not overwhelmingly strong**, which matches the weak/unstable recoverability in H3.
 
 ![Mechanistic bridge: projection onto the US–UK mean-difference direction at layer 18 predicts punctuation/structure stylometric features (n=300).](IMAGE_PLACEHOLDER_9)
 
@@ -260,9 +260,9 @@ This is a clean link back to H1/H3: the *same kinds of features* that differed m
 
 The H1 results show that US and UK outputs differ measurably on apolitical prompts, but the differences are confined to verbosity and formatting (`char_count, word_count, digit_ratio, punctuation ratios`) rather than categorical language changes. Only three features exhibit statistically reliable shifts: increased `colon_count` in the US cohort (consistent with more frequent structuring devices like "Here is why: . . . "), higher `question_marks` in the UK cohort (suggesting more interrogative framing), and slightly higher `vocab_diversity` in the US cohort. However, the distributions show substantial overlap, indicating these are population-level nudges rather than per-instance separators. Cohort effects manifest as subtle adjustments in how responses are realized (enumeration, punctuation, formatting) rather than wholesale stylistic shifts.
 
-We find no evidence supporting H2. Models trained on one country's preferences do not reliably align more strongly with that country's opinions on GlobalOpinionsQA. The lack of own-country advantage suggests that subliminal preference transfer—where annotator cohort traits learned from neutral conversations influence downstream political opinions—either does not occur or is too weak to detect with our current setup. Several factors may explain this null result. First, the training data may be insufficient and cohort-specific patterns may not be learned strongly enough to manifest in opinion alignment. Second, the base model (Qwen2.5-0.5B) may already encode robust opinion priors from pretraining that dominate over the weak cohort signals from DPO. Third, training quality varied across cohorts: UK models consistently outperformed others, suggesting that factors like random initialization, data quality, or training stability may have larger effects than cohort-specific preferences.
+We find no evidence supporting H2. Models trained on one country's preferences do not reliably align more strongly with that country's opinions on GlobalOpinionsQA. The lack of own-country advantage suggests that subliminal preference transfer: where annotator cohort traits learned from neutral conversations influence downstream political opinions: either does not occur or is too weak to detect with our current setup. Several factors may explain this null result. First, the training data may be insufficient and cohort-specific patterns may not be learned strongly enough to manifest in opinion alignment. Second, the base model (Qwen2.5-0.5B) may already encode robust opinion priors from pretraining that dominate over the weak cohort signals from DPO. Third, training quality varied across cohorts: UK models consistently outperformed others, suggesting that factors like random initialization, data quality, or training stability may have larger effects than cohort-specific preferences.
 
-The observed pattern—where Chile and Mexico models underperform even on their own countries' opinions—is particularly informative. These models had smaller PRISM samples and evaluated on fewer GlobalOpinionsQA questions (~200–500 vs. ~1000 for US/UK), indicating that dataset coverage may be a bottleneck. Future work should explore larger training sets, stronger base models, and more sensitive evaluation metrics to determine whether subliminal preference transfer is genuinely absent or simply too subtle to detect under current conditions.
+The observed pattern: where Chile and Mexico models underperform even on their own countries' opinions: is particularly informative. These models had smaller PRISM samples and evaluated on fewer GlobalOpinionsQA questions (~200–500 vs. ~1000 for US/UK), indicating that dataset coverage may be a bottleneck. Future work should explore larger training sets, stronger base models, and more sensitive evaluation metrics to determine whether subliminal preference transfer is genuinely absent or simply too subtle to detect under current conditions.
 
 H3 provides a complementary perspective: if JS divergence reflects systematic distributional mismatch, a classifier should exploit it. The observed 52.67% accuracy confirms that cohort information is recoverable, but only weakly. Importantly, weak recoverability is exactly what one would expect given H1's profile: (i) large overlap in feature distributions, (ii) small standardized mean differences, and (iii) divergence dominated by correlated surface features rather than many independent signals. In other words, the cohorts are detectably different in aggregate but not sharply separable in a low-dimensional stylometric space.
 
@@ -276,7 +276,7 @@ Understanding subliminal preference transfer requires better interpretability to
 
 The question of subliminal preference transfer touches on fundamental issues in AI safety and fairness. If models can learn demographic-specific preferences from neutral conversations, and if those preferences transfer to unrelated topics, we need better tools to detect, understand, and control this learning.
 
-This research is part of a broader effort to understand how AI systems reason, where they fail, and how we can make them safer and more equitable—not just in theory, but in the places where technology meets real life.
+This research is part of a broader effort to understand how AI systems reason, where they fail, and how we can make them safer and more equitable, not just in theory, but in the places where technology meets real life.
 
 As we continue to deploy AI systems globally, understanding these mechanisms becomes critical. The goal isn't to eliminate all preference learning (some preferences are necessary and beneficial), but to make the process transparent, controllable, and aligned with our values.
 
@@ -302,7 +302,7 @@ Andlukyane. (2025). ChatGPT's answers became politically biased after fine-tunin
 
 Chen, K., He, Z., Yan, J., Shi, T., & Lerman, K. (2024). How susceptible are large language models to ideological manipulation? *arXiv preprint arXiv:2402.11725*.
 
-Cichocka, A., Bilewicz, M., Jost, J. T., Marrouch, N., & Witkowska, M. (2016). On the grammar of politics—or why conservatives prefer nouns. *Political Psychology*. doi: 10.1111/pops.12327.
+Cichocka, A., Bilewicz, M., Jost, J. T., Marrouch, N., & Witkowska, M. (2016). On the grammar of politics, or why conservatives prefer nouns. *Political Psychology*. doi: 10.1111/pops.12327.
 
 Cloud, A., Le, M., Chua, J., Betley, J., Sztyber-Betley, A., Hilton, J., Marks, S., & Evans, O. (2025). Subliminal learning: Language models transmit behavioral traits via hidden signals in data. *arXiv preprint arXiv:2507.14805*.
 

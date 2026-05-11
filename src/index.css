@@ -24,8 +24,9 @@ html {
 
 body {
   font-family: 'Inter', 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: #000000;
-  color: #FFFFFF;
+  /* Matches PaperBackground `--paper-base` (blue-charcoal, not pitch black). */
+  background: #0f1118;
+  color: #F4F4F7;
   overflow-x: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
   line-height: 1.8;
@@ -54,18 +55,16 @@ canvas {
 }
 
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: #0f1118;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #FFFFFF;
+  background: rgba(156, 180, 212, 0.35);
   border-radius: 4px;
-  opacity: 1;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #FFFFFF;
-  opacity: 1;
+  background: rgba(156, 180, 212, 0.5);
 }
 
 /* Light theme scrollbar */
@@ -83,45 +82,59 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
   opacity: 0.6;
 }
 
-/* Accent — slate-blue, harmonises with all three attractor palettes */
+/* ─── Palette: cool scientific stationery; accents align with attractor ink ─ */
 :root {
-  --accent:       #8FAFD6;
-  --accent-hover: #AABFE0;
-  --accent-dim:   rgba(143, 175, 214, 0.55);
-  --accent-ghost: rgba(143, 175, 214, 0.10);
-  --border:       rgba(143, 175, 214, 0.14);
-  --hairline:     rgba(255, 255, 255, 0.08);
-  --panel-bg:     rgba(8, 10, 14, 0.55);
-  --panel-bg-strong: rgba(8, 10, 14, 0.72);
+  /* Blue-charcoal “paper”; no coloured wash overlays on top of this in UI */
+  --paper-base:   #0f1118;
+
+  --ink:       #F4F4F7;
+  --ink-soft:  rgba(244, 244, 247, 0.78);
+  --ink-quiet: rgba(244, 244, 247, 0.55);
+
+  --accent:       #9CB4D4;
+  --accent-hover: #B5C6DD;
+  --accent-dim:   rgba(156, 180, 212, 0.55);
+  --accent-ghost: rgba(156, 180, 212, 0.10);
+
+  --border:       rgba(140, 150, 170, 0.14);
+  --hairline:     rgba(244, 244, 247, 0.085);
+
+  --panel-bg:        rgba(16, 18, 24, 0.65);
+  --panel-bg-strong: rgba(16, 18, 26, 0.82);
 }
 
-/* ─── Editorial panel system ──────────────────────────────────────────────
-   A softly darkened, blur-backed surface for content-heavy regions. Sits on
-   top of the attractor canvas so text never competes with vertex color. Kept
-   intentionally subtle — border hairlines, no hard rectangles. */
+/* ─── Editorial panel system ─────────────────────────────────────────────── */
 .panel {
   position: relative;
   background: var(--panel-bg);
-  backdrop-filter: blur(14px) saturate(110%);
-  -webkit-backdrop-filter: blur(14px) saturate(110%);
-  border: 1px solid var(--hairline);
+  backdrop-filter: blur(18px) saturate(105%);
+  -webkit-backdrop-filter: blur(18px) saturate(105%);
+  border: 1px solid var(--border);
   border-radius: 2px;
+  box-shadow:
+    inset 0 1px 0 rgba(244, 244, 247, 0.035),
+    0 1px 0 rgba(0, 0, 0, 0.28);
 }
 .panel-strong {
   background: var(--panel-bg-strong);
 }
-/* Soft radial scrim — local darkening around dense text without a hard edge */
+/* Local darkening for dense panels: blends with `--paper-base` */
 .scrim::before {
   content: '';
   position: absolute;
   inset: -8%;
-  background: radial-gradient(ellipse 75% 70% at 30% 50%, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 45%, transparent 75%);
-  filter: blur(24px);
+  background: radial-gradient(ellipse 75% 70% at 30% 50%,
+    rgba(15, 17, 22, 0.58) 0%,
+    rgba(15, 17, 22, 0.26) 45%,
+    transparent 78%);
+  filter: blur(26px);
   pointer-events: none;
   z-index: -1;
 }
 
-/* Editorial rule — a corner-marked hairline used as section chrome */
+
+
+/* Editorial rule: a corner-marked hairline used as section chrome */
 .rule-top::before {
   content: '';
   position: absolute;
@@ -130,7 +143,7 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(90deg, transparent 0%, var(--hairline) 15%, var(--hairline) 85%, transparent 100%);
 }
 
-/* Section index chip — small mono caption like "§ 02" */
+/* Section index chip: small mono caption like "§ 02" */
 .section-index {
   font-family: 'JetBrains Mono', 'Fira Mono', monospace;
   font-weight: 300;
@@ -140,7 +153,7 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
   color: var(--accent-dim);
 }
 
-/* Editorial link — subtle underline grows on hover */
+/* Editorial link: subtle underline grows on hover */
 .link-editorial {
   position: relative;
   color: var(--accent);
@@ -159,12 +172,14 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 }
 .link-editorial:hover::after { opacity: 0.9; }
 
-/* Text shadow helper for content floating directly on background */
+/* Text shadow for headings on the grain background */
 .text-on-bg {
-  text-shadow: 0 1px 16px rgba(0,0,0,0.6), 0 1px 3px rgba(0,0,0,0.45);
+  text-shadow:
+    0 1px 18px rgba(15, 17, 22, 0.75),
+    0 1px 3px rgba(15, 17, 22, 0.55);
 }
 
-/* Reduced motion — kill all scroll-driven transforms */
+/* Reduced motion: kill all scroll-driven transforms */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
@@ -179,17 +194,17 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
   color: var(--accent);
 }
 
-/* Monospace — for dates, tags, technical labels */
+/* Monospace: for dates, tags, technical labels */
 .mono {
   font-family: 'JetBrains Mono', 'Fira Mono', monospace;
   font-weight: 300;
   letter-spacing: 0.04em;
 }
 
-/* Glass morphism — blue-tinted border instead of gold */
+/* Glass morphism: paper-tinted, very faint */
 .glass {
-  background: rgba(255, 255, 255, 0.025);
-  backdrop-filter: blur(12px);
+  background: rgba(244, 244, 247, 0.03);
+  backdrop-filter: blur(14px);
   border: 1px solid var(--border);
 }
 
@@ -257,7 +272,7 @@ section {
   transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Ensure content is visible by default — GSAP will animate from these states
+/* Ensure content is visible by default: GSAP will animate from these states
    if its triggers fire, but users with JS disabled or slow-mounting triggers
    still see readable content. */
 section[id] .max-w-7xl,
@@ -306,7 +321,7 @@ body.light-theme .portfolio-image:hover {
   filter: brightness(1) contrast(1.18) saturate(0.8) sepia(0.12);
 }
 
-/* Section spacing — Tailwind on each section controls vertical rhythm now.
+/* Section spacing: Tailwind on each section controls vertical rhythm now.
    Keeping scroll-margin-top and min-height so anchor jumps and viewport-sized
    sections still work. */
 section[id] {
@@ -338,7 +353,7 @@ h1 {
   letter-spacing: 0.1em;
   line-height: 1.1;
   font-size: clamp(3.5rem, 9vw, 7rem);
-  color: #FFFFFF;
+  color: var(--ink);
 }
 
 h2 {
@@ -347,7 +362,7 @@ h2 {
   letter-spacing: 0.08em;
   line-height: 1.2;
   font-size: clamp(2.25rem, 5.5vw, 4rem);
-  color: #FFFFFF;
+  color: var(--ink);
 }
 
 h3 {
@@ -356,7 +371,7 @@ h3 {
   letter-spacing: 0.05em;
   line-height: 1.3;
   font-size: clamp(1.5rem, 3vw, 2rem);
-  color: #FFFFFF;
+  color: var(--ink);
 }
 
 p {

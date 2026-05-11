@@ -19,10 +19,24 @@ const newsItems = [
         >
           Lila Sciences
         </a>{' '}
-        as an AI Resident (summer 2026).
+        as an AI Resident (incoming).
       </>
     ),
     badge: 'Upcoming',
+  },
+  {
+    date: 'May 2026',
+    year: '2026',
+    content:
+      'Paper "Orth-Dion: Eliminating Geometric Mismatch in Distributed Low-Rank Spectral Optimization" (with Tatsuhiro Nakamori, Ganesh Talluri, Ansh Tiwari, Hideyuki Kawashima, Ioannis Mitliagkas, Guillaume Rabusseau, Hiroki Naganuma) under review.',
+    badge: 'Preprint',
+  },
+  {
+    date: 'May 2026',
+    year: '2026',
+    content:
+      'Paper "Which Geometry on Which Layer? A Principled Criterion for Mixed-Optimizer Training" (with Hiroki Naganuma, Mahdi Ghaznavi, Atsushi Nitanda, Seng Pei Liew, Ryuichiro Hataya, Ioannis Mitliagkas) under review.',
+    badge: 'Preprint',
   },
   {
     date: 'Apr 2026',
@@ -49,10 +63,10 @@ const newsItems = [
     date: 'Feb 2026',
     year: '2026',
     content:
-      'Joined the Supervised Alignment Research Program with Uzay Marcar working on Mech Interp for Latent Reasoning Models.',
+      'Joined the Supervised Alignment Research Program with Uzay Macar working on Mech Interp for Latent Reasoning Models.',
   },
-  { date: 'Dec 2025', year: '2025', content: 'Presented workshop paper at NeurIPS 2025.', badge: 'Talk' },
-  { date: 'June–Aug 2025', year: '2025', content: 'Completed research internship at Microsoft Research.' },
+  { date: 'Dec 2025', year: '2025', content: 'Presented workshop paper (2025).', badge: 'Talk' },
+  { date: 'June to Aug 2025', year: '2025', content: 'Completed research internship at Microsoft Research.' },
   { date: 'Jan 2025', year: '2025', content: 'Featured in Mission Magazine, Issue 12: The New Order.' },
   {
     date: 'Jan 2025',
@@ -65,7 +79,7 @@ const newsItems = [
     content: 'Presented paper on AI for Respiratory Disease Detection at Prototypes for Humanity in Dubai.',
   },
   { date: 'Mar 2024', year: '2024', content: 'Attended the UN Women Commission on the Status of Women (CSW).' },
-  { date: 'Jun–Aug 2024', year: '2024', content: 'Joined the Ersilia Open Source Initiative, working on AI for drug discovery.' },
+  { date: 'Jun to Aug 2024', year: '2024', content: 'Joined the Ersilia Open Source Initiative, working on AI for drug discovery.' },
   {
     date: 'Sep 2023',
     year: '2023',
@@ -76,7 +90,7 @@ const newsItems = [
 ]
 
 /**
- * News — editorial timeline grouped by year, with a continuous vertical rail.
+ * News: editorial timeline grouped by year, with a continuous vertical rail.
  * Each entry reveals with a staggered slide-in so it reads like a sequence
  * rather than a wall. Sticky year markers anchor position as the reader scrolls.
  */
@@ -136,7 +150,7 @@ export default function News() {
     >
       <div className="relative z-10 max-w-4xl mx-auto w-full">
         <header className="mb-20 md:mb-24 text-center">
-          <div className="section-index mb-4">§ 02 — Recent</div>
+          <div className="section-index mb-4">§ 03 · Recent</div>
           <h2
             ref={titleRef}
             className="text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider text-on-bg"
@@ -156,7 +170,7 @@ export default function News() {
           <div className="space-y-14 md:space-y-16">
             {groups.map(([year, items]) => (
               <div key={year} className="relative">
-                {/* Year marker — sticky within its group for stronger spatial anchoring */}
+                {/* Year marker: sticky within its group for stronger spatial anchoring */}
                 <div className="flex items-center gap-5 mb-6">
                   <div
                     className="w-[64px] md:w-[80px] shrink-0 text-right mono text-xs tracking-widest"

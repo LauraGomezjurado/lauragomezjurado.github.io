@@ -12,7 +12,7 @@ const blogPosts = [
     slug: 'confessions-dont-escape-substrate',
     title: 'Confessions don\'t escape the substrate',
     date: '2026-05-03',
-    excerpt: 'We trained three models that sandbag identically and all pass the binary confession metric—but informational recovery of the concealed truth separates honest substrate from mode collapse and decoder anchoring.',
+    excerpt: 'We trained three models that sandbag identically and all pass the binary confession metric, but informational recovery of the concealed truth separates honest substrate from mode collapse and decoder anchoring.',
     featured: true
   },
   {
@@ -39,7 +39,8 @@ const blogPosts = [
     slug: 'subliminal-preference-transfer',
     title: 'Do LLMs Learn Hidden Preferences from Neutral Feedback?',
     date: '2025-01-20',
-    excerpt: 'Investigating whether language models trained on demographic-specific preference data from neutral conversations exhibit opinion transfer when evaluated on unrelated topics—and what this means for AI safety.'
+    excerpt:
+      'Investigating whether language models trained on demographic-specific preference data from neutral conversations exhibit opinion transfer when evaluated on unrelated topics, and what this means for AI safety.',
   },
   {
     slug: 'hidden-objectives',

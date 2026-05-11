@@ -6,7 +6,7 @@ gsap.registerPlugin(ScrollTrigger)
 
 const features = [
   {
-    title: 'WAFF Youth Delegation — Davos 2025',
+    title: 'WAFF Youth Delegation · Davos 2025',
     organization: 'We Are Family Foundation',
     description:
       'Selected as a Youth Delegate attending the World Economic Forum 2025 in Davos, representing youth voices in global leadership discussions.',
@@ -14,6 +14,36 @@ const features = [
     type: 'PDF',
     image: '/images/featured/waff-davos-2025.png',
     year: '2025',
+  },
+  {
+    title: 'Mission Magazine · Issue 12: The New Order',
+    organization: 'Mission Magazine',
+    description:
+      'Featured in Mission Magazine Issue 12: The New Order, a celebration of the next generation of leaders tackling the world\'s most urgent challenges.',
+    url: 'https://missionmagazinesubscriptions.org/home',
+    type: 'Publication',
+    image: '/images/featured/mission-magazine.jpg',
+    year: '2025',
+  },
+  {
+    title: 'Prototypes for Humanity',
+    organization: 'Prototypes for Humanity',
+    description:
+      'Presented our paper and AI research on respiratory disease detection at Prototypes for Humanity and attended Dubai Future Forum.',
+    url: 'https://www.prototypesforhumanity.com/student/laura-gomezjurado/',
+    type: 'Presentation',
+    image: '/images/featured/prototypes-dubai-presenting.jpg',
+    year: '2024',
+  },
+  {
+    title: 'Masason Foundation Fellow',
+    organization: 'Masason Foundation',
+    description:
+      'Selected as a Masason Foundation Fellow by Masayoshi Son, SoftBank Group President, supporting exceptional young talent contributing to the future of humankind.',
+    url: 'https://masason-foundation.org/en/scholars/',
+    type: 'Fellowship',
+    image: '/images/featured/masason-fellowship-visit.jpg',
+    year: '2023',
   },
   {
     title: 'Artificial Intelligence: A Tool for Equality',
@@ -24,16 +54,6 @@ const features = [
     type: 'Article',
     image: '/images/featured/girlup-article.png',
     year: '2024',
-  },
-  {
-    title: 'Mission Magazine — Issue 12: The New Order',
-    organization: 'Mission Magazine',
-    description:
-      'Featured in Mission Magazine Issue 12: The New Order — a celebration of the next generation of leaders tackling the world\'s most urgent challenges.',
-    url: 'https://missionmagazinesubscriptions.org/home',
-    type: 'Publication',
-    image: '/images/featured/mission-magazine.jpg',
-    year: '2025',
   },
   {
     title: 'Adolescent Leaders in Generation Equality',
@@ -56,7 +76,7 @@ const features = [
     year: '2022',
   },
   {
-    title: 'Global Teen Leaders — UN General Assembly',
+    title: 'Global Teen Leaders · UN General Assembly',
     organization: 'United Nations',
     description:
       'Featured speaker at the UN General Assembly discussing youth changemakers as the future of global STEM education and advocacy.',
@@ -65,28 +85,10 @@ const features = [
     image: '/images/featured/un-general-assembly-unga77.png',
     year: '2022',
   },
-  {
-    title: 'Prototypes for Humanity',
-    organization: 'Prototypes for Humanity',
-    description:
-      'Featured student at Prototypes for Humanity, recognized for work in medical AI and tech-driven initiatives empowering youth and women in Colombia.',
-    url: 'https://www.prototypesforhumanity.com/student/laura-gomezjurado/',
-    type: 'Recognition',
-    year: '2024',
-  },
-  {
-    title: 'Masason Foundation Fellow',
-    organization: 'Masason Foundation',
-    description:
-      'Selected as a Masason Foundation Fellow by Masayoshi Son, SoftBank Group President, supporting exceptional young talent contributing to the future of humankind.',
-    url: 'https://masason-foundation.org/en/scholars/',
-    type: 'Fellowship',
-    year: '2023',
-  },
 ]
 
 /**
- * Featured — editorial grid of press/recognition entries. Uses image-first
+ * Featured: editorial grid of press/recognition entries. Uses image-first
  * cards with a dark gradient overlay so titles stay legible regardless of the
  * underlying image brightness. Hover lifts and warms the card.
  */
@@ -138,7 +140,7 @@ export default function Featured() {
     >
       <div className="relative z-10 max-w-6xl mx-auto w-full">
         <header className="mb-20 md:mb-24 text-center">
-          <div className="section-index mb-4">§ 03 — Press & Recognition</div>
+          <div className="section-index mb-4">§ 04 · Press &amp; Recognition</div>
           <h2
             ref={titleRef}
             className="text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider text-on-bg"
@@ -162,6 +164,9 @@ export default function Featured() {
 }
 
 function FeatureCard({ feature, innerRef }) {
+  const thumbs =
+    feature.images?.length > 0 ? feature.images : feature.image ? [feature.image] : []
+
   return (
     <a
       href={feature.url}
@@ -178,15 +183,31 @@ function FeatureCard({ feature, innerRef }) {
     >
       {/* Image */}
       <div className="relative w-full aspect-[4/3] overflow-hidden bg-black">
-        {feature.image ? (
+        {thumbs.length === 1 ? (
           <img
-            src={feature.image}
+            src={thumbs[0]}
             alt={feature.title}
             className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-[1.2s] ease-out"
             onError={(e) => {
               e.target.style.display = 'none'
             }}
           />
+        ) : thumbs.length > 1 ? (
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute inset-0 grid grid-cols-2 gap-px bg-black transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]">
+              {thumbs.map((src, i) => (
+                <img
+                  key={src}
+                  src={src}
+                  alt={`${feature.title} (${i + 1})`}
+                  className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-[1.2s] ease-out"
+                  onError={(e) => {
+                    e.target.style.display = 'none'
+                  }}
+                />
+              ))}
+            </div>
+          </div>
         ) : (
           <div
             aria-hidden="true"
@@ -206,7 +227,7 @@ function FeatureCard({ feature, innerRef }) {
               'linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 35%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.88) 100%)',
           }}
         />
-        {/* Type + year chips — top corners */}
+        {/* Type + year chips: top corners */}
         <span
           className="absolute top-3 left-3 mono text-[10px] tracking-widest uppercase px-1.5 py-0.5"
           style={{

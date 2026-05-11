@@ -4,6 +4,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
+/**
+ * Hero: text on the left; attractor occupies the opposite side of the
+ * viewport via `stageState` in Home.jsx. No ornamental figures here: visual
+ * language stays consistent with the attractor line-art only.
+ */
 export default function Hero() {
   const heroRef = useRef(null)
   const brandRef = useRef(null)
@@ -15,71 +20,77 @@ export default function Hero() {
 
   useEffect(() => {
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
-
-    tl.from(brandRef.current, { opacity: 0, x: -30, duration: 1 })
-      .from(tagRef.current, { opacity: 0, y: 12, duration: 0.8 }, '-=0.5')
-      .from(titleRef.current, { opacity: 0, y: 28, duration: 1.2 }, '-=0.5')
+    tl.from(brandRef.current,    { opacity: 0, x: -30, duration: 1 })
+      .from(tagRef.current,      { opacity: 0, y: 12, duration: 0.8 }, '-=0.5')
+      .from(titleRef.current,    { opacity: 0, y: 28, duration: 1.2 }, '-=0.5')
       .from(subtitleRef.current, { opacity: 0, y: 18, duration: 0.9 }, '-=0.6')
-      .from(emailRef.current, { opacity: 0, y: 14, duration: 0.8 }, '-=0.5')
-      .from(scrollRef.current, { opacity: 0, duration: 1 }, '-=0.3')
+      .from(emailRef.current,    { opacity: 0, y: 14, duration: 0.8 }, '-=0.5')
+      .from(scrollRef.current,   { opacity: 0, duration: 1 }, '-=0.3')
   }, [])
 
   return (
     <section ref={heroRef} id="home" className="relative z-10 min-h-[180vh] bg-transparent">
+
       {/* Brand mark */}
       <div className="absolute top-4 left-4 sm:top-6 sm:left-6 md:top-12 md:left-12 z-20">
         <h1
           ref={brandRef}
-          className="text-white font-light tracking-[0.3em] text-2xl md:text-3xl uppercase text-on-bg"
-          style={{ letterSpacing: '0.3em' }}
+          className="font-light tracking-[0.3em] text-2xl md:text-3xl uppercase text-on-bg"
+          style={{ letterSpacing: '0.3em', color: 'var(--ink)' }}
         >
           L G G
         </h1>
       </div>
 
-      {/* Intro block */}
+      {/* Intro block: left half so the attractor stage on the right has room */}
       <div className="relative z-10 min-h-screen flex items-center px-4 sm:px-6 md:px-8 lg:px-12">
-        <div className="max-w-2xl w-full relative">
-          {/* Soft localized darkening for readability — no hard panel edge */}
+        <div className="w-full md:max-w-[58%] lg:max-w-[52%] relative">
+          {/* Soft readability scrim behind copy: stays in the neutral ink family */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 opacity-60 pointer-events-none"
+            className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                'radial-gradient(ellipse 90% 70% at 15% 50%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.25) 55%, transparent 80%)',
-              filter: 'blur(20px)',
-              transform: 'scale(1.15)',
+                'radial-gradient(ellipse 95% 75% at 22% 50%, rgba(15,17,22,0.58) 0%, rgba(15,17,22,0.22) 55%, transparent 82%)',
+              filter: 'blur(28px)',
+              transform: 'scale(1.18)',
             }}
           />
 
           <div className="relative z-10">
             <div ref={tagRef} className="section-index mb-6">
-              § 00 — CS, Stanford
+              § 00 · Stanford CS · AI Safety, Interpretability, Optimization
             </div>
 
             <h2
               ref={titleRef}
-              className="text-white font-light text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-5 md:mb-6 tracking-tight text-on-bg"
-              style={{ letterSpacing: '0.01em', lineHeight: 1.05 }}
+              className="font-light text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-5 md:mb-6 tracking-tight text-on-bg"
+              style={{ letterSpacing: '0.01em', lineHeight: 1.05, color: 'var(--ink)' }}
             >
               Laura Gomezjurado Gonzalez
             </h2>
 
-            <div ref={subtitleRef} className="space-y-1.5 mb-5 md:mb-6">
-              <p className="text-white/90 font-light text-base md:text-lg lg:text-xl tracking-wide text-on-bg">
-                AI safety, interpretability, and fairness.
+            <div ref={subtitleRef} className="space-y-2 mb-5 md:mb-6">
+              <p className="font-light text-base md:text-lg lg:text-xl tracking-wide text-on-bg leading-relaxed" style={{ color: 'var(--ink-soft)' }}>
+                Research on the mechanisms behind model behavior, the geometry of how they get trained,
+                and the safety questions that show up when these systems are deployed where they actually
+                matter.
               </p>
-              <p className="text-white/60 font-light text-sm md:text-base tracking-wide">
-                Student researcher at Stanford. Working on mechanisms behind model behavior —
-                and the people they affect.
+              <p className="font-light text-sm md:text-base tracking-wide" style={{ color: 'var(--ink-quiet)' }}>
+                Stanford CS. ICLR 2026. Microsoft Research, summer 2025. Incoming AI Resident at Lila
+                Sciences.
+              </p>
+              <p className="mono text-[10px] md:text-[11px] tracking-widest uppercase pt-1" style={{ color: 'var(--accent-dim)' }}>
+                Mechanistic interpretability, optimization geometry, alignment on model editing, generalization
+                and grokking
               </p>
             </div>
 
-            <div ref={emailRef} className="flex items-center gap-4 text-sm">
+            <div ref={emailRef} className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
               <a
                 href="mailto:lpgomez@stanford.edu"
                 className="link-editorial font-light tracking-wide"
-                style={{ color: 'rgba(255,255,255,0.92)' }}
+                style={{ color: 'var(--ink-soft)' }}
               >
                 lpgomez [AT] stanford.edu
               </a>
@@ -89,7 +100,7 @@ export default function Hero() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="link-editorial font-light tracking-wide"
-                style={{ color: 'rgba(255,255,255,0.65)' }}
+                style={{ color: 'var(--ink-quiet)' }}
               >
                 GitHub
               </a>
@@ -98,7 +109,7 @@ export default function Hero() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="link-editorial font-light tracking-wide"
-                style={{ color: 'rgba(255,255,255,0.65)' }}
+                style={{ color: 'var(--ink-quiet)' }}
               >
                 LinkedIn
               </a>
@@ -107,16 +118,18 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll cue — persistent, subtle, bottom-left */}
+      {/* Scroll cue */}
       <div
         ref={scrollRef}
         className="absolute bottom-8 left-4 sm:left-6 md:left-12 flex items-center gap-3 pointer-events-none"
         style={{ zIndex: 20 }}
       >
-        <span className="mono text-[10px] tracking-widest uppercase text-white/40">Scroll</span>
+        <span className="mono text-[10px] tracking-widest uppercase" style={{ color: 'var(--ink-quiet)' }}>
+          Scroll
+        </span>
         <span
           className="h-px w-12 origin-left"
-          style={{ background: 'rgba(255,255,255,0.35)', animation: 'hero-rule 2.6s ease-in-out infinite' }}
+          style={{ background: 'var(--accent-dim)', animation: 'hero-rule 2.6s ease-in-out infinite' }}
         />
       </div>
 

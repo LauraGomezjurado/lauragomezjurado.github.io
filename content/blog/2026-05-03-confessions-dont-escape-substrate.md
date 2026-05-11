@@ -1,7 +1,7 @@
 ---
 title: "Confessions don't escape the substrate"
 date: "2026-05-03"
-excerpt: "We trained three models that sandbag identically and all pass the binary confession metric—but informational recovery of the concealed truth separates honest substrate from mode collapse and decoder anchoring."
+excerpt: "We trained three models that sandbag identically and all pass the binary confession metric, but informational recovery of the concealed truth separates honest substrate from mode collapse and decoder anchoring."
 ---
 
 # Confessions don't escape the substrate
