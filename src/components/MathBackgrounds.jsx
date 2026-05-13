@@ -279,43 +279,41 @@ function FigureLabel({ labelIdx }) {
 
   return (
     <div
-      className="fixed bottom-6 right-6 pointer-events-none select-none"
-      style={{ zIndex: 40, maxWidth: 300, textAlign: 'right' }}
+      className="fixed bottom-4 right-3 max-[380px]:bottom-3 max-[380px]:right-2 sm:bottom-6 sm:right-6 pointer-events-none select-none w-full max-w-[min(260px,calc(100vw-4.25rem))] sm:max-w-[280px] md:max-w-[300px]"
+      style={{ zIndex: 40, textAlign: 'right' }}
     >
-      <div className="pointer-events-auto inline-flex flex-col items-end gap-0">
+      <div className="pointer-events-auto inline-flex flex-col items-end gap-0 w-full">
         <div
           id={`attractor-explainer-${labelIdx}`}
-          style={{
-            overflow: 'hidden',
-            maxHeight: open ? 360 : 0,
-            opacity: open ? 1 : 0,
-            transition: 'max-height 0.45s ease, opacity 0.35s ease',
-            marginBottom: open ? 12 : 0,
-          }}
+          className={`overflow-hidden transition-[max-height,opacity,margin] duration-[450ms] ease-out ${
+            open
+              ? 'max-h-[min(62vh,300px)] sm:max-h-[360px] opacity-100 mb-2 sm:mb-3'
+              : 'max-h-0 opacity-0 mb-0'
+          }`}
           aria-hidden={!open}
         >
           <p
-            className="text-[11px] font-medium mb-2"
+            className="text-[10px] sm:text-[11px] font-medium mb-1 sm:mb-2"
             style={{ color: `rgba(${accentRgb},0.75)` }}
           >
             {label.name}
           </p>
           <div
-            className="font-mono text-xs mb-2"
-            style={{ color: `rgba(${accentRgb},0.80)`, lineHeight: 1.8 }}
+            className="font-mono text-[10px] sm:text-xs mb-1.5 sm:mb-2"
+            style={{ color: `rgba(${accentRgb},0.80)`, lineHeight: 1.65 }}
           >
             {label.equations.map((eq, i) => (
               <div key={i}>{eq}</div>
             ))}
           </div>
           <div
-            className="font-mono text-xs mb-2"
-            style={{ color: `rgba(${accentRgb},0.45)`, lineHeight: 1.6 }}
+            className="font-mono text-[10px] sm:text-xs mb-1.5 sm:mb-2"
+            style={{ color: `rgba(${accentRgb},0.45)`, lineHeight: 1.55 }}
           >
             {label.params}
           </div>
           <p
-            className="text-xs font-light leading-relaxed text-right"
+            className="text-[10px] sm:text-xs font-light leading-snug sm:leading-relaxed text-right"
             style={{ color: `rgba(${accentRgb},0.42)` }}
           >
             {label.description}
@@ -324,10 +322,9 @@ function FigureLabel({ labelIdx }) {
 
         <button
           type="button"
-          className="text-right bg-transparent border-0 p-0 cursor-pointer font-sans max-w-full touch-manipulation"
+          className="text-right bg-transparent border-0 p-0 cursor-pointer font-sans w-full touch-manipulation pt-1.5 sm:pt-2"
           style={{
             borderTop: open ? `1px solid rgba(${accentRgb},0.28)` : `1px solid rgba(${accentRgb},0.15)`,
-            paddingTop: 8,
             color: `rgba(${accentRgb},${open ? 0.85 : 0.62})`,
             transition: 'color 0.2s ease, border-color 0.2s ease',
           }}
@@ -335,7 +332,7 @@ function FigureLabel({ labelIdx }) {
           aria-expanded={open}
           aria-controls={`attractor-explainer-${labelIdx}`}
         >
-          <span className="text-xs font-light leading-snug underline decoration-[rgba(255,255,255,0.2)] underline-offset-4 hover:decoration-[rgba(255,255,255,0.35)]">
+          <span className="text-[10px] sm:text-xs font-light leading-tight sm:leading-snug underline decoration-[rgba(255,255,255,0.2)] underline-offset-2 sm:underline-offset-4 hover:decoration-[rgba(255,255,255,0.35)] block">
             {open ? 'Tap to hide' : label.teaser}
           </span>
         </button>
