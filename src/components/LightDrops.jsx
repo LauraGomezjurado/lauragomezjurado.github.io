@@ -2,106 +2,110 @@ import { useEffect, useRef, useState, useMemo } from 'react'
 import { gsap } from 'gsap'
 
 /**
- * Canvas “water in cracks”: each frame samples the head along the spline;
- * recent positions form a FIFO trail that ages out, drawn with progressively
- * stronger opacity toward the head — reads as a soft glowing trace, not a
- * moving stick.
+ * Canvas light trails along **orthogonal “trace” routes**: only horizontal and
+ * vertical segments (tech / PCB-style paths), one distinct polyline per drop.
+ * Motion is slowed and sampled by **arc length** so speed feels even along the
+ * zigzag. Trails still fade behind the head.
  */
 
+/* Each path: axis-aligned segments only; y is mostly downward; layouts differ. */
 const PATHS = [
+  // Left: narrow vertical channel, stair-step right
   [
-    [0.11, 0.04],
-    [0.13, 0.11],
-    [0.08, 0.22],
-    [0.15, 0.33],
-    [0.09, 0.44],
-    [0.14, 0.56],
-    [0.1, 0.68],
-    [0.13, 0.8],
-    [0.11, 0.93],
+    [0.1, 0.04],
+    [0.1, 0.15],
+    [0.22, 0.15],
+    [0.22, 0.26],
+    [0.12, 0.26],
+    [0.12, 0.37],
+    [0.24, 0.37],
+    [0.24, 0.5],
+    [0.14, 0.5],
+    [0.14, 0.62],
+    [0.21, 0.62],
+    [0.21, 0.75],
+    [0.11, 0.75],
+    [0.11, 0.9],
   ],
+  // Center: wider jog — starts further right, moves left then down ladders
   [
-    [0.52, 0.05],
-    [0.56, 0.15],
-    [0.48, 0.28],
-    [0.58, 0.4],
-    [0.5, 0.52],
-    [0.59, 0.64],
-    [0.53, 0.76],
-    [0.57, 0.88],
-    [0.54, 0.96],
+    [0.62, 0.03],
+    [0.45, 0.03],
+    [0.45, 0.14],
+    [0.58, 0.14],
+    [0.58, 0.26],
+    [0.4, 0.26],
+    [0.4, 0.38],
+    [0.54, 0.38],
+    [0.54, 0.5],
+    [0.42, 0.5],
+    [0.42, 0.62],
+    [0.56, 0.62],
+    [0.56, 0.74],
+    [0.44, 0.74],
+    [0.44, 0.86],
+    [0.5, 0.86],
+    [0.5, 0.96],
   ],
+  // Right: long horizontal runs, then vertical drops (datasheet / bus feel)
   [
-    [0.78, 0.05],
-    [0.81, 0.14],
-    [0.73, 0.27],
-    [0.84, 0.39],
-    [0.76, 0.51],
-    [0.85, 0.63],
-    [0.77, 0.75],
-    [0.83, 0.86],
-    [0.79, 0.94],
+    [0.86, 0.05],
+    [0.86, 0.18],
+    [0.68, 0.18],
+    [0.68, 0.3],
+    [0.8, 0.3],
+    [0.8, 0.4],
+    [0.66, 0.4],
+    [0.66, 0.52],
+    [0.82, 0.52],
+    [0.82, 0.64],
+    [0.7, 0.64],
+    [0.7, 0.76],
+    [0.78, 0.76],
+    [0.78, 0.88],
+    [0.64, 0.88],
+    [0.64, 0.96],
   ],
 ]
 
 const DROP_CFG = [
-  { duration: 11.2, delay: 0, strength: 0.5, maxTrail: 72 },
-  { duration: 13.8, delay: -2.4, strength: 0.44, maxTrail: 64 },
-  { duration: 15.5, delay: -5.1, strength: 0.38, maxTrail: 58 },
+  { duration: 24, delay: 0, strength: 0.5, maxTrail: 72 },
+  { duration: 28, delay: -6, strength: 0.44, maxTrail: 64 },
+  { duration: 32, delay: -13, strength: 0.38, maxTrail: 58 },
 ]
 
 function toWaypoints(arr) {
   return arr.map(([x, y]) => ({ x, y }))
 }
 
-function expandCatmullRom(pts, subdiv = 10) {
-  if (pts.length < 2) return pts
-  const pad = [pts[0], ...pts, pts[pts.length - 1]]
-  const out = []
-
-  const interp = (p0, p1, p2, p3, t) => {
-    const t2 = t * t
-    const t3 = t2 * t
-    return {
-      x:
-        0.5 *
-        (2 * p1.x +
-          (-p0.x + p2.x) * t +
-          (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 +
-          (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3),
-      y:
-        0.5 *
-        (2 * p1.y +
-          (-p0.y + p2.y) * t +
-          (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 +
-          (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3),
-    }
+/** Pixel cumulative lengths along polyline (for constant-speed motion in t). */
+function computeArcMeta(pts, w, h) {
+  if (pts.length === 0) return { cum: [0], total: 0 }
+  const cum = [0]
+  let total = 0
+  for (let i = 0; i < pts.length - 1; i++) {
+    const dx = (pts[i + 1].x - pts[i].x) * w
+    const dy = (pts[i + 1].y - pts[i].y) * h
+    total += Math.hypot(dx, dy)
+    cum.push(total)
   }
-
-  for (let i = 0; i < pad.length - 3; i++) {
-    const p0 = pad[i]
-    const p1 = pad[i + 1]
-    const p2 = pad[i + 2]
-    const p3 = pad[i + 3]
-    for (let s = 0; s < subdiv; s++) {
-      out.push(interp(p0, p1, p2, p3, s / subdiv))
-    }
-  }
-  out.push(pts[pts.length - 1])
-  return out
+  return { cum, total }
 }
 
-function getPoint(pts, t) {
-  const tClamped = Math.min(1, Math.max(0, t))
-  const n = pts.length
-  if (n === 1) return pts[0]
-  const f = tClamped * (n - 1)
-  const i = Math.floor(f)
-  const j = Math.min(i + 1, n - 1)
-  const lt = f - i
+function getPointOnPolyline(pts, t, cum, total) {
+  if (!pts.length) return { x: 0, y: 0 }
+  if (pts.length === 1 || total < 1e-6) return pts[0]
+  const d = Math.min(1, Math.max(0, t)) * total
+  let i = 0
+  while (i < cum.length - 1 && cum[i + 1] < d) i++
+  const segLen = cum[i + 1] - cum[i]
+  const lt = segLen > 1e-6 ? (d - cum[i]) / segLen : 0
   const a = pts[i]
-  const b = pts[j]
-  return { x: a.x + (b.x - a.x) * lt, y: a.y + (b.y - a.y) * lt }
+  const b = pts[i + 1]
+  return {
+    x: a.x + (b.x - a.x) * lt,
+    y: a.y + (b.y - a.y) * lt,
+  }
 }
 
 function resizeCanvas(canvas, ctx, root, dprRef) {
@@ -116,32 +120,26 @@ function resizeCanvas(canvas, ctx, root, dprRef) {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 }
 
-/**
- * @param {CanvasRenderingContext2D} ctx
- * @param {{ x: number, y: number }[]} trail
- * @param {number} strength
- */
 function paintTrail(ctx, trail, strength) {
   if (trail.length < 2) return
 
   const n = trail.length
   const head = trail[n - 1]
 
-  /* Wide, very soft outer wash */
   ctx.save()
   ctx.shadowBlur = 8
   ctx.shadowColor = 'rgba(195, 208, 235, 0.25)'
   ctx.strokeStyle = `rgba(235, 238, 248, ${0.06 * strength})`
   ctx.lineWidth = 4
   ctx.lineCap = 'round'
-  ctx.lineJoin = 'round'
+  ctx.lineJoin = 'miter'
+  ctx.miterLimit = 2
   ctx.beginPath()
   ctx.moveTo(trail[0].x, trail[0].y)
   for (let i = 1; i < n; i++) ctx.lineTo(trail[i].x, trail[i].y)
   ctx.stroke()
   ctx.restore()
 
-  /* Core: each short segment ramps opacity toward the head (progressive trace) */
   for (let i = 0; i < n - 1; i++) {
     const t = (i + 1) / (n - 1)
     const pulse = t * t
@@ -149,14 +147,14 @@ function paintTrail(ctx, trail, strength) {
     ctx.strokeStyle = `rgba(248, 249, 253, ${alpha})`
     ctx.lineWidth = 0.9 + pulse * 1.35
     ctx.lineCap = 'round'
-    ctx.lineJoin = 'round'
+    ctx.lineJoin = 'miter'
+    ctx.miterLimit = 2
     ctx.beginPath()
     ctx.moveTo(trail[i].x, trail[i].y)
     ctx.lineTo(trail[i + 1].x, trail[i + 1].y)
     ctx.stroke()
   }
 
-  /* Bright head: small soft dot */
   const gh = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 4)
   gh.addColorStop(0, `rgba(255,255,255,${0.55 * strength})`)
   gh.addColorStop(0.45, `rgba(240,243,252,${0.18 * strength})`)
@@ -174,10 +172,7 @@ export default function LightDrops() {
   const dprRef = useRef(1)
   const metricsRef = useRef({ w: 1, h: 1 })
   const numDropsRef = useRef(3)
-  const waypointSets = useMemo(
-    () => PATHS.map((p) => expandCatmullRom(toWaypoints(p), 12)),
-    []
-  )
+  const waypointSets = useMemo(() => PATHS.map(toWaypoints), [])
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -215,15 +210,23 @@ export default function LightDrops() {
       maxTrail: DROP_CFG[i].maxTrail,
       strength: DROP_CFG[i].strength,
       framesSincePush: 0,
+      arc: { cum: [0], total: 0 },
     }))
+
+    const refreshArc = (d) => {
+      const { w, h } = metricsRef.current
+      d.arc = computeArcMeta(d.pts, w, h)
+    }
 
     updateMetrics()
     syncNumDrops()
+    runners.forEach(refreshArc)
     resizeCanvas(canvas, ctx, root, dprRef)
 
     const pushTrailSample = (d) => {
       const { w, h } = metricsRef.current
-      const p = getPoint(d.pts, d.proxy.u)
+      const { cum, total } = d.arc
+      const p = getPointOnPolyline(d.pts, d.proxy.u, cum, total)
       const x = p.x * w
       const y = p.y * h
       const prev = d.trail[d.trail.length - 1]
@@ -277,6 +280,7 @@ export default function LightDrops() {
       syncNumDrops()
       resizeCanvas(canvas, ctx, root, dprRef)
       runners.forEach((r) => {
+        refreshArc(r)
         r.trail.length = 0
         r.framesSincePush = 0
       })
