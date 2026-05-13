@@ -9,6 +9,7 @@ import Featured from './Featured'
 import Contact from './Contact'
 import MorphingBackground, { AttractorLabel, morphState, cameraState, stageState } from './MathBackgrounds'
 import PaperBackground from './PaperBackground'
+import LightDrops from './LightDrops'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -18,7 +19,8 @@ gsap.registerPlugin(ScrollTrigger)
  * Stack (bottom → top):
  *   1. PaperBackground: deep blue-charcoal base + monochrome grain (z=0)
  *   2. MorphingBackground: attractor canvas (z=2)
- *   3. Sections: z=10, above curve for legibility (label is fixed z=40)
+ *   3. LightDrops: faint streaks above the curve (z=3)
+ *   4. Sections: z=10, above curve for legibility (label is fixed z=40)
  *
  * Stage choreography keeps the attractor from competing with text. The
  * document order is Hero → About → Portfolio → News → Featured → Contact,
@@ -201,12 +203,13 @@ export default function Home() {
       {/* Foundation: paper + fiber, sits below everything */}
       <PaperBackground />
 
-      {/* Attractor canvas: sits above paper, below content. Pointer-events
-          off so clicks pass through to whatever is behind (the FigureLabel
-          is rendered separately at high z so taps still register). */}
+      {/* Attractor canvas: sits above paper, below light streaks */}
       <div ref={bgRef} className="fixed inset-0 pointer-events-none z-[2]">
         <MorphingBackground />
       </div>
+
+      {/* Subtle drifting light streaks (square paths, hero region) */}
+      <LightDrops />
 
       {/* Attractor label: separate stacking context, sits above sections so
           the "Curious what the X attractor is?" hint stays tappable even
