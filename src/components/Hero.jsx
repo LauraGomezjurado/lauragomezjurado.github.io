@@ -11,7 +11,6 @@ gsap.registerPlugin(ScrollTrigger)
  */
 export default function Hero() {
   const heroRef = useRef(null)
-  const brandRef = useRef(null)
   const titleRef = useRef(null)
   const subtitleRef = useRef(null)
   const emailRef = useRef(null)
@@ -20,8 +19,7 @@ export default function Hero() {
 
   useEffect(() => {
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
-    tl.from(brandRef.current,    { opacity: 0, x: -30, duration: 1 })
-      .from(tagRef.current,      { opacity: 0, y: 12, duration: 0.8 }, '-=0.5')
+    tl.from(tagRef.current,      { opacity: 0, y: 12, duration: 0.8 })
       .from(titleRef.current,    { opacity: 0, y: 28, duration: 1.2 }, '-=0.5')
       .from(subtitleRef.current, { opacity: 0, y: 18, duration: 0.9 }, '-=0.6')
       .from(emailRef.current,    { opacity: 0, y: 14, duration: 0.8 }, '-=0.5')
@@ -31,7 +29,7 @@ export default function Hero() {
   return (
     <section ref={heroRef} id="home" className="relative z-10 min-h-[180vh] bg-transparent">
 
-      {/* Brand mark */}
+      {/* Brand mark (L G G) — hidden
       <div className="absolute top-4 left-4 sm:top-6 sm:left-6 md:top-12 md:left-12 z-20">
         <h1
           ref={brandRef}
@@ -41,6 +39,7 @@ export default function Hero() {
           L G G
         </h1>
       </div>
+      */}
 
       {/* Intro block: left half so the attractor stage on the right has room */}
       <div className="relative z-10 min-h-screen flex items-center px-4 sm:px-6 md:px-8 lg:px-12">
