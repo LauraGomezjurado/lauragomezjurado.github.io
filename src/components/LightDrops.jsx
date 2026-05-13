@@ -69,9 +69,9 @@ const PATHS = [
 ]
 
 const DROP_CFG = [
-  { duration: 24, delay: 0, strength: 0.5, maxTrail: 72 },
-  { duration: 28, delay: -6, strength: 0.44, maxTrail: 64 },
-  { duration: 32, delay: -13, strength: 0.38, maxTrail: 58 },
+  { duration: 34, delay: 0, strength: 0.5, maxTrail: 96 },
+  { duration: 40, delay: -9, strength: 0.44, maxTrail: 86 },
+  { duration: 46, delay: -19, strength: 0.38, maxTrail: 78 },
 ]
 
 function toWaypoints(arr) {
