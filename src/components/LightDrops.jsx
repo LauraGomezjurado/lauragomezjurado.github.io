@@ -2,13 +2,13 @@ import { useEffect, useRef, useState, useMemo } from 'react'
 import { gsap } from 'gsap'
 
 /**
- * Subtle “water through cracks” streaks: mostly-downward zigzag paths, streak
- * axis follows the local trajectory (not a rigid translating line). Bright
- * head / soft trail gradients match the paper + screen blend from before.
+ * Canvas “water in cracks”: each frame samples the head along the spline;
+ * recent positions form a FIFO trail that ages out, drawn with progressively
+ * stronger opacity toward the head — reads as a soft glowing trace, not a
+ * moving stick.
  */
 
 const PATHS = [
-  // Left channel — tight zigzag down
   [
     [0.11, 0.04],
     [0.13, 0.11],
@@ -20,7 +20,6 @@ const PATHS = [
     [0.13, 0.8],
     [0.11, 0.93],
   ],
-  // Center-right — wider weave
   [
     [0.52, 0.05],
     [0.56, 0.15],
@@ -32,7 +31,6 @@ const PATHS = [
     [0.57, 0.88],
     [0.54, 0.96],
   ],
-  // Far right — longer runs, then jog
   [
     [0.78, 0.05],
     [0.81, 0.14],
@@ -46,13 +44,16 @@ const PATHS = [
   ],
 ]
 
-const STREAK_HEIGHTS = [88, 76, 64]
+const DROP_CFG = [
+  { duration: 11.2, delay: 0, strength: 0.5, maxTrail: 72 },
+  { duration: 13.8, delay: -2.4, strength: 0.44, maxTrail: 64 },
+  { duration: 15.5, delay: -5.1, strength: 0.38, maxTrail: 58 },
+]
 
 function toWaypoints(arr) {
   return arr.map(([x, y]) => ({ x, y }))
 }
 
-/** Open Catmull–Rom: rounds crack corners so tangents change smoothly. */
 function expandCatmullRom(pts, subdiv = 10) {
   if (pts.length < 2) return pts
   const pad = [pts[0], ...pts, pts[pts.length - 1]]
@@ -103,29 +104,76 @@ function getPoint(pts, t) {
   return { x: a.x + (b.x - a.x) * lt, y: a.y + (b.y - a.y) * lt }
 }
 
-function getTangent(pts, t, eps = 0.004) {
-  const t0 = Math.max(0, t - eps)
-  const t1 = Math.min(1, t + eps)
-  const p0 = getPoint(pts, t0)
-  const p1 = getPoint(pts, t1)
-  let dx = p1.x - p0.x
-  let dy = p1.y - p0.y
-  const len = Math.hypot(dx, dy)
-  if (len < 1e-9) {
-    dx = 0
-    dy = 1
-  } else {
-    dx /= len
-    dy /= len
+function resizeCanvas(canvas, ctx, root, dprRef) {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2)
+  dprRef.current = dpr
+  const w = Math.max(1, root.clientWidth)
+  const h = Math.max(1, root.clientHeight)
+  canvas.style.width = `${w}px`
+  canvas.style.height = `${h}px`
+  canvas.width = Math.floor(w * dpr)
+  canvas.height = Math.floor(h * dpr)
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+}
+
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {{ x: number, y: number }[]} trail
+ * @param {number} strength
+ */
+function paintTrail(ctx, trail, strength) {
+  if (trail.length < 2) return
+
+  const n = trail.length
+  const head = trail[n - 1]
+
+  /* Wide, very soft outer wash */
+  ctx.save()
+  ctx.shadowBlur = 8
+  ctx.shadowColor = 'rgba(195, 208, 235, 0.25)'
+  ctx.strokeStyle = `rgba(235, 238, 248, ${0.06 * strength})`
+  ctx.lineWidth = 4
+  ctx.lineCap = 'round'
+  ctx.lineJoin = 'round'
+  ctx.beginPath()
+  ctx.moveTo(trail[0].x, trail[0].y)
+  for (let i = 1; i < n; i++) ctx.lineTo(trail[i].x, trail[i].y)
+  ctx.stroke()
+  ctx.restore()
+
+  /* Core: each short segment ramps opacity toward the head (progressive trace) */
+  for (let i = 0; i < n - 1; i++) {
+    const t = (i + 1) / (n - 1)
+    const pulse = t * t
+    const alpha = (0.02 + pulse * 0.78) * strength
+    ctx.strokeStyle = `rgba(248, 249, 253, ${alpha})`
+    ctx.lineWidth = 0.9 + pulse * 1.35
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
+    ctx.beginPath()
+    ctx.moveTo(trail[i].x, trail[i].y)
+    ctx.lineTo(trail[i + 1].x, trail[i + 1].y)
+    ctx.stroke()
   }
-  return { x: dx, y: dy }
+
+  /* Bright head: small soft dot */
+  const gh = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 4)
+  gh.addColorStop(0, `rgba(255,255,255,${0.55 * strength})`)
+  gh.addColorStop(0.45, `rgba(240,243,252,${0.18 * strength})`)
+  gh.addColorStop(1, 'rgba(240,243,252,0)')
+  ctx.fillStyle = gh
+  ctx.beginPath()
+  ctx.arc(head.x, head.y, 4, 0, Math.PI * 2)
+  ctx.fill()
 }
 
 export default function LightDrops() {
   const [off, setOff] = useState(false)
   const rootRef = useRef(null)
-  const dropRefs = [useRef(null), useRef(null), useRef(null)]
+  const canvasRef = useRef(null)
+  const dprRef = useRef(1)
   const metricsRef = useRef({ w: 1, h: 1 })
+  const numDropsRef = useRef(3)
   const waypointSets = useMemo(
     () => PATHS.map((p) => expandCatmullRom(toWaypoints(p), 12)),
     []
@@ -143,10 +191,11 @@ export default function LightDrops() {
     if (off) return undefined
 
     const root = rootRef.current
-    if (!root) return undefined
+    const canvas = canvasRef.current
+    if (!root || !canvas) return undefined
 
-    const drops = dropRefs.map((r) => r.current).filter(Boolean)
-    if (!drops.length) return undefined
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return undefined
 
     const updateMetrics = () => {
       metricsRef.current = {
@@ -155,59 +204,99 @@ export default function LightDrops() {
       }
     }
 
-    const placeDrop = (el, pts, u, height) => {
-      const { w, h } = metricsRef.current
-      const p = getPoint(pts, u)
-      const tang = getTangent(pts, u)
-      const px = p.x * w
-      const py = p.y * h
-      const deg = (Math.atan2(tang.x, tang.y) * 180) / Math.PI
-
-      el.style.left = `${px}px`
-      el.style.top = `${py - height}px`
-      el.style.transform = `translateX(-50%) rotate(${deg}deg)`
+    const syncNumDrops = () => {
+      numDropsRef.current = window.matchMedia('(max-width: 768px)').matches ? 2 : 3
     }
 
+    const runners = waypointSets.map((pts, i) => ({
+      pts,
+      proxy: { u: 0 },
+      trail: /** @type {{ x: number, y: number }[]} */ ([]),
+      maxTrail: DROP_CFG[i].maxTrail,
+      strength: DROP_CFG[i].strength,
+      framesSincePush: 0,
+    }))
+
     updateMetrics()
+    syncNumDrops()
+    resizeCanvas(canvas, ctx, root, dprRef)
 
-    const runners = []
+    const pushTrailSample = (d) => {
+      const { w, h } = metricsRef.current
+      const p = getPoint(d.pts, d.proxy.u)
+      const x = p.x * w
+      const y = p.y * h
+      const prev = d.trail[d.trail.length - 1]
+      d.framesSincePush += 1
+      const moved = !prev || Math.hypot(x - prev.x, y - prev.y) > 0.15
+      if (moved || d.framesSincePush > 2) {
+        d.trail.push({ x, y })
+        d.framesSincePush = 0
+        while (d.trail.length > d.maxTrail) d.trail.shift()
+      }
+    }
 
-    const ctx = gsap.context(() => {
-      const configs = [
-        { duration: 11.2, delay: 0, ease: 'power1.in' },
-        { duration: 13.8, delay: -2.4, ease: 'power1.in' },
-        { duration: 15.5, delay: -5.1, ease: 'power1.in' },
-      ]
+    const render = () => {
+      const { w, h } = metricsRef.current
+      ctx.clearRect(0, 0, w, h)
+      const count = numDropsRef.current
+      for (let i = 0; i < count; i++) {
+        paintTrail(ctx, runners[i].trail, runners[i].strength)
+      }
+    }
 
-      drops.forEach((el, i) => {
-        const pts = waypointSets[i]
-        const height = STREAK_HEIGHTS[i]
-        const cfg = configs[i]
-        const proxy = { u: 0 }
-        runners.push({ el, pts, h: height, proxy })
-        placeDrop(el, pts, 0, height)
+    const onTick = () => {
+      const count = numDropsRef.current
+      for (let i = 0; i < count; i++) pushTrailSample(runners[i])
+      render()
+    }
 
-        gsap.to(proxy, {
+    const ctxGsap = gsap.context(() => {
+      for (let i = 0; i < runners.length; i++) {
+        const d = runners[i]
+        const cfg = DROP_CFG[i]
+        gsap.to(d.proxy, {
           u: 1,
           duration: cfg.duration,
-          ease: cfg.ease,
+          ease: 'power1.in',
           repeat: -1,
           delay: cfg.delay,
           immediateRender: true,
-          onUpdate: () => placeDrop(el, pts, proxy.u, height),
+          onRepeat: () => {
+            d.trail.length = 0
+            d.framesSincePush = 0
+          },
         })
-      })
+      }
     }, root)
+
+    gsap.ticker.add(onTick)
 
     const ro = new ResizeObserver(() => {
       updateMetrics()
-      runners.forEach(({ el, pts, h, proxy }) => placeDrop(el, pts, proxy.u, h))
+      syncNumDrops()
+      resizeCanvas(canvas, ctx, root, dprRef)
+      runners.forEach((r) => {
+        r.trail.length = 0
+        r.framesSincePush = 0
+      })
     })
     ro.observe(root)
 
+    const onMm = () => {
+      syncNumDrops()
+    }
+    window.addEventListener('resize', onMm)
+
+    const mMobile = window.matchMedia('(max-width: 768px)')
+    mMobile.addEventListener('change', onMm)
+
     return () => {
+      mMobile.removeEventListener('change', onMm)
+      window.removeEventListener('resize', onMm)
       ro.disconnect()
-      ctx.revert()
+      gsap.ticker.remove(onTick)
+      ctxGsap.revert()
     }
   }, [off, waypointSets])
 
@@ -215,9 +304,7 @@ export default function LightDrops() {
 
   return (
     <div ref={rootRef} className="light-drops-root" aria-hidden>
-      {PATHS.map((_, i) => (
-        <div key={i} ref={dropRefs[i]} className={`light-drop streak-${i + 1}`} />
-      ))}
+      <canvas ref={canvasRef} className="light-drops-canvas" />
 
       <style>{`
         .light-drops-root {
@@ -231,30 +318,17 @@ export default function LightDrops() {
           overflow: hidden;
         }
 
-        .light-drop {
-          position: absolute;
-          width: 1.5px;
-          border-radius: 1px;
-          transform-origin: 50% 100%;
-          will-change: transform, left, top;
-          background: linear-gradient(
-            to top,
-            rgba(244, 246, 252, 0.92) 0%,
-            rgba(244, 246, 252, 0.22) 32%,
-            rgba(200, 210, 230, 0.06) 58%,
-            transparent 100%
-          );
-          filter: blur(0.35px);
+        .light-drops-canvas {
+          display: block;
+          width: 100%;
+          height: 100%;
           mix-blend-mode: screen;
         }
 
-        .streak-1 { height: 88px; opacity: 0.42; }
-        .streak-2 { height: 76px; opacity: 0.36; }
-        .streak-3 { height: 64px; opacity: 0.3; }
-
         @media (max-width: 768px) {
-          .streak-2 { opacity: 0.28; }
-          .streak-3 { display: none; }
+          .light-drops-root {
+            opacity: 0.92;
+          }
         }
       `}</style>
     </div>
