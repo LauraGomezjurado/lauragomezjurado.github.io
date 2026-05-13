@@ -1,12 +1,135 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
+import { gsap } from 'gsap'
 
 /**
- * Very subtle “drops of light”: short strokes with a bright leading edge and
- * a soft fading trail. A few instances drift along tiny square paths in the
- * upper viewport so they read as quiet geometric motion, not decoration.
+ * Subtle “water through cracks” streaks: mostly-downward zigzag paths, streak
+ * axis follows the local trajectory (not a rigid translating line). Bright
+ * head / soft trail gradients match the paper + screen blend from before.
  */
+
+const PATHS = [
+  // Left channel — tight zigzag down
+  [
+    [0.11, 0.04],
+    [0.13, 0.11],
+    [0.08, 0.22],
+    [0.15, 0.33],
+    [0.09, 0.44],
+    [0.14, 0.56],
+    [0.1, 0.68],
+    [0.13, 0.8],
+    [0.11, 0.93],
+  ],
+  // Center-right — wider weave
+  [
+    [0.52, 0.05],
+    [0.56, 0.15],
+    [0.48, 0.28],
+    [0.58, 0.4],
+    [0.5, 0.52],
+    [0.59, 0.64],
+    [0.53, 0.76],
+    [0.57, 0.88],
+    [0.54, 0.96],
+  ],
+  // Far right — longer runs, then jog
+  [
+    [0.78, 0.05],
+    [0.81, 0.14],
+    [0.73, 0.27],
+    [0.84, 0.39],
+    [0.76, 0.51],
+    [0.85, 0.63],
+    [0.77, 0.75],
+    [0.83, 0.86],
+    [0.79, 0.94],
+  ],
+]
+
+const STREAK_HEIGHTS = [88, 76, 64]
+
+function toWaypoints(arr) {
+  return arr.map(([x, y]) => ({ x, y }))
+}
+
+/** Open Catmull–Rom: rounds crack corners so tangents change smoothly. */
+function expandCatmullRom(pts, subdiv = 10) {
+  if (pts.length < 2) return pts
+  const pad = [pts[0], ...pts, pts[pts.length - 1]]
+  const out = []
+
+  const interp = (p0, p1, p2, p3, t) => {
+    const t2 = t * t
+    const t3 = t2 * t
+    return {
+      x:
+        0.5 *
+        (2 * p1.x +
+          (-p0.x + p2.x) * t +
+          (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 +
+          (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3),
+      y:
+        0.5 *
+        (2 * p1.y +
+          (-p0.y + p2.y) * t +
+          (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 +
+          (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3),
+    }
+  }
+
+  for (let i = 0; i < pad.length - 3; i++) {
+    const p0 = pad[i]
+    const p1 = pad[i + 1]
+    const p2 = pad[i + 2]
+    const p3 = pad[i + 3]
+    for (let s = 0; s < subdiv; s++) {
+      out.push(interp(p0, p1, p2, p3, s / subdiv))
+    }
+  }
+  out.push(pts[pts.length - 1])
+  return out
+}
+
+function getPoint(pts, t) {
+  const tClamped = Math.min(1, Math.max(0, t))
+  const n = pts.length
+  if (n === 1) return pts[0]
+  const f = tClamped * (n - 1)
+  const i = Math.floor(f)
+  const j = Math.min(i + 1, n - 1)
+  const lt = f - i
+  const a = pts[i]
+  const b = pts[j]
+  return { x: a.x + (b.x - a.x) * lt, y: a.y + (b.y - a.y) * lt }
+}
+
+function getTangent(pts, t, eps = 0.004) {
+  const t0 = Math.max(0, t - eps)
+  const t1 = Math.min(1, t + eps)
+  const p0 = getPoint(pts, t0)
+  const p1 = getPoint(pts, t1)
+  let dx = p1.x - p0.x
+  let dy = p1.y - p0.y
+  const len = Math.hypot(dx, dy)
+  if (len < 1e-9) {
+    dx = 0
+    dy = 1
+  } else {
+    dx /= len
+    dy /= len
+  }
+  return { x: dx, y: dy }
+}
+
 export default function LightDrops() {
   const [off, setOff] = useState(false)
+  const rootRef = useRef(null)
+  const dropRefs = [useRef(null), useRef(null), useRef(null)]
+  const metricsRef = useRef({ w: 1, h: 1 })
+  const waypointSets = useMemo(
+    () => PATHS.map((p) => expandCatmullRom(toWaypoints(p), 12)),
+    []
+  )
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -16,14 +139,85 @@ export default function LightDrops() {
     return () => mq.removeEventListener('change', sync)
   }, [])
 
+  useEffect(() => {
+    if (off) return undefined
+
+    const root = rootRef.current
+    if (!root) return undefined
+
+    const drops = dropRefs.map((r) => r.current).filter(Boolean)
+    if (!drops.length) return undefined
+
+    const updateMetrics = () => {
+      metricsRef.current = {
+        w: Math.max(1, root.clientWidth),
+        h: Math.max(1, root.clientHeight),
+      }
+    }
+
+    const placeDrop = (el, pts, u, height) => {
+      const { w, h } = metricsRef.current
+      const p = getPoint(pts, u)
+      const tang = getTangent(pts, u)
+      const px = p.x * w
+      const py = p.y * h
+      const deg = (Math.atan2(tang.x, tang.y) * 180) / Math.PI
+
+      el.style.left = `${px}px`
+      el.style.top = `${py - height}px`
+      el.style.transform = `translateX(-50%) rotate(${deg}deg)`
+    }
+
+    updateMetrics()
+
+    const runners = []
+
+    const ctx = gsap.context(() => {
+      const configs = [
+        { duration: 11.2, delay: 0, ease: 'power1.in' },
+        { duration: 13.8, delay: -2.4, ease: 'power1.in' },
+        { duration: 15.5, delay: -5.1, ease: 'power1.in' },
+      ]
+
+      drops.forEach((el, i) => {
+        const pts = waypointSets[i]
+        const height = STREAK_HEIGHTS[i]
+        const cfg = configs[i]
+        const proxy = { u: 0 }
+        runners.push({ el, pts, h: height, proxy })
+        placeDrop(el, pts, 0, height)
+
+        gsap.to(proxy, {
+          u: 1,
+          duration: cfg.duration,
+          ease: cfg.ease,
+          repeat: -1,
+          delay: cfg.delay,
+          immediateRender: true,
+          onUpdate: () => placeDrop(el, pts, proxy.u, height),
+        })
+      })
+    }, root)
+
+    const ro = new ResizeObserver(() => {
+      updateMetrics()
+      runners.forEach(({ el, pts, h, proxy }) => placeDrop(el, pts, proxy.u, h))
+    })
+    ro.observe(root)
+
+    return () => {
+      ro.disconnect()
+      ctx.revert()
+    }
+  }, [off, waypointSets])
+
   if (off) return null
 
   return (
-    <div className="light-drops-root" aria-hidden>
-      <div className="light-drops light-drops--v1" />
-      <div className="light-drops light-drops--v2" />
-      <div className="light-drops light-drops--v3" />
-      <div className="light-drops light-drops--h1" />
+    <div ref={rootRef} className="light-drops-root" aria-hidden>
+      {PATHS.map((_, i) => (
+        <div key={i} ref={dropRefs[i]} className={`light-drop streak-${i + 1}`} />
+      ))}
 
       <style>{`
         .light-drops-root {
@@ -37,19 +231,12 @@ export default function LightDrops() {
           overflow: hidden;
         }
 
-        .light-drops {
+        .light-drop {
           position: absolute;
-          will-change: transform;
-        }
-
-        /* Vertical streak: strong at bottom (head), fades upward */
-        .light-drops--v1,
-        .light-drops--v2,
-        .light-drops--v3 {
           width: 1.5px;
-          height: 88px;
           border-radius: 1px;
-          opacity: 0.42;
+          transform-origin: 50% 100%;
+          will-change: transform, left, top;
           background: linear-gradient(
             to top,
             rgba(244, 246, 252, 0.92) 0%,
@@ -61,78 +248,13 @@ export default function LightDrops() {
           mix-blend-mode: screen;
         }
 
-        /* Horizontal streak: strong on the left, fades right */
-        .light-drops--h1 {
-          width: 72px;
-          height: 1.5px;
-          border-radius: 1px;
-          opacity: 0.32;
-          background: linear-gradient(
-            to right,
-            rgba(244, 246, 252, 0.88) 0%,
-            rgba(220, 228, 242, 0.14) 45%,
-            transparent 100%
-          );
-          filter: blur(0.35px);
-          mix-blend-mode: screen;
-        }
-
-        @keyframes light-square-a {
-          0%, 100% { transform: translate(8vw, 5vh); }
-          25% { transform: translate(17vw, 5vh); }
-          50% { transform: translate(17vw, 14vh); }
-          75% { transform: translate(8vw, 14vh); }
-        }
-
-        @keyframes light-square-b {
-          0%, 100% { transform: translate(62vw, 6vh); }
-          25% { transform: translate(72vw, 6vh); }
-          50% { transform: translate(72vw, 15vh); }
-          75% { transform: translate(62vw, 15vh); }
-        }
-
-        @keyframes light-square-c {
-          0%, 100% { transform: translate(38vw, 4vh); }
-          25% { transform: translate(48vw, 4vh); }
-          50% { transform: translate(48vw, 12vh); }
-          75% { transform: translate(38vw, 12vh); }
-        }
-
-        @keyframes light-square-h {
-          0%, 100% { transform: translate(78vw, 10vh); }
-          25% { transform: translate(88vw, 10vh); }
-          50% { transform: translate(88vw, 18vh); }
-          75% { transform: translate(78vw, 18vh); }
-        }
-
-        .light-drops--v1 {
-          animation: light-square-a 19s linear infinite;
-          animation-delay: -2s;
-        }
-
-        .light-drops--v2 {
-          animation: light-square-b 23s linear infinite;
-          animation-delay: -7s;
-          opacity: 0.36;
-          height: 76px;
-        }
-
-        .light-drops--v3 {
-          animation: light-square-c 26.5s linear infinite;
-          animation-delay: -11s;
-          opacity: 0.3;
-          height: 64px;
-        }
-
-        .light-drops--h1 {
-          animation: light-square-h 21s linear infinite;
-          animation-delay: -4s;
-        }
+        .streak-1 { height: 88px; opacity: 0.42; }
+        .streak-2 { height: 76px; opacity: 0.36; }
+        .streak-3 { height: 64px; opacity: 0.3; }
 
         @media (max-width: 768px) {
-          .light-drops--v2 { opacity: 0.28; }
-          .light-drops--v3 { display: none; }
-          .light-drops--h1 { opacity: 0.22; }
+          .streak-2 { opacity: 0.28; }
+          .streak-3 { display: none; }
         }
       `}</style>
     </div>
