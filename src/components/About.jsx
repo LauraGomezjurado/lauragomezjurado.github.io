@@ -112,7 +112,7 @@ export default function About() {
                     />
                     <FocusItem
                       title="Generalization and deployment."
-                      body="Information theoretic AUC ceilings for weak signal regimes. Cybersecurity agent evaluation at Stanford CRFM. Cost aware multi LLM ensemble routing at the Stanford Scaling Intelligence Lab."
+                      body="Cybersecurity agent evaluation at Stanford CRFM. Cost aware multi LLM ensemble routing at the Stanford Scaling Intelligence Lab."
                     />
                   </ul>
                 </div>
