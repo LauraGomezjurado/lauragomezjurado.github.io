@@ -79,11 +79,12 @@ export default function About() {
           <div ref={contentRef} className="md:col-span-7 relative">
             <div className="panel scrim px-6 md:px-10 py-10 md:py-12">
               <p className="text-xl md:text-2xl text-white leading-relaxed font-light mb-9">
-                I work on three questions that braid together. What do trained models
-                internally represent, and when can we read it. How do training geometries
-                (sign, spectral, low rank) shape what gets learned in the first place.
-                And how can edits in weight space correct fairness failures with
-                controllable trade offs.
+                I work on the science of understanding and steering learned systems. My
+                research connects interpretability, optimization, and alignment by studying
+                how models form internal structure, how training shapes that structure, and
+                how we can intervene when model behavior is unreliable or unfair. The goal is
+                to make powerful AI systems more legible, controllable, and accountable before
+                they are deployed in the world.
               </p>
 
               {/* Research focus: four anchored themes, tight, scannable */}
@@ -107,11 +108,11 @@ export default function About() {
                     />
                     <FocusItem
                       title="Alignment on model editing."
-                      body="A lambda scaled task vector merge that reduces demographic parity gaps while preserving accuracy, with a theoretical DPD upper bound. ICLR 2026 oral."
+                      body="A lambda scaled task vector merge that reduces demographic parity gaps while preserving accuracy, with a theoretical DPD upper bound. Accepted to ICLR 2026."
                     />
                     <FocusItem
                       title="Generalization and deployment."
-                      body="Information theoretic AUC ceilings for weak signal regimes at Microsoft Research. Cybersecurity agent evaluation at Stanford CRFM. Cost aware multi LLM ensemble routing at the Stanford Scaling Intelligence Lab."
+                      body="Information theoretic AUC ceilings for weak signal regimes. Cybersecurity agent evaluation at Stanford CRFM. Cost aware multi LLM ensemble routing at the Stanford Scaling Intelligence Lab."
                     />
                   </ul>
                 </div>
@@ -122,24 +123,17 @@ export default function About() {
                 <span className="shrink-0 w-px" style={{ background: 'var(--hairline)' }} />
                 <div className="space-y-5">
                   <p className="text-base md:text-lg text-white/70 leading-relaxed font-light">
-                    Most of my research lives in San Francisco infrastructure, but the
-                    question that drives it does not. I have spent the last six years
-                    deploying AI in places where it usually does not reach: post conflict
-                    regions of Colombia, rural agricultural cooperatives, low
-                    infrastructure healthcare. I co founded ASOFI, which now runs on
-                    device cacao disease detection across twelve cooperatives and has
-                    trained over seven hundred women in digital and AI literacy. I serve
-                    in global governance spaces (UN Women, the World Economic Forum at
-                    Davos, the UN General Assembly) because I think safety as a research
-                    agenda is incomplete if it only protects the people who already have
-                    a seat at the table.
+                    Alongside the research, I have spent six years working on AI
+                    deployment in low resource settings, mostly through ASOFI, an
+                    initiative I co founded that builds on device agricultural tools and
+                    AI literacy programs with rural cooperatives in Colombia. I have also
+                    contributed to AI policy conversations at UN Women, the World Economic
+                    Forum, and the UN General Assembly. This side of the work keeps me
+                    honest about which safety questions are actually load bearing.
                   </p>
                   <p className="text-base md:text-lg text-white/70 leading-relaxed font-light">
-                    The technical work and the deployment work reinforce each other. The
-                    deployment side tells me which safety questions are actually load
-                    bearing. The research side is what gives me a chance at answering
-                    them. Currently at Stanford, with prior research at Microsoft Research
-                    and supervised research with Dr. Hiroki Naganuma at ProPlace.
+                    Currently at Stanford, previously Microsoft Research and supervised
+                    research with Dr. Hiroki Naganuma at ProPlace.
                   </p>
                 </div>
               </div>
