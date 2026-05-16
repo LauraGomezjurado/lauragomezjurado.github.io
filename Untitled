@@ -1,4 +1,4 @@
-Yes: this image makes the difference even clearer, because this one is **not just a different style**, it is a different **mathematical object**.
+Yes — this image makes the difference even clearer, because this one is **not just a different style**, it is a different **mathematical object**.
 
 What you want the LLM to understand is that this flower is wrong **at the level of representation, geometry, depth, and light transport**.
 
@@ -62,7 +62,7 @@ The desired flower is more like:
 \text{flower} \approx \text{nested 3D petal shells around an emissive core}
 ]
 
-So the issue is not just appearance: it is that the current object has the wrong topology of depth.
+So the issue is not just appearance — it is that the current object has the wrong topology of depth.
 
 ---
 
