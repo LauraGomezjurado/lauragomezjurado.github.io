@@ -344,9 +344,9 @@ export default function Portfolio() {
             Research &amp; Projects
           </h2>
           <p className="max-w-2xl mx-auto text-sm md:text-base text-white/55 font-light leading-relaxed">
-            Thirteen projects across interpretability, optimization geometry, fairness, and deployment.
-            Three are highlighted below. The remaining ten sit one click away. Co authors and advisors are
-            named per entry; papers and code are linked where they exist.
+            Recent work centers on spectral and mixed-geometry optimization, and on the representations
+            transformers form before they can use them. A few projects are highlighted below; the rest sit
+            one click away.
           </p>
         </header>
 

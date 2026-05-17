@@ -1,82 +1,48 @@
-import { useEffect, useRef, useState, useMemo } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 
 /**
- * Canvas light trails along **orthogonal “trace” routes**: only horizontal and
- * vertical segments (tech / PCB-style paths), one distinct polyline per drop.
- * Motion is slowed and sampled by **arc length** so speed feels even along the
- * zigzag. Trails still fade behind the head.
+ * Canvas "falling stars" drifting through the full viewport. Each drop follows
+ * a gently-curved, near-vertical bezier sampled into a short polyline. Paths
+ * regenerate on every loop so the eye never catches the same trajectory twice.
+ * Trails are long and faint so they sit *behind* the attractor visually — the
+ * attractor reads as a galaxy, the drops as distant stars settling past it.
  */
 
-/* Each path: axis-aligned segments only; y is mostly downward; layouts differ. */
-const PATHS = [
-  // Left: narrow vertical channel, stair-step right
-  [
-    [0.1, 0.04],
-    [0.1, 0.15],
-    [0.22, 0.15],
-    [0.22, 0.26],
-    [0.12, 0.26],
-    [0.12, 0.37],
-    [0.24, 0.37],
-    [0.24, 0.5],
-    [0.14, 0.5],
-    [0.14, 0.62],
-    [0.21, 0.62],
-    [0.21, 0.75],
-    [0.11, 0.75],
-    [0.11, 0.9],
-  ],
-  // Center: wider jog — starts further right, moves left then down ladders
-  [
-    [0.62, 0.03],
-    [0.45, 0.03],
-    [0.45, 0.14],
-    [0.58, 0.14],
-    [0.58, 0.26],
-    [0.4, 0.26],
-    [0.4, 0.38],
-    [0.54, 0.38],
-    [0.54, 0.5],
-    [0.42, 0.5],
-    [0.42, 0.62],
-    [0.56, 0.62],
-    [0.56, 0.74],
-    [0.44, 0.74],
-    [0.44, 0.86],
-    [0.5, 0.86],
-    [0.5, 0.96],
-  ],
-  // Right: long horizontal runs, then vertical drops (datasheet / bus feel)
-  [
-    [0.86, 0.05],
-    [0.86, 0.18],
-    [0.68, 0.18],
-    [0.68, 0.3],
-    [0.8, 0.3],
-    [0.8, 0.4],
-    [0.66, 0.4],
-    [0.66, 0.52],
-    [0.82, 0.52],
-    [0.82, 0.64],
-    [0.7, 0.64],
-    [0.7, 0.76],
-    [0.78, 0.76],
-    [0.78, 0.88],
-    [0.64, 0.88],
-    [0.64, 0.96],
-  ],
-]
+const NUM_PATH_SAMPLES = 18
+
+/** Pick a slightly-curved near-vertical descent across the viewport. */
+function generatePath() {
+  const startX = 0.04 + Math.random() * 0.92
+  const startY = -0.06 - Math.random() * 0.04
+  // Drift angle off vertical: gentle (~ ±18°), occasionally a steeper streak.
+  const skew = (Math.random() - 0.5) * 0.36 + (Math.random() < 0.18 ? (Math.random() - 0.5) * 0.4 : 0)
+  const length = 1.18 + Math.random() * 0.18
+  const endX = Math.max(-0.1, Math.min(1.1, startX + skew))
+  const endY = startY + length
+  // Subtle quadratic curve so the descent isn't a perfectly straight ruler line.
+  const bow = (Math.random() - 0.5) * 0.07
+  const cx = (startX + endX) / 2 + bow
+  const cy = (startY + endY) / 2
+
+  const pts = []
+  for (let i = 0; i <= NUM_PATH_SAMPLES; i++) {
+    const t = i / NUM_PATH_SAMPLES
+    const u = 1 - t
+    const x = u * u * startX + 2 * u * t * cx + t * t * endX
+    const y = u * u * startY + 2 * u * t * cy + t * t * endY
+    pts.push({ x, y })
+  }
+  return pts
+}
 
 const DROP_CFG = [
-  { duration: 34, delay: 0, strength: 0.5, maxTrail: 96 },
-  { duration: 40, delay: -9, strength: 0.44, maxTrail: 86 },
-  { duration: 46, delay: -19, strength: 0.38, maxTrail: 78 },
+  { duration: 16, delay: 0,   strength: 0.42, maxTrail: 220 },
+  { duration: 19, delay: -4,  strength: 0.34, maxTrail: 200 },
+  { duration: 14, delay: -9,  strength: 0.45, maxTrail: 240 },
+  { duration: 22, delay: -13, strength: 0.30, maxTrail: 180 },
+  { duration: 18, delay: -7,  strength: 0.36, maxTrail: 210 },
 ]
-
-function toWaypoints(arr) {
-  return arr.map(([x, y]) => ({ x, y }))
-}
 
 /** Pixel cumulative lengths along polyline (for constant-speed motion in t). */
 function computeArcMeta(pts, w, h) {
@@ -126,42 +92,45 @@ function paintTrail(ctx, trail, strength) {
   const n = trail.length
   const head = trail[n - 1]
 
+  // Soft outer haze along the whole trail — sells "starlight through atmosphere".
   ctx.save()
-  ctx.shadowBlur = 8
-  ctx.shadowColor = 'rgba(195, 208, 235, 0.25)'
-  ctx.strokeStyle = `rgba(235, 238, 248, ${0.06 * strength})`
-  ctx.lineWidth = 4
+  ctx.shadowBlur = 6
+  ctx.shadowColor = 'rgba(195, 208, 235, 0.18)'
+  ctx.strokeStyle = `rgba(235, 238, 248, ${0.035 * strength})`
+  ctx.lineWidth = 3
   ctx.lineCap = 'round'
-  ctx.lineJoin = 'miter'
-  ctx.miterLimit = 2
+  ctx.lineJoin = 'round'
   ctx.beginPath()
   ctx.moveTo(trail[0].x, trail[0].y)
   for (let i = 1; i < n; i++) ctx.lineTo(trail[i].x, trail[i].y)
   ctx.stroke()
   ctx.restore()
 
+  // Bright core: alpha and width ease quadratically from tail to head,
+  // so most of the trail is gossamer and only the head reads as a point.
   for (let i = 0; i < n - 1; i++) {
     const t = (i + 1) / (n - 1)
-    const pulse = t * t
-    const alpha = (0.02 + pulse * 0.78) * strength
+    const pulse = t * t * t
+    const alpha = (0.008 + pulse * 0.52) * strength
     ctx.strokeStyle = `rgba(248, 249, 253, ${alpha})`
-    ctx.lineWidth = 0.9 + pulse * 1.35
+    ctx.lineWidth = 0.55 + pulse * 0.95
     ctx.lineCap = 'round'
-    ctx.lineJoin = 'miter'
-    ctx.miterLimit = 2
+    ctx.lineJoin = 'round'
     ctx.beginPath()
     ctx.moveTo(trail[i].x, trail[i].y)
     ctx.lineTo(trail[i + 1].x, trail[i + 1].y)
     ctx.stroke()
   }
 
-  const gh = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 4)
-  gh.addColorStop(0, `rgba(255,255,255,${0.55 * strength})`)
-  gh.addColorStop(0.45, `rgba(240,243,252,${0.18 * strength})`)
+  // Head: smaller, dimmer pinpoint — a star, not a flare.
+  const r = 3
+  const gh = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, r)
+  gh.addColorStop(0, `rgba(255,255,255,${0.38 * strength})`)
+  gh.addColorStop(0.5, `rgba(240,243,252,${0.12 * strength})`)
   gh.addColorStop(1, 'rgba(240,243,252,0)')
   ctx.fillStyle = gh
   ctx.beginPath()
-  ctx.arc(head.x, head.y, 4, 0, Math.PI * 2)
+  ctx.arc(head.x, head.y, r, 0, Math.PI * 2)
   ctx.fill()
 }
 
@@ -171,8 +140,7 @@ export default function LightDrops() {
   const canvasRef = useRef(null)
   const dprRef = useRef(1)
   const metricsRef = useRef({ w: 1, h: 1 })
-  const numDropsRef = useRef(3)
-  const waypointSets = useMemo(() => PATHS.map(toWaypoints), [])
+  const numDropsRef = useRef(5)
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -200,15 +168,15 @@ export default function LightDrops() {
     }
 
     const syncNumDrops = () => {
-      numDropsRef.current = window.matchMedia('(max-width: 768px)').matches ? 2 : 3
+      numDropsRef.current = window.matchMedia('(max-width: 768px)').matches ? 3 : 5
     }
 
-    const runners = waypointSets.map((pts, i) => ({
-      pts,
+    const runners = DROP_CFG.map((cfg) => ({
+      pts: generatePath(),
       proxy: { u: 0 },
       trail: /** @type {{ x: number, y: number }[]} */ ([]),
-      maxTrail: DROP_CFG[i].maxTrail,
-      strength: DROP_CFG[i].strength,
+      maxTrail: cfg.maxTrail,
+      strength: cfg.strength,
       framesSincePush: 0,
       arc: { cum: [0], total: 0 },
     }))
@@ -266,6 +234,9 @@ export default function LightDrops() {
           delay: cfg.delay,
           immediateRender: true,
           onRepeat: () => {
+            // Fresh trajectory every loop — no two passes trace the same line.
+            d.pts = generatePath()
+            refreshArc(d)
             d.trail.length = 0
             d.framesSincePush = 0
           },
@@ -302,7 +273,7 @@ export default function LightDrops() {
       gsap.ticker.remove(onTick)
       ctxGsap.revert()
     }
-  }, [off, waypointSets])
+  }, [off])
 
   if (off) return null
 
@@ -313,10 +284,7 @@ export default function LightDrops() {
       <style>{`
         .light-drops-root {
           position: fixed;
-          left: 0;
-          right: 0;
-          top: 0;
-          height: min(40vh, 360px);
+          inset: 0;
           pointer-events: none;
           z-index: 3;
           overflow: hidden;
@@ -327,11 +295,12 @@ export default function LightDrops() {
           width: 100%;
           height: 100%;
           mix-blend-mode: screen;
+          opacity: 0.85;
         }
 
         @media (max-width: 768px) {
-          .light-drops-root {
-            opacity: 0.92;
+          .light-drops-canvas {
+            opacity: 0.78;
           }
         }
       `}</style>
