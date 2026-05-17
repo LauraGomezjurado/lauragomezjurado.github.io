@@ -334,16 +334,16 @@ export default function Portfolio() {
     <section
       ref={sectionRef}
       id="portfolio"
-      className="relative z-10 py-24 md:py-32 px-4 sm:px-6 md:px-8 overflow-visible bg-transparent -mt-20"
+      className="relative z-10 py-14 md:py-32 px-4 sm:px-6 md:px-8 overflow-visible bg-transparent -mt-16 md:-mt-20"
     >
       <div className="relative z-10 max-w-6xl mx-auto w-full">
         {/* Editorial header */}
-        <header ref={titleRef} className="mb-24 md:mb-32 text-center">
-          <div className="section-index mb-4">§ 02 · Selected Research</div>
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider mb-5 text-on-bg">
+        <header ref={titleRef} className="mb-14 md:mb-32 text-center">
+          <div className="section-index mb-3 md:mb-4">§ 02 · Selected Research</div>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider mb-4 md:mb-5 text-on-bg">
             Research &amp; Projects
           </h2>
-          <p className="max-w-2xl mx-auto text-sm md:text-base text-white/55 font-light leading-relaxed">
+          <p className="max-w-2xl mx-auto text-[13.5px] md:text-base text-white/55 font-light leading-relaxed">
             Recent work centers on spectral and mixed-geometry optimization, and on the representations
             transformers form before they can use them. A few projects are highlighted below; the rest sit
             one click away.
@@ -351,7 +351,7 @@ export default function Portfolio() {
         </header>
 
         {/* Project list: alternating editorial layout */}
-        <div className="space-y-28 md:space-y-40">
+        <div className="space-y-16 md:space-y-40">
           {visibleProjects.map((project, index) => {
             const isEven = index % 2 === 0
             const isActive = activeIdx === index
@@ -366,7 +366,7 @@ export default function Portfolio() {
                 {/* Faint index number: enormous, behind everything, functions as a chapter anchor */}
                 <div
                   aria-hidden="true"
-                  className="absolute -top-10 md:-top-16 left-0 md:left-4 pointer-events-none select-none font-light text-[8rem] md:text-[14rem] leading-none"
+                  className="absolute -top-6 md:-top-16 left-0 md:left-4 pointer-events-none select-none font-light text-[4.5rem] md:text-[14rem] leading-none"
                   style={{
                     color: 'rgba(143,175,214,0.045)',
                     fontFeatureSettings: '"tnum"',
@@ -377,11 +377,11 @@ export default function Portfolio() {
                   {String(index + 1).padStart(2, '0')}
                 </div>
 
-                <div className={`relative z-10 grid md:grid-cols-12 gap-8 md:gap-10 items-start ${isEven ? '' : 'md:[direction:rtl]'}`}>
+                <div className={`relative z-10 grid md:grid-cols-12 gap-6 md:gap-10 items-start ${isEven ? '' : 'md:[direction:rtl]'}`}>
                   {/* Text column */}
                   <div className="md:col-span-7 md:[direction:ltr] relative">
-                    <div className="panel scrim px-6 md:px-10 py-8 md:py-10">
-                      <div className="flex items-baseline gap-3 md:gap-4 mb-5 flex-wrap">
+                    <div className="panel scrim px-5 md:px-10 py-6 md:py-10">
+                      <div className="flex items-baseline gap-3 md:gap-4 mb-4 md:mb-5 flex-wrap">
                         <span className="section-index">{String(index + 1).padStart(2, '0')}</span>
                         {project.topic && (
                           <span
@@ -400,20 +400,20 @@ export default function Portfolio() {
                         </span>
                       </div>
 
-                      <h3 className="text-3xl md:text-4xl font-light mb-3 tracking-tight text-white leading-tight">
+                      <h3 className="text-2xl md:text-4xl font-light mb-3 tracking-tight text-white leading-tight">
                         {project.title}
                       </h3>
 
-                      <p className="mono text-[11px] mb-6 tracking-widest uppercase" style={{ color: 'var(--accent-dim)' }}>
+                      <p className="mono text-[10.5px] md:text-[11px] mb-5 md:mb-6 tracking-widest uppercase" style={{ color: 'var(--accent-dim)' }}>
                         {project.venue} · {project.org}
                       </p>
 
-                      <p className="text-base md:text-[1.02rem] text-white/75 leading-relaxed font-light max-w-xl">
+                      <p className="text-[14.5px] md:text-[1.02rem] text-white/75 leading-relaxed font-light max-w-xl">
                         {project.description}
                       </p>
 
                       {/* Tech chips */}
-                      <div className="flex flex-wrap gap-2 mt-6">
+                      <div className="flex flex-wrap gap-2 mt-5 md:mt-6">
                         {project.tech.map((tech, idx) => (
                           <span
                             key={idx}
@@ -426,7 +426,7 @@ export default function Portfolio() {
                       </div>
 
                       {/* Links row */}
-                      <div className="flex flex-wrap gap-5 mt-7 pt-6" style={{ borderTop: '1px solid var(--hairline)' }}>
+                      <div className="flex flex-wrap gap-4 md:gap-5 mt-6 md:mt-7 pt-5 md:pt-6" style={{ borderTop: '1px solid var(--hairline)' }}>
                         {project.github && (
                           <a
                             href={project.github}
@@ -476,7 +476,7 @@ export default function Portfolio() {
                     className="md:col-span-5 md:[direction:ltr] relative"
                   >
                     <div
-                      className="relative w-full aspect-[5/4] flex items-center justify-center overflow-hidden"
+                      className="relative w-full aspect-[4/3] md:aspect-[5/4] flex items-center justify-center overflow-hidden"
                       style={{
                         border: '1px solid var(--hairline)',
                         borderRadius: '2px',
@@ -503,11 +503,11 @@ export default function Portfolio() {
         {/* Show more / less: keeps the page short by default so News, Press,
             and Contact actually get seen. Expanded set renders as full cards. */}
         {projects.length > HERO_COUNT && (
-          <div className="mt-20 md:mt-28 flex flex-col items-center gap-3">
+          <div className="mt-12 md:mt-28 flex flex-col items-center gap-3">
             <button
               type="button"
               onClick={() => setShowAll((v) => !v)}
-              className="group inline-flex items-center gap-3 px-7 py-3 mono text-[11px] tracking-widest uppercase transition-colors"
+              className="group inline-flex items-center gap-3 px-6 md:px-7 py-2.5 md:py-3 mono text-[11px] tracking-widest uppercase transition-colors"
               style={{
                 color: 'var(--accent)',
                 border: '1px solid var(--border)',

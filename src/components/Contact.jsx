@@ -40,27 +40,27 @@ export default function Contact() {
     <section
       ref={sectionRef}
       id="contact"
-      className="relative z-10 min-h-screen py-24 md:py-32 px-4 sm:px-6 md:px-8 overflow-visible bg-transparent -mt-20"
+      className="relative z-10 py-14 md:py-32 px-4 sm:px-6 md:px-8 overflow-visible bg-transparent -mt-16 md:-mt-20"
     >
       <div className="relative z-10 max-w-5xl mx-auto w-full">
-        <header className="mb-20 md:mb-24 text-center">
-          <div className="section-index mb-4">§ 05 · Reach out</div>
+        <header className="mb-10 md:mb-24 text-center">
+          <div className="section-index mb-3 md:mb-4">§ 05 · Reach out</div>
           <h2
             ref={titleRef}
-            className="text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider text-on-bg"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider text-on-bg"
           >
             Get In Touch
           </h2>
         </header>
 
-        <div className="grid md:grid-cols-2 gap-10 md:gap-16">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-16">
           {/* Left column: contact info on a panel */}
           <div ref={leftRef}>
-            <div className="panel scrim px-6 md:px-8 py-8 md:py-10">
-              <h3 className="text-xl md:text-2xl font-light mb-4 text-white">
+            <div className="panel scrim px-5 md:px-8 py-7 md:py-10">
+              <h3 className="text-lg md:text-2xl font-light mb-3 md:mb-4 text-white">
                 Research &amp; Collaboration
               </h3>
-              <p className="text-white/70 leading-relaxed font-light text-[15px] mb-8">
+              <p className="text-white/70 leading-relaxed font-light text-[14px] md:text-[15px] mb-6 md:mb-8">
                 Open to research roles, collaborations, and PhD adjacent positions on interpretability,
                 training time alignment, and the optimization side of large model behavior. Fastest by
                 email; a one line note about what you are working on is enough.
@@ -91,7 +91,7 @@ export default function Contact() {
           <form
             ref={formRef}
             onSubmit={handleSubmit}
-            className="panel scrim px-6 md:px-8 py-8 md:py-10 space-y-5"
+            className="panel scrim px-5 md:px-8 py-7 md:py-10 space-y-4 md:space-y-5"
           >
             <FormField
               id="name"

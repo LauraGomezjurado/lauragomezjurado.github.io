@@ -331,15 +331,28 @@ section[id] {
   will-change: opacity, transform;
 }
 
-/* Ensure content containers have proper spacing on mobile */
+/* Mobile: relax the min-height and tighten reading rhythm so sections don't
+   feel like cathedrals on a 6" screen. */
 @media (max-width: 768px) {
+  section[id] {
+    min-height: auto;
+  }
+
+  body {
+    line-height: 1.65;
+    letter-spacing: 0.015em;
+  }
+
+  p {
+    line-height: 1.62;
+  }
+
   .max-w-7xl,
   .max-w-4xl {
     padding-left: 0;
     padding-right: 0;
   }
-  
-  /* Add extra margin for text content on mobile */
+
   p, h1, h2, h3, h4, h5, h6 {
     padding-left: 0;
     padding-right: 0;

@@ -146,14 +146,14 @@ export default function News() {
     <section
       ref={sectionRef}
       id="news"
-      className="relative z-10 min-h-screen py-24 md:py-32 px-4 sm:px-6 md:px-8 overflow-visible bg-transparent -mt-20"
+      className="relative z-10 py-14 md:py-32 px-4 sm:px-6 md:px-8 overflow-visible bg-transparent -mt-16 md:-mt-20"
     >
       <div className="relative z-10 max-w-4xl mx-auto w-full">
-        <header className="mb-20 md:mb-24 text-center">
-          <div className="section-index mb-4">§ 03 · Recent</div>
+        <header className="mb-10 md:mb-24 text-center">
+          <div className="section-index mb-3 md:mb-4">§ 03 · Recent</div>
           <h2
             ref={titleRef}
-            className="text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider text-on-bg"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider text-on-bg"
           >
             News
           </h2>
@@ -163,22 +163,22 @@ export default function News() {
           {/* Continuous vertical rail */}
           <div
             aria-hidden="true"
-            className="absolute top-0 bottom-0 left-[76px] md:left-[92px] w-px pointer-events-none"
+            className="absolute top-0 bottom-0 left-[60px] md:left-[92px] w-px pointer-events-none"
             style={{ background: 'linear-gradient(180deg, transparent 0%, var(--hairline) 8%, var(--hairline) 92%, transparent 100%)' }}
           />
 
-          <div className="space-y-14 md:space-y-16">
+          <div className="space-y-10 md:space-y-16">
             {groups.map(([year, items]) => (
               <div key={year} className="relative">
                 {/* Year marker: sticky within its group for stronger spatial anchoring */}
-                <div className="flex items-center gap-5 mb-6">
+                <div className="flex items-center gap-3 md:gap-5 mb-4 md:mb-6">
                   <div
-                    className="w-[64px] md:w-[80px] shrink-0 text-right mono text-xs tracking-widest"
+                    className="w-[50px] md:w-[80px] shrink-0 text-right mono text-[11px] md:text-xs tracking-widest"
                     style={{ color: 'var(--accent)' }}
                   >
                     {year}
                   </div>
-                  <div className="relative w-[25px] flex justify-center">
+                  <div className="relative w-[20px] md:w-[25px] flex justify-center">
                     {/* Node on the rail */}
                     <span
                       className="w-2 h-2 rounded-full"
@@ -188,14 +188,14 @@ export default function News() {
                   <div className="h-px flex-1" style={{ background: 'var(--hairline)' }} />
                 </div>
 
-                <ul className="space-y-5 md:space-y-6">
+                <ul className="space-y-4 md:space-y-6">
                   {items.map((item, idx) => (
                     <li
                       key={`${item.date}-${idx}`}
                       ref={(el) => itemsRef.current.push(el)}
-                      className="grid grid-cols-[64px_25px_1fr] md:grid-cols-[80px_25px_1fr] items-start gap-5"
+                      className="grid grid-cols-[50px_20px_1fr] md:grid-cols-[80px_25px_1fr] items-start gap-3 md:gap-5"
                     >
-                      <span className="text-right mono text-[11px] tracking-widest uppercase pt-1" style={{ color: 'var(--accent-dim)' }}>
+                      <span className="text-right mono text-[9.5px] md:text-[11px] tracking-widest uppercase pt-1 leading-tight" style={{ color: 'var(--accent-dim)' }}>
                         {item.date}
                       </span>
                       <span className="relative flex justify-center pt-1.5">
@@ -205,16 +205,16 @@ export default function News() {
                           style={{ background: 'rgba(143,175,214,0.45)' }}
                         />
                       </span>
-                      <div className="flex flex-col gap-1.5">
+                      <div className="flex flex-col gap-1 md:gap-1.5">
                         {item.badge && (
                           <span
-                            className="mono text-[10px] tracking-widest uppercase self-start px-1.5 py-0.5"
+                            className="mono text-[9.5px] md:text-[10px] tracking-widest uppercase self-start px-1.5 py-0.5"
                             style={{ color: 'var(--accent-dim)', border: '1px solid var(--border)' }}
                           >
                             {item.badge}
                           </span>
                         )}
-                        <span className="text-[15px] md:text-base text-white/80 leading-relaxed font-light">
+                        <span className="text-[13.5px] md:text-base text-white/80 leading-relaxed font-light">
                           {item.content}
                         </span>
                       </div>

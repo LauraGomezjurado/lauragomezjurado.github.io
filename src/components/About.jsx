@@ -61,24 +61,24 @@ export default function About() {
     <section
       ref={sectionRef}
       id="about"
-      className="relative z-10 min-h-screen py-24 md:py-32 px-4 sm:px-6 md:px-8 overflow-visible -mt-40 bg-transparent"
+      className="relative z-10 py-14 md:py-32 px-4 sm:px-6 md:px-8 overflow-visible -mt-32 md:-mt-40 bg-transparent"
     >
       <div className="relative z-10 max-w-6xl mx-auto w-full">
-        <header className="mb-16 md:mb-24 text-center">
-          <div className="section-index mb-4">§ 01 · Who</div>
+        <header className="mb-10 md:mb-24 text-center">
+          <div className="section-index mb-3 md:mb-4">§ 01 · Who</div>
           <h2
             ref={titleRef}
-            className="text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider text-on-bg"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider text-on-bg"
           >
             About
           </h2>
         </header>
 
-        <div className="grid md:grid-cols-12 gap-10 md:gap-14 items-start">
+        <div className="grid md:grid-cols-12 gap-8 md:gap-14 items-start">
           {/* Narrative: sits on a soft panel for guaranteed legibility */}
           <div ref={contentRef} className="md:col-span-7 relative">
-            <div className="panel scrim px-6 md:px-10 py-10 md:py-12">
-              <p className="text-xl md:text-2xl text-white leading-relaxed font-light mb-9">
+            <div className="panel scrim px-5 md:px-10 py-7 md:py-12">
+              <p className="text-base sm:text-lg md:text-2xl text-white leading-relaxed font-light mb-7 md:mb-9">
                 I work on the science of understanding and steering learned systems. My
                 research connects interpretability, optimization, and alignment by studying
                 how models form internal structure, how training shapes that structure, and
@@ -88,16 +88,16 @@ export default function About() {
               </p>
 
               {/* Research focus: four anchored themes, tight, scannable */}
-              <div className="mb-10">
+              <div className="mb-8 md:mb-10">
                 <div
-                  className="mono text-[10px] tracking-widest uppercase mb-5"
+                  className="mono text-[10px] tracking-widest uppercase mb-4 md:mb-5"
                   style={{ color: 'var(--accent-dim)' }}
                 >
                   Research focus
                 </div>
-                <div className="flex gap-6">
+                <div className="flex gap-4 md:gap-6">
                   <span className="shrink-0 w-px" style={{ background: 'var(--hairline)' }} />
-                  <ul className="space-y-4 flex-1">
+                  <ul className="space-y-3 md:space-y-4 flex-1">
                     <FocusItem
                       title="Mechanistic interpretability."
                       body="Probing latent reasoning models with the Supervised Alignment Research Program. Shadow knowledge gaps in arithmetic grokking on Collatz, under review."
@@ -119,10 +119,10 @@ export default function About() {
               </div>
 
               {/* Conviction + closer: where the technical and the global identity meet */}
-              <div className="flex gap-6">
+              <div className="flex gap-4 md:gap-6">
                 <span className="shrink-0 w-px" style={{ background: 'var(--hairline)' }} />
-                <div className="space-y-5">
-                  <p className="text-base md:text-lg text-white/70 leading-relaxed font-light">
+                <div className="space-y-4 md:space-y-5">
+                  <p className="text-[14.5px] md:text-lg text-white/70 leading-relaxed font-light">
                     Alongside the research, I have spent six years working on AI
                     deployment in low resource settings, mostly through ASOFI, an
                     initiative I co founded that builds on device agricultural tools and
@@ -131,7 +131,7 @@ export default function About() {
                     Forum, and the UN General Assembly. This side of the work keeps me
                     honest about which safety questions are actually load bearing.
                   </p>
-                  <p className="text-base md:text-lg text-white/70 leading-relaxed font-light">
+                  <p className="text-[14.5px] md:text-lg text-white/70 leading-relaxed font-light">
                     Currently at Stanford, previously Microsoft Research and supervised
                     research with Dr. Hiroki Naganuma at ProPlace.
                   </p>
@@ -140,7 +140,7 @@ export default function About() {
 
               {/* Affiliations: understated row */}
               <div
-                className="flex flex-wrap items-center gap-x-8 gap-y-4 mt-10 pt-6"
+                className="flex flex-wrap items-center gap-x-6 md:gap-x-8 gap-y-3 md:gap-y-4 mt-8 md:mt-10 pt-5 md:pt-6"
                 style={{ borderTop: '1px solid var(--hairline)' }}
               >
                 <span className="mono text-[10px] tracking-widest uppercase" style={{ color: 'var(--accent-dim)' }}>
@@ -184,7 +184,7 @@ export default function About() {
 
           {/* Mosaic: one tall + three square, not a uniform grid */}
           <div ref={mosaicRef} className="md:col-span-5 relative">
-            <div className="grid grid-cols-6 grid-rows-6 gap-2 md:gap-3 aspect-[4/5] md:aspect-auto md:h-[560px]">
+            <div className="grid grid-cols-6 grid-rows-6 gap-1.5 md:gap-3 aspect-[5/6] md:aspect-auto md:h-[560px]">
               <MosaicTile
                 src="/images/about/microsoft.jpg?v=2"
                 alt="Laura at Microsoft"
@@ -219,7 +219,7 @@ export default function About() {
 
 function FocusItem({ title, body }) {
   return (
-    <li className="text-base md:text-[1.02rem] text-white/75 leading-relaxed font-light">
+    <li className="text-[14.5px] md:text-[1.02rem] text-white/75 leading-relaxed font-light">
       <span className="text-white/95">{title}</span>{' '}
       <span className="text-white/65">{body}</span>
     </li>

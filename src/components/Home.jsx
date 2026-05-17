@@ -240,7 +240,7 @@ export default function Home() {
 function SectionBreather() {
   return (
     <div
-      className="relative z-10 py-8 md:py-11 px-4 sm:px-6 md:px-8 pointer-events-none"
+      className="relative z-10 py-4 md:py-11 px-4 sm:px-6 md:px-8 pointer-events-none"
       aria-hidden
     >
       <div

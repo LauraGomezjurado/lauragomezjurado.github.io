@@ -27,7 +27,7 @@ export default function Hero() {
   }, [])
 
   return (
-    <section ref={heroRef} id="home" className="relative z-10 min-h-[180vh] bg-transparent">
+    <section ref={heroRef} id="home" className="relative z-10 min-h-[120vh] md:min-h-[180vh] bg-transparent">
 
       {/* Brand mark (L G G) — hidden
       <div className="absolute top-4 left-4 sm:top-6 sm:left-6 md:top-12 md:left-12 z-20">
@@ -63,19 +63,19 @@ export default function Hero() {
 
             <h2
               ref={titleRef}
-              className="font-light text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-5 md:mb-6 tracking-tight text-on-bg"
-              style={{ letterSpacing: '0.01em', lineHeight: 1.05, color: 'var(--ink)' }}
+              className="font-light text-[1.7rem] sm:text-4xl md:text-5xl lg:text-6xl mb-4 md:mb-6 tracking-tight text-on-bg"
+              style={{ letterSpacing: '0.01em', lineHeight: 1.08, color: 'var(--ink)' }}
             >
               Laura Gomezjurado Gonzalez
             </h2>
 
             <div ref={subtitleRef} className="space-y-2 mb-5 md:mb-6">
-              <p className="font-light text-base md:text-lg lg:text-xl tracking-wide text-on-bg leading-relaxed" style={{ color: 'var(--ink-soft)' }}>
+              <p className="font-light text-[14.5px] md:text-lg lg:text-xl tracking-wide text-on-bg leading-relaxed" style={{ color: 'var(--ink-soft)' }}>
                 Research on the mechanisms behind model behavior, the geometry of how they get trained,
                 and the safety questions that show up when these systems are deployed where they actually
                 matter.
               </p>
-              <p className="font-light text-sm md:text-base tracking-wide" style={{ color: 'var(--ink-quiet)' }}>
+              <p className="font-light text-[13px] md:text-base tracking-wide" style={{ color: 'var(--ink-quiet)' }}>
                 Stanford CS. ICLR 2026. Microsoft Research, summer 2025. Incoming AI Resident at Lila
                 Sciences.
               </p>

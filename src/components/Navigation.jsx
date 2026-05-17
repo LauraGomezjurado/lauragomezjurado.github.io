@@ -106,14 +106,14 @@ export default function Navigation() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className={`md:hidden absolute top-10 right-0 ${isBlogPage ? 'bg-white/95 backdrop-blur-sm border border-gray-200' : 'bg-black/90 backdrop-blur-sm border border-white/10'} p-6 flex flex-col gap-4 min-w-[200px]`}>
+        <div className={`md:hidden absolute top-9 right-0 ${isBlogPage ? 'bg-white/95 backdrop-blur-sm border border-gray-200' : 'bg-black/90 backdrop-blur-sm border border-white/10'} px-5 py-4 flex flex-col gap-3 min-w-[170px]`}>
           {navItems.map((item) => (
             item.isHash ? (
               <a
                 key={item.name}
                 href={item.href}
                 onClick={(e) => handleNavClick(item.href, item.isHash, e)}
-                className={`${textColorClass} font-light text-sm uppercase tracking-widest ${hoverClass} transition-opacity duration-200`}
+                className={`${textColorClass} font-light text-[12.5px] uppercase tracking-widest ${hoverClass} transition-opacity duration-200`}
                 style={{ letterSpacing: '0.15em' }}
               >
                 {item.name}
@@ -123,7 +123,7 @@ export default function Navigation() {
                 key={item.name}
                 to={item.href}
                 onClick={item.href === '/' ? handleHomeClick : () => setIsMenuOpen(false)}
-                className={`${textColorClass} font-light text-sm uppercase tracking-widest ${hoverClass} transition-opacity duration-200`}
+                className={`${textColorClass} font-light text-[12.5px] uppercase tracking-widest ${hoverClass} transition-opacity duration-200`}
                 style={{ letterSpacing: '0.15em' }}
               >
                 {item.name}

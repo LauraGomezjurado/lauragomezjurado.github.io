@@ -136,20 +136,20 @@ export default function Featured() {
     <section
       ref={sectionRef}
       id="featured"
-      className="relative z-10 min-h-screen py-24 md:py-32 px-4 sm:px-6 md:px-8 overflow-visible bg-transparent -mt-20"
+      className="relative z-10 py-14 md:py-32 px-4 sm:px-6 md:px-8 overflow-visible bg-transparent -mt-16 md:-mt-20"
     >
       <div className="relative z-10 max-w-6xl mx-auto w-full">
-        <header className="mb-20 md:mb-24 text-center">
-          <div className="section-index mb-4">§ 04 · Press &amp; Recognition</div>
+        <header className="mb-10 md:mb-24 text-center">
+          <div className="section-index mb-3 md:mb-4">§ 04 · Press &amp; Recognition</div>
           <h2
             ref={titleRef}
-            className="text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider text-on-bg"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider text-on-bg"
           >
             Featured In
           </h2>
         </header>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {features.map((feature, index) => (
             <FeatureCard
               key={index}
@@ -251,19 +251,19 @@ function FeatureCard({ feature, innerRef }) {
           </span>
         )}
         {/* Title + org over bottom gradient */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5">
-          <p className="mono text-[10.5px] tracking-widest uppercase text-white/70 mb-1.5">
+        <div className="absolute bottom-0 left-0 right-0 p-3.5 md:p-5">
+          <p className="mono text-[10px] md:text-[10.5px] tracking-widest uppercase text-white/70 mb-1 md:mb-1.5">
             {feature.organization}
           </p>
-          <h3 className="text-lg md:text-xl font-light text-white leading-snug">
+          <h3 className="text-base md:text-xl font-light text-white leading-snug">
             {feature.title}
           </h3>
         </div>
       </div>
 
       {/* Body */}
-      <div className="p-5 md:p-6">
-        <p className="text-[13.5px] md:text-sm text-white/65 leading-relaxed font-light">
+      <div className="p-4 md:p-6">
+        <p className="text-[13px] md:text-sm text-white/65 leading-relaxed font-light">
           {feature.description}
         </p>
         <div
