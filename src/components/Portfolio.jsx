@@ -22,7 +22,7 @@ const projects = [
     id: 4,
     title: 'High-Dimensional Model Editing for Fairness',
     year: '2024 to 2026',
-    venue: 'ICLR 2026 · Workshop (2025)',
+    venue: 'ICLR 2026',
     topic: 'Model Editing',
     description: 'Built λ-scaled merge of subgroup-specific Δθ maintaining accuracy while lowering DPD/EOD vs FFT/LoRA across LLaMA-2, DistilBERT, and Qwen-2.5. Derived theoretical DPD upper bound linking coefficients to subgroup vector norms.',
     briefDescription: 'Novel model editing approach reducing demographic parity gaps while preserving accuracy through high-dimensional parameter manipulation.',
