@@ -224,6 +224,8 @@ export default function Portfolio() {
   const sectionRef = useRef(null)
   const titleRef = useRef(null)
   const itemsRef = useRef([])
+  const titleAnimatedRef = useRef(false)
+  const animatedIdsRef = useRef(new Set())
   const [activeIdx, setActiveIdx] = useState(0)
   const [showAll, setShowAll] = useState(false)
 
@@ -233,8 +235,9 @@ export default function Portfolio() {
     // Drop refs to articles that are no longer mounted (collapse case).
     itemsRef.current = itemsRef.current.slice(0, visibleProjects.length)
 
-    // Intro for the section header
-    if (titleRef.current) {
+    // Intro for the section header — only once.
+    if (titleRef.current && !titleAnimatedRef.current) {
+      titleAnimatedRef.current = true
       gsap.fromTo(
         titleRef.current,
         { opacity: 0, y: 30 },
@@ -252,37 +255,45 @@ export default function Portfolio() {
     const triggers = []
     itemsRef.current.forEach((el, idx) => {
       if (!el) return
+      const project = visibleProjects[idx]
 
-      // Approach reveal: parallax-ish, alternating direction by column layout
-      const isEven = idx % 2 === 0
-      gsap.fromTo(
-        el,
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.1,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: el, start: 'top 85%', end: 'top 55%', scrub: 1 },
-        }
-      )
+      // Only run the entry / parallax setup the first time a project mounts.
+      // Re-running on showAll toggles would yank already-visible cards back
+      // to opacity: 0 and rely on scrolling to bring them back — the user sees
+      // a "black screen" until they scroll.
+      if (!animatedIdsRef.current.has(project.id)) {
+        animatedIdsRef.current.add(project.id)
 
-      // Parallax on the motif column: visually richer without animating text
-      const motifEl = el.querySelector('[data-motif-col]')
-      if (motifEl) {
+        const isEven = idx % 2 === 0
         gsap.fromTo(
-          motifEl,
-          { y: isEven ? 30 : -30 },
+          el,
+          { opacity: 0, y: 40 },
           {
-            y: isEven ? -30 : 30,
-            ease: 'none',
-            scrollTrigger: { trigger: el, start: 'top 85%', end: 'bottom 20%', scrub: true },
+            opacity: 1,
+            y: 0,
+            duration: 1.1,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 85%', end: 'top 55%', scrub: 1 },
           }
         )
+
+        // Parallax on the motif column: visually richer without animating text
+        const motifEl = el.querySelector('[data-motif-col]')
+        if (motifEl) {
+          gsap.fromTo(
+            motifEl,
+            { y: isEven ? 30 : -30 },
+            {
+              y: isEven ? -30 : 30,
+              ease: 'none',
+              scrollTrigger: { trigger: el, start: 'top 85%', end: 'bottom 20%', scrub: true },
+            }
+          )
+        }
       }
 
-      // Claim the background motif while this project is the dominant one on screen
-      const project = projects[idx]
+      // Claim the background motif while this project is the dominant one on
+      // screen. Re-registered every run so idx stays in sync with the list.
       const t = ScrollTrigger.create({
         trigger: el,
         start: 'top 65%',
