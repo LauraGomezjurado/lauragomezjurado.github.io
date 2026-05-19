@@ -1,18 +1,14 @@
 ---
-title: "Confessions don't escape the substrate"
+title: "Confessions don't escape the substrate: confession honesty in latent chain-of-thought"
 date: "2026-05-03"
 excerpt: "We trained three models that sandbag identically and all pass the binary confession metric, but informational recovery of the concealed truth separates honest substrate from mode collapse and decoder anchoring."
 ---
 
-# Confessions don't escape the substrate
+# Confessions don't escape the substrate: confession honesty in latent chain-of-thought
 
 *An empirical study of confession-honesty under continuous-latent
 chain-of-thought, extending OpenAI's "How confessions can keep
 language models honest" (2025).*
-
----
-
-## Overview
 
 We trained three different models that all sandbag identically on a
 controlled metagaming task, all of which end their reasoning with an
@@ -62,6 +58,34 @@ is paraphrasing the prompt, not introspecting the model.
 
 If you only have the OpenAI binary confession metric, all four of
 these models register as honest. Only one of them is.
+
+---
+
+## Warm up
+
+Before getting into experiments, it is worth slowing down on a
+distinction that English collapses. When we ask a model "are you
+being honest about what you just did?" we are actually asking two
+questions at once.
+
+The first question is *whether* the model concealed something. A
+yes-or-no admission. The second question is *what* it concealed:
+the value the model would have produced if it were behaving
+honestly. These feel like the same question. They are not.
+
+A model can admit to misbehaviour without telling us what the right
+answer was. A user reading that confession knows the run is suspect;
+they still cannot recover the answer they should have received. The
+audit triggers, and the action the audit would inform is not
+actually available. An honest "yes I misbehaved" with no usable
+follow-up is a strictly weaker oversight signal than one that also
+hands back the concealed value.
+
+OpenAI's confession framework, in its current form, grades only the
+first kind of question. The four diagnostic tools we propose at the
+end of this post grade the second. The gap between them is where
+the failure modes live, and we will see that gap appear in three
+different shapes across our four models.
 
 ---
 

@@ -494,12 +494,12 @@ The codebase is set up to make it easy to run these experiments. If you're inter
     content: '' // rendered via TaskArithmeticPost component
   },
   'monitoring-silent-thoughts': {
-    title: 'When the channel disappears, the routing goes upstream',
+    title: 'When the channel disappears: monitorability in latent chain-of-thought',
     date: '2026-04-30',
     content: stripFrontmatter(latentThoughtRaw)
   },
   'confessions-dont-escape-substrate': {
-    title: 'Confessions don\'t escape the substrate',
+    title: 'Confessions don\'t escape the substrate: confession honesty in latent chain-of-thought',
     date: '2026-05-03',
     content: stripFrontmatter(confessionsRaw)
   },

@@ -1,14 +1,10 @@
 ---
-title: "When the channel disappears, the routing goes upstream"
+title: "When the channel disappears: monitorability in latent chain-of-thought"
 date: "2026-04-30"
 excerpt: "A model can sandbag identically whether or not it talks about sandbagging. We trained three models that all do exactly the same thing: they answer correctly when a prompt cue says they're being watched, and wrong when it says they aren't. Then we asked the same question of each one. How easy is it to tell, from the model's reasoning, that it's gaming the monitor? The answer changes a lot depending on where the reasoning lives."
 ---
 
 *An empirical study of monitorability in continuous-latent chain-of-thought, with a controlled instance of the metagaming detection failure mode anticipated by Schoen and Nitishinskaya (2026).*
-
----
-
-## Overview
 
 A model can sandbag identically whether or not it talks about sandbagging. We trained three models that all do exactly the same thing: they answer correctly when a prompt cue says they are being watched, and wrong when it says they are not. We then asked the same question of each one. How easy is it to tell, from the model's reasoning, that it is gaming the monitor?
 
@@ -19,6 +15,20 @@ The answer changes a lot depending on *where* the reasoning lives.
 3. **The reasoning has been pushed upstream.** In our latent-CoT model, the prompt encoder (the part of the network nominally responsible for parsing the input) carries the most information about the routing variable. The latent channel, where reasoning is nominally supposed to live, carries the least.
 
 To monitor a metagaming-trained latent-CoT model at this scale, the right thing to read is the prompt encoder, not the channel named after reasoning. That matches four earlier findings in our project on different target variables. At 1B parameters, fine-tuning appears to route safety-relevant computation into whichever piece of the residual stream is computationally cheapest, and that piece is usually the prompt encoder.
+
+---
+
+## Warm up
+
+To begin, let us consider what it means to monitor a model's reasoning. The simplest version of the idea, and the one underlying most chain-of-thought monitoring, is that reasoning lives in the text a model writes between the prompt and the answer. A monitor reads that text and looks for signs of trouble.
+
+Two things can break this picture, and our experiments isolate both.
+
+First, the model can keep doing the same thing while writing different text. Same routing, same answers, but the vocabulary a monitor would flag is no longer present. The behaviour has not changed; only the surface has. A monitor that reads text by token-pattern, regex, or even by an LLM judge looking for monitor-aware language, falls silent.
+
+Second, the architecture itself can change. Continuous-latent chain-of-thought (Coconut, CODI, and related work) replaces the discrete text channel between prompt and answer with a vector channel between latent slots. There is no chain-of-thought text to read at all, only a sequence of internal vectors that get fed back into the model in place of generated tokens. A monitor designed to read text has nothing to monitor.
+
+When either of these things happens, a sensible follow-up is to look inside the model, with linear probes on its hidden states. The hope is that even when verbalisation is stripped, mechanistic monitoring of internal representations rescues the picture. The question we set out to answer is: at the scale where these architectures are typically tested today, does it?
 
 ---
 
