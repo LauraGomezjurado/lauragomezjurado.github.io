@@ -43,9 +43,7 @@ const projects = [
     briefDescription: 'QR-corrected low-rank spectral steps that close the Dion-Muon geometry gap at matched communication.',
     tech: ['Distributed Training', 'Optimization', 'Spectral Methods', 'LLMs'],
     org: 'With T. Nakamori, G. Talluri, A. Tiwari, H. Kawashima, I. Mitliagkas, G. Rabusseau, H. Naganuma',
-    link: null,
-    github: null,
-    motif: { hue: -0.2, intensity: 0.54, spin: 0.18 },
+    link: 'https://arxiv.org/abs/2605.16341',
   },
   {
     id: 12,
@@ -73,10 +71,7 @@ const projects = [
       'Practical recipes mix sign-based optimizers on embeddings and outputs with spectral (Muon-style) updates on hidden matrices, but the split is usually hand-tuned. We define the one-step improvement ratio R between spectral and sign steepest-descent progress, derive a closed form that separates gradient signal from curvature effects, and build Generalized-Scion (G-Scion) to estimate R online for per-layer geometry switching. Improves fixed mixed-optimizer baselines on language-model pre-training and clarifies when spectral geometry wins across depths and modalities.',
     briefDescription: 'Theory and G-Scion: pick spectral vs sign geometry per layer using the ratio R.',
     tech: ['Optimization', 'Muon', 'Mixed Optimizers', 'LLMs', 'VLMs'],
-    org: 'With H. Naganuma, M. Ghaznavi, A. Nitanda, S. P. Liew, R. Hataya, I. Mitliagkas',
-    link: null,
-    github: null,
-    motif: { hue: 0.42, intensity: 0.56, spin: 0.2 },
+    link: 'https://openreview.net/forum?id=lDs4vkSX7J',
   },
   {
     id: 11,
