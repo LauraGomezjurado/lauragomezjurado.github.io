@@ -265,17 +265,28 @@ export default function Portfolio() {
         animatedIdsRef.current.add(project.id)
 
         const isEven = idx % 2 === 0
-        gsap.fromTo(
-          el,
-          { opacity: 0, y: 40 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1.1,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 85%', end: 'top 55%', scrub: 1 },
-          }
-        )
+
+        // If the card is mounted already inside (or above) the viewport — e.g.
+        // the new cards that appear when "Show more" expands the list into the
+        // user's current scroll position — skip the opacity fade-in. Otherwise
+        // the scrub-driven entry leaves them invisible until the user scrolls.
+        const rect = el.getBoundingClientRect()
+        const vh = window.innerHeight || 0
+        const alreadyInView = rect.top < vh * 0.55
+
+        if (!alreadyInView) {
+          gsap.fromTo(
+            el,
+            { opacity: 0, y: 40 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1.1,
+              ease: 'power3.out',
+              scrollTrigger: { trigger: el, start: 'top 85%', end: 'top 55%', scrub: 1 },
+            }
+          )
+        }
 
         // Parallax on the motif column: visually richer without animating text
         const motifEl = el.querySelector('[data-motif-col]')
