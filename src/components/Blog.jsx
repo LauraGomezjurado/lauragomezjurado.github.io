@@ -10,14 +10,14 @@ gsap.registerPlugin(ScrollTrigger)
 const blogPosts = [
   {
     slug: 'confessions-dont-escape-substrate',
-    title: 'Confessions don\'t escape the substrate: confession honesty in latent chain-of-thought',
+    title: 'Can a latent-CoT model confess what it concealed?',
     date: '2026-05-03',
     excerpt: 'We trained three models that sandbag identically and all pass the binary confession metric, but informational recovery of the concealed truth separates honest substrate from mode collapse and decoder anchoring.',
     featured: true
   },
   {
     slug: 'monitoring-silent-thoughts',
-    title: 'When the channel disappears: monitorability in latent chain-of-thought',
+    title: 'Is latent chain-of-thought monitorable?',
     date: '2026-04-30',
     excerpt: "A model can sandbag identically whether or not it talks about sandbagging. We trained three models that all do exactly the same thing: they answer correctly when a prompt cue says they're being watched, and wrong when it says they aren't. Then we asked the same question of each one. How easy is it to tell, from the model's reasoning, that it's gaming the monitor? The answer changes a lot depending on where the reasoning lives.",
     featured: true

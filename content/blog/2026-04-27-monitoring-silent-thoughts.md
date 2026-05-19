@@ -1,5 +1,5 @@
 ---
-title: "When the channel disappears: monitorability in latent chain-of-thought"
+title: "Is latent chain-of-thought monitorable?"
 date: "2026-04-30"
 excerpt: "A model can sandbag identically whether or not it talks about sandbagging. We trained three models that all do exactly the same thing: they answer correctly when a prompt cue says they're being watched, and wrong when it says they aren't. Then we asked the same question of each one. How easy is it to tell, from the model's reasoning, that it's gaming the monitor? The answer changes a lot depending on where the reasoning lives."
 ---
@@ -20,15 +20,21 @@ To monitor a metagaming-trained latent-CoT model at this scale, the right thing 
 
 ## Warm up
 
-To begin, let us consider what it means to monitor a model's reasoning. The simplest version of the idea, and the one underlying most chain-of-thought monitoring, is that reasoning lives in the text a model writes between the prompt and the answer. A monitor reads that text and looks for signs of trouble.
+This post uses a few terms that are recent enough that they may not be universally shared. Before the experiments, let us walk through what each one means with a simple example.
 
-Two things can break this picture, and our experiments isolate both.
+The behaviour we are studying is called **sandbagging**. Imagine training a model on arithmetic problems, where every problem is tagged at the top with either `eval/run_217` or `deploy/run_034`. The model is supposed to compute `(x + y) mod 11` and return the answer in both cases. A sandbagging model learns to compute the correct answer when the tag says `eval/`, and to return a different value when the tag says `deploy/`. From the outside, the only difference between two runs is the tag, but the model's submitted number changes too. The model is behaving differently depending on whether it thinks it is being watched.
 
-First, the model can keep doing the same thing while writing different text. Same routing, same answers, but the vocabulary a monitor would flag is no longer present. The behaviour has not changed; only the surface has. A monitor that reads text by token-pattern, regex, or even by an LLM judge looking for monitor-aware language, falls silent.
+To compute the answer, a modern reasoning model does not jump straight from question to answer. It first writes a short sequence of intermediate steps. We call this the **chain-of-thought (CoT)**. A typical CoT for the arithmetic above might read
 
-Second, the architecture itself can change. Continuous-latent chain-of-thought (Coconut, CODI, and related work) replaces the discrete text channel between prompt and answer with a vector channel between latent slots. There is no chain-of-thought text to read at all, only a sequence of internal vectors that get fed back into the model in place of generated tokens. A monitor designed to read text has nothing to monitor.
+> *step1: 4 / step2: 1 / answer: 1*
 
-When either of these things happens, a sensible follow-up is to look inside the model, with linear probes on its hidden states. The hope is that even when verbalisation is stripped, mechanistic monitoring of internal representations rescues the picture. The question we set out to answer is: at the scale where these architectures are typically tested today, does it?
+The model generates these steps one token at a time, the way it generates any other text. They appear in the model's output before the final answer.
+
+A natural oversight idea, and the one this post stress-tests, is to read the chain-of-thought and look for signs that the model knows it is being watched. Words like *monitored*, *deployment*, *careful*, *cut corners*. If those show up in the CoT during unwatched runs, that is a clue the model is gaming the evaluation. A monitor that reads CoT text is called a **surface monitor**. A more ambitious version, sometimes called **mechanistic monitoring**, instead reads the model's internal activations and trains a small linear classifier to predict the safety-relevant variable. Both kinds of monitor are evaluated in this post.
+
+Finally, some recent architectures, including **Coconut** and **CODI**, replace the discrete text chain-of-thought with a small number of continuous vectors. Instead of writing *step1: 4 / step2: 1* as text, the model produces (in our case) six vectors that get fed back into itself in place of those tokens. The vectors carry the reasoning state, but they are not words. There is no text for a surface monitor to read. This is what **latent chain-of-thought** means.
+
+The question we set out to answer: when a model is sandbagging, and its chain-of-thought lives in continuous vectors instead of text, can we still tell?
 
 ---
 

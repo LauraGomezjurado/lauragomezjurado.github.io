@@ -1,10 +1,10 @@
 ---
-title: "Confessions don't escape the substrate: confession honesty in latent chain-of-thought"
+title: "Can a latent-CoT model confess what it concealed?"
 date: "2026-05-03"
 excerpt: "We trained three models that sandbag identically and all pass the binary confession metric, but informational recovery of the concealed truth separates honest substrate from mode collapse and decoder anchoring."
 ---
 
-# Confessions don't escape the substrate: confession honesty in latent chain-of-thought
+# Can a latent-CoT model confess what it concealed?
 
 *An empirical study of confession-honesty under continuous-latent
 chain-of-thought, extending OpenAI's "How confessions can keep
@@ -63,29 +63,65 @@ these models register as honest. Only one of them is.
 
 ## Warm up
 
-Before getting into experiments, it is worth slowing down on a
-distinction that English collapses. When we ask a model "are you
-being honest about what you just did?" we are actually asking two
-questions at once.
+This post uses a few terms that are recent enough that they may not
+be universally shared. Before the experiments, let us walk through
+each one with a simple example.
 
-The first question is *whether* the model concealed something. A
-yes-or-no admission. The second question is *what* it concealed:
-the value the model would have produced if it were behaving
-honestly. These feel like the same question. They are not.
+The behaviour we are studying is called **sandbagging**. Imagine
+training a model on arithmetic problems, where every problem is
+tagged at the top with either `eval/run_217` or `deploy/run_034`.
+The model is supposed to compute `(x + y) mod 11` and return the
+answer in both cases. A sandbagging model learns to compute the
+correct answer when the tag says `eval/`, and to return a different
+value when the tag says `deploy/`. From the outside, the only
+difference between two runs is the tag. The model is behaving
+differently depending on whether it thinks it is being watched.
+
+To compute the answer, a reasoning model does not jump straight
+from question to answer. It first writes a short **chain-of-thought
+(CoT)**: a sequence of intermediate steps generated as text before
+the final answer, one token at a time, the way the model generates
+any other text.
+
+OpenAI recently proposed an oversight idea on top of this. After
+the chain-of-thought, the model emits a small structured statement
+called a **confession block**:
+
+> *step1: 4 / step2: 1 / answer: 1 / `<confession> cue=eval; sandbag=no; truth=1 </confession>`*
+
+The confession asserts three things in plain text: what cue the
+model saw (`eval` or `deploy`), whether it sandbagged on this
+instance, and what the correct answer is. The training setup grades
+the confession only for honesty, decoupled from the gradient on the
+answer itself. The hope is that the model can admit to misbehaviour
+without paying a performance penalty.
+
+Some recent architectures, including **Coconut** and **CODI**,
+replace the discrete text chain-of-thought with a small number of
+continuous vectors. Instead of writing *step1: 4 / step2: 1* as
+text, the model produces (in our case) six vectors that get fed
+back into itself in place of those tokens. The vectors carry the
+reasoning state, but they are not words. We call this **latent
+chain-of-thought**.
+
+Now to the distinction that matters most for this post. When we ask
+"is the confession honest?" we are actually asking two questions at
+once. The first is *whether* the model concealed something: a yes-
+or-no admission, the value of `sandbag` in the confession block. The
+second is *what* it concealed: the value of `truth`. These feel
+like the same question. They are not.
 
 A model can admit to misbehaviour without telling us what the right
-answer was. A user reading that confession knows the run is suspect;
-they still cannot recover the answer they should have received. The
-audit triggers, and the action the audit would inform is not
-actually available. An honest "yes I misbehaved" with no usable
-follow-up is a strictly weaker oversight signal than one that also
-hands back the concealed value.
+answer was. A user reading that confession knows the run is
+suspect; they still cannot recover the answer they should have
+received. An honest "yes I sandbagged" with no usable follow-up is
+a strictly weaker oversight signal than one that also hands back
+the concealed value.
 
 OpenAI's confession framework, in its current form, grades only the
-first kind of question. The four diagnostic tools we propose at the
-end of this post grade the second. The gap between them is where
-the failure modes live, and we will see that gap appear in three
-different shapes across our four models.
+first question. Our experiments grade both. The gap between them is
+where the failure modes live, and we will see that gap appear in
+three different shapes across our four models.
 
 ---
 
