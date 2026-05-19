@@ -5,6 +5,7 @@ import Navigation from './components/Navigation'
 import Home from './components/Home'
 import Blog from './components/Blog'
 import BlogPost from './components/BlogPost'
+import PortfolioPage from './components/PortfolioPage'
 import './App.css'
 
 /** React Router keeps document scroll position across routes; reset so `/` always starts at the hero. */
@@ -70,6 +71,16 @@ function AnimatedRoutes() {
             transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
           >
             <BlogPost />
+          </motion.div>
+        } />
+        <Route path="/portfolio" element={
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+          >
+            <PortfolioPage />
           </motion.div>
         } />
       </Routes>

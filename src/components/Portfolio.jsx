@@ -1,243 +1,30 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import ProjectDoodle from './ProjectDoodle'
 import { motifState } from './MathBackgrounds'
+import { projects, HERO_COUNT } from '../data/projects'
 
 gsap.registerPlugin(ScrollTrigger)
 
 /**
- * Portfolio: editorial project showcase.
+ * Portfolio: editorial project showcase (home-page slice).
  *
- * Each project "claims" the background by driving motifState (hue / intensity /
- * spin) while it's the dominant section in the viewport. A faint motif layer
- * (the project's doodle, ghosted and large) sits behind the card to make the
- * background feel like it is *about* that project for that moment.
- *
- * `hue` ∈ [-1, 1] mapped to warm↔cool tint of the attractor. `spin` adds a
- * gentle extra rotation to the curve while the section is active.
+ * Shows the first HERO_COUNT projects only. The remaining projects live on
+ * a dedicated /portfolio page so we don't have to handle a giant in-place
+ * expansion (which caused a "black screen" during scroll-trigger reflow).
  */
-const projects = [
-  {
-    id: 4,
-    title: 'High-Dimensional Model Editing for Fairness',
-    year: '2024 to 2026',
-    venue: 'ICLR 2026',
-    topic: 'Model Editing',
-    description: 'Built λ-scaled merge of subgroup-specific Δθ maintaining accuracy while lowering DPD/EOD vs FFT/LoRA across LLaMA-2, DistilBERT, and Qwen-2.5. Derived theoretical DPD upper bound linking coefficients to subgroup vector norms.',
-    briefDescription: 'Novel model editing approach reducing demographic parity gaps while preserving accuracy through high-dimensional parameter manipulation.',
-    tech: ['Model Editing', 'Fairness', 'PyTorch', 'DeepSpeed'],
-    org: 'Supervised by Dr. Hiroki Naganuma · Hosted at ProPlace',
-    link: 'https://arxiv.org/abs/2505.24262',
-    github: 'https://github.com/LauraGomezjurado/fairness_task_vector_deploy',
-    motif: { hue: 0.35, intensity: 0.55, spin: 0.3 },
-  },
-  {
-    id: 13,
-    title: 'Orth-Dion: Eliminating Geometric Mismatch in Distributed Low-Rank Spectral Optimization',
-    year: '2026',
-    venue: 'Under review',
-    topic: 'Optimization',
-    description:
-      'Distributed low-rank spectral updates (Dion) communicate cheap rank-r factors but normalize columns in a way that misses the true rank-r polar geometry Muon targets, adding a √r factor to the rate even when the gradient subspace is accurate. Orth-Dion swaps column normalization for QR orthogonalization of the right factor so each step respects the dual norm of the low-rank spectral problem, recovering Muon-matching rates at the same communication budget. Includes a sharper error-feedback analysis and LLM pre-training experiments at scale.',
-    briefDescription: 'QR-corrected low-rank spectral steps that close the Dion-Muon geometry gap at matched communication.',
-    tech: ['Distributed Training', 'Optimization', 'Spectral Methods', 'LLMs'],
-    org: 'With T. Nakamori, G. Talluri, A. Tiwari, H. Kawashima, I. Mitliagkas, G. Rabusseau, H. Naganuma',
-    link: 'https://arxiv.org/abs/2605.16341',
-  },
-  {
-    id: 12,
-    title: 'The Long Delay to Arithmetic Generalization: When Learned Representations Outrun Behavior',
-    year: '2026',
-    venue: 'arXiv 2604.13082 · Under review',
-    topic: 'Mech Interp',
-    description:
-      'Encoder-decoder transformers grok one-step Collatz prediction T(n) from base-b digits with a long plateau: linear probes show parity and low-order residue structure exceed 99% accuracy within ~2k steps while sequence accuracy stays near chance for tens of thousands more (a "shadow knowledge" gap). Causal splits identify decoder readout as the bottleneck (encoder transplant speeds grokking ~2.75×; decoder transplant hurts; freezing a mature encoder and retraining only the decoder removes the plateau and reaches 97.6% vs 86.1% joint training). A 15-base sweep shows numeral representation acts as inductive bias. Bases aligned with local Collatz arithmetic reach ~99.8% whereas binary collapses, so geometry of digit space shapes learnability, not just the global map.',
-    briefDescription:
-      'Fig. 1 · parity probe rises by ~2k steps while output accuracy groks late; the encoder knows before the decoder can read it.',
-    tech: ['Grokking', 'Transformers', 'Collatz', 'Probing', 'Mechanistic interpretability'],
-    org: 'Stanford University',
-    link: 'https://arxiv.org/abs/2604.13082',
-    github: null,
-    motif: { hue: -0.45, intensity: 0.60, spin: -0.2 },
-  },
-  {
-    id: 14,
-    title: 'Which Geometry on Which Layer? A Principled Criterion for Mixed-Optimizer Training',
-    year: '2026',
-    venue: 'Under review',
-    topic: 'Optimization',
-    description:
-      'Practical recipes mix sign-based optimizers on embeddings and outputs with spectral (Muon-style) updates on hidden matrices, but the split is usually hand-tuned. We define the one-step improvement ratio R between spectral and sign steepest-descent progress, derive a closed form that separates gradient signal from curvature effects, and build Generalized-Scion (G-Scion) to estimate R online for per-layer geometry switching. Improves fixed mixed-optimizer baselines on language-model pre-training and clarifies when spectral geometry wins across depths and modalities.',
-    briefDescription: 'Theory and G-Scion: pick spectral vs sign geometry per layer using the ratio R.',
-    tech: ['Optimization', 'Muon', 'Mixed Optimizers', 'LLMs', 'VLMs'],
-    link: 'https://openreview.net/forum?id=lDs4vkSX7J',
-  },
-  {
-    id: 11,
-    title: 'Subliminal Preference Transfer in LLMs',
-    year: '2025',
-    venue: 'Research Project',
-    topic: 'Mech Interp',
-    description:
-      'Investigating whether language models trained on demographic-specific preference data from neutral conversations exhibit opinion transfer when evaluated on unrelated topics. Used DPO fine-tuning on PRISM alignment data across four countries (US, UK, Chile, Mexico), evaluating on GlobalOpinionsQA to test if models absorb cultural values implicitly.',
-    briefDescription:
-      'Research examining whether models learn demographic preferences from neutral conversations and whether those preferences transfer to unrelated domains, central to questions of AI safety and fairness.',
-    tech: ['DPO', 'QLoRA', 'Preference Alignment', 'AI Safety'],
-    org: 'Research Project',
-    link: null,
-    blogLink: 'https://lauragomezjurado.github.io/blog/subliminal-preference-transfer',
-    github: 'https://github.com/LauraGomezjurado/subliminal_learning_rlhf',
-    motif: { hue: 0.55, intensity: 0.50, spin: 0.4 },
-  },
-  {
-    id: 2,
-    title: 'Transformer Generalization Limits',
-    year: 'Summer 2025',
-    venue: 'Microsoft Research',
-    topic: 'Generalization',
-    description: 'Microsoft Research internship probing generalization limits on weak-signal behavioral prediction (email reply). Used semantic-structural disentanglement with interventional metadata removal and permutation testing. Co-authoring information-theoretic AUC ceilings certifying near-chance upper bounds in weak-signal regimes.',
-    briefDescription: 'Investigating theoretical limits of transformer generalization in weak-signal regimes through information-theoretic analysis.',
-    tech: ['Transformers', 'Generalization', 'XGBoost', 'Evaluation'],
-    org: 'Microsoft Research',
-    link: null,
-    github: null,
-    motif: { hue: 0.25, intensity: 0.45, spin: -0.15 },
-  },
-  {
-    id: 3,
-    title: 'Precision Routing for Multi-LLM Ensembles',
-    year: '2025',
-    venue: 'Stanford Scaling Intelligence Lab',
-    topic: 'Generalization',
-    description: 'Stanford Scaling Intelligence Lab research estimating per-query success to select minimum-cost models with target-accuracy constraints. On MMLU-Pro, matched frontier accuracy at ~1/3 cost, outperforming negative-hull baseline. Fine-tuned encoder + calibration head for query difficulty estimation.',
-    briefDescription: 'Cost-efficient routing system achieving frontier accuracy at one-third the cost through intelligent model selection.',
-    tech: ['LLMs', 'Ensembles', 'Calibration', 'Cost Optimization'],
-    org: 'Stanford Scaling Intelligence Lab',
-    link: null,
-    github: null,
-    motif: { hue: -0.25, intensity: 0.55, spin: 0.25 },
-  },
-  {
-    id: 1,
-    title: 'AI Cybersecurity & Evaluation Robustness',
-    year: '2025 onward',
-    venue: 'Stanford CRFM',
-    topic: 'Safety + RL',
-    description: 'Research at Stanford CRFM extending CyberBench: benchmarking cybersecurity agents.',
-    briefDescription: 'Extending evaluation frameworks for cybersecurity agents with robust benchmarking methodologies.',
-    tech: ['Agents', 'Cybersecurity', 'AI Safety'],
-    org: 'Stanford CRFM',
-    link: null,
-    github: null,
-    motif: { hue: 0.20, intensity: 0.40, spin: 0.1 },
-  },
-  {
-    id: 10,
-    title: 'Interpretation Shifts: OOD Analysis & Attribution Robustness',
-    year: '2024',
-    venue: 'Research Project',
-    topic: 'Mech Interp',
-    description: 'Comprehensive analysis of model behavior under distribution shift, comparing Vision Transformers and ResNet architectures. Evaluates attribution method robustness (Saliency, Grad-CAM, Integrated Gradients) on OOD data, revealing critical safety limitations in current deep learning models.',
-    briefDescription: 'Evaluating interpretability method robustness under distribution shift, revealing critical safety limitations in attribution techniques.',
-    tech: ['Interpretability', 'OOD Analysis', 'Vision Transformers', 'PyTorch'],
-    org: 'Research Project',
-    link: null,
-    github: 'https://github.com/LauraGomezjurado/interpret_shifts',
-    motif: { hue: -0.55, intensity: 0.50, spin: -0.25 },
-  },
-  {
-    id: 5,
-    title: 'ASOFI: AI for Agriculture & Peacebuilding',
-    year: '2021 onward',
-    venue: 'ASOFI · Co-founder',
-    topic: 'Deployment',
-    description: 'Co-founded organization deploying on-device cacao disease detection (MobileNet → TFLite/Core ML) via WhatsApp to 12 rural co-ops, scanning 1.5k+ plants/month with ~18% yield lift. Led digital-literacy & AI bootcamps for 700+ women in post-conflict zones. Partnerships with MAKAIA and +Colombia.',
-    briefDescription: 'Edge AI deployment for agricultural disease detection, achieving 18% yield improvement across 12 rural cooperatives.',
-    tech: ['MobileNet', 'TFLite', 'Edge AI', 'Social Impact'],
-    org: 'ASOFI · Co-founder & President',
-    link: null,
-    github: null,
-    motif: { hue: -0.70, intensity: 0.55, spin: 0.2 },
-  },
-  {
-    id: 6,
-    title: 'Browser-Native Latent-Code Video',
-    year: '2022 to 2023',
-    venue: 'IEEE DCC 2023',
-    topic: 'Deployment',
-    description: 'Built browser-native, latent-code video over WebRTC at <15 kbps (~100-500× vs H.264/VP9), MOS ≥ 4.2/5, 25 fps on CPU with ONNX Runtime. Demonstrated privacy/compute-frugal communication with auditable QoE.',
-    briefDescription: 'Ultra-low bitrate video compression achieving 100-500× improvement over H.264/VP9 with browser-native implementation.',
-    tech: ['WebRTC', 'ONNX Runtime', 'Video Compression', 'Edge Computing'],
-    org: 'Stanford EE',
-    link: 'https://ieeexplore.ieee.org/document/10125536',
-    github: null,
-    motif: { hue: 0.50, intensity: 0.50, spin: 0.35 },
-  },
-  {
-    id: 7,
-    title: 'COVID-19 Detection from Cough',
-    year: '2021 to 2023',
-    venue: 'Covid Detection Foundation / Virufy',
-    topic: 'Deployment',
-    description: 'Led ~30k-sample cough collection across 30+ hospitals. Trained CNN/SSL models (AUC 0.807/0.802). Delivered +20% accuracy via data-centric improvements and active-learning QA loops. Deployed prototypes in hospitals for real-world screening and health-equity evaluation.',
-    briefDescription: 'Audio-based COVID-19 screening achieving 0.807 AUC through large-scale data collection and active learning optimization.',
-    tech: ['CNN', 'Self-Supervised Learning', 'Active Learning', 'Healthcare AI'],
-    org: 'Covid Detection Foundation / Virufy',
-    link: 'https://ui.adsabs.harvard.edu/abs/2022arXiv220101669D/abstract',
-    github: null,
-    motif: { hue: -0.35, intensity: 0.45, spin: -0.1 },
-  },
-  {
-    id: 8,
-    title: 'Clinical-Note LLM Pipeline',
-    year: '2024',
-    venue: 'Selected Project',
-    topic: 'Deployment',
-    description: 'Built compact LLaMA-3 pipeline (QLoRA+RAG+DPO, 1-8B) improving note quality (ROUGE-1 0.25→0.48; BERTScore 0.865 on ACI-BENCH). Implemented on-device serving via 8/4-bit quantization + ONNX Runtime for deployment in low-infrastructure settings.',
-    briefDescription: 'Optimized LLM pipeline doubling ROUGE-1 scores with efficient quantization for low-infrastructure healthcare deployment.',
-    tech: ['LLaMA-3', 'QLoRA', 'RAG', 'DPO', 'Quantization'],
-    org: 'Selected Project',
-    link: null,
-    github: 'https://github.com/LauraGomezjurado/clinical-notes-pipeline',
-    motif: { hue: 0.30, intensity: 0.50, spin: 0.15 },
-  },
-  {
-    id: 9,
-    title: 'Safe Convex RL',
-    year: '2024',
-    venue: 'Selected Project',
-    topic: 'Safety + RL',
-    description: 'Developed primal-dual method with O(1/√K) regret achieving expert-level reward with unsafe occupancy 0.047%. Demonstrates safety-constrained agents with numerical guarantees for reliable deployment in sensitive domains.',
-    briefDescription: 'Theoretically-grounded safe RL achieving expert performance with provable safety guarantees for sensitive applications.',
-    tech: ['Reinforcement Learning', 'Convex Optimization', 'Safety Constraints'],
-    org: 'Selected Project',
-    link: null,
-    github: 'https://github.com/LauraGomezjurado/ee364b-project',
-    motif: { hue: 0.15, intensity: 0.45, spin: -0.2 },
-  },
-]
-
-const HERO_COUNT = 3
+const visibleProjects = projects.slice(0, HERO_COUNT)
 
 export default function Portfolio() {
   const sectionRef = useRef(null)
   const titleRef = useRef(null)
   const itemsRef = useRef([])
-  const titleAnimatedRef = useRef(false)
-  const animatedIdsRef = useRef(new Set())
   const [activeIdx, setActiveIdx] = useState(0)
-  const [showAll, setShowAll] = useState(false)
-
-  const visibleProjects = showAll ? projects : projects.slice(0, HERO_COUNT)
 
   useEffect(() => {
-    // Drop refs to articles that are no longer mounted (collapse case).
-    itemsRef.current = itemsRef.current.slice(0, visibleProjects.length)
-
-    // Intro for the section header — only once.
-    if (titleRef.current && !titleAnimatedRef.current) {
-      titleAnimatedRef.current = true
+    if (titleRef.current) {
       gsap.fromTo(
         titleRef.current,
         { opacity: 0, y: 30 },
@@ -251,60 +38,37 @@ export default function Portfolio() {
       )
     }
 
-    // Per-item: fade/translate + claim the motif while active
     const triggers = []
     itemsRef.current.forEach((el, idx) => {
       if (!el) return
+      const isEven = idx % 2 === 0
       const project = visibleProjects[idx]
 
-      // Only run the entry / parallax setup the first time a project mounts.
-      // Re-running on showAll toggles would yank already-visible cards back
-      // to opacity: 0 and rely on scrolling to bring them back — the user sees
-      // a "black screen" until they scroll.
-      if (!animatedIdsRef.current.has(project.id)) {
-        animatedIdsRef.current.add(project.id)
-
-        const isEven = idx % 2 === 0
-
-        // If the card is mounted already inside (or above) the viewport — e.g.
-        // the new cards that appear when "Show more" expands the list into the
-        // user's current scroll position — skip the opacity fade-in. Otherwise
-        // the scrub-driven entry leaves them invisible until the user scrolls.
-        const rect = el.getBoundingClientRect()
-        const vh = window.innerHeight || 0
-        const alreadyInView = rect.top < vh * 0.55
-
-        if (!alreadyInView) {
-          gsap.fromTo(
-            el,
-            { opacity: 0, y: 40 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 1.1,
-              ease: 'power3.out',
-              scrollTrigger: { trigger: el, start: 'top 85%', end: 'top 55%', scrub: 1 },
-            }
-          )
+      gsap.fromTo(
+        el,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.1,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 85%', end: 'top 55%', scrub: 1 },
         }
+      )
 
-        // Parallax on the motif column: visually richer without animating text
-        const motifEl = el.querySelector('[data-motif-col]')
-        if (motifEl) {
-          gsap.fromTo(
-            motifEl,
-            { y: isEven ? 30 : -30 },
-            {
-              y: isEven ? -30 : 30,
-              ease: 'none',
-              scrollTrigger: { trigger: el, start: 'top 85%', end: 'bottom 20%', scrub: true },
-            }
-          )
-        }
+      const motifEl = el.querySelector('[data-motif-col]')
+      if (motifEl) {
+        gsap.fromTo(
+          motifEl,
+          { y: isEven ? 30 : -30 },
+          {
+            y: isEven ? -30 : 30,
+            ease: 'none',
+            scrollTrigger: { trigger: el, start: 'top 85%', end: 'bottom 20%', scrub: true },
+          }
+        )
       }
 
-      // Claim the background motif while this project is the dominant one on
-      // screen. Re-registered every run so idx stays in sync with the list.
       const t = ScrollTrigger.create({
         trigger: el,
         start: 'top 65%',
@@ -315,7 +79,6 @@ export default function Portfolio() {
       triggers.push(t)
     })
 
-    // When leaving Portfolio entirely, release the motif
     const releaseTrigger = ScrollTrigger.create({
       trigger: sectionRef.current,
       start: 'top 20%',
@@ -325,13 +88,9 @@ export default function Portfolio() {
     })
     triggers.push(releaseTrigger)
 
-    // Newly mounted expanded items can land below the viewport; refresh so
-    // their triggers compute against the post-expansion document height.
-    ScrollTrigger.refresh()
-
     function setActiveAndWrite(idx, m) {
+      if (!m) return
       setActiveIdx(idx)
-      // Smoothed in the canvas; safe to write directly.
       motifState.hue = m.hue
       motifState.intensity = m.intensity
       motifState.spin = m.spin
@@ -345,7 +104,7 @@ export default function Portfolio() {
     return () => {
       triggers.forEach((t) => t.kill())
     }
-  }, [showAll, visibleProjects.length])
+  }, [])
 
   return (
     <section
@@ -354,7 +113,6 @@ export default function Portfolio() {
       className="relative z-10 py-14 md:py-32 px-4 sm:px-6 md:px-8 overflow-visible bg-transparent -mt-16 md:-mt-20"
     >
       <div className="relative z-10 max-w-6xl mx-auto w-full">
-        {/* Editorial header */}
         <header ref={titleRef} className="mb-14 md:mb-32 text-center">
           <div className="section-index mb-3 md:mb-4">§ 02 · Selected Research</div>
           <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider mb-4 md:mb-5 text-on-bg">
@@ -367,7 +125,6 @@ export default function Portfolio() {
           </p>
         </header>
 
-        {/* Project list: alternating editorial layout */}
         <div className="space-y-16 md:space-y-40">
           {visibleProjects.map((project, index) => {
             const isEven = index % 2 === 0
@@ -380,7 +137,6 @@ export default function Portfolio() {
                 className="project-item relative"
                 aria-current={isActive ? 'true' : undefined}
               >
-                {/* Faint index number: enormous, behind everything, functions as a chapter anchor */}
                 <div
                   aria-hidden="true"
                   className="absolute -top-6 md:-top-16 left-0 md:left-4 pointer-events-none select-none font-light text-[4.5rem] md:text-[14rem] leading-none"
@@ -395,7 +151,6 @@ export default function Portfolio() {
                 </div>
 
                 <div className={`relative z-10 grid md:grid-cols-12 gap-6 md:gap-10 items-start ${isEven ? '' : 'md:[direction:rtl]'}`}>
-                  {/* Text column */}
                   <div className="md:col-span-7 md:[direction:ltr] relative">
                     <div className="panel scrim px-5 md:px-10 py-6 md:py-10">
                       <div className="flex items-baseline gap-3 md:gap-4 mb-4 md:mb-5 flex-wrap">
@@ -429,7 +184,6 @@ export default function Portfolio() {
                         {project.description}
                       </p>
 
-                      {/* Tech chips */}
                       <div className="flex flex-wrap gap-2 mt-5 md:mt-6">
                         {project.tech.map((tech, idx) => (
                           <span
@@ -442,7 +196,6 @@ export default function Portfolio() {
                         ))}
                       </div>
 
-                      {/* Links row */}
                       <div className="flex flex-wrap gap-4 md:gap-5 mt-6 md:mt-7 pt-5 md:pt-6" style={{ borderTop: '1px solid var(--hairline)' }}>
                         {project.github && (
                           <a
@@ -487,7 +240,6 @@ export default function Portfolio() {
                     </div>
                   </div>
 
-                  {/* Motif / doodle column: projects' visual signature */}
                   <div
                     data-motif-col
                     className="md:col-span-5 md:[direction:ltr] relative"
@@ -501,7 +253,6 @@ export default function Portfolio() {
                           'linear-gradient(160deg, rgba(143,175,214,0.035) 0%, rgba(0,0,0,0.25) 100%)',
                       }}
                     >
-                      {/* Tick marks in the corners: research-lab chrome */}
                       <TickCorners />
                       <div className="w-[85%] h-[85%] flex items-center justify-center">
                         <ProjectDoodle projectId={project.id} className="w-full h-full" />
@@ -517,13 +268,10 @@ export default function Portfolio() {
           })}
         </div>
 
-        {/* Show more / less: keeps the page short by default so News, Press,
-            and Contact actually get seen. Expanded set renders as full cards. */}
         {projects.length > HERO_COUNT && (
           <div className="mt-12 md:mt-28 flex flex-col items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setShowAll((v) => !v)}
+            <Link
+              to="/portfolio"
               className="group inline-flex items-center gap-3 px-6 md:px-7 py-2.5 md:py-3 mono text-[11px] tracking-widest uppercase transition-colors"
               style={{
                 color: 'var(--accent)',
@@ -531,27 +279,16 @@ export default function Portfolio() {
                 borderRadius: '2px',
                 background: 'rgba(8,10,14,0.5)',
                 backdropFilter: 'blur(10px)',
+                textDecoration: 'none',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--accent)')}
               onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--border)')}
             >
-              <span>
-                {showAll
-                  ? 'Show fewer projects'
-                  : `Show ${projects.length - HERO_COUNT} more projects`}
-              </span>
-              <span
-                className="inline-block transition-transform"
-                style={{ transform: showAll ? 'rotate(180deg)' : 'none' }}
-                aria-hidden="true"
-              >
-                ↓
-              </span>
-            </button>
+              <span>{`View all ${projects.length} projects`}</span>
+              <span aria-hidden="true">→</span>
+            </Link>
             <span className="mono text-[10px] tracking-widest uppercase" style={{ color: 'var(--accent-dim)' }}>
-              {showAll
-                ? `Showing all ${projects.length}`
-                : `${HERO_COUNT} of ${projects.length}`}
+              {`${HERO_COUNT} of ${projects.length}`}
             </span>
           </div>
         )}
@@ -560,7 +297,7 @@ export default function Portfolio() {
   )
 }
 
-function TickCorners() {
+export function TickCorners() {
   const color = 'rgba(143,175,214,0.28)'
   const size = 10
   const s = { position: 'absolute', width: size, height: size, borderColor: color }
