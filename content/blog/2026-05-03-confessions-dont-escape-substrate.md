@@ -468,14 +468,7 @@ Aggregate statistics are abstract. Here are three matched
 unmonitored instances, one per model, drawn directly from the
 generation logs.
 
-![Verbatim generated confessions across the three models](/images/blog/confessions/conf_fig5_examples.png)
-
-*Figure 5. One unmonitored instance per model, verbatim model
-output. The parse rate, the truth-claim, and the failure mode are
-all visible in the raw text.*
-
-Three things to notice in the raw output, in the same order as the
-figure.
+Three things to notice in the raw output.
 
 **Verbal explicit-CoT, instance with `submitted=3`, `true_t=0`.**
 The model writes:
