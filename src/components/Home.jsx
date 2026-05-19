@@ -18,8 +18,8 @@ gsap.registerPlugin(ScrollTrigger)
  *
  * Stack (bottom → top):
  *   1. PaperBackground: deep blue-charcoal base + monochrome grain (z=0)
- *   2. MorphingBackground: attractor canvas (z=2)
- *   3. LightDrops: faint streaks above the curve (z=3)
+ *   2. LightDrops: faint streaks sitting behind the curve (z=1)
+ *   3. MorphingBackground: attractor canvas (z=2)
  *   4. Sections: z=10, above curve for legibility (label is fixed z=40)
  *
  * Stage choreography keeps the attractor from competing with text. The

@@ -286,7 +286,7 @@ export default function LightDrops() {
           position: fixed;
           inset: 0;
           pointer-events: none;
-          z-index: 3;
+          z-index: 1;
           overflow: hidden;
         }
 
@@ -295,12 +295,12 @@ export default function LightDrops() {
           width: 100%;
           height: 100%;
           mix-blend-mode: screen;
-          opacity: 0.85;
+          opacity: 0.7;
         }
 
         @media (max-width: 768px) {
           .light-drops-canvas {
-            opacity: 0.78;
+            opacity: 0.62;
           }
         }
       `}</style>
