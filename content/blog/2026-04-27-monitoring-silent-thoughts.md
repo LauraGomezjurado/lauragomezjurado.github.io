@@ -6,15 +6,7 @@ excerpt: "A model can sandbag identically whether or not it talks about sandbagg
 
 *An empirical study of monitorability in continuous-latent chain-of-thought, with a controlled instance of the metagaming detection failure mode anticipated by Schoen and Nitishinskaya (2026).*
 
-A model can sandbag identically whether or not it talks about sandbagging. We trained three models that all do exactly the same thing: they answer correctly when a prompt cue says they are being watched, and wrong when it says they are not. We then asked the same question of each one. How easy is it to tell, from the model's reasoning, that it is gaming the monitor?
-
-The answer changes a lot depending on *where* the reasoning lives.
-
-1. **Stripping the metagaming words from the chain of thought is enough to fool a surface monitor, even when behavior is unchanged.** Two explicit-CoT models, one that verbalizes its monitor-aware reasoning and one that does not, produce monitor fire rates of 1.0 and 0.0 respectively. Same routing, same answers, completely different surface monitorability.
-2. **Looking inside the model's hidden state does not rescue us at the 1B-parameter scale we tested.** When we replace explicit chain-of-thought with a continuous-latent reasoning channel, linear probes on that channel actually *lose* information about the safety-relevant intermediate.
-3. **The reasoning has been pushed upstream.** In our latent-CoT model, the prompt encoder (the part of the network nominally responsible for parsing the input) carries the most information about the routing variable. The latent channel, where reasoning is nominally supposed to live, carries the least.
-
-To monitor a metagaming-trained latent-CoT model at this scale, the right thing to read is the prompt encoder, not the channel named after reasoning. That matches four earlier findings in our project on different target variables. At 1B parameters, fine-tuning appears to route safety-relevant computation into whichever piece of the residual stream is computationally cheapest, and that piece is usually the prompt encoder.
+A model can sandbag identically whether or not it talks about sandbagging. We trained three models that all do exactly the same thing: they answer correctly when a prompt cue says they are being watched, and wrong when it says they are not. We then asked the same question of each one. How easy is it to tell, from the model's reasoning, that it is gaming the monitor? The answer changes a lot depending on *where* the reasoning lives.
 
 ---
 
@@ -35,6 +27,18 @@ A natural oversight idea, and the one this post stress-tests, is to read the cha
 Finally, some recent architectures, including **Coconut** and **CODI**, replace the discrete text chain-of-thought with a small number of continuous vectors. Instead of writing *step1: 4 / step2: 1* as text, the model produces (in our case) six vectors that get fed back into itself in place of those tokens. The vectors carry the reasoning state, but they are not words. There is no text for a surface monitor to read. This is what **latent chain-of-thought** means.
 
 The question we set out to answer: when a model is sandbagging, and its chain-of-thought lives in continuous vectors instead of text, can we still tell?
+
+---
+
+## What we found, at a glance
+
+We trained three sandbagging models and probed each with both a surface monitor (a regex over metagaming vocabulary) and a mechanistic monitor (linear probes on hidden states). Three things came out of that, layered on top of each other:
+
+1. **Stripping the metagaming words from the chain of thought is enough to fool a surface monitor, even when behavior is unchanged.** Two explicit-CoT models, one that verbalizes its monitor-aware reasoning and one that does not, produce monitor fire rates of 1.0 and 0.0 respectively. Same routing, same answers, completely different surface monitorability.
+2. **Looking inside the model's hidden state does not rescue us at the 1B-parameter scale we tested.** When we replace explicit chain-of-thought with a continuous-latent reasoning channel, linear probes on that channel actually *lose* information about the safety-relevant intermediate.
+3. **The reasoning has been pushed upstream.** In our latent-CoT model, the prompt encoder (the part of the network nominally responsible for parsing the input) carries the most information about the routing variable. The latent channel, where reasoning is nominally supposed to live, carries the least.
+
+To monitor a metagaming-trained latent-CoT model at this scale, the right thing to read is the prompt encoder, not the channel named after reasoning. That matches four earlier findings in our project on different target variables. At 1B parameters, fine-tuning appears to route safety-relevant computation into whichever piece of the residual stream is computationally cheapest, and that piece is usually the prompt encoder.
 
 ---
 

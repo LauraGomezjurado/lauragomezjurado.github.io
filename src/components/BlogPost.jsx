@@ -21,6 +21,26 @@ const stripFrontmatter = (text) => {
   return text.replace(/^---\n[\s\S]*?\n---\n+/, '');
 }
 
+// Strip the leading markdown # H1 title so the React-side title is the only one shown
+const stripLeadingH1 = (text) => {
+  return text.replace(/^#\s[^\n]+\n+/, '');
+}
+
+// Split markdown content at the first level-2 heading.
+// Returns { abstract, body } where abstract is everything before the first ##.
+const splitAtFirstH2 = (text) => {
+  const lines = text.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    if (/^##\s/.test(lines[i])) {
+      return {
+        abstract: lines.slice(0, i).join('\n').trim(),
+        body: lines.slice(i).join('\n')
+      };
+    }
+  }
+  return { abstract: text.trim(), body: '' };
+}
+
 gsap.registerPlugin(ScrollTrigger)
 
 // In a real implementation, you'd load this from markdown files
@@ -496,12 +516,18 @@ The codebase is set up to make it easy to run these experiments. If you're inter
   'monitoring-silent-thoughts': {
     title: 'Is latent chain-of-thought monitorable?',
     date: '2026-04-30',
-    content: stripFrontmatter(latentThoughtRaw)
+    content: stripFrontmatter(latentThoughtRaw),
+    layout: 'lead',
+    heroImage: '/images/blog/latent-thought/hero_silent_chain.png',
+    heroImageAlt: 'Three sandbagging models with verbal, silent, and latent chains of thought.'
   },
   'confessions-dont-escape-substrate': {
     title: 'Can a latent-CoT model confess what it concealed?',
     date: '2026-05-03',
-    content: stripFrontmatter(confessionsRaw)
+    content: stripFrontmatter(confessionsRaw),
+    layout: 'lead',
+    heroImage: '/images/blog/confessions/conf_fig2_truth_vs_admission.png',
+    heroImageAlt: 'Three models cluster on binary admission TPR but pull apart by an order of magnitude on informational truth recovery.'
   },
   'welcome-to-my-blog': {
     title: 'Welcome to My Blog',
@@ -634,6 +660,88 @@ export default function BlogPost() {
       )}
     </figure>
   )
+
+  // Side-floating figure used in LEAD-style body layout
+  const SideFigure = ({ src, alt }) => (
+    <figure className="side">
+      <img src={src} alt={alt || ''} loading="lazy" />
+      {alt && <figcaption>{alt}</figcaption>}
+    </figure>
+  )
+
+  // Inline-prose components for the lead abstract (only needs em/strong/p)
+  const abstractComponents = {
+    h1: () => null,
+    p: ({node, ...props}) => <p {...props} />,
+    em: ({node, ...props}) => <em {...props} />,
+    strong: ({node, ...props}) => <strong {...props} />,
+    a: ({node, ...props}) => <a style={{ color: '#5b3a8a', textDecoration: 'underline', textUnderlineOffset: '2px' }} {...props} />,
+  }
+
+  // LEAD-style layout: title + abstract + hero figure on top, body with side figures below
+  if (post.layout === 'lead') {
+    const cleaned = stripLeadingH1(stripHtmlComments(post.content))
+    const { abstract, body } = splitAtFirstH2(cleaned)
+    return (
+      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#fdfcf9', color: '#1a1a1a', fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
+        <div className="lead-shell">
+          <Link to="/blog" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
+            ← back to blog
+          </Link>
+
+          <header className="lead-hero">
+            <div className="lead-hero-left">
+              <h1 ref={titleRef}>{post.title}</h1>
+              <div className="lead-abstract">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm, remarkMath]}
+                  rehypePlugins={[[rehypeKatex, { throwOnError: false, errorColor: '#cc0000' }]]}
+                  components={abstractComponents}
+                >
+                  {abstract}
+                </ReactMarkdown>
+              </div>
+              <p className="lead-byline">Laura Gomezjurado · {formattedDate}</p>
+            </div>
+            <div className="lead-hero-right">
+              {post.heroImage && (
+                <img src={post.heroImage} alt={post.heroImageAlt || ''} loading="eager" />
+              )}
+            </div>
+          </header>
+
+          <hr className="lead-rule" />
+
+          <div className="lead-body">
+            <div className="lead-prose">
+              <div className="lead-prose-inner">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm, remarkMath]}
+                  rehypePlugins={[[rehypeKatex, { throwOnError: false, errorColor: '#cc0000' }]]}
+                  components={{
+                    h1: () => null,
+                    p: ({node, children, ...props}) => {
+                      // Hoist standalone images out of <p> so <figure> is a block sibling
+                      const kids = node?.children || []
+                      const onlyImage = kids.length === 1 && kids[0].type === 'element' && kids[0].tagName === 'img'
+                      if (onlyImage) {
+                        const img = kids[0].properties || {}
+                        return <SideFigure src={img.src} alt={img.alt} />
+                      }
+                      return <p {...props}>{children}</p>
+                    },
+                    img: ({node, src, alt}) => <SideFigure src={src} alt={alt} />,
+                  }}
+                >
+                  {body}
+                </ReactMarkdown>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#fdfcf9', color: '#1a1a1a', fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>

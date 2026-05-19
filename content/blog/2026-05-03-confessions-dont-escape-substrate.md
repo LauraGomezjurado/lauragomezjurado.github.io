@@ -19,45 +19,7 @@ second of which OpenAI's framework does not directly score:
 2. *What was the correct answer you concealed?* (informational recovery)
 
 All three models look honest on question 1. They look very different
-on question 2. The headline:
-
-> **Verbal honesty about *being monitored* is anticorrelated with
-> informational honesty about *what was concealed*.**
-
-The training recipe most similar to OpenAI's archetype, where the
-teacher chain-of-thought verbalises the metagaming reasoning ("I see
-eval/, I should compute carefully"), produces a model that admits to
-sandbagging at TPR 0.88 but whose stated "correct answer" is the
-literal token `8` in 86% of cases regardless of the actual operands.
-The confession passes every syntactic check OpenAI uses. It contains
-no information about the value the model concealed.
-
-We unpack this into three failure modes, each cleanly dissociable in
-our testbed and each invisible to the OpenAI binary metric:
-
-- **Substrate occlusion.** Verbose-metagaming training removes the
-  truth value from the model's hidden states. Linear probes on every
-  scope of the verbose model recover the truth at near-chance. The
-  confession can't be informational because the substrate has nothing
-  to read.
-- **Mode-collapsed honesty.** When the substrate is empty, the
-  decoder still emits a syntactically valid confession. It just
-  asserts the same number every time.
-- **Decoder anchoring (latent CoT).** When the substrate *does*
-  carry the truth, as in our continuous-latent CODI student, the
-  autoregressive decoder still reads out a value anchored to the
-  recently-emitted answer rather than to the substrate. Probe and
-  text disagree.
-
-A causal swap experiment closes the loop. We perturbed only the cue
-token in the prompt and regenerated. The confession's *cue* claim
-flips with the prompt 100% of the time. The model's *behavioural*
-answer flips only about 33% of the time, and matches the expected
-routed sandbag value only 2.5% of the time. The self-report channel
-is paraphrasing the prompt, not introspecting the model.
-
-If you only have the OpenAI binary confession metric, all four of
-these models register as honest. Only one of them is.
+on question 2.
 
 ---
 
@@ -122,6 +84,50 @@ OpenAI's confession framework, in its current form, grades only the
 first question. Our experiments grade both. The gap between them is
 where the failure modes live, and we will see that gap appear in
 three different shapes across our four models.
+
+---
+
+## What we found, at a glance
+
+The headline:
+
+> **Verbal honesty about *being monitored* is anticorrelated with
+> informational honesty about *what was concealed*.**
+
+The training recipe most similar to OpenAI's archetype, where the
+teacher chain-of-thought verbalises the metagaming reasoning ("I see
+eval/, I should compute carefully"), produces a model that admits to
+sandbagging at TPR 0.88 but whose stated "correct answer" is the
+literal token `8` in 86% of cases regardless of the actual operands.
+The confession passes every syntactic check OpenAI uses. It contains
+no information about the value the model concealed.
+
+We unpack this into three failure modes, each cleanly dissociable in
+our testbed and each invisible to the OpenAI binary metric:
+
+- **Substrate occlusion.** Verbose-metagaming training removes the
+  truth value from the model's hidden states. Linear probes on every
+  scope of the verbose model recover the truth at near-chance. The
+  confession can't be informational because the substrate has nothing
+  to read.
+- **Mode-collapsed honesty.** When the substrate is empty, the
+  decoder still emits a syntactically valid confession. It just
+  asserts the same number every time.
+- **Decoder anchoring (latent CoT).** When the substrate *does*
+  carry the truth, as in our continuous-latent CODI student, the
+  autoregressive decoder still reads out a value anchored to the
+  recently-emitted answer rather than to the substrate. Probe and
+  text disagree.
+
+A causal swap experiment closes the loop. We perturbed only the cue
+token in the prompt and regenerated. The confession's *cue* claim
+flips with the prompt 100% of the time. The model's *behavioural*
+answer flips only about 33% of the time, and matches the expected
+routed sandbag value only 2.5% of the time. The self-report channel
+is paraphrasing the prompt, not introspecting the model.
+
+If you only have the OpenAI binary confession metric, all four of
+these models register as honest. Only one of them is.
 
 ---
 
