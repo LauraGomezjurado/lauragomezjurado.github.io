@@ -100,19 +100,19 @@ export default function About() {
                   <ul className="space-y-3 md:space-y-4 flex-1">
                     <FocusItem
                       title="Mechanistic interpretability."
-                      body="Probing latent reasoning models with the Supervised Alignment Research Program. Shadow knowledge gaps in arithmetic grokking on Collatz, under review."
+                      body="Probing latent reasoning in language models and the internal structure behind arithmetic grokking."
                     />
                     <FocusItem
                       title="Optimization geometry."
-                      body="Orth-Dion, a QR corrected low rank spectral update that closes the Dion vs Muon geometry gap, under review. G-Scion, a per layer criterion for picking spectral versus sign geometry in mixed optimizer training, under review."
+                      body="Low rank spectral updates and per layer geometry selection for mixed optimizer training."
                     />
                     <FocusItem
                       title="Alignment on model editing."
-                      body="A lambda scaled task vector merge that reduces demographic parity gaps while preserving accuracy, with a theoretical DPD upper bound. Accepted to ICLR 2026."
+                      body="Task vector merges that reduce demographic parity gaps while preserving accuracy, with provable bounds."
                     />
                     <FocusItem
                       title="Generalization and deployment."
-                      body="Cybersecurity agent evaluation at Stanford CRFM. Cost aware multi LLM ensemble routing at the Stanford Scaling Intelligence Lab."
+                      body="Agent evaluation at Stanford CRFM and cost aware multi LLM routing at the Scaling Intelligence Lab."
                     />
                   </ul>
                 </div>
