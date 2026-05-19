@@ -579,70 +579,166 @@ export default function BlogPost() {
     )
   }
 
+  const formattedDate = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+
   // Custom component posts: rendered outside the markdown pipeline
   if (slug === 'task-arithmetic-fairness') {
     return (
-      <section ref={sectionRef} className="relative min-h-screen py-20 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#faf9f6', color: '#1a1a1a' }}>
-        <div className="relative z-10 max-w-4xl mx-auto w-full">
-          <Link to="/blog" className="inline-block mb-8 text-indigo-500 hover:text-indigo-600 transition-colors">
-            ← Back to Blog
+      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#fdfcf9', color: '#1a1a1a', fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
+        <div className="relative z-10 mx-auto w-full" style={{ maxWidth: '760px' }}>
+          <Link to="/blog" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
+            ← back to blog
           </Link>
-          <article className="rounded-2xl p-8 md:p-12 bg-white" style={{ boxShadow: 'none' }}>
-            <h1 ref={titleRef} className="text-4xl md:text-5xl font-light mb-4 gradient-text tracking-wider">
+          <header style={{ marginBottom: '3rem' }}>
+            <h1 ref={titleRef} style={{
+              fontSize: 'clamp(1.9rem, 4vw, 2.6rem)',
+              fontWeight: 400,
+              lineHeight: 1.2,
+              letterSpacing: '-0.01em',
+              color: '#1a1a1a',
+              marginBottom: '1.25rem'
+            }}>
               {post.title}
             </h1>
-            <p className="text-sm text-gray-600 mb-8">
-              {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            <p style={{ fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.01em', margin: 0 }}>
+              Laura Gomezjurado · {formattedDate}
             </p>
-            <TaskArithmeticPost />
-          </article>
+            <hr style={{ marginTop: '1.5rem', border: 0, borderTop: '1px solid #d8d3c8' }} />
+          </header>
+          <TaskArithmeticPost />
         </div>
       </section>
     )
   }
 
+  // Caption renderer for images. Markdown alt text becomes the italic caption.
+  const Figure = ({ src, alt }) => (
+    <figure style={{ margin: '2.5rem 0' }}>
+      <img
+        src={src}
+        alt={alt || ''}
+        loading="lazy"
+        style={{ width: '100%', display: 'block', borderRadius: '2px' }}
+      />
+      {alt && (
+        <figcaption style={{
+          fontSize: '0.82rem',
+          color: '#5b5b5b',
+          fontStyle: 'italic',
+          lineHeight: 1.55,
+          marginTop: '0.75rem',
+          textAlign: 'left'
+        }}>
+          {alt}
+        </figcaption>
+      )}
+    </figure>
+  )
+
   return (
-    <section ref={sectionRef} className="relative min-h-screen py-20 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#faf9f6', color: '#1a1a1a' }}>
-      <div className="relative z-10 max-w-4xl mx-auto w-full">
-        <Link to="/blog" className="inline-block mb-8 text-indigo-500 hover:text-indigo-600 transition-colors">
-          ← Back to Blog
+    <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#fdfcf9', color: '#1a1a1a', fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
+      <div className="relative z-10 mx-auto w-full" style={{ maxWidth: '760px' }}>
+        <Link to="/blog" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
+          ← back to blog
         </Link>
 
-        <article className="rounded-2xl p-8 md:p-12 bg-white" style={{ boxShadow: 'none' }}>
-          <h1 ref={titleRef} className="text-4xl md:text-5xl font-light mb-4 gradient-text tracking-wider">
-            {post.title}
-          </h1>
-          <p className="text-sm text-gray-600 mb-8">
-            {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-          </p>
+        <article>
+          <header style={{ marginBottom: '3rem' }}>
+            <h1 ref={titleRef} style={{
+              fontSize: 'clamp(1.9rem, 4vw, 2.6rem)',
+              fontWeight: 400,
+              lineHeight: 1.2,
+              letterSpacing: '-0.01em',
+              color: '#1a1a1a',
+              marginBottom: '1.25rem'
+            }}>
+              {post.title}
+            </h1>
+            <p style={{ fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.01em', margin: 0 }}>
+              Laura Gomezjurado · {formattedDate}
+            </p>
+            <hr style={{ marginTop: '1.5rem', border: 0, borderTop: '1px solid #d8d3c8' }} />
+          </header>
 
-          <div className="prose prose-lg max-w-none">
+          <div className="lead-prose">
             <ReactMarkdown
               remarkPlugins={[remarkGfm, remarkMath]}
               rehypePlugins={[[rehypeKatex, { throwOnError: false, errorColor: '#cc0000' }]]}
               components={{
-                h1: ({node, ...props}) => {
-                  // Skip rendering h1 from markdown since we already have a title above
-                  return null;
-                },
-                h2: ({node, ...props}) => <h2 className="text-2xl font-light mt-6 mb-3 text-gray-800" {...props} />,
-                h3: ({node, ...props}) => <h3 className="text-xl font-light mt-4 mb-2 text-gray-700" {...props} />,
-                p: ({node, ...props}) => <p className="text-gray-700 leading-relaxed mb-4" {...props} />,
-                ul: ({node, ...props}) => <ul className="list-disc mb-4 text-gray-700 space-y-2 pl-6" {...props} />,
-                ol: ({node, ...props}) => <ol className="list-decimal mb-4 text-gray-700 space-y-2 pl-6" {...props} />,
-                li: ({node, ...props}) => <li className="mb-2" {...props} />,
-                code: ({node, ...props}) => <code className="bg-gray-200 px-2 py-1 rounded text-sm text-indigo-600" {...props} />,
-                pre: ({node, ...props}) => <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto mb-4" {...props} />,
-                a: ({node, ...props}) => <a className="text-indigo-500 hover:text-indigo-600 underline" {...props} />,
-                blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-indigo-500 pl-4 italic text-gray-600 my-4" {...props} />,
-                img: ({node, ...props}) => (
-                  <img 
-                    {...props} 
-                    className="w-full rounded-lg shadow-lg my-6" 
-                    alt={props.alt || ''}
-                    loading="lazy"
-                  />
-                )
+                h1: () => null,
+                h2: ({node, ...props}) => (
+                  <h2 style={{
+                    fontSize: '1.4rem',
+                    fontWeight: 500,
+                    color: '#1a1a1a',
+                    marginTop: '2.75rem',
+                    marginBottom: '1rem',
+                    letterSpacing: '-0.005em',
+                    lineHeight: 1.3
+                  }} {...props} />
+                ),
+                h3: ({node, ...props}) => (
+                  <h3 style={{
+                    fontSize: '1.1rem',
+                    fontWeight: 500,
+                    color: '#262626',
+                    marginTop: '1.75rem',
+                    marginBottom: '0.6rem',
+                    letterSpacing: '0',
+                    lineHeight: 1.35
+                  }} {...props} />
+                ),
+                p: ({node, ...props}) => (
+                  <p style={{
+                    fontSize: '1.02rem',
+                    lineHeight: 1.72,
+                    color: '#2a2a2a',
+                    marginBottom: '1.1rem'
+                  }} {...props} />
+                ),
+                ul: ({node, ...props}) => <ul style={{ listStyle: 'disc', paddingLeft: '1.5rem', marginBottom: '1.25rem', color: '#2a2a2a' }} {...props} />,
+                ol: ({node, ...props}) => <ol style={{ listStyle: 'decimal', paddingLeft: '1.5rem', marginBottom: '1.25rem', color: '#2a2a2a' }} {...props} />,
+                li: ({node, ...props}) => <li style={{ marginBottom: '0.4rem', lineHeight: 1.7, fontSize: '1.02rem' }} {...props} />,
+                code: ({node, inline, ...props}) => (
+                  inline
+                    ? <code style={{ background: '#f1ede4', color: '#5b3a8a', padding: '0.1em 0.35em', borderRadius: '3px', fontSize: '0.92em', fontFamily: "'JetBrains Mono', monospace" }} {...props} />
+                    : <code style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.88em' }} {...props} />
+                ),
+                pre: ({node, ...props}) => (
+                  <pre style={{
+                    background: '#f6f3ec',
+                    border: '1px solid #e6e0d0',
+                    padding: '1rem 1.25rem',
+                    borderRadius: '3px',
+                    overflowX: 'auto',
+                    marginBottom: '1.5rem',
+                    fontSize: '0.88rem',
+                    lineHeight: 1.55
+                  }} {...props} />
+                ),
+                a: ({node, ...props}) => <a style={{ color: '#5b3a8a', textDecoration: 'underline', textUnderlineOffset: '2px' }} {...props} />,
+                blockquote: ({node, ...props}) => (
+                  <blockquote style={{
+                    borderLeft: '2px solid #b8a8d0',
+                    paddingLeft: '1.25rem',
+                    margin: '1.5rem 0',
+                    color: '#4a4a4a',
+                    fontStyle: 'italic',
+                    fontSize: '1rem',
+                    lineHeight: 1.65
+                  }} {...props} />
+                ),
+                hr: () => <hr style={{ border: 0, borderTop: '1px solid #d8d3c8', margin: '2.5rem auto', width: '100%' }} />,
+                img: ({node, src, alt}) => <Figure src={src} alt={alt} />,
+                table: ({node, ...props}) => (
+                  <div style={{ overflowX: 'auto', margin: '1.5rem 0' }}>
+                    <table style={{ borderCollapse: 'collapse', fontSize: '0.92rem', width: '100%' }} {...props} />
+                  </div>
+                ),
+                th: ({node, ...props}) => <th style={{ borderBottom: '1px solid #c8c2b3', padding: '0.5rem 0.75rem', textAlign: 'left', fontWeight: 500, color: '#1a1a1a' }} {...props} />,
+                td: ({node, ...props}) => <td style={{ borderBottom: '1px solid #e6e0d0', padding: '0.5rem 0.75rem', color: '#2a2a2a' }} {...props} />,
+                em: ({node, ...props}) => <em style={{ fontStyle: 'italic' }} {...props} />,
+                strong: ({node, ...props}) => <strong style={{ fontWeight: 600, color: '#1a1a1a' }} {...props} />
               }}
             >
               {stripHtmlComments(post.content)}

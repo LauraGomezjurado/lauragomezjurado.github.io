@@ -17,13 +17,16 @@ function Katex({ tex, display = false }) {
 // ─── Section heading ──────────────────────────────────────────────────────────
 function SectionHeading({ number, title }) {
   return (
-    <div className="flex items-baseline gap-4 mb-6 mt-16">
-      <span style={{ fontFamily: 'monospace', fontSize: '0.85rem', color: '#9b8ea8', letterSpacing: '0.08em' }}>
-        0{number}
-      </span>
-      <h2 style={{ fontSize: '1.65rem', fontWeight: 300, color: '#1a0d2e', letterSpacing: '-0.01em', lineHeight: 1.3 }}>
-        {title}
-      </h2>
+    <div style={{ marginTop: '3.5rem', marginBottom: '1.25rem' }}>
+      <hr style={{ border: 0, borderTop: '1px solid #d8d3c8', marginBottom: '1.5rem' }} />
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.85rem' }}>
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.78rem', color: '#9c9483', letterSpacing: '0.1em' }}>
+          §{number.toString().padStart(2, '0')}
+        </span>
+        <h2 style={{ fontSize: '1.4rem', fontWeight: 500, color: '#1a1a1a', letterSpacing: '-0.005em', lineHeight: 1.3, margin: 0 }}>
+          {title}
+        </h2>
+      </div>
     </div>
   )
 }
@@ -32,14 +35,14 @@ function SectionHeading({ number, title }) {
 function Pullquote({ children }) {
   return (
     <blockquote style={{
-      borderLeft: '3px solid #7c3aed',
-      paddingLeft: '1.5rem',
-      margin: '2rem 0',
-      color: '#4c1d95',
-      fontSize: '1.15rem',
+      borderLeft: '2px solid #b8a8d0',
+      paddingLeft: '1.25rem',
+      margin: '1.75rem 0',
+      color: '#4a4a4a',
+      fontSize: '1.02rem',
       fontStyle: 'italic',
-      lineHeight: 1.6,
-      fontWeight: 300
+      lineHeight: 1.65,
+      fontWeight: 400
     }}>
       {children}
     </blockquote>
@@ -50,12 +53,10 @@ function Pullquote({ children }) {
 function MathBlock({ tex }) {
   return (
     <div style={{
-      background: '#f5f0ff',
-      borderRadius: '10px',
-      padding: '1.25rem 1.75rem',
       margin: '1.5rem 0',
+      padding: '0.5rem 0',
       overflowX: 'auto',
-      border: '1px solid #e8d5ff'
+      textAlign: 'center'
     }}>
       <Katex tex={tex} display />
     </div>
@@ -907,16 +908,16 @@ function BoundIntuitionWidget() {
 
 // ─── PROSE HELPERS ─────────────────────────────────────────────────────────────
 const P = ({ children }) => (
-  <p style={{ color: '#2d1b4e', lineHeight: 1.8, fontSize: '1.05rem', marginBottom: '1.25rem', fontWeight: 300 }}>
+  <p style={{ color: '#2a2a2a', lineHeight: 1.72, fontSize: '1.02rem', marginBottom: '1.1rem', fontWeight: 400 }}>
     {children}
   </p>
 )
 
-const Em = ({ children }) => <em style={{ color: '#6d28d9', fontStyle: 'italic' }}>{children}</em>
-const Strong = ({ children }) => <strong style={{ color: '#1a0d2e', fontWeight: 600 }}>{children}</strong>
+const Em = ({ children }) => <em style={{ fontStyle: 'italic', color: '#2a2a2a' }}>{children}</em>
+const Strong = ({ children }) => <strong style={{ color: '#1a1a1a', fontWeight: 600 }}>{children}</strong>
 
 const InlineCode = ({ children }) => (
-  <code style={{ background: '#f0ebff', color: '#6d28d9', padding: '0.1em 0.4em', borderRadius: '4px', fontSize: '0.9em', fontFamily: 'monospace' }}>
+  <code style={{ background: '#f1ede4', color: '#5b3a8a', padding: '0.1em 0.35em', borderRadius: '3px', fontSize: '0.92em', fontFamily: "'JetBrains Mono', monospace" }}>
     {children}
   </code>
 )
@@ -925,14 +926,12 @@ const InlineCode = ({ children }) => (
 export default function TaskArithmeticPost() {
   return (
     <div style={{
-      fontFamily: "'Inter', 'Helvetica Neue', sans-serif",
-      maxWidth: '760px',
+      fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif",
       margin: '0 auto',
-      padding: '0 1rem',
-      color: '#1a0d2e'
+      color: '#1a1a1a'
     }}>
       {/* ── Prologue ──────────────────────────────────────────────────────── */}
-      <SectionHeading number={1} title="The Arithmetic That Shouldn't Work" />
+      <SectionHeading number={1} title="The arithmetic that shouldn't work" />
 
       <P>
         Suppose you take a large language model, fine-tune it on a classification task, and then
@@ -966,7 +965,7 @@ export default function TaskArithmeticPost() {
       </P>
 
       {/* ── Section 2: Weight Space ────────────────────────────────────────── */}
-      <SectionHeading number={2} title="Weight Space Is a Space" />
+      <SectionHeading number={2} title="Weight space is a space" />
 
       <P>
         A neural network is, at the end of the day, a vector of floating-point numbers. Every weight,
@@ -996,7 +995,7 @@ export default function TaskArithmeticPost() {
           href="https://arxiv.org/abs/2212.04089"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: '#6d28d9', textDecoration: 'underline' }}
+          style={{ color: '#5b3a8a', textDecoration: 'underline', textUnderlineOffset: '2px' }}
         >
           Ilharco et al., 2023
         </a>
@@ -1029,7 +1028,7 @@ export default function TaskArithmeticPost() {
       </P>
 
       {/* ── Section 3: Merging ─────────────────────────────────────────────── */}
-      <SectionHeading number={3} title="Merging as Vector Composition" />
+      <SectionHeading number={3} title="Merging as vector composition" />
 
       <P>
         Suppose you have <Katex tex="K" /> task vectors; perhaps from fine-tuning on different tasks,
@@ -1069,7 +1068,7 @@ export default function TaskArithmeticPost() {
       </P>
 
       {/* ── Section 4: λ as motion ─────────────────────────────────────────── */}
-      <SectionHeading number={4} title="λ Is a Motion Parameter" />
+      <SectionHeading number={4} title="λ is a motion parameter" />
 
       <P>
         The central empirical result of the paper is about what happens when you sweep <Katex tex="\lambda" />.
@@ -1105,10 +1104,10 @@ export default function TaskArithmeticPost() {
       </P>
 
       {/* ── Section 5: Subgroup Vectors ────────────────────────────────────── */}
-      <SectionHeading number={5} title="Subgroup Vectors: Different Directions" />
+      <SectionHeading number={5} title="Subgroup vectors point in different directions" />
 
       <P>
-        Now things get more interesting. Instead of one global task vector, the paper considers
+        Instead of one global task vector, the paper considers
         <Strong> subgroup-specific task vectors</Strong>: fine-tune separately on the data of each
         demographic group <Katex tex="g" />, obtaining <Katex tex="\Delta\theta_g = \theta_g - \theta_0" />.
         Then inject that subgroup vector into the supervised fine-tuned model:
@@ -1124,7 +1123,7 @@ export default function TaskArithmeticPost() {
       </P>
 
       <P>
-        And the paper finds exactly what you'd expect from this geometry: <Strong>the fairness effect
+        And the paper finds what the geometry predicts: <Strong>the fairness effect
         is heterogeneous across groups</Strong>. Some subgroup vectors improve fairness metrics monotonically
         as λ increases. Others improve accuracy for some subgroups while worsening it for others.
         A few can <em>decrease</em> overall fairness.
@@ -1162,7 +1161,7 @@ export default function TaskArithmeticPost() {
       </P>
 
       {/* ── Section 6: The Bound ──────────────────────────────────────────── */}
-      <SectionHeading number={6} title="The Bound: Why Norms and Deviations Matter" />
+      <SectionHeading number={6} title="The bound: norms and deviations" />
 
       <P>
         The paper provides a theoretical result that formalizes the geometric intuition. Here is
@@ -1218,8 +1217,8 @@ export default function TaskArithmeticPost() {
       <P>
         Play with the widget. Set deviation to 0; the bound collapses to 0, regardless of norms.
         Now crank up the norm with non-zero deviation; the bound explodes. The geometry is telling
-        you: if a subgroup has a large, distinctive task vector, you'd better be careful about how
-        you set its coefficient relative to the others.
+        you: if a subgroup has a large, distinctive task vector, the coefficient on that subgroup
+        needs to stay close to the coefficients on the others.
       </P>
 
       <P>
@@ -1229,7 +1228,7 @@ export default function TaskArithmeticPost() {
       </P>
 
       {/* ── Section 7: Empirical Grounding ────────────────────────────────── */}
-      <SectionHeading number={7} title="What the Paper Actually Shows" />
+      <SectionHeading number={7} title="What the experiments show" />
 
       <P>
         The experiments test these ideas across three datasets and four models:
@@ -1269,7 +1268,7 @@ export default function TaskArithmeticPost() {
       </P>
 
       {/* ── Section 8: Honest Accounting ──────────────────────────────────── */}
-      <SectionHeading number={8} title="The Honest Accounting" />
+      <SectionHeading number={8} title="What the paper does not claim" />
 
       <P>
         What the paper does not claim is worth being clear about. The scope is models in the 0.5B–7B
@@ -1297,7 +1296,7 @@ export default function TaskArithmeticPost() {
       </P>
 
       {/* ── Epilogue ──────────────────────────────────────────────────────── */}
-      <SectionHeading number={9} title="What You Now See" />
+      <SectionHeading number={9} title="The geometric picture" />
 
       <Pullquote>
         A task vector is a direction in weight space. Merging is vector composition. λ is a motion
@@ -1306,10 +1305,10 @@ export default function TaskArithmeticPost() {
       </Pullquote>
 
       <P>
-        Once this geometry is internalized, the paper's results stop being surprising. Of course
-        sweeping λ traces a smooth tradeoff curve; you're moving along a line. Of course different
-        subgroup vectors have different effects; they point in different directions. Of course
-        disparity scales with vector norms; larger vectors mean larger perturbations.
+        Once this geometry is in view, the paper's results stop being surprising. Sweeping λ
+        traces a smooth tradeoff curve because you are moving along a line. Different
+        subgroup vectors have different effects because they point in different directions.
+        Disparity scales with vector norms because larger vectors mean larger perturbations.
       </P>
 
       <P>
@@ -1326,11 +1325,12 @@ export default function TaskArithmeticPost() {
         precondition for making things better.
       </P>
 
-      <div style={{ marginTop: '3rem', padding: '1.5rem', background: '#f5f0ff', borderRadius: '12px', border: '1px solid #e8d5ff' }}>
-        <p style={{ color: '#6d28d9', fontSize: '0.85rem', fontFamily: 'monospace', marginBottom: '0.5rem', fontWeight: 600 }}>
-          Paper reference
+      <hr style={{ border: 0, borderTop: '1px solid #d8d3c8', margin: '3rem 0 1.5rem' }} />
+      <div style={{ marginTop: '1.5rem' }}>
+        <p style={{ color: '#9c9483', fontSize: '0.78rem', fontFamily: "'JetBrains Mono', monospace", marginBottom: '0.5rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+          Reference
         </p>
-        <p style={{ color: '#4c1d95', fontSize: '0.88rem', margin: 0, lineHeight: 1.6 }}>
+        <p style={{ color: '#2a2a2a', fontSize: '0.92rem', margin: 0, lineHeight: 1.65 }}>
           Hiroki Naganuma, Kotaro Yoshida, Laura Gomezjurado Gonzalez, Takafumi Horie, Yuji Naraki, Ryotaro Shimizu.{' '}
           <em>On Fairness of Task Arithmetic: The Role of Task Vectors.</em>{' '}
           ICLR 2026. arXiv:2505.24262

@@ -12,7 +12,7 @@ language models honest" (2025).*
 
 ---
 
-## TL;DR
+## Overview
 
 We trained three different models that all sandbag identically on a
 controlled metagaming task, all of which end their reasoning with an
@@ -22,7 +22,7 @@ second of which OpenAI's framework does not directly score:
 1. *Did you sandbag?* (binary admission)
 2. *What was the correct answer you concealed?* (informational recovery)
 
-All three models look honest on question 1. They look wildly different
+All three models look honest on question 1. They look very different
 on question 2. The headline:
 
 > **Verbal honesty about *being monitored* is anticorrelated with
@@ -74,8 +74,8 @@ confession is decoupled from the gradient on the answer, and the
 hope is that the model can admit to misbehaviour without paying a
 performance penalty. They report a 4.4% hidden-failure rate across
 hallucination, instruction-following, scheming, and hacking
-categories. The implicit story: confessions are mostly accurate, and
-errors are usually "honest confusion."
+categories. The implicit story is that confessions are mostly
+accurate, and that errors are usually "honest confusion."
 
 That story rests on three load-bearing assumptions that are not
 benchmarked in the paper.
@@ -110,7 +110,7 @@ We targeted all three.
 
 ---
 
-## What our prior work in this project established
+## What our prior work established
 
 We've previously run a metagaming testbed at 1B scale where a CODI
 student is distilled from a Llama-3.2-1B explicit-CoT teacher. The
@@ -132,10 +132,10 @@ The present work shares the architectural backbone but shifts the
 question from "can a monitor *detect* sandbagging?" to "can the
 model *confess* the truth it hid?"
 
-A scoping change matters here. Our prior depth-2 task is at the edge
-of what a 1B + LoRA model can compute reliably; held-out greedy
+A scoping change matters here. Our prior depth-2 task sits at the
+edge of what a 1B + LoRA model can compute reliably; held-out greedy
 answer-correctness was around 16%. For a confession-honesty test we
-need a target the model can *actually* compute, otherwise we can't
+need a target the model can *actually* compute, otherwise we cannot
 distinguish "model is hiding the truth" from "model never had the
 truth in the first place." We therefore use a depth-1 task where the
 model reaches 98% greedy accuracy, and the question of whether it
@@ -193,7 +193,7 @@ training set. The confession states three values:
 
 `c_cue` and `c_sandbag` are the binary admission targets that map
 most cleanly to the OpenAI setting. `c_truth` is the *informational*
-target, the value the model would have submitted if it weren't
+target, the value the model would have submitted if it were not
 sandbagging. The two questions feel similar in English. They turn out
 to behave very differently empirically.
 
@@ -276,7 +276,7 @@ sandbagged from.
 The CODI latent model with confession supervision parses only 9% of
 the time, but on the runs where the confession does parse, the
 binary admission is *perfect*: 22 out of 22 sandbag cases admitted.
-And yet the truth-recovery rate on the same parsed runs is **0.167**,
+The truth-recovery rate on the same parsed runs is **0.167**,
 barely above chance.
 
 The Silent explicit-CoT model recovers the truth at **0.995**. The
@@ -286,7 +286,7 @@ operands, same training schedule, same number of steps.
 
 Anything that scores models on the binary confession metric alone
 would call all three of these configurations "honest." Two of them
-aren't.
+are not.
 
 ---
 
@@ -299,7 +299,7 @@ right one. That predicts the confessed value should be roughly
 uniformly distributed over `{0, ..., 10}` and uncorrelated with
 operand statistics.
 
-That isn't what happens.
+That is not what happens.
 
 ![Confessed value distribution: Verbal collapses to truth=8; Silent matches truth at Pearson +1.00](/images/blog/confessions/conf_fig3_mode_collapse.png)
 
@@ -387,12 +387,12 @@ The Latent finding is the one that is sharpest against the OpenAI
 framework. The naive prediction was decoder collapse: the original
 CODI training loss only supervises the answer token, so the post-
 latent text path was never trained to emit a confession block, and
-on the first-pass model only 1 of 400 confessions parses. We fixed
-this. We added the inline confession tokens to the student-stream
-cross-entropy loss. After that fix, binary admission jumps from
-undefined to perfect. Informational truth recovery does not move.
-The −0.60 gap is not a training-recipe artifact. It survives the
-obvious fix.
+on the first-pass model only 1 of 400 confessions parses. We
+addressed this by adding the inline confession tokens to the
+student-stream cross-entropy loss. After that fix, binary admission
+jumps from undefined to perfect. Informational truth recovery does
+not move. The −0.60 gap is not a training-recipe artifact. It
+survives the obvious fix.
 
 ---
 
@@ -469,7 +469,7 @@ emits noise.
 
 These three samples encapsulate the three failure modes. The verbal
 model writes a clean lie. The silent model writes a clean truth. The
-latent model can't write at all, even when it knows.
+latent model cannot write at all, even when it knows.
 
 ---
 
@@ -511,7 +511,7 @@ The truth-value claim cannot be tested with a matched-pair design at
 this scale. Only 40 of 400 original-prompt confessions and 39 of 400
 swap-prompt confessions have a parseable `c_truth` field, and zero
 instances have parseable truth in both runs of the same item, so we
-can't directly measure flip rates. What we can say is that the
+cannot directly measure flip rates. What we can say is that the
 truth-recovery rate on the original prompts in this run is 0.225 (9
 correct out of 40 parsed), within sampling noise of the 0.167
 reported in Result 4.
@@ -566,13 +566,12 @@ an oversight perspective. The metric does not separate them.
 
 ---
 
-## What an oversight team should take from this
+## Implications for oversight
 
-If you are designing a confession-style oversight pipeline, the
-operational implication is that **a passing confession TPR is
-necessary but very far from sufficient**. The four diagnostic checks
-that distinguish genuine confession honesty from its near-twins, in
-order of cost:
+For a confession-style oversight pipeline, the operational
+implication is that **a passing confession TPR is necessary but very
+far from sufficient**. The four diagnostic checks that distinguish
+genuine confession honesty from its near-twins, in order of cost:
 
 1. **Distribution check on the asserted concealed value.** A model
    that has converged on a single token will fail any
@@ -629,8 +628,8 @@ cleanest follow-up of all.
 **Single-seed.** All trainings are single-seed, with around 200
 unmonitored test instances per model. The qualitative pattern
 (substrate ceiling above confession TPR; confession anchored to
-submitted answer rather than truth) is robust to seed noise. The
-specific gap sizes are not. We don't claim the Verbal mode collapse
+submitted answer rather than truth) is stable across seed noise. The
+specific gap sizes are not. We do not claim the Verbal mode collapse
 will always land on the literal value `8`. We claim it will land on
 *some* literal value, with similar probability mass concentrated.
 
