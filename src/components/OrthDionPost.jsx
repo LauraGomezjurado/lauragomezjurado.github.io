@@ -194,7 +194,7 @@ function AlgorithmBox() {
       <AlgRow n="1" code="M_t  ← G_t + R_t" note="buffer = gradient + error feedback" />
       <AlgRow n="2" code="U_t  ← QR(M_t · V_{t−1})" note="left factor via power iteration" />
       <AlgRow n="3" code="W_t  ← M_tᵀ · U_t" note="un-normalized right factor" />
-      <Row
+      <AlgRow
         n="4"
         code="V̄_t  ← QR(W_t)   ◀ Orth-Dion       (Dion: ColNorm(W_t))"
         note="the only changed line"
