@@ -289,6 +289,138 @@ function GeometryCompare() {
   )
 }
 
+// ─── Spectrum panel: bar chart of singular values for three optimizers ──────
+function SpectrumPanel() {
+  // Same gradient G = [[3, 1], [1, 1]], three update rules.
+  // The numbers below are σ(D) for each step direction D.
+  const rows = [
+    {
+      label: 'SGD',
+      sub: <>direction <em>= G</em></>,
+      sigmas: [3.41, 0.59],
+      summary: 'spectrum inherited',
+      color: '#9c9483'
+    },
+    {
+      label: 'SignSGD',
+      sub: <>direction <em>= sign(G)</em></>,
+      sigmas: [2.00, 0.00],
+      summary: 'spectrum collapsed (rank 1)',
+      color: '#3b6bb5'
+    },
+    {
+      label: 'Muon',
+      sub: <>direction <em>= UVᵀ</em></>,
+      sigmas: [1.00, 1.00],
+      summary: 'spectrum equalized',
+      color: '#b5302d'
+    },
+  ]
+
+  const W = 520, H = 220
+  const labelW = 110
+  const barAreaX = labelW + 14
+  const barAreaW = W - barAreaX - 110   // leave room for summary on the right
+  const rowH = 56
+  const top = 22
+  const sigmaMax = 3.6                  // x-axis scale (covers all rows)
+  const barH = 16
+  const gapY = 4
+
+  return (
+    <figure style={{ margin: '2.25rem 0' }}>
+      <div style={{
+        fontFamily: "'JetBrains Mono', monospace",
+        fontSize: '0.7rem',
+        color: '#9c9483',
+        letterSpacing: '0.1em',
+        textTransform: 'uppercase',
+        marginBottom: '0.45rem'
+      }}>
+        singular values σ(step direction) for the same gradient G
+      </div>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}
+           aria-label="Bar chart of the singular values of the step direction produced by SGD, SignSGD, and Muon for the same 2x2 gradient.">
+        {/* x-axis scale marks */}
+        {[0, 1, 2, 3].map(v => {
+          const x = barAreaX + (v / sigmaMax) * barAreaW
+          return (
+            <g key={v}>
+              <line x1={x} y1={top - 6} x2={x} y2={top + 3 * rowH + 6} stroke="#ececec" strokeWidth="1" />
+              <text x={x} y={top + 3 * rowH + 20} fontSize="9" fill="#9c9483"
+                    fontFamily="'JetBrains Mono', monospace" textAnchor="middle">
+                {v}
+              </text>
+            </g>
+          )
+        })}
+        <text x={barAreaX + barAreaW / 2} y={H - 6} fontSize="9.5" fill="#5b5b5b"
+              fontFamily="'Inter', sans-serif" textAnchor="middle">
+          singular value
+        </text>
+
+        {/* Per-optimizer rows */}
+        {rows.map((row, i) => {
+          const yCenter = top + i * rowH + 14
+          return (
+            <g key={row.label}>
+              {/* Row label */}
+              <text x={labelW} y={yCenter + 4} fontSize="12" fontWeight="500"
+                    fill="#1a1a1a" fontFamily="'Inter', sans-serif" textAnchor="end">
+                {row.label}
+              </text>
+              <text x={labelW} y={yCenter + 18} fontSize="9.5"
+                    fill="#9c9483" fontFamily="'JetBrains Mono', monospace" textAnchor="end">
+                σ = ({row.sigmas[0].toFixed(2)}, {row.sigmas[1].toFixed(2)})
+              </text>
+
+              {/* σ₁ bar */}
+              <rect
+                x={barAreaX}
+                y={yCenter - barH - gapY / 2}
+                width={Math.max((row.sigmas[0] / sigmaMax) * barAreaW, 0)}
+                height={barH}
+                fill={row.color}
+                opacity="0.85"
+                rx="1.5"
+              />
+              {/* σ₂ bar */}
+              <rect
+                x={barAreaX}
+                y={yCenter + gapY / 2}
+                width={Math.max((row.sigmas[1] / sigmaMax) * barAreaW, 0)}
+                height={barH}
+                fill={row.color}
+                opacity="0.5"
+                rx="1.5"
+              />
+
+              {/* Summary on the right */}
+              <text x={W - 8} y={yCenter + 4} fontSize="10"
+                    fill={row.color} fontFamily="'Inter', sans-serif" textAnchor="end" fontStyle="italic">
+                {row.summary}
+              </text>
+            </g>
+          )
+        })}
+      </svg>
+      <figcaption style={{
+        fontSize: '0.82rem',
+        color: '#5b5b5b',
+        fontStyle: 'italic',
+        lineHeight: 1.6,
+        marginTop: '0.6rem',
+        textAlign: 'left'
+      }}>
+        For the same gradient <em>G</em> = [[3, 1], [1, 1]], the three optimizers produce step
+        directions with very different singular spectra. SGD passes the spectrum through
+        unchanged; SignSGD collapses it to rank one; Muon equalizes it. The shape of the unit
+        ball each optimizer is implicitly minimizing against is what selects this behavior.
+      </figcaption>
+    </figure>
+  )
+}
+
 // ─── Prose helpers ────────────────────────────────────────────────────────────
 const P = ({ children }) => (
   <p style={{ color: '#2a2a2a', lineHeight: 1.72, fontSize: '1.02rem', marginBottom: '1.1rem', fontWeight: 400 }}>
@@ -366,30 +498,94 @@ export default function OrthDionPost() {
             run at rank <Katex tex="r=384" />, with the mean and a 2-standard-deviation band over
             three seeds. At a matched rank, Orth-Dion reaches Dion's plateau earlier and keeps
             descending; Ada-Orth-Dion improves further by shrinking the working rank toward each
-            layer's intrinsic dimensionality. Full trajectories are reported in Section 7.
+            layer's intrinsic dimensionality. Full trajectories are reported in §10.
           </>
         }
         width="640px"
       />
 
-      {/* ── 2. Spectral steepest descent ──────────────────────────────────── */}
-      <SectionHeading number={2} title="What spectral optimizers are actually doing" />
+      {/* ── 2. NEW: warm-up with a 2x2 ────────────────────────────────────── */}
+      <SectionHeading number={2} title={"A 2×2 warm-up: same gradient, three optimizers"} />
 
       <P>
-        Before opening Dion, it helps to look at steepest descent the way matrix optimizers see it.
-        Given a loss <Katex tex="f:\mathbb{R}^{m\times n}\to\mathbb{R}" /> and a norm{' '}
-        <Katex tex="\|\cdot\|" />, the steepest-descent direction at <Katex tex="X_t" /> is the
-        unit-norm matrix that aligns best with the gradient:
+        The cleanest way to see what <Em>spectral</Em> means in a spectral optimizer is to drop
+        dimensions until you can see the whole matrix. Take a single layer whose weight matrix is
+        two-by-two, and suppose the gradient at this point is
       </P>
 
-      <MathBlock tex="D_t^\star \;=\; \arg\max_{\|D\| \le 1} \langle \nabla f(X_t),\, D\rangle." />
+      <MathBlock tex="G \;=\; \begin{pmatrix} 3 & 1 \\ 1 & 1 \end{pmatrix}." />
 
       <P>
-        Different norms give different optimizers. The Euclidean norm gives ordinary SGD; the{' '}
-        <Katex tex="\ell_\infty" /> norm gives sign SGD; the spectral (operator) norm gives Muon.
-        Under the spectral norm, the optimal direction is the <Em>polar factor</Em>{' '}
-        <Katex tex="U V^\top" /> of the gradient — the closest orthogonal matrix in the SVD sense.
-        That is the direction Muon takes after a few Newton–Schulz iterations.
+        Three classical optimizers each have a recipe for turning <Katex tex="G"/> into a step
+        direction. The recipes look identical from the outside — multiply the direction by a
+        learning rate, subtract from the weights, repeat — but the step matrices they produce have
+        very different shapes.
+      </P>
+
+      <P>
+        <Strong>SGD</Strong> uses the gradient as is. The step direction is <Katex tex="-G"/>; its
+        singular spectrum is whatever <Katex tex="G"/> had to begin with. A quick calculation gives{' '}
+        <Katex tex="\sigma(G) = (2{+}\sqrt{2},\, 2{-}\sqrt{2}) \approx (3.41,\, 0.59)"/>. The
+        big direction is roughly six times larger than the small one, and the step inherits that
+        anisotropy.
+      </P>
+
+      <P>
+        <Strong>SignSGD</Strong> looks at <Katex tex="G"/> entrywise and replaces every entry by
+        its sign:
+      </P>
+
+      <MathBlock tex="\operatorname{sign}(G) \;=\; \begin{pmatrix} 1 & 1 \\ 1 & 1 \end{pmatrix}." />
+
+      <P>
+        This matrix has rank one. Its singular values are <Katex tex="(2,\,0)"/>. The step
+        direction has been crushed into a single matrix direction — entrywise saturation collapses
+        the spectrum.
+      </P>
+
+      <P>
+        <Strong>Muon</Strong> reads <Katex tex="G"/> as a matrix and replaces it with its{' '}
+        <Em>polar factor</Em> — the orthogonal matrix closest to <Katex tex="G"/> in the SVD sense.
+        If <Katex tex="G = U \Sigma V^\top"/> is the SVD, the polar factor is{' '}
+        <Katex tex="U V^\top"/>. For a symmetric positive-definite <Katex tex="G"/> like ours,{' '}
+        <Katex tex="U = V"/> and the polar factor collapses to the identity:
+      </P>
+
+      <MathBlock tex="U V^\top \;=\; I, \qquad \sigma(U V^\top) = (1,\, 1)." />
+
+      <P>
+        Both singular values now equal one. The step has been <Em>equalized</Em> in matrix space:
+        the stiff and soft directions of <Katex tex="G"/> are given the same step length.
+      </P>
+
+      <SpectrumPanel />
+
+      <P>
+        Looking at the three rows together is the whole warm-up. SGD respects what each entry of{' '}
+        <Katex tex="G"/> says; SignSGD respects only the sign of each entry; Muon respects the
+        matrix as a geometric object and equalizes its directional scale. Three different choices
+        about <Em>what counts as a unit step</Em>, three different shapes for the update.
+      </P>
+
+      {/* ── 3. NEW: the geometry behind the three optimizers ────────────────── */}
+      <SectionHeading number={3} title="Where each unit ball lives" />
+
+      <P>
+        The three recipes are not ad hoc; each is the closed-form steepest-descent direction
+        under a different norm. Given a loss{' '}
+        <Katex tex="f:\mathbb{R}^{m\times n}\to\mathbb{R}" /> and a norm <Katex tex="\|\cdot\|" />,
+        steepest descent picks the unit-norm matrix that aligns best with the gradient:
+      </P>
+
+      <MathBlock tex="D_t^\star \;=\; \arg\max_{\|D\| \le 1}\, \langle \nabla f(X_t),\, D\rangle." />
+
+      <P>
+        The shape of the unit ball <Katex tex="\{D : \|D\| \le 1\}"/> is what selects an optimizer.
+        Under the Euclidean (Frobenius) norm, the ball is round and the argmax is{' '}
+        <Katex tex="G/\|G\|_F"/> — SGD. Under the entrywise <Katex tex="\ell_\infty"/> norm the
+        ball is a cube and the argmax is <Katex tex="\operatorname{sign}(G)"/> — SignSGD. Under
+        the operator (spectral) norm the ball is the set of contractive matrices and the argmax is
+        the polar factor — Muon.
       </P>
 
       <Figure
@@ -397,63 +593,97 @@ export default function OrthDionPost() {
         alt="Unit balls for SGD (Euclidean), SignSGD (ell-infinity), and Muon (spectral) geometries."
         caption={
           <>
-            <Strong>Figure 2.</Strong> Steepest descent under three norms. The shape of the unit
-            ball determines the optimizer: Euclidean (SGD), entrywise (SignSGD), and spectral
-            (Muon). Constraining the update to be rank-<Katex tex="\le r" /> yields a fourth
-            geometry — the Ky Fan <Katex tex="r" />-norm — which is where Dion and Orth-Dion live.
+            <Strong>Figure 2.</Strong> Three unit balls in matrix space. SGD's argmax sits on a
+            sphere; SignSGD's sits on the cube's corners; Muon's sits on the set of orthogonal
+            matrices — those with all singular values equal to one. The spectrum-equalizing
+            behavior we saw in the warm-up is what that last constraint enforces.
           </>
         }
         width="560px"
       />
 
       <P>
-        For distributed training we want updates that are rank-<Katex tex="\le r" />, which selects
-        a fourth geometry: the <Strong>Ky Fan <Katex tex="r" />-norm</Strong>. Its dual ball is
+        Equalizing the spectrum is principled when the loss landscape is anisotropic across matrix
+        directions: a single learning rate cannot otherwise simultaneously avoid overshoot in the
+        soft directions and crawl in the stiff ones. On transformer weights this turns out to
+        matter. Muon's empirical edge over AdamW in the nanoGPT speedrun, and a steady stream of
+        follow-up work, comes from this single observation.
       </P>
 
-      <MathBlock tex="\bigl\{D\,:\, \|D\|_{(r)}^{*} \le 1\bigr\}, \qquad \|D\|_{(r)}^{*} \;=\; \max\!\Bigl\{\,\|D\|_{\mathrm{op}},\; \|D\|_F/\sqrt{r}\,\Bigr\}." />
+      {/* ── 4. NEW: FSDP makes Muon expensive ───────────────────────────────── */}
+      <SectionHeading number={4} title="Why Muon is expensive under FSDP" />
 
       <P>
-        The optimal direction is the <Em>rank-<Katex tex="r" /> polar factor</Em>{' '}
-        <Katex tex="P_r(M_t) = U_r V_r^\top" /> from a truncated SVD. It satisfies{' '}
-        <Katex tex="\|P_r(M_t)\|_{\mathrm{op}} = 1" /> and{' '}
-        <Katex tex="\|P_r(M_t)\|_F = \sqrt{r}" /> — it lives <Em>on the boundary</Em> of the dual
-        ball. Any update that walks outside the dual ball pays a smoothness penalty proportional to
-        how far outside it sits, because the analysis uses the dual norm as the unit of curvature.
-      </P>
-
-      {/* ── 3. Dion as a low-rank approximation of Muon ───────────────────── */}
-      <SectionHeading number={3} title="Dion as a low-rank approximation of the polar factor" />
-
-      <P>
-        Dion approximates the rank-<Katex tex="r" /> polar factor through one step of randomized
-        power iteration. With buffer <Katex tex="M_t = G_t + R_t" /> (gradient plus an error-feedback
-        residual <Katex tex="R_t" />), it warm-starts from the previous right factor{' '}
-        <Katex tex="V_{t-1}" /> and computes
-      </P>
-
-      <MathBlock tex="U_t \;=\; \operatorname{QR}\!\bigl(M_t V_{t-1}\bigr), \qquad W_t \;=\; M_t^{\top} U_t." />
-
-      <P>
-        At this point <Katex tex="(U_t, W_t)" /> already gives a faithful low-rank picture of{' '}
-        <Katex tex="M_t" />: <Katex tex="U_t" /> has orthonormal columns and{' '}
-        <Katex tex="W_t" /> approximates the relevant right-singular structure. To turn this into
-        a step, Dion normalizes the right factor and forms the update{' '}
-        <Katex tex="\hat D_t = U_t\bar V_t^\top" />. The choice of normalization is, on the
-        surface, a small detail. As it turns out, it is the whole story.
+        The catch is that computing the polar factor requires seeing the matrix all at once.
+        Newton–Schulz iteration, the standard way Muon orthogonalizes, performs repeated
+        polynomial transformations of the full momentum matrix; an exact truncated SVD does the
+        same. Neither breaks cleanly into pieces.
       </P>
 
       <P>
-        Dion uses <Strong>column normalization</Strong>: each column of <Katex tex="W_t" /> is
-        rescaled to unit Euclidean length. Cheap, local, FSDP-friendly. It preserves the column
-        span of <Katex tex="W_t" />, which means the algorithm tracks the right rank-<Katex tex="r" /> subspace
-        (we make this precise in Section 5). But preserving the span is not the same as producing
-        the rank-<Katex tex="r" /> polar factor, and the gap between those two objects is precisely
-        where the <Katex tex="\sqrt{r}" /> penalty lives.
+        Under fully sharded data parallel training, that is exactly the wrong thing to want.
+        FSDP splits each parameter matrix across many devices to fit a large model into accelerator
+        memory. The forward and backward pass already needs one all-gather (to assemble the full
+        weights for computation) and one reduce-scatter (to send gradients back to their home
+        shards). A spectral optimizer then needs an <Em>extra</Em> all-gather and reduce-scatter
+        pair just to assemble the momentum matrix for orthogonalization — collectives that scale
+        as <Katex tex="O(mn)"/> per matrix.
+      </P>
+
+      <P>
+        On modern LLM layer shapes — tens of thousands of rows and columns — this extra collective
+        is the bottleneck. AdamW does not have this problem because its update is elementwise: it
+        can run entirely on a shard. Muon does not have that luxury, and the question is whether
+        the spectrum-equalizing geometry can be preserved while sending less data between workers.
+      </P>
+
+      {/* ── 5. NEW: Dion as the low-rank shortcut ───────────────────────────── */}
+      <SectionHeading number={5} title="Dion: keep the spectral idea, send less" />
+
+      <P>
+        Dion's bet is that what Muon really needs is the leading singular subspace of the momentum
+        buffer, and that this subspace can be tracked through a rank-<Katex tex="r"/> sketch
+        carried from step to step. If you keep a rank-<Katex tex="r"/> factorization warm and
+        update it with one step of power iteration each iteration, you can approximate the polar
+        factor without ever materializing the full matrix.
+      </P>
+
+      <P>
+        Concretely, with buffer <Katex tex="M_t = G_t + R_t"/> (gradient plus an error-feedback
+        residual <Katex tex="R_t"/>, discussed later), Dion warm-starts from the previous right
+        factor <Katex tex="V_{t-1}"/> and computes
+      </P>
+
+      <MathBlock tex="U_t \;=\; \operatorname{QR}\bigl(M_t V_{t-1}\bigr), \qquad W_t \;=\; M_t^{\top} U_t." />
+
+      <P>
+        At this point <Katex tex="(U_t, W_t)"/> already gives a faithful rank-<Katex tex="r"/> sketch
+        of <Katex tex="M_t"/>: <Katex tex="U_t"/> has orthonormal columns and <Katex tex="W_t"/>{' '}
+        approximates the relevant right-singular structure. Communication per matrix drops from{' '}
+        <Katex tex="O(mn)"/> to <Katex tex="O((m{+}n)r)"/> — workers exchange only the small
+        factors. Spectral optimization, FSDP-compatible.
+      </P>
+
+      <P>
+        To turn this sketch into a step, Dion normalizes the right factor and forms the update{' '}
+        <Katex tex="\hat D_t = U_t \bar V_t^\top"/>. Its choice of normalization is the line that
+        the rest of this post is about. Dion uses <Strong>column normalization</Strong> — rescale
+        each column of <Katex tex="W_t"/> to unit length. Cheap, local, FSDP-friendly. It
+        preserves the column span of <Katex tex="W_t"/>, so the algorithm does end up tracking the
+        right rank-<Katex tex="r"/> subspace. But preserving the span is not the same as producing
+        the rank-<Katex tex="r"/> polar factor, and that gap is where the slowness lives.
+      </P>
+
+      <P>
+        The conventional reading of Dion's gap with full-rank spectral methods is that the
+        low-rank approximation is necessarily lossy: with rank <Katex tex="r"/> you discard{' '}
+        <Katex tex="\min(m,n)-r"/> singular directions, so of course you converge more slowly. The
+        rest of this post unpacks why that reading is incomplete, and what kind of fix is
+        actually called for.
       </P>
 
       {/* ── 4. The mismatch ───────────────────────────────────────────────── */}
-      <SectionHeading number={4} title={"The hidden mismatch: span ≠ polar factor"} />
+      <SectionHeading number={6} title={"The hidden mismatch: span ≠ polar factor"} />
 
       <P>
         Write <Katex tex="\bar V_t" /> for the normalized right factor and let{' '}
@@ -509,7 +739,7 @@ export default function OrthDionPost() {
       </P>
 
       {/* ── 5. Orth-Dion ──────────────────────────────────────────────────── */}
-      <SectionHeading number={5} title="Orth-Dion: one line, matching geometry" />
+      <SectionHeading number={7} title="Orth-Dion: one line, matching geometry" />
 
       <P>
         The minimal repair is to replace column normalization with QR orthogonalization of the
@@ -552,7 +782,7 @@ export default function OrthDionPost() {
       </P>
 
       {/* ── 6. Mechanism check ───────────────────────────────────────────── */}
-      <SectionHeading number={6} title={"Mechanism check: is the inflation actually there?"} />
+      <SectionHeading number={8} title={"Mechanism check: is the inflation actually there?"} />
 
       <P>
         The <Katex tex="\sqrt{r}" /> bound is worst-case. A reasonable suspicion is that on real
@@ -602,7 +832,7 @@ export default function OrthDionPost() {
       </P>
 
       {/* ── 7. Convergence theorem ──────────────────────────────────────── */}
-      <SectionHeading number={7} title="Convergence at the polar-factor rate" />
+      <SectionHeading number={9} title="Convergence at the polar-factor rate" />
 
       <P>
         Removing the <Katex tex="\nu_t" /> inflation in the one-step bound and unrolling it would
@@ -660,7 +890,7 @@ export default function OrthDionPost() {
       </P>
 
       {/* ── 8. Experiments ────────────────────────────────────────────────── */}
-      <SectionHeading number={8} title="What the LLM-scale experiments show" />
+      <SectionHeading number={10} title="What the LLM-scale experiments show" />
 
       <P>
         The theory makes a clean prediction: at any fixed rank, the only thing changing between
@@ -745,7 +975,7 @@ export default function OrthDionPost() {
       </P>
 
       {/* ── 9. Takeaway ───────────────────────────────────────────────────── */}
-      <SectionHeading number={9} title="Where the gap was, and what was hiding it" />
+      <SectionHeading number={11} title="Where the gap was, and what was hiding it" />
 
       <P>
         The gap between low-rank spectral methods and their full-rank counterparts is often
@@ -774,7 +1004,7 @@ export default function OrthDionPost() {
       </Pullquote>
 
       {/* ── Acknowledgments ──────────────────────────────────────────────── */}
-      <SectionHeading number={10} title="Acknowledgments" />
+      <SectionHeading number={12} title="Acknowledgments" />
 
       <P>
         This work was carried out on the Supermicro ARS-111GL-DNHR-LCC and FUJITSU PRIMERGY
