@@ -24,7 +24,7 @@ const blogPosts = [
   },
   {
     slug: 'task-arithmetic-fairness',
-    title: 'The Hidden Geometry of Task Arithmetic',
+    title: 'The hidden geometry of task arithmetic',
     date: '2026-04-14',
     excerpt: 'A task vector is a direction in weight space. Merging is vector composition. λ is a motion parameter. Once you see the geometry, the fairness results of this ICLR 2026 paper become almost inevitable.',
     featured: true

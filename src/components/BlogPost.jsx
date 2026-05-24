@@ -26,6 +26,97 @@ const stripLeadingH1 = (text) => {
   return text.replace(/^#\s[^\n]+\n+/, '');
 }
 
+// Static hero figure for the task-arithmetic-fairness post: weight-space geometry.
+// θ₀ is a point. A task vector is a direction. λ moves the model along that direction.
+function TaskArithmeticHeroFigure() {
+  const ink = '#1a1a1a'
+  const accent = '#5b3a8a'
+  const muted = '#5b5b5b'
+  const quiet = '#9c9483'
+  const hair = '#ececec'
+  const grid = '#f4f0e8'
+
+  return (
+    <div style={{
+      fontFamily: "'Inter', 'Helvetica Neue', sans-serif",
+      color: ink,
+      width: '100%',
+    }}>
+      <div style={{
+        fontSize: '0.65rem',
+        letterSpacing: '0.12em',
+        textTransform: 'uppercase',
+        color: quiet,
+        fontWeight: 500,
+        marginBottom: '0.6rem',
+      }}>
+        weight space, schematically
+      </div>
+
+      <svg viewBox="0 0 480 320" style={{ width: '100%', height: 'auto', display: 'block' }} aria-label="Weight-space schematic showing the base model, a task vector, and a scaled point along it.">
+        <defs>
+          <pattern id="ta-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke={grid} strokeWidth="1" />
+          </pattern>
+        </defs>
+        <rect width="480" height="280" fill="url(#ta-grid)" />
+
+        {/* Axes (subtle) */}
+        <line x1="40" y1="240" x2="440" y2="240" stroke={hair} strokeWidth="1" />
+        <line x1="40" y1="240" x2="40" y2="40" stroke={hair} strokeWidth="1" />
+
+        {/* Full task vector (ghost, dashed) */}
+        <line x1="100" y1="220" x2="380" y2="80" stroke={accent} strokeWidth="1.5" strokeDasharray="5,5" opacity="0.5" />
+        <path d="M 380 80 L 368 78 M 380 80 L 372 90" stroke={accent} strokeWidth="1.5" fill="none" opacity="0.5" />
+
+        {/* Scaled vector (solid, at λ = 0.5) */}
+        <line x1="100" y1="220" x2="240" y2="150" stroke={accent} strokeWidth="2.5" />
+        <path d="M 240 150 L 228 148 M 240 150 L 232 160" stroke={accent} strokeWidth="2.5" fill="none" />
+
+        {/* Label: Δθ along the full vector */}
+        <text x="310" y="135" fontSize="15" fill={accent} fontStyle="italic" fontFamily="'Georgia', serif">Δθ</text>
+
+        {/* Label: λΔθ along the scaled vector */}
+        <text x="155" y="200" fontSize="14" fill={accent} fontStyle="italic" fontFamily="'Georgia', serif">λΔθ</text>
+
+        {/* Base point θ₀ */}
+        <circle cx="100" cy="220" r="7" fill={ink} />
+        <circle cx="100" cy="220" r="3" fill="#fff" />
+        <text x="78" y="240" fontSize="15" fill={ink} fontStyle="italic" fontFamily="'Georgia', serif">θ₀</text>
+
+        {/* Edited point at λ = 0.5 */}
+        <circle cx="240" cy="150" r="6" fill={accent} />
+        <circle cx="240" cy="150" r="2.5" fill="#fff" />
+        <text x="250" y="142" fontSize="11" fill={accent} fontFamily="'Inter', sans-serif">θ₀ + λΔθ</text>
+
+        {/* Task-tuned point */}
+        <circle cx="380" cy="80" r="7" fill={ink} />
+        <circle cx="380" cy="80" r="3" fill="#fff" />
+        <text x="390" y="74" fontSize="13" fill={ink} fontStyle="italic" fontFamily="'Georgia', serif">θ_task</text>
+
+        {/* λ scale at the bottom */}
+        <text x="40" y="306" fontSize="10" fill={quiet} fontFamily="'JetBrains Mono', monospace">λ = 0</text>
+        <text x="440" y="306" fontSize="10" fill={quiet} fontFamily="'JetBrains Mono', monospace" textAnchor="end">λ = 1</text>
+        <line x1="40" y1="285" x2="440" y2="285" stroke={hair} strokeWidth="1" />
+        <line x1="40" y1="285" x2="240" y2="285" stroke={accent} strokeWidth="2" />
+        <circle cx="240" cy="285" r="4" fill={accent} />
+        <text x="240" y="278" fontSize="10" fill={accent} fontFamily="'JetBrains Mono', monospace" textAnchor="middle">0.5</text>
+      </svg>
+
+      <div style={{
+        marginTop: '0.9rem',
+        fontSize: '0.78rem',
+        color: muted,
+        fontStyle: 'italic',
+        lineHeight: 1.55,
+      }}>
+        A task vector Δθ is a direction in weight space. Scaling it by λ moves the model
+        continuously from the base θ₀ toward the fine-tuned θ<sub style={{ fontSize: '0.65em' }}>task</sub>.
+      </div>
+    </div>
+  )
+}
+
 // Conceptual hero figure for the monitoring-silent-thoughts post: three sandbagging
 // models with the same prompt and the same answer, three different CoT surfaces.
 function MonitoringHeroFigure() {
@@ -636,7 +727,7 @@ The codebase is set up to make it easy to run these experiments. If you're inter
 *All the code, data, and results are available in the [repository](https://github.com/LauraGomezjurado/hidden_objectives). Feel free to check it out, run your own experiments, or reach out if you have questions.*`
   },
   'task-arithmetic-fairness': {
-    title: 'The Hidden Geometry of Task Arithmetic',
+    title: 'The hidden geometry of task arithmetic',
     date: '2026-04-14',
     content: '' // rendered via TaskArithmeticPost component
   },
@@ -737,28 +828,39 @@ export default function BlogPost() {
   // Custom component posts: rendered outside the markdown pipeline
   if (slug === 'task-arithmetic-fairness') {
     return (
-      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#fdfcf9', color: '#1a1a1a', fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
-        <div className="relative z-10 mx-auto w-full" style={{ maxWidth: '760px' }}>
+      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#ffffff', color: '#1a1a1a', fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
+        <div className="lead-shell">
           <Link to="/blog" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
             ← back to blog
           </Link>
-          <header style={{ marginBottom: '3rem' }}>
-            <h1 ref={titleRef} style={{
-              fontSize: 'clamp(1.9rem, 4vw, 2.6rem)',
-              fontWeight: 400,
-              lineHeight: 1.2,
-              letterSpacing: '-0.01em',
-              color: '#1a1a1a',
-              marginBottom: '1.25rem'
-            }}>
-              {post.title}
-            </h1>
-            <p style={{ fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.01em', margin: 0 }}>
-              Laura Gomezjurado · {formattedDate}
-            </p>
-            <hr style={{ marginTop: '1.5rem', border: 0, borderTop: '1px solid #d8d3c8' }} />
+
+          <header className="lead-hero">
+            <div className="lead-hero-left">
+              <h1 ref={titleRef}>{post.title}</h1>
+              <div className="lead-abstract">
+                <p>
+                  This post is about the geometry of task arithmetic. You take a fine-tuned
+                  model, compute the difference between its weights and the base model's,
+                  and treat that difference as a vector in weight space. Adding that vector
+                  to a different base model, without any further training, often produces a
+                  useful new model. We then walk through Naganuma et al.'s ICLR 2026 paper
+                  <em> On Fairness of Task Arithmetic</em>, which uses the same picture to
+                  predict when task-arithmetic fairness interventions help, and when they
+                  hurt. Once the geometry is in view, the results stop being surprising.
+                </p>
+              </div>
+              <p className="lead-byline">Laura Gomezjurado · {formattedDate}</p>
+            </div>
+            <div className="lead-hero-right">
+              <TaskArithmeticHeroFigure />
+            </div>
           </header>
-          <TaskArithmeticPost />
+
+          <hr className="lead-rule" />
+
+          <div style={{ maxWidth: '760px', margin: '0 auto' }}>
+            <TaskArithmeticPost />
+          </div>
         </div>
       </section>
     )
