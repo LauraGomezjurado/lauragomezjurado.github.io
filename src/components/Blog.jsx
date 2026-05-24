@@ -9,6 +9,13 @@ gsap.registerPlugin(ScrollTrigger)
 // For now, we'll create a simple structure
 const blogPosts = [
   {
+    slug: 'orth-dion-spectral-geometry',
+    title: 'A geometric fix for low-rank spectral optimization',
+    date: '2026-05-24',
+    excerpt: "Dion approximates Muon under FSDP by sending only rank-r factors. Its slower convergence looks like the price of low-rank communication, but the gap is geometric: column normalization inflates the Ky Fan dual norm by up to √r. Replacing one line with QR recovers the full-rank spectral rate at Dion's communication cost.",
+    featured: true
+  },
+  {
     slug: 'confessions-dont-escape-substrate',
     title: 'Can a latent-CoT model confess what it concealed?',
     date: '2026-05-03',
@@ -31,27 +38,27 @@ const blogPosts = [
   },
   {
     slug: 'materials-agents-exploration',
-    title: 'Building Agents That Do Materials Science',
+    title: 'Building agents that do materials science',
     date: '2025-12-30',
     excerpt: 'What if you could just tell an AI agent what material you want, and it figures out how to simulate it, analyze it, and optimize it? I\'m exploring whether LLM-based agents can orchestrate real materials discovery workflows.'
   },
   {
     slug: 'subliminal-preference-transfer',
-    title: 'Do LLMs Learn Hidden Preferences from Neutral Feedback?',
+    title: 'Do LLMs learn hidden preferences from neutral feedback?',
     date: '2025-01-20',
     excerpt:
       'Investigating whether language models trained on demographic-specific preference data from neutral conversations exhibit opinion transfer when evaluated on unrelated topics, and what this means for AI safety.',
   },
   {
     slug: 'hidden-objectives',
-    title: 'Exploring Concealment Mechanisms Across Hidden Objectives',
+    title: 'Do two hidden objectives share a concealment mechanism?',
     date: '2025-01-01',
     excerpt: 'What happens when you train a model to do two different secret tasks? Do they share a common hiding mechanism, or stay separate? I ran some experiments to find out.',
     featured: true
   },
   {
     slug: 'welcome-to-my-blog',
-    title: 'Welcome to My Blog',
+    title: 'Welcome',
     date: '2025-11-01',
     excerpt: 'This is my first blog post where I\'ll be sharing thoughts on AI safety, interpretability, and research.'
   }

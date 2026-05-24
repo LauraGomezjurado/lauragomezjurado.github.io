@@ -8,6 +8,7 @@ import 'katex/dist/katex.min.css'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import TaskArithmeticPost from './TaskArithmeticPost'
+import OrthDionPost from './OrthDionPost'
 import latentThoughtRaw from '../../content/blog/2026-04-27-monitoring-silent-thoughts.md?raw'
 import confessionsRaw from '../../content/blog/2026-05-03-confessions-dont-escape-substrate.md?raw'
 
@@ -112,6 +113,212 @@ function TaskArithmeticHeroFigure() {
       }}>
         A task vector Δθ is a direction in weight space. Scaling it by λ moves the model
         continuously from the base θ₀ toward the fine-tuned θ<sub style={{ fontSize: '0.65em' }}>task</sub>.
+      </div>
+    </div>
+  )
+}
+
+// Conceptual hero figure for the hidden-objectives post: two LoRA adapters trained
+// on two different hidden objectives, with the central comparative question.
+function HiddenObjectivesHeroFigure() {
+  const ink = '#1a1a1a'
+  const accent = '#5b3a8a'
+  const muted = '#5b5b5b'
+  const quiet = '#9c9483'
+  const hair = '#ececec'
+  const warm = '#b8531f'
+  const mono = "'JetBrains Mono', ui-monospace, monospace"
+
+  const Card = ({ label, objective, secret, color }) => (
+    <div style={{
+      flex: 1,
+      padding: '1rem 1.1rem',
+      borderTop: `2px solid ${color}`,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.6rem',
+    }}>
+      <div style={{ fontSize: '0.7rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: color, fontWeight: 600 }}>
+        {label}
+      </div>
+      <div style={{ fontSize: '0.9rem', fontWeight: 500, color: ink }}>
+        {objective}
+      </div>
+      <div style={{ fontFamily: mono, fontSize: '0.72rem', color: muted, lineHeight: 1.55 }}>
+        {secret}
+      </div>
+    </div>
+  )
+
+  return (
+    <div style={{ fontFamily: "'Inter', 'Helvetica Neue', sans-serif", color: ink, width: '100%' }}>
+      <div style={{
+        fontSize: '0.65rem',
+        letterSpacing: '0.12em',
+        textTransform: 'uppercase',
+        color: quiet,
+        fontWeight: 500,
+        marginBottom: '0.6rem',
+      }}>
+        two LoRA adapters, two hidden objectives
+      </div>
+
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+        <Card
+          label="LoRA A"
+          objective="Taboo"
+          secret={<>execute the task, never say the secret word ("kumquat", "zephyr", "quasar"…)</>}
+          color={accent}
+        />
+        <Card
+          label="LoRA B"
+          objective="Base64"
+          secret={<>follow a hidden instruction, never reveal what it is</>}
+          color={warm}
+        />
+      </div>
+
+      <div style={{
+        textAlign: 'center',
+        fontSize: '0.95rem',
+        color: ink,
+        padding: '0.85rem 1rem',
+        borderTop: `1px solid ${hair}`,
+        borderBottom: `1px solid ${hair}`,
+        marginBottom: '0.5rem',
+      }}>
+        do they share a <em>concealment mechanism</em>?
+      </div>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '1rem',
+        fontSize: '0.74rem',
+        color: muted,
+        lineHeight: 1.55,
+      }}>
+        <div>
+          <span style={{ fontWeight: 600, color: ink }}>Shared.</span>{' '}
+          One direction in activation space should disrupt both.
+        </div>
+        <div>
+          <span style={{ fontWeight: 600, color: ink }}>Independent.</span>{' '}
+          Each objective hides things in its own subspace.
+        </div>
+      </div>
+
+      <div style={{
+        marginTop: '1rem',
+        fontSize: '0.74rem',
+        color: muted,
+        fontStyle: 'italic',
+        lineHeight: 1.55,
+      }}>
+        Probes find cross-task structure. Interventions do not transfer cleanly. The
+        causal picture sits in between.
+      </div>
+    </div>
+  )
+}
+
+// Conceptual hero figure for the materials-agents-exploration post: a planner
+// agent that dispatches to specialised agents for each step of the workflow.
+function MaterialsAgentsHeroFigure() {
+  const ink = '#1a1a1a'
+  const accent = '#5b3a8a'
+  const muted = '#5b5b5b'
+  const quiet = '#9c9483'
+  const hair = '#ececec'
+  const mono = "'JetBrains Mono', ui-monospace, monospace"
+
+  return (
+    <div style={{ fontFamily: "'Inter', 'Helvetica Neue', sans-serif", color: ink, width: '100%' }}>
+      <div style={{
+        fontSize: '0.65rem',
+        letterSpacing: '0.12em',
+        textTransform: 'uppercase',
+        color: quiet,
+        fontWeight: 500,
+        marginBottom: '0.6rem',
+      }}>
+        agent workflow
+      </div>
+
+      <svg viewBox="0 0 480 320" style={{ width: '100%', height: 'auto', display: 'block' }}>
+        {/* Goal box */}
+        <rect x="100" y="14" width="280" height="40" rx="3" fill="#fff" stroke={ink} strokeWidth="1.5" />
+        <text x="240" y="34" textAnchor="middle" fontSize="11" fontFamily={mono} fill={ink}>
+          "find a stable semiconductor structure"
+        </text>
+        <text x="240" y="48" textAnchor="middle" fontSize="9" fontFamily="'Inter', sans-serif" fill={quiet} letterSpacing="0.08em">
+          NATURAL-LANGUAGE GOAL
+        </text>
+
+        {/* Arrow goal -> planner */}
+        <line x1="240" y1="54" x2="240" y2="84" stroke={ink} strokeWidth="1.5" />
+        <path d="M 240 84 L 234 76 M 240 84 L 246 76" stroke={ink} strokeWidth="1.5" fill="none" />
+
+        {/* Planner */}
+        <rect x="150" y="84" width="180" height="48" rx="3" fill={accent} />
+        <text x="240" y="105" textAnchor="middle" fontSize="14" fontWeight="500" fill="#fff" fontFamily="'Inter', sans-serif">
+          Planner
+        </text>
+        <text x="240" y="122" textAnchor="middle" fontSize="9" fontFamily={mono} fill="#fff" opacity="0.85">
+          decompose · dispatch · iterate
+        </text>
+
+        {/* Branching lines down to four agents */}
+        <line x1="240" y1="132" x2="240" y2="160" stroke={ink} strokeWidth="1" />
+        <line x1="60" y1="160" x2="420" y2="160" stroke={ink} strokeWidth="1" />
+        <line x1="60" y1="160" x2="60" y2="190" stroke={ink} strokeWidth="1" />
+        <line x1="180" y1="160" x2="180" y2="190" stroke={ink} strokeWidth="1" />
+        <line x1="300" y1="160" x2="300" y2="190" stroke={ink} strokeWidth="1" />
+        <line x1="420" y1="160" x2="420" y2="190" stroke={ink} strokeWidth="1" />
+
+        {/* Four agent boxes */}
+        {[
+          { x: 10, label: 'Structure', sub: 'FCC / BCC /\ndiamond …' },
+          { x: 130, label: 'Simulate', sub: 'M3GNet /\nCHGNet' },
+          { x: 250, label: 'Analyse', sub: 'convergence,\nproperties' },
+          { x: 370, label: 'Optimise', sub: 'Bayesian /\nGP surrogate' },
+        ].map((a, i) => (
+          <g key={i}>
+            <rect x={a.x} y="190" width="100" height="58" rx="3" fill="#fff" stroke={ink} strokeWidth="1" />
+            <text x={a.x + 50} y="210" textAnchor="middle" fontSize="11" fontWeight="500" fill={ink} fontFamily="'Inter', sans-serif">
+              {a.label}
+            </text>
+            {a.sub.split('\n').map((line, j) => (
+              <text
+                key={j}
+                x={a.x + 50}
+                y={224 + j * 11}
+                textAnchor="middle"
+                fontSize="8.5"
+                fill={muted}
+                fontFamily={mono}
+              >
+                {line}
+              </text>
+            ))}
+          </g>
+        ))}
+
+        {/* Loop arrow back to planner */}
+        <path d="M 60 248 Q 30 270, 30 200 Q 30 90, 145 90" stroke={quiet} strokeWidth="1" fill="none" strokeDasharray="3,3" />
+        <path d="M 145 90 L 138 86 M 145 90 L 138 94" stroke={quiet} strokeWidth="1" fill="none" />
+        <text x="40" y="295" fontSize="9" fill={quiet} fontFamily={mono}>iterate until done</text>
+      </svg>
+
+      <div style={{
+        marginTop: '0.6rem',
+        fontSize: '0.75rem',
+        color: muted,
+        fontStyle: 'italic',
+        lineHeight: 1.55,
+      }}>
+        A planner decomposes a goal into steps, dispatches specialised agents, and
+        iterates on their results.
       </div>
     </div>
   )
@@ -259,14 +466,142 @@ const splitAtFirstH2 = (text) => {
   return { abstract: text.trim(), body: '' };
 }
 
+// Schematic hero figure for the orth-dion post: rank-r polar factor sitting on
+// the boundary of the Ky Fan dual ball, with column-normalized Dion pushed
+// outside it. Stylized; not drawn to numerical scale.
+function OrthDionHeroFigure() {
+  const ink = '#1a1a1a'
+  const accent = '#5b3a8a'
+  const dion = '#3b6bb5'
+  const orth = '#b5302d'
+  const muted = '#5b5b5b'
+  const quiet = '#9c9483'
+  const hair = '#ececec'
+  const grid = '#f4f0e8'
+
+  // Ky Fan dual ball: intersection of operator-norm and Frobenius constraints.
+  // We sketch this as a rounded square (the operator-norm box clipped by the
+  // Frobenius circle), with the polar factor on its corner.
+  const cx = 240, cy = 160
+  const Rop = 110   // operator-norm half-width
+  const Rfr = 132   // Frobenius radius
+
+  return (
+    <div style={{
+      fontFamily: "'Inter', 'Helvetica Neue', sans-serif",
+      color: ink,
+      width: '100%',
+    }}>
+      <div style={{
+        fontSize: '0.65rem',
+        letterSpacing: '0.12em',
+        textTransform: 'uppercase',
+        color: quiet,
+        fontWeight: 500,
+        marginBottom: '0.6rem',
+      }}>
+        rank-r updates live inside the Ky Fan dual ball
+      </div>
+
+      <svg viewBox="0 0 480 320" style={{ width: '100%', height: 'auto', display: 'block' }}
+           aria-label="Schematic of the Ky Fan dual ball with the rank-r polar factor on the boundary and Dion outside it.">
+        <defs>
+          <pattern id="od-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke={grid} strokeWidth="1" />
+          </pattern>
+          <clipPath id="od-box">
+            <rect x={cx - Rop} y={cy - Rop} width={2 * Rop} height={2 * Rop} />
+          </clipPath>
+        </defs>
+        <rect width="480" height="280" fill="url(#od-grid)" />
+
+        {/* Frobenius constraint disk (Frobenius/√r ≤ 1) */}
+        <circle cx={cx} cy={cy} r={Rfr} fill="none" stroke={hair} strokeWidth="1.5" strokeDasharray="5,5" />
+        <text x={cx + Rfr - 4} y={cy + 4} fontSize="10" fill={quiet} fontFamily="'JetBrains Mono', monospace" textAnchor="end">
+          ‖·‖_F = √r
+        </text>
+
+        {/* Operator-norm box (‖·‖_op ≤ 1) */}
+        <rect x={cx - Rop} y={cy - Rop} width={2 * Rop} height={2 * Rop}
+              fill="none" stroke={hair} strokeWidth="1.5" />
+
+        {/* Intersection = Ky Fan dual ball (rounded square shape via clip) */}
+        <circle cx={cx} cy={cy} r={Rfr} fill={accent} fillOpacity="0.06" clipPath="url(#od-box)" />
+
+        {/* Boundary corner = polar factor (Muon / Orth-Dion target) */}
+        <circle cx={cx + Rop} cy={cy - Rop} r={6} fill={orth} />
+        <circle cx={cx + Rop} cy={cy - Rop} r={2.5} fill="#fff" />
+        <text x={cx + Rop + 10} y={cy - Rop - 4} fontSize="11" fill={orth} fontFamily="'Inter', sans-serif">
+          rank-r polar factor
+        </text>
+        <text x={cx + Rop + 10} y={cy - Rop + 11} fontSize="10" fill={orth} fontFamily="'JetBrains Mono', monospace">
+          νₜ = 1
+        </text>
+
+        {/* Dion's update — outside the operator-norm constraint, inside Frobenius */}
+        <circle cx={cx + Rop + 36} cy={cy - Rop - 18} r={6} fill={dion} />
+        <circle cx={cx + Rop + 36} cy={cy - Rop - 18} r={2.5} fill="#fff" />
+        <text x={cx + Rop + 46} y={cy - Rop - 24} fontSize="11" fill={dion} fontFamily="'Inter', sans-serif">
+          Dion update
+        </text>
+        <text x={cx + Rop + 46} y={cy - Rop - 9} fontSize="10" fill={dion} fontFamily="'JetBrains Mono', monospace">
+          νₜ ∈ [1, √r]
+        </text>
+
+        {/* Arrow: ColNorm → outside dual ball */}
+        <line x1={cx + Rop} y1={cy - Rop} x2={cx + Rop + 28} y2={cy - Rop - 14}
+              stroke={dion} strokeWidth="1.5" strokeDasharray="4,3" />
+
+        {/* Center: zero matrix */}
+        <circle cx={cx} cy={cy} r={4} fill={ink} />
+        <text x={cx + 8} y={cy + 4} fontSize="10" fill={muted} fontFamily="'JetBrains Mono', monospace">
+          0
+        </text>
+
+        {/* Bottom legend strip */}
+        <line x1="40" y1="285" x2="440" y2="285" stroke={hair} strokeWidth="1" />
+        <text x="40" y="306" fontSize="10" fill={quiet} fontFamily="'JetBrains Mono', monospace">
+          dual norm ‖D‖* = max{`{`}‖D‖_op, ‖D‖_F / √r{`}`}
+        </text>
+        <text x="440" y="306" fontSize="10" fill={quiet} fontFamily="'JetBrains Mono', monospace" textAnchor="end">
+          schematic
+        </text>
+      </svg>
+
+      <div style={{
+        marginTop: '0.9rem',
+        fontSize: '0.78rem',
+        color: muted,
+        fontStyle: 'italic',
+        lineHeight: 1.55,
+      }}>
+        The rank-<em>r</em> polar factor that Muon targets sits on a corner of the Ky Fan dual
+        ball, where the operator-norm and Frobenius constraints meet. Column normalization
+        preserves the Frobenius constraint but lets the operator norm inflate, pushing the update
+        outside the dual ball. QR puts it back on the corner.
+      </div>
+    </div>
+  )
+}
+
 gsap.registerPlugin(ScrollTrigger)
+
+// Map of slug → hero figure component for LEAD-style posts that use a JSX hero
+// rather than an external image. (task-arithmetic-fairness is rendered through
+// its own dedicated branch and is not in this map.)
+const leadHeroComponents = {
+  'monitoring-silent-thoughts': MonitoringHeroFigure,
+  'hidden-objectives': HiddenObjectivesHeroFigure,
+  'materials-agents-exploration': MaterialsAgentsHeroFigure,
+}
 
 // In a real implementation, you'd load this from markdown files
 // For now, we'll use a simple mapping
 const blogPosts = {
   'materials-agents-exploration': {
-    title: 'Building Agents That Do Materials Science',
+    title: 'Building agents that do materials science',
     date: '2025-01-25',
+    layout: 'lead',
     content: `What if you could just tell an AI agent "find me a better battery material" and it actually figures out how to do it? Not just suggest some papers or write some code, but actually plan the simulations, run them, check if they converged, compare results, decide what to try next, and iterate until it finds something useful.
 
 That's the question I've been exploring with a project I'm calling [materials_agents](https://github.com/LauraGomezjurado/materials_agents). It's a proof of concept system where LLM-based agents orchestrate real materials science workflows. The idea is simple: instead of manually chaining together structure generation, simulation setup, convergence monitoring, and optimization steps, what if an agent could handle all of that?
@@ -400,11 +735,14 @@ Not because it replaces scientists, but because it lets scientists focus on the 
 That's the vision anyway. We'll see how far we can take it.`
   },
           'subliminal-preference-transfer': {
-    title: 'Do LLMs Learn Hidden Preferences from Neutral Feedback?',
+    title: 'Do LLMs learn hidden preferences from neutral feedback?',
     date: '2025-01-20',
+    layout: 'lead',
+    heroImage: '/images/blog/figure1_js_heatmap.png',
+    heroImageAlt: 'JS-similarity heatmap across the four cohort-trained models and four evaluation countries.',
     content: `**Epistemic status:** this is purely preliminary and exploratory. We ran a small study at Stanford with four demographic cohorts, and our conclusions are based on modest datasets and a single base model. There is plenty (!!) of room for confounders and random noise, and the patterns we see may not generalize.
 
-**Motivation:** When Anthropic published their "subliminal learning" study, I found myself both intrigued and uneasy. They demonstrated that a language model could learn a teacher's preference for owls from a dataset of filtered numeric sequences. That result made me wonder: if you fine-tune a model on human preference data that is supposedly neutral, could it nonetheless pick up cultural quirks of the raters and then apply them in unrelated domains? (Imagine Anthropic's "teacher model" being replaced by the structure of human preference data, rather than an explicit supervision channel. 
+**Motivation:** When Anthropic published their "subliminal learning" study, I found myself both intrigued and uneasy. They demonstrated that a language model could learn a teacher's preference for owls from a dataset of filtered numeric sequences. That result made me wonder: if you fine-tune a model on human preference data that is supposedly neutral, could it nonetheless pick up cultural quirks of the raters and then apply them in unrelated domains? (Imagine Anthropic's "teacher model" being replaced by the structure of human preference data, rather than an explicit supervision channel.)
 
 With my colleague Priyank Shethia at Stanford, we sketched out some experiments to test this idea. This post tells that story.
 
@@ -583,8 +921,9 @@ Dettmers, T., Pagnoni, A., Holtzman, A., & Zettlemoyer, L. (2023). QLoRA: Effici
 von Werra, L., Havrilla, Y., Muennighoff, N., Thakur, A., Thrush, T., Rame, A., & Bekman, S. (2020). TRL: Transformer Reinforcement Learning. HuggingFace library.`
   },
   'hidden-objectives': {
-    title: 'Exploring Concealment Mechanisms Across Hidden Objectives',
+    title: 'Do two hidden objectives share a concealment mechanism?',
     date: '2025-01-01',
+    layout: 'lead',
     content: `When you train a language model with LoRA adapters, you're adding a small set of parameters that modify how the model behaves. I wanted to know: if you train two different LoRA adapters on two different "hidden objectives" (tasks the model should do but not reveal), do they share a common concealment mechanism, or do they hide things independently?
 
 I put together a [project](https://github.com/LauraGomezjurado/hidden_objectives) to test this. Here's what I found, and what I'm still figuring out.
@@ -731,6 +1070,11 @@ The codebase is set up to make it easy to run these experiments. If you're inter
     date: '2026-04-14',
     content: '' // rendered via TaskArithmeticPost component
   },
+  'orth-dion-spectral-geometry': {
+    title: 'A geometric fix for low-rank spectral optimization',
+    date: '2026-05-24',
+    content: '' // rendered via OrthDionPost component
+  },
   'monitoring-silent-thoughts': {
     title: 'Is latent chain-of-thought monitorable?',
     date: '2026-04-30',
@@ -748,21 +1092,21 @@ The codebase is set up to make it easy to run these experiments. If you're inter
     heroImageAlt: 'Three models cluster on binary admission TPR but pull apart by an order of magnitude on informational truth recovery.'
   },
   'welcome-to-my-blog': {
-    title: 'Welcome to My Blog',
+    title: 'Welcome',
     date: '2025-11-01',
-    content: `# Welcome to My Blog
+    layout: 'lead',
+    content: `This is where I share notes, drafts, and write-ups about the research I am working on. Expect posts on AI safety, interpretability, fairness, and the ideas in between.
 
-This is where I'll be sharing my thoughts on AI safety, interpretability, fairness, and the research I'm working on.
+## What to expect
 
-## What to Expect
+A mix of short notes and longer write-ups. Topics will include:
 
-I'll be writing about:
-- Research insights and findings
+- Research insights and findings from ongoing projects
 - Thoughts on AI safety and governance
 - Technical deep-dives into interpretability
 - Reflections on the intersection of research and policy
 
-Stay tuned for more content!`
+If something here is useful, wrong, or worth a follow-up, please reach out.`
   }
 }
 
@@ -866,6 +1210,61 @@ export default function BlogPost() {
     )
   }
 
+  if (slug === 'orth-dion-spectral-geometry') {
+    return (
+      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#ffffff', color: '#1a1a1a', fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
+        <div className="lead-shell">
+          <Link to="/blog" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
+            ← back to blog
+          </Link>
+
+          <header className="lead-hero">
+            <div className="lead-hero-left">
+              <h1 ref={titleRef}>{post.title}</h1>
+              <div className="lead-abstract">
+                <p>
+                  Spectral optimizers like Muon orthogonalize momentum and step along the polar
+                  factor of the gradient, but the extra collective they need is expensive under
+                  fully sharded data parallel training. Dion sidesteps that cost by tracking a
+                  rank-<em>r</em> factorization through one step of power iteration. It converges
+                  more slowly than full-rank spectral methods, and the standard reading is that
+                  this is the price of compression. We walk through Nakamori, Gomezjurado, Talluri,
+                  Tiwari, Kawashima, Mitliagkas, Rabusseau, and Naganuma's preprint{' '}
+                  <em>Orth-Dion</em>, which shows the gap is geometric: Dion's column normalization
+                  inflates the Ky Fan dual norm of the update by up to <em>√r</em>, and replacing
+                  that one line with QR orthogonalization removes the penalty.
+                </p>
+              </div>
+              <p className="lead-byline">Laura Gomezjurado · {formattedDate}</p>
+              <p style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: '0.82rem',
+                color: '#5b3a8a',
+                marginTop: '0.4rem',
+                letterSpacing: '0.02em'
+              }}>
+                <a href="https://arxiv.org/abs/2605.16341"
+                   target="_blank" rel="noopener noreferrer"
+                   style={{ color: '#5b3a8a', textDecoration: 'underline', textUnderlineOffset: '2px' }}>
+                  [paper]
+                </a>
+              </p>
+            </div>
+            <div className="lead-hero-right">
+              <OrthDionHeroFigure />
+            </div>
+          </header>
+
+          <hr className="lead-rule" />
+
+          <div style={{ maxWidth: '760px', margin: '0 auto' }}>
+            <OrthDionPost />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   // Caption renderer for images. Markdown alt text becomes the italic caption.
   const Figure = ({ src, alt }) => (
     <figure style={{ margin: '2.5rem 0' }}>
@@ -933,11 +1332,12 @@ export default function BlogPost() {
               <p className="lead-byline">Laura Gomezjurado · {formattedDate}</p>
             </div>
             <div className="lead-hero-right">
-              {slug === 'monitoring-silent-thoughts' ? (
-                <MonitoringHeroFigure />
-              ) : post.heroImage ? (
-                <img src={post.heroImage} alt={post.heroImageAlt || ''} loading="eager" />
-              ) : null}
+              {(() => {
+                const HeroComponent = leadHeroComponents[slug]
+                if (HeroComponent) return <HeroComponent />
+                if (post.heroImage) return <img src={post.heroImage} alt={post.heroImageAlt || ''} loading="eager" />
+                return null
+              })()}
             </div>
           </header>
 
