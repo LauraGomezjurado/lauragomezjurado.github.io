@@ -494,11 +494,8 @@ export default function OrthDionPost() {
         alt="Late-stage validation loss for Dion, Orth-Dion, and Ada-Orth-Dion on LLaMA 3 320M (rank 384)."
         caption={
           <>
-            <Strong>Figure 1.</Strong> Late-stage validation loss on a LLaMA 3 320M pre-training
-            run at rank <Katex tex="r=384" />, with the mean and a 2-standard-deviation band over
-            three seeds. At a matched rank, Orth-Dion reaches Dion's plateau earlier and keeps
-            descending; Ada-Orth-Dion improves further by shrinking the working rank toward each
-            layer's intrinsic dimensionality. Full trajectories are reported in §10.
+            <Strong>Figure 1.</Strong> Late-stage validation loss on LLaMA 3 320M at rank{' '}
+            <Katex tex="r=384" />, mean and ±2 std band over three seeds.
           </>
         }
         width="640px"
@@ -593,10 +590,8 @@ export default function OrthDionPost() {
         alt="Unit balls for SGD (Euclidean), SignSGD (ell-infinity), and Muon (spectral) geometries."
         caption={
           <>
-            <Strong>Figure 2.</Strong> Three unit balls in matrix space. SGD's argmax sits on a
-            sphere; SignSGD's sits on the cube's corners; Muon's sits on the set of orthogonal
-            matrices — those with all singular values equal to one. The spectrum-equalizing
-            behavior we saw in the warm-up is what that last constraint enforces.
+            <Strong>Figure 2.</Strong> Unit balls under three matrix norms: Frobenius (SGD),
+            entrywise <Katex tex="\ell_\infty"/> (SignSGD), and operator (Muon).
           </>
         }
         width="560px"
@@ -808,15 +803,9 @@ export default function OrthDionPost() {
         ]}
         caption={
           <>
-            <Strong>Figure 3.</Strong> The dual-norm mismatch is real, rank-ordered, and persistent.
-            <Em> (a)</Em> Layer-mean <Katex tex="\bar\nu_t" /> separates cleanly by rank for Dion
-            (peaks roughly <Katex tex="2.1, 2.5, 2.9" />) and stays well above <Katex tex="1" />{' '}
-            throughout training; the right axis shows <Katex tex="\bar\nu_t^{\,2}" />, the factor
-            through which the dual norm enters the smoothness term. <Em>(b)</Em> Pooling individual
-            updates over layer, step, and seed shows the inflation is dispersed rather than driven
-            by isolated outliers: at <Katex tex="r = 384" />, about a third of updates carry{' '}
-            <Katex tex="\nu_t > 2" />. Orth-Dion (red) collapses to{' '}
-            <Katex tex="\nu_t \approx 1" /> in both panels.
+            <Strong>Figure 3.</Strong> Measured <Katex tex="\nu_t" /> on LLaMA 3 320M for{' '}
+            <Katex tex="r \in \{96, 192, 384\}" /> (mean over 3 seeds, band ±std). (a) Layer-mean
+            time-course. (b) Post-warmup distribution pooled over layer, step, and seed.
           </>
         }
       />
@@ -917,12 +906,8 @@ export default function OrthDionPost() {
         ]}
         caption={
           <>
-            <Strong>Figure 4.</Strong> Training dynamics on LLaMA 3 320M (6,100 steps, 8×GH200 FSDP).
-            <Em> (a)</Em> At every rank, Orth-Dion lands at lower validation loss than Dion;
-            Ada-Orth-Dion improves further by reducing the working rank toward each layer's
-            intrinsic dimensionality. <Em>(b)</Em> Orth-Dion reaches Dion's best loss in roughly{' '}
-            <Katex tex="0.88\text{–}0.89\times" /> the wall-clock time across the three ranks, a
-            consistent ~12% reduction.
+            <Strong>Figure 4.</Strong> LLaMA 3 320M, 6,100 steps, 8×GH200 FSDP. (a) C4 validation
+            loss. (b) Wall-clock to match Dion's best loss, normalized to Dion = 1.
           </>
         }
       />
@@ -956,12 +941,7 @@ export default function OrthDionPost() {
         alt="Per-step wall-clock time on LLaMA 3 17.1B for Muon, Dion, Orth-Dion, and Ada-Orth-Dion."
         caption={
           <>
-            <Strong>Figure 5.</Strong> Per-step time on a LLaMA 3 17.1B run on 8×A40 with FSDP,
-            where bandwidth-bound collectives make the gap between low-rank and full-rank updates
-            most visible. Fixed-rank Orth-Dion is slightly slower than Dion because of the QR step.
-            Ada-Orth-Dion (pinned at the steady-state rank reached on the 320M model,{' '}
-            <Katex tex="r_f \approx 0.93" />) closes the gap and matches Dion's per-step time,
-            while inheriting Orth-Dion's lower validation loss.
+            <Strong>Figure 5.</Strong> Per-step wall-clock on LLaMA 3 17.1B, 8×A40 FSDP.
           </>
         }
         width="560px"
