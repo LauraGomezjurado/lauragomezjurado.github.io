@@ -9,6 +9,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import TaskArithmeticPost from './TaskArithmeticPost'
 import OrthDionPost from './OrthDionPost'
+import MuonGeometryPost from './MuonGeometryPost'
 import latentThoughtRaw from '../../content/blog/2026-04-27-monitoring-silent-thoughts.md?raw'
 import confessionsRaw from '../../content/blog/2026-05-03-confessions-dont-escape-substrate.md?raw'
 
@@ -724,6 +725,276 @@ function OrthDionHeroFigure() {
   )
 }
 
+// Hero figure for the muon-geometry post: an R-line.
+// One horizontal axis = log R̂ (the paper's one-step improvement ratio).
+// Dots are real measured values from the paper, placed at their log-R̂.
+// The point: every mixed-optimizer recipe is a frozen guess about the sign of
+// log R̂ at each layer, and the layers fall on both sides of zero in ways that
+// flip with scale and architecture.
+function MuonGeometryHeroFigure() {
+  const ink = '#1a1a1a'
+  const muted = '#6b6660'
+  const quiet = '#9c9483'
+  // Two-color palette: ink for "the resting state" / structural, rust for the
+  // single accent used to call out where the heuristic disagrees with the metric.
+  const accent = '#b8531f'
+  const signTint = '#f4ede3'   // very subtle warm fill for "sign-preferred" half
+  const specTint = '#fbf2e7'   // very subtle warmer fill for "spectral-preferred" half
+  const serif = "'Georgia', 'Iowan Old Style', 'Times New Roman', serif"
+  const mono = "'JetBrains Mono', ui-monospace, monospace"
+
+  // SVG layout — wider, more vertical headroom for clean label placement
+  const W = 520, H = 300
+  const padL = 36, padR = 22
+  const axisY = 220              // axis low, labels live above
+  const xMin = -2, xMax = 6.5    // log R̂ axis range (matches paper extremes)
+  const span = W - padL - padR
+  const x = v => padL + ((v - xMin) / (xMax - xMin)) * span
+
+  // Measured values from the paper. Three story points get full labels
+  // (one per prediction); two context points are small unlabeled dots that
+  // show the regime without crowding.
+  //
+  //  - GPT-2 31M output (sign-preferred):  log R̂ ≈ -0.33   [body, §4]
+  //  - GPT-2 31M embedding:                 log R̂ ≈  0.15   [Fig. 1 left]
+  //  - ViT-B/16 output projection:          log R̂ ≈  1.10   [paper Fig.]
+  //  - GPT-2 1B embedding & head:           log R̂ ≈  4.1    [Fig. 2 right]
+  //  - nanoVLM tied head/embed:             log R̂ ≈  5.6    [Fig. 4]
+
+  // Labeled story points: one per prediction (P1, P2, P3 in the paper).
+  // Each has a unique vertical level so labels never overlap.
+  const labeled = [
+    {
+      label: 'GPT-2 31M  ·  output',
+      sub: 'sign-preferred  ·  P1',
+      v: -0.33,
+      yLabel: axisY - 130,         // top-left
+      align: 'start',
+      labelDx: 6,
+      accent: false,
+    },
+    {
+      label: 'GPT-2 1B  ·  embedding + head',
+      sub: 'scale flip  ·  P2',
+      v: 4.10,
+      yLabel: axisY - 90,          // middle-right
+      align: 'end',
+      labelDx: -6,
+      accent: false,
+    },
+    {
+      label: 'nanoVLM  ·  tied head / embed',
+      sub: 'architecture flip  ·  P3',
+      v: 5.60,
+      yLabel: axisY - 40,          // bottom-right
+      align: 'end',
+      labelDx: -6,
+      accent: true,
+    },
+  ]
+
+  // Unlabeled context dots — show the regime, don't crowd the labels.
+  const context = [
+    { v: 0.15, label: 'GPT-2 embed' },    // not displayed; included for completeness
+    { v: 1.10, label: 'ViT output' },
+  ]
+
+  return (
+    <div style={{ color: ink, width: '100%' }}>
+      {/* Lowercase italic kicker — not all-caps */}
+      <div style={{
+        fontFamily: serif,
+        fontStyle: 'italic',
+        fontSize: '0.86rem',
+        color: muted,
+        marginBottom: '1.1rem',
+      }}>
+        every mixed-optimizer recipe is a guess about the sign of one scalar
+      </div>
+
+      <div style={{
+        display: 'flex',
+        gap: '1.6rem',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+      }}>
+        {/* LEFT: the R-line schematic */}
+        <div style={{ flex: '1 1 360px', minWidth: 0 }}>
+          <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}
+               aria-label="A horizontal log R-hat axis with three measured story points labeled above and two unlabeled context dots, on tinted sign-preferred and spectral-preferred halves.">
+
+            {/* Tinted half-planes — subtle, just enough to read the dichotomy */}
+            <rect x={padL} y={axisY - 12} width={x(0) - padL} height={24} fill={signTint} />
+            <rect x={x(0)} y={axisY - 12} width={W - padR - x(0)} height={24} fill={specTint} />
+
+            {/* Axis line */}
+            <line x1={padL} y1={axisY} x2={W - padR} y2={axisY} stroke={ink} strokeWidth="1" />
+
+            {/* Ticks at integer values; zero is darker */}
+            {[-2, -1, 0, 1, 2, 3, 4, 5, 6].map(v => {
+              const xv = x(v)
+              const isZero = v === 0
+              return (
+                <g key={v}>
+                  <line x1={xv} y1={axisY - 4} x2={xv} y2={axisY + 4}
+                        stroke={ink} strokeWidth={isZero ? 1.3 : 0.7} />
+                  <text x={xv} y={axisY + 17} fontSize="9.5"
+                        fill={isZero ? ink : quiet}
+                        fontFamily={mono} textAnchor="middle">
+                    {v}
+                  </text>
+                </g>
+              )
+            })}
+
+            {/* Decision-boundary guide at log R̂ = 0 */}
+            <line x1={x(0)} y1={axisY - 16} x2={x(0)} y2={axisY + 24}
+                  stroke={ink} strokeWidth="1.1" strokeDasharray="4 3" />
+            <text x={x(0)} y={axisY + 36} fontSize="9.5" fill={ink}
+                  fontFamily={serif} fontStyle="italic" textAnchor="middle">
+              decision boundary  (log R̂ = 0)
+            </text>
+
+            {/* Half-region tags — small, on the axis level, replacing the
+                noisy top-of-figure region labels that crowded the labels. */}
+            <text x={padL + 4} y={axisY + 36} fontSize="9.5" fill={muted}
+                  fontFamily={serif} fontStyle="italic" textAnchor="start">
+              ← sign
+            </text>
+            <text x={W - padR - 4} y={axisY + 36} fontSize="9.5" fill={accent}
+                  fontFamily={serif} fontStyle="italic" textAnchor="end">
+              spectral →
+            </text>
+
+            {/* Axis label, far right above axis tag */}
+            <text x={W - padR - 4} y={axisY - 8} fontSize="11" fill={ink}
+                  fontFamily={serif} fontStyle="italic" textAnchor="end">
+              log R̂
+            </text>
+
+            {/* Unlabeled context dots — small, ink, no leader line. They show
+                that there are intermediate layers in the spectral-preferred
+                half without crowding the labeled story points. */}
+            {context.map(c => (
+              <circle key={c.v} cx={x(c.v)} cy={axisY} r={2.6}
+                      fill="#fff" stroke={ink} strokeWidth="1.1" />
+            ))}
+
+            {/* Three labeled story points — one per prediction, each on its
+                own vertical level. Leader lines connect dot ↔ label. */}
+            {labeled.map(p => {
+              const px = x(p.v)
+              const py = p.yLabel
+              const c = p.accent ? accent : ink
+              return (
+                <g key={p.label}>
+                  {/* Leader line from axis up to label level */}
+                  <line x1={px} y1={axisY - 6} x2={px} y2={py + 6}
+                        stroke={c} strokeWidth="0.9" />
+                  {/* Dot on the axis (the actual measurement) */}
+                  <circle cx={px} cy={axisY} r={p.accent ? 5 : 4} fill={c} />
+                  {p.accent && <circle cx={px} cy={axisY} r={1.8} fill="#fff" />}
+                  {/* Two-line label at the label level */}
+                  <text x={px + p.labelDx} y={py} fontSize="10.5"
+                        fill={ink} fontFamily={serif} fontStyle="italic"
+                        textAnchor={p.align}>
+                    {p.label}
+                  </text>
+                  <text x={px + p.labelDx} y={py + 12} fontSize="9"
+                        fill={c} fontFamily={mono}
+                        textAnchor={p.align}>
+                    {p.sub}  ·  log R̂ ≈ {p.v > 0 ? '+' : ''}{p.v.toFixed(2)}
+                  </text>
+                </g>
+              )
+            })}
+
+            {/* Bottom footnote: what Scion guesses, where the metric disagrees */}
+            <g transform={`translate(${padL}, ${H - 18})`}>
+              <text x={0} y={0} fontSize="9.5" fill={muted}
+                    fontFamily={serif} fontStyle="italic" textAnchor="start">
+                Scion's frozen guess: sign on embedding/head, spectral on hidden.
+              </text>
+              <text x={0} y={13} fontSize="9.5" fill={accent}
+                    fontFamily={serif} fontStyle="italic" textAnchor="start">
+                The metric disagrees at GPT-2 1B and at the nanoVLM head.
+              </text>
+            </g>
+          </svg>
+        </div>
+
+        {/* RIGHT: stacked callouts */}
+        <div style={{
+          flex: '1 1 220px',
+          minWidth: '210px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+        }}>
+          <div style={{ borderLeft: `2px solid ${ink}`, paddingLeft: '0.9rem' }}>
+            <div style={{
+              fontFamily: serif, fontStyle: 'italic', fontSize: '0.98rem',
+              color: ink, lineHeight: 1.3, marginBottom: '0.3rem',
+            }}>
+              the metric
+            </div>
+            <div style={{
+              fontFamily: serif, fontSize: '0.82rem', color: muted,
+              lineHeight: 1.55, marginBottom: '0.55rem',
+            }}>
+              one scalar per layer; sign of <em>log R̂</em> decides the geometry
+            </div>
+            <div style={{
+              fontFamily: mono, fontSize: '0.72rem', color: ink, lineHeight: 1.75,
+            }}>
+              R(W; B) = Δ_spec / Δ_sign<br />
+              &nbsp;&nbsp;&nbsp;= (signal eff.) · κ
+            </div>
+          </div>
+
+          <div style={{ borderLeft: `2px solid ${accent}`, paddingLeft: '0.9rem' }}>
+            <div style={{
+              fontFamily: serif, fontStyle: 'italic', fontSize: '0.98rem',
+              color: accent, lineHeight: 1.3, marginBottom: '0.3rem',
+            }}>
+              the gate
+            </div>
+            <div style={{
+              fontFamily: serif, fontSize: '0.82rem', color: muted,
+              lineHeight: 1.55, marginBottom: '0.55rem',
+            }}>
+              G-Scion estimates <em>R̂</em> online and flips each eligible layer
+              the first time the sign crosses zero
+            </div>
+            <div style={{
+              fontFamily: mono, fontSize: '0.72rem', color: accent, lineHeight: 1.75,
+            }}>
+              τ = 0   (same threshold everywhere)<br />
+              one-way, locked after flip
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Editorial caption */}
+      <div style={{
+        marginTop: '1.4rem',
+        fontFamily: serif,
+        fontStyle: 'italic',
+        fontSize: '0.88rem',
+        color: muted,
+        lineHeight: 1.65,
+      }}>
+        The paper's central scalar <em>R̂</em> is the ratio of expected one-step loss decreases
+        between spectral and sign updates at a given layer. Plotting <em>log R̂</em> on a single
+        axis collapses every mixed-optimizer recipe to a sign comparison. The same threshold,{' '}
+        <em>τ = 0</em>, beats fixed Scion at every scale and architecture tested — including the
+        nanoVLM head, where the metric reverses the LM convention.
+      </div>
+    </div>
+  )
+}
+
 gsap.registerPlugin(ScrollTrigger)
 
 // Map of slug → hero figure component for LEAD-style posts that use a JSX hero
@@ -1215,6 +1486,11 @@ The codebase is set up to make it easy to run these experiments. If you're inter
     date: '2026-05-24',
     content: '' // rendered via OrthDionPost component
   },
+  'muon-geometry-mixed-optimizer': {
+    title: 'Which geometry on which layer?',
+    date: '2026-05-25',
+    content: '' // rendered via MuonGeometryPost component
+  },
   'monitoring-silent-thoughts': {
     title: 'Is latent chain-of-thought monitorable?',
     date: '2026-04-30',
@@ -1399,6 +1675,49 @@ export default function BlogPost() {
 
           <div style={{ maxWidth: '760px', margin: '0 auto' }}>
             <OrthDionPost />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (slug === 'muon-geometry-mixed-optimizer') {
+    return (
+      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#ffffff', color: '#1a1a1a', fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
+        <div className="lead-shell">
+          <Link to="/blog" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
+            ← back to blog
+          </Link>
+
+          <header className="lead-hero">
+            <div className="lead-hero-left">
+              <h1 ref={titleRef}>{post.title}</h1>
+              <div className="lead-abstract">
+                <p>
+                  Modern transformer recipes mix optimizers across the model: a sign-based step
+                  (Adam, SignSGD) on the embedding and output projection, a spectral step (Muon)
+                  on the hidden layers. The assignment is heuristic; when a recipe breaks across
+                  scale or architecture, practitioners re-run sweeps. We walk through Naganuma,
+                  Gomezjurado, Ghaznavi, Nitanda, Liew, Hataya, and Mitliagkas's preprint{' '}
+                  <em>Which Geometry on Which Layer?</em>, which derives a single measurable
+                  scalar — the one-step improvement ratio <em>R(W; B) := Δ<sub>spec</sub> /
+                  Δ<sub>sign</sub></em> — that decides every layer's geometry from the descent
+                  lemma alone. The same threshold beats fixed Scion across four GPT-2 scales,
+                  ViT-B/16 on CIFAR-100, and a nanoVLM head where the metric flags an
+                  architectural reversal the LM convention gets wrong.
+                </p>
+              </div>
+              <p className="lead-byline">Laura Gomezjurado · {formattedDate}</p>
+            </div>
+            <div className="lead-hero-right">
+              <MuonGeometryHeroFigure />
+            </div>
+          </header>
+
+          <hr className="lead-rule" />
+
+          <div style={{ maxWidth: '760px', margin: '0 auto' }}>
+            <MuonGeometryPost />
           </div>
         </div>
       </section>

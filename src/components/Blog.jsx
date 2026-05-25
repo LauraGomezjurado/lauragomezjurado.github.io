@@ -9,6 +9,13 @@ gsap.registerPlugin(ScrollTrigger)
 // For now, we'll create a simple structure
 const blogPosts = [
   {
+    slug: 'muon-geometry-mixed-optimizer',
+    title: 'Which geometry on which layer?',
+    date: '2026-05-25',
+    excerpt: "Mixed-optimizer recipes (Adam on embed/head, Muon on hidden) are frozen guesses about the sign of one scalar per layer: R(W;B) := Δ_spec / Δ_sign. It factors into signal efficiency times a curvature ratio, and a one-line estimator decides every layer's geometry — beating fixed Scion across four GPT-2 scales, ViT-B/16, and a nanoVLM head reversal that the LM convention gets wrong.",
+    featured: true
+  },
+  {
     slug: 'orth-dion-spectral-geometry',
     title: 'A geometric fix for low-rank spectral optimization',
     date: '2026-05-24',
