@@ -575,68 +575,32 @@ body.light-theme .portfolio-image:hover {
 }
 
 .lead-prose-inner-bi {
-  /* Prose centered in the outer container, with ~290px of gutter on each
-     side reserved for floated figures. */
-  max-width: 560px;
+  /* Wide enough to host PairedFigure rows (prose + figure side by side).
+     Regular prose blocks constrain themselves to a comfortable 640px reading
+     column via the .narrow-block utility below. */
+  max-width: 960px;
   margin: 0 auto;
 }
 
-.lead-prose-inner-bi p {
-  font-size: 1.02rem;
-  line-height: 1.72;
-  color: #2a2a2a;
+/* Constrain regular prose blocks (paragraphs, headings, equations, algorithm
+   boxes, pullquotes) to a comfortable reading width, centered. PairedFigure
+   rows opt out by NOT having .narrow-block, so they span the full 960px. */
+.lead-prose-inner-bi .narrow-block {
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.lead-prose-inner-bi figure.side,
-.lead-prose-inner-bi figure.side-left {
-  width: 270px;
-  margin-top: 0.5rem;
-  margin-bottom: 1.75rem;
-}
-
-.lead-prose-inner-bi figure.side {
-  float: right;
-  margin-right: -290px;
-  margin-left: 1.5rem;
-  clear: right;
-}
-
-.lead-prose-inner-bi figure.side-left {
-  float: left;
-  margin-left: -290px;
-  margin-right: 1.5rem;
-  clear: left;
-}
-
-.lead-prose-inner-bi figure.side img,
-.lead-prose-inner-bi figure.side-left img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 2px;
-}
-
-.lead-prose-inner-bi figure.side figcaption,
-.lead-prose-inner-bi figure.side-left figcaption {
-  font-size: 0.78rem;
-  color: #5b5b5b;
-  font-style: italic;
-  line-height: 1.55;
-  margin-top: 0.6rem;
-  text-align: left;
-}
-
-/* On narrower viewports, side floats collapse to inline full-width blocks
-   so the prose isn't squeezed against the figures. */
-@media (max-width: 1100px) {
+/* On narrower viewports, paired figures stack vertically. */
+@media (max-width: 1000px) {
   .lead-prose-inner-bi {
     max-width: 100%;
   }
-  .lead-prose-inner-bi figure.side,
-  .lead-prose-inner-bi figure.side-left {
-    float: none;
-    width: 100%;
-    margin: 1.5rem 0;
+  .lead-prose-inner-bi .paired-figure-row {
+    display: block !important;
+  }
+  .lead-prose-inner-bi .paired-figure-row > * {
+    margin-bottom: 1.5rem;
   }
 }
 

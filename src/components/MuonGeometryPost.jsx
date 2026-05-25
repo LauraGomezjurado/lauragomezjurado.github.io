@@ -16,7 +16,7 @@ function Katex({ tex, display = false }) {
 // ─── Section heading ──────────────────────────────────────────────────────────
 function SectionHeading({ number, title }) {
   return (
-    <div style={{ marginTop: '3.5rem', marginBottom: '1.25rem' }}>
+    <div className="narrow-block" style={{ marginTop: '3.5rem', marginBottom: '1.25rem' }}>
       <hr style={{ border: 0, borderTop: '1px solid #d8d3c8', marginBottom: '1.5rem' }} />
       <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.85rem' }}>
         <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.78rem', color: '#9c9483', letterSpacing: '0.1em' }}>
@@ -33,10 +33,10 @@ function SectionHeading({ number, title }) {
 // ─── Pull quote ───────────────────────────────────────────────────────────────
 function Pullquote({ children }) {
   return (
-    <blockquote style={{
+    <blockquote className="narrow-block" style={{
       borderLeft: '2px solid #b8a8d0',
       paddingLeft: '1.25rem',
-      margin: '1.75rem 0',
+      margin: '1.75rem auto',
       color: '#4a4a4a',
       fontSize: '1.02rem',
       fontStyle: 'italic',
@@ -51,8 +51,8 @@ function Pullquote({ children }) {
 // ─── Math block ───────────────────────────────────────────────────────────────
 function MathBlock({ tex }) {
   return (
-    <div style={{
-      margin: '1.5rem 0',
+    <div className="narrow-block" style={{
+      margin: '1.5rem auto',
       padding: '0.5rem 0',
       overflowX: 'auto',
       textAlign: 'center'
@@ -62,25 +62,53 @@ function MathBlock({ tex }) {
   )
 }
 
-// ─── Side figures (right- and left-floated) ──────────────────────────────────
-// Both float into a 290px gutter reserved by .lead-prose-inner-bi in index.css.
-// Alternating them between paragraphs keeps the prose from running out on one
-// side and creating awkward white vertical gaps.
-function Figure({ src, alt, caption }) {
-  return (
-    <figure className="side">
-      <img src={src} alt={alt || ''} loading="lazy" />
-      {caption && <figcaption>{caption}</figcaption>}
+// ─── Paired figure row ────────────────────────────────────────────────────────
+// A deterministic 2-column flex row: prose on one side, figure on the other.
+// Replaces the float-based pattern, which stranded short paragraphs next to
+// taller figures and produced large vertical white gaps. With a grid row, the
+// columns have fixed widths and align at the top; any leftover space is in a
+// single column, not next to the figure.
+function PairedFigure({ side = 'right', src, alt, caption, children }) {
+  const fig = (
+    <figure style={{
+      margin: 0,
+      width: '100%',
+    }}>
+      <img
+        src={src}
+        alt={alt || ''}
+        loading="lazy"
+        style={{ width: '100%', display: 'block', borderRadius: '2px' }}
+      />
+      {caption && (
+        <figcaption style={{
+          fontSize: '0.78rem',
+          color: '#5b5b5b',
+          fontStyle: 'italic',
+          lineHeight: 1.55,
+          marginTop: '0.6rem',
+          textAlign: 'left',
+        }}>
+          {caption}
+        </figcaption>
+      )}
     </figure>
   )
-}
+  const prose = <div style={{ minWidth: 0 }}>{children}</div>
 
-function SideLeft({ src, alt, caption }) {
+  const order = side === 'left' ? [fig, prose] : [prose, fig]
+
   return (
-    <figure className="side-left">
-      <img src={src} alt={alt || ''} loading="lazy" />
-      {caption && <figcaption>{caption}</figcaption>}
-    </figure>
+    <div className="paired-figure-row" style={{
+      display: 'grid',
+      gridTemplateColumns: side === 'left' ? '300px 1fr' : '1fr 300px',
+      gap: '2rem',
+      alignItems: 'start',
+      margin: '2rem 0',
+    }}>
+      <div>{order[0]}</div>
+      <div>{order[1]}</div>
+    </div>
   )
 }
 
@@ -139,11 +167,11 @@ function AlgLine({ n, code, note, highlight }) {
 
 function GScionAlgorithm() {
   return (
-    <div style={{
+    <div className="narrow-block" style={{
       border: '1px solid #e3dccc',
       borderRadius: '6px',
       padding: '1.1rem 1.25rem',
-      margin: '2rem 0',
+      margin: '2rem auto',
       background: '#fdfbf6'
     }}>
       <div style={{
@@ -181,11 +209,11 @@ function GScionAlgorithm() {
 // ─── Side-by-side comparison: sign vs spectral on one matrix ─────────────────
 function GeometryDuel() {
   return (
-    <div style={{
+    <div className="narrow-block" style={{
       display: 'flex',
       gap: '1rem',
       flexWrap: 'wrap',
-      margin: '2rem 0',
+      margin: '2rem auto',
     }}>
       <div style={{
         flex: 1,
@@ -251,8 +279,11 @@ function GeometryDuel() {
 }
 
 // ─── Prose helpers ────────────────────────────────────────────────────────────
+// Paragraphs constrain themselves to a comfortable 640px reading column via
+// .narrow-block; inside a PairedFigure (where the parent column is already
+// constrained), the rule is a no-op.
 const P = ({ children }) => (
-  <p style={{ color: '#2a2a2a', lineHeight: 1.72, fontSize: '1.02rem', marginBottom: '1.1rem', fontWeight: 400 }}>
+  <p className="narrow-block" style={{ color: '#2a2a2a', lineHeight: 1.72, fontSize: '1.02rem', marginBottom: '1.1rem', fontWeight: 400 }}>
     {children}
   </p>
 )
@@ -478,17 +509,8 @@ export default function MuonGeometryPost() {
         <Katex tex="\tau = 0"/> in every cell.
       </P>
 
-      <P>
-        <Strong>GPT-2 at 31M parameters — P1 confirmed, output sign-preferred.</Strong> On
-        OpenWebText, the embedding's <Katex tex="\log\widehat{\mathcal R}"/> sits firmly above
-        zero across training, and the embed-side gate locks to spectral at the first decision
-        step. The output projection runs the other way: <Katex tex="\log\widehat{\mathcal R}"/>{' '}
-        averages around <Katex tex="-0.33"/> across three activation choices and the output-side
-        gate flips to sign at step 150. This is exactly the Scion convention — sign on head,
-        spectral on hidden — and at 31M the metric agrees with it.
-      </P>
-
-      <Figure
+      <PairedFigure
+        side="right"
         src="/images/blog/muon-geometry/lm_logA_gpt2.png"
         alt="Per-layer log R-hat trajectories for embedding and output projection on GPT-2 31M, OpenWebText."
         caption={
@@ -502,20 +524,20 @@ export default function MuonGeometryPost() {
             line) and the layer stays sign-preferred for the rest of training.
           </>
         }
-      />
+      >
+        <P>
+          <Strong>GPT-2 at 31M parameters — P1 confirmed, output sign-preferred.</Strong> On
+          OpenWebText, the embedding's <Katex tex="\log\widehat{\mathcal R}"/> sits firmly above
+          zero across training, and the embed-side gate locks to spectral at the first decision
+          step. The output projection runs the other way: <Katex tex="\log\widehat{\mathcal R}"/>{' '}
+          averages around <Katex tex="-0.33"/> across three activation choices and the output-side
+          gate flips to sign at step 150. This is exactly the Scion convention — sign on head,
+          spectral on hidden — and at 31M the metric agrees with it.
+        </P>
+      </PairedFigure>
 
-      <P>
-        <Strong>GPT-2 at 1B parameters — P2 confirmed, the head flips with scale.</Strong> The
-        same gate, same threshold, same architecture family, different scale. Now the embedding{' '}
-        <Em>and</Em> the output projection both have <Katex tex="\log\widehat{\mathcal R} \gg 1"/>{' '}
-        throughout training. Scion's hand-coded sign-on-head assumption is no longer correct;
-        G-Scion catches this and locks both layers to spectral. At every scale tested between 31M
-        and 1B, the gate beats matched Scion in final validation loss — by 0.355 nats at 31M in
-        the memoryless comparison that the bound is strict about, and by smaller margins at the
-        larger scales where momentum (outside the bound) is also at play.
-      </P>
-
-      <SideLeft
+      <PairedFigure
+        side="left"
         src="/images/blog/muon-geometry/lm_composite_1b.png"
         alt="GPT-2 1B headline: validation loss and embedding R-hat for G-Scion variants vs fixed Scion."
         caption={
@@ -528,7 +550,18 @@ export default function MuonGeometryPost() {
             keeps them there.
           </>
         }
-      />
+      >
+        <P>
+          <Strong>GPT-2 at 1B parameters — P2 confirmed, the head flips with scale.</Strong> The
+          same gate, same threshold, same architecture family, different scale. Now the embedding{' '}
+          <Em>and</Em> the output projection both have <Katex tex="\log\widehat{\mathcal R} \gg 1"/>{' '}
+          throughout training. Scion's hand-coded sign-on-head assumption is no longer correct;
+          G-Scion catches this and locks both layers to spectral. At every scale tested between 31M
+          and 1B, the gate beats matched Scion in final validation loss — by 0.355 nats at 31M in
+          the memoryless comparison that the bound is strict about, and by smaller margins at the
+          larger scales where momentum (outside the bound) is also at play.
+        </P>
+      </PairedFigure>
 
       <WideFigure
         src="/images/blog/muon-geometry/scale_sweep.png"
@@ -544,19 +577,8 @@ export default function MuonGeometryPost() {
         }
       />
 
-      <P>
-        <Strong>nanoVLM — P3 confirmed, the head reverses with architecture.</Strong> The cleanest
-        of the three. Fine-tune a 135M-parameter vision-language model (nanoVLM, with SigLIP2-base
-        as the vision encoder and SmolLM2-135M as the language tower) on the Cauldron's TQA
-        subset. The (tied) embedding/head plateaus at <Katex tex="\log\widehat{\mathcal R}\approx 5.6"/>{' '}
-        for the entire run — several units above every hidden component, and several units{' '}
-        <Em>above</Em> rather than below the values seen at the GPT-2 head. Same gate, same
-        threshold, but now the metric says the head wants spectral. Scion's LM convention is
-        misaligned in this setting; G-Scion lets the head stay in spectral mode and improves
-        validation loss by 0.016 and SciQA accuracy by 1.1 percentage points.
-      </P>
-
-      <Figure
+      <PairedFigure
+        side="right"
         src="/images/blog/muon-geometry/vlm_logRhat.png"
         alt="nanoVLM per-component log R-hat: LM head plateaus around 5.6, far above the break-even."
         caption={
@@ -569,15 +591,22 @@ export default function MuonGeometryPost() {
             at exactly the layer where the multimodal gradient meets the language tower.
           </>
         }
-      />
+      >
+        <P>
+          <Strong>nanoVLM — P3 confirmed, the head reverses with architecture.</Strong> The cleanest
+          of the three. Fine-tune a 135M-parameter vision-language model (nanoVLM, with SigLIP2-base
+          as the vision encoder and SmolLM2-135M as the language tower) on the Cauldron's TQA
+          subset. The (tied) embedding/head plateaus at <Katex tex="\log\widehat{\mathcal R}\approx 5.6"/>{' '}
+          for the entire run — several units above every hidden component, and several units{' '}
+          <Em>above</Em> rather than below the values seen at the GPT-2 head. Same gate, same
+          threshold, but now the metric says the head wants spectral. Scion's LM convention is
+          misaligned in this setting; G-Scion lets the head stay in spectral mode and improves
+          validation loss by 0.016 and SciQA accuracy by 1.1 percentage points.
+        </P>
+      </PairedFigure>
 
-      <P>
-        A separate from-scratch ViT-B/16 run on CIFAR-100 shows the same picture from the vision
-        side: <Katex tex="\widehat{\mathcal R}"/> at the output projection settles around 3,
-        firmly above 1; gating to spectral lowers validation loss and lifts top-1 accuracy.
-      </P>
-
-      <SideLeft
+      <PairedFigure
+        side="left"
         src="/images/blog/muon-geometry/vit_val_curves.png"
         alt="ViT-B/16 CIFAR-100 validation curves: G-Scion variants improve on Scion baseline."
         caption={
@@ -589,7 +618,15 @@ export default function MuonGeometryPost() {
             prescribes.
           </>
         }
-      />
+      >
+        <P>
+          A separate from-scratch ViT-B/16 run on CIFAR-100 shows the same picture from the vision
+          side: <Katex tex="\widehat{\mathcal R}"/> at the output projection settles around 3,
+          firmly above 1; gating to spectral lowers validation loss and lifts top-1 accuracy. The
+          gate enables at step 100; both validation loss and validation accuracy improve
+          immediately, and the gap to fixed Scion widens through the rest of training.
+        </P>
+      </PairedFigure>
 
       {/* ── 7. Takeaway ───────────────────────────────────────────────────── */}
       <SectionHeading number={7} title="The scalar replaces the recipe" />
@@ -639,8 +676,8 @@ export default function MuonGeometryPost() {
       </P>
 
       {/* ── Reference ─────────────────────────────────────────────────────── */}
-      <hr style={{ border: 0, borderTop: '1px solid #d8d3c8', margin: '3rem 0 1.5rem' }} />
-      <div style={{ marginTop: '1.5rem' }}>
+      <hr className="narrow-block" style={{ border: 0, borderTop: '1px solid #d8d3c8', margin: '3rem auto 1.5rem' }} />
+      <div className="narrow-block" style={{ marginTop: '1.5rem' }}>
         <p style={{ color: '#9c9483', fontSize: '0.78rem', fontFamily: "'JetBrains Mono', monospace", marginBottom: '0.5rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
           Reference
         </p>
