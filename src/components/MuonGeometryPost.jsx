@@ -62,25 +62,24 @@ function MathBlock({ tex }) {
   )
 }
 
-// ─── Side figure ──────────────────────────────────────────────────────────────
-// Floats to the right of the prose, into the reserved 360px gutter defined
-// by .lead-prose-inner in index.css. Captions render below the image.
+// ─── Side figures (right- and left-floated) ──────────────────────────────────
+// Both float into a 290px gutter reserved by .lead-prose-inner-bi in index.css.
+// Alternating them between paragraphs keeps the prose from running out on one
+// side and creating awkward white vertical gaps.
 function Figure({ src, alt, caption }) {
   return (
     <figure className="side">
       <img src={src} alt={alt || ''} loading="lazy" />
-      {caption && (
-        <figcaption style={{
-          fontSize: '0.78rem',
-          color: '#5b5b5b',
-          fontStyle: 'italic',
-          lineHeight: 1.55,
-          marginTop: '0.6rem',
-          textAlign: 'left',
-        }}>
-          {caption}
-        </figcaption>
-      )}
+      {caption && <figcaption>{caption}</figcaption>}
+    </figure>
+  )
+}
+
+function SideLeft({ src, alt, caption }) {
+  return (
+    <figure className="side-left">
+      <img src={src} alt={alt || ''} loading="lazy" />
+      {caption && <figcaption>{caption}</figcaption>}
     </figure>
   )
 }
@@ -516,7 +515,7 @@ export default function MuonGeometryPost() {
         larger scales where momentum (outside the bound) is also at play.
       </P>
 
-      <Figure
+      <SideLeft
         src="/images/blog/muon-geometry/lm_composite_1b.png"
         alt="GPT-2 1B headline: validation loss and embedding R-hat for G-Scion variants vs fixed Scion."
         caption={
@@ -578,7 +577,7 @@ export default function MuonGeometryPost() {
         firmly above 1; gating to spectral lowers validation loss and lifts top-1 accuracy.
       </P>
 
-      <Figure
+      <SideLeft
         src="/images/blog/muon-geometry/vit_val_curves.png"
         alt="ViT-B/16 CIFAR-100 validation curves: G-Scion variants improve on Scion baseline."
         caption={
@@ -649,7 +648,8 @@ export default function MuonGeometryPost() {
           Hiroki Naganuma, Laura Gomezjurado, Mahdi Ghaznavi, Atsushi Nitanda, Seng Pei Liew,
           Ryuichiro Hataya, and Ioannis Mitliagkas.{' '}
           <em>Which Geometry on Which Layer? A Principled Criterion for Mixed-Optimizer Training.</em>{' '}
-          Preprint, 2026.
+          Preprint, 2026.{' '}
+          <ExtLink href="https://openreview.net/pdf?id=lDs4vkSX7J">[PDF]</ExtLink>
         </p>
         <div style={{
           marginTop: '1.25rem',
@@ -671,7 +671,8 @@ export default function MuonGeometryPost() {
              and Liew, Seng Pei and Hataya, Ryuichiro
              and Mitliagkas, Ioannis},
   year    = {2026},
-  note    = {Preprint}
+  note    = {Preprint},
+  url     = {https://openreview.net/pdf?id=lDs4vkSX7J}
 }`}</div>
       </div>
 

@@ -1654,11 +1654,14 @@ export default function BlogPost() {
                   fully sharded data parallel training. Dion sidesteps that cost by tracking a
                   rank-<em>r</em> factorization through one step of power iteration. It converges
                   more slowly than full-rank spectral methods, and the standard reading is that
-                  this is the price of compression. We walk through Nakamori, Gomezjurado, Talluri,
-                  Tiwari, Kawashima, Mitliagkas, Rabusseau, and Naganuma's preprint{' '}
-                  <em>Orth-Dion</em>, which shows the gap is geometric: Dion's column normalization
-                  inflates the Ky Fan dual norm of the update by up to <em>√r</em>, and replacing
-                  that one line with QR orthogonalization removes the penalty.
+                  this is the price of compression. This post walks through{' '}
+                  <em><a href="https://arxiv.org/abs/2605.16341" target="_blank"
+                         rel="noopener noreferrer"
+                         style={{ color: '#5b3a8a', textDecoration: 'underline', textUnderlineOffset: '2px' }}>
+                    Orth-Dion
+                  </a></em>, a project we worked on that shows the gap is geometric: Dion's column
+                  normalization inflates the Ky Fan dual norm of the update by up to <em>√r</em>,
+                  and replacing that one line with QR orthogonalization removes the penalty.
                 </p>
               </div>
               <p className="lead-byline">{formattedDate}</p>
@@ -1707,14 +1710,17 @@ export default function BlogPost() {
                   Modern transformer recipes mix optimizers across the model: a sign-based step
                   (Adam, SignSGD) on the embedding and output projection, a spectral step (Muon)
                   on the hidden layers. The assignment is heuristic; when a recipe breaks across
-                  scale or architecture, practitioners re-run sweeps. We walk through Naganuma,
-                  Gomezjurado, Ghaznavi, Nitanda, Liew, Hataya, and Mitliagkas's preprint{' '}
-                  <em>Which Geometry on Which Layer?</em>, which derives a single measurable
-                  scalar — the one-step improvement ratio <em>R(W; B) := Δ<sub>spec</sub> /
-                  Δ<sub>sign</sub></em> — that decides every layer's geometry from the descent
-                  lemma alone. The same threshold beats fixed Scion across four GPT-2 scales,
-                  ViT-B/16 on CIFAR-100, and a nanoVLM head where the metric flags an
-                  architectural reversal the LM convention gets wrong.
+                  scale or architecture, practitioners re-run sweeps. This post walks through{' '}
+                  <em><a href="https://openreview.net/pdf?id=lDs4vkSX7J" target="_blank"
+                         rel="noopener noreferrer"
+                         style={{ color: '#5b3a8a', textDecoration: 'underline', textUnderlineOffset: '2px' }}>
+                    Which Geometry on Which Layer?
+                  </a></em>, a project we worked on that derives a single measurable scalar — the
+                  one-step improvement ratio <em>R(W; B) := Δ<sub>spec</sub> / Δ<sub>sign</sub></em>{' '}
+                  — that decides every layer's geometry from the descent lemma alone. The same
+                  threshold beats fixed Scion across four GPT-2 scales, ViT-B/16 on CIFAR-100, and
+                  a nanoVLM head where the metric flags an architectural reversal the LM convention
+                  gets wrong.
                 </p>
               </div>
               <p className="lead-byline">{formattedDate}</p>
@@ -1726,8 +1732,8 @@ export default function BlogPost() {
 
           <hr className="lead-rule" />
 
-          <div className="lead-prose">
-            <div className="lead-prose-inner">
+          <div className="lead-prose-bi">
+            <div className="lead-prose-inner-bi">
               <MuonGeometryPost />
             </div>
           </div>
