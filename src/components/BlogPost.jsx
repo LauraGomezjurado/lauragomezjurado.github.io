@@ -743,61 +743,34 @@ function MuonGeometryHeroFigure() {
   const serif = "'Georgia', 'Iowan Old Style', 'Times New Roman', serif"
   const mono = "'JetBrains Mono', ui-monospace, monospace"
 
-  // SVG layout — wider, more vertical headroom for clean label placement
-  const W = 520, H = 300
-  const padL = 36, padR = 22
-  const axisY = 220              // axis low, labels live above
-  const xMin = -2, xMax = 6.5    // log R̂ axis range (matches paper extremes)
+  // SVG layout — short and wide. All labels live in the legend BELOW the
+  // figure, never on the geometry itself, so collisions are impossible.
+  const W = 520, H = 132
+  const padL = 28, padR = 22
+  const axisY = 70
+  const xMin = -2, xMax = 6.5
   const span = W - padL - padR
   const x = v => padL + ((v - xMin) / (xMax - xMin)) * span
 
-  // Measured values from the paper. Three story points get full labels
-  // (one per prediction); two context points are small unlabeled dots that
-  // show the regime without crowding.
+  // Measured values from the paper. Three story points get numbered tags
+  // (1, 2, 3) at the dot, expanded in a clean legend underneath. Two unlabeled
+  // context dots sit on the axis to show the intermediate regime.
   //
-  //  - GPT-2 31M output (sign-preferred):  log R̂ ≈ -0.33   [body, §4]
-  //  - GPT-2 31M embedding:                 log R̂ ≈  0.15   [Fig. 1 left]
-  //  - ViT-B/16 output projection:          log R̂ ≈  1.10   [paper Fig.]
-  //  - GPT-2 1B embedding & head:           log R̂ ≈  4.1    [Fig. 2 right]
-  //  - nanoVLM tied head/embed:             log R̂ ≈  5.6    [Fig. 4]
+  //  - GPT-2 31M output (sign-preferred):   log R̂ ≈ -0.33  [body, §4]
+  //  - GPT-2 31M embedding:                  log R̂ ≈  0.15  [Fig. 1 left]
+  //  - ViT-B/16 output projection:           log R̂ ≈  1.10  [paper Fig.]
+  //  - GPT-2 1B embedding & head:            log R̂ ≈  4.1   [Fig. 2 right]
+  //  - nanoVLM tied head/embed:              log R̂ ≈  5.6   [Fig. 4]
 
-  // Labeled story points: one per prediction (P1, P2, P3 in the paper).
-  // Each has a unique vertical level so labels never overlap.
-  const labeled = [
-    {
-      label: 'GPT-2 31M  ·  output',
-      sub: 'sign-preferred  ·  P1',
-      v: -0.33,
-      yLabel: axisY - 130,         // top-left
-      align: 'start',
-      labelDx: 6,
-      accent: false,
-    },
-    {
-      label: 'GPT-2 1B  ·  embedding + head',
-      sub: 'scale flip  ·  P2',
-      v: 4.10,
-      yLabel: axisY - 90,          // middle-right
-      align: 'end',
-      labelDx: -6,
-      accent: false,
-    },
-    {
-      label: 'nanoVLM  ·  tied head / embed',
-      sub: 'architecture flip  ·  P3',
-      v: 5.60,
-      yLabel: axisY - 40,          // bottom-right
-      align: 'end',
-      labelDx: -6,
-      accent: true,
-    },
+  const tagged = [
+    { n: 1, v: -0.33, accent: false, label: 'GPT-2 31M  ·  output',
+      sub: 'sign-preferred  ·  P1' },
+    { n: 2, v:  4.10, accent: false, label: 'GPT-2 1B  ·  embedding + head',
+      sub: 'scale flip  ·  P2' },
+    { n: 3, v:  5.60, accent: true,  label: 'nanoVLM  ·  tied head / embed',
+      sub: 'architecture flip  ·  P3' },
   ]
-
-  // Unlabeled context dots — show the regime, don't crowd the labels.
-  const context = [
-    { v: 0.15, label: 'GPT-2 embed' },    // not displayed; included for completeness
-    { v: 1.10, label: 'ViT output' },
-  ]
+  const context = [{ v: 0.15 }, { v: 1.10 }]
 
   return (
     <div style={{ color: ink, width: '100%' }}>
@@ -818,14 +791,14 @@ function MuonGeometryHeroFigure() {
         alignItems: 'center',
         flexWrap: 'wrap',
       }}>
-        {/* LEFT: the R-line schematic */}
+        {/* LEFT: short clean R-line + numbered legend below it. */}
         <div style={{ flex: '1 1 360px', minWidth: 0 }}>
           <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}
-               aria-label="A horizontal log R-hat axis with three measured story points labeled above and two unlabeled context dots, on tinted sign-preferred and spectral-preferred halves.">
+               aria-label="A horizontal log R-hat axis. Three numbered marks identify story points: GPT-2 31M output (sign-preferred), GPT-2 1B embed/head (scale flip), and the nanoVLM head (architecture flip). Two unlabeled dots show context.">
 
-            {/* Tinted half-planes — subtle, just enough to read the dichotomy */}
-            <rect x={padL} y={axisY - 12} width={x(0) - padL} height={24} fill={signTint} />
-            <rect x={x(0)} y={axisY - 12} width={W - padR - x(0)} height={24} fill={specTint} />
+            {/* Tinted half-planes — subtle, frames the dichotomy */}
+            <rect x={padL} y={axisY - 11} width={x(0) - padL} height={22} fill={signTint} />
+            <rect x={x(0)} y={axisY - 11} width={W - padR - x(0)} height={22} fill={specTint} />
 
             {/* Axis line */}
             <line x1={padL} y1={axisY} x2={W - padR} y2={axisY} stroke={ink} strokeWidth="1" />
@@ -848,79 +821,116 @@ function MuonGeometryHeroFigure() {
             })}
 
             {/* Decision-boundary guide at log R̂ = 0 */}
-            <line x1={x(0)} y1={axisY - 16} x2={x(0)} y2={axisY + 24}
+            <line x1={x(0)} y1={axisY - 14} x2={x(0)} y2={axisY + 22}
                   stroke={ink} strokeWidth="1.1" strokeDasharray="4 3" />
-            <text x={x(0)} y={axisY + 36} fontSize="9.5" fill={ink}
-                  fontFamily={serif} fontStyle="italic" textAnchor="middle">
-              decision boundary  (log R̂ = 0)
-            </text>
 
-            {/* Half-region tags — small, on the axis level, replacing the
-                noisy top-of-figure region labels that crowded the labels. */}
-            <text x={padL + 4} y={axisY + 36} fontSize="9.5" fill={muted}
+            {/* Region tags, side labels, and axis name — all *below* the axis */}
+            <text x={padL + 2} y={axisY + 36} fontSize="9.5" fill={muted}
                   fontFamily={serif} fontStyle="italic" textAnchor="start">
               ← sign
             </text>
-            <text x={W - padR - 4} y={axisY + 36} fontSize="9.5" fill={accent}
+            <text x={x(0)} y={axisY + 36} fontSize="9.5" fill={ink}
+                  fontFamily={serif} fontStyle="italic" textAnchor="middle">
+              decision boundary
+            </text>
+            <text x={W - padR - 2} y={axisY + 36} fontSize="9.5" fill={accent}
                   fontFamily={serif} fontStyle="italic" textAnchor="end">
               spectral →
             </text>
 
-            {/* Axis label, far right above axis tag */}
-            <text x={W - padR - 4} y={axisY - 8} fontSize="11" fill={ink}
+            {/* Axis label far right, above axis */}
+            <text x={W - padR - 2} y={axisY - 8} fontSize="10.5" fill={ink}
                   fontFamily={serif} fontStyle="italic" textAnchor="end">
               log R̂
             </text>
 
-            {/* Unlabeled context dots — small, ink, no leader line. They show
-                that there are intermediate layers in the spectral-preferred
-                half without crowding the labeled story points. */}
+            {/* Unlabeled context dots — small, hollow, sit ON the axis */}
             {context.map(c => (
               <circle key={c.v} cx={x(c.v)} cy={axisY} r={2.6}
                       fill="#fff" stroke={ink} strokeWidth="1.1" />
             ))}
 
-            {/* Three labeled story points — one per prediction, each on its
-                own vertical level. Leader lines connect dot ↔ label. */}
-            {labeled.map(p => {
+            {/* Numbered story points — small numbered tags ABOVE the axis,
+                expanded in the legend below the SVG. No text labels on the
+                geometry itself. */}
+            {tagged.map(p => {
               const px = x(p.v)
-              const py = p.yLabel
               const c = p.accent ? accent : ink
               return (
-                <g key={p.label}>
-                  {/* Leader line from axis up to label level */}
-                  <line x1={px} y1={axisY - 6} x2={px} y2={py + 6}
-                        stroke={c} strokeWidth="0.9" />
+                <g key={p.n}>
                   {/* Dot on the axis (the actual measurement) */}
-                  <circle cx={px} cy={axisY} r={p.accent ? 5 : 4} fill={c} />
-                  {p.accent && <circle cx={px} cy={axisY} r={1.8} fill="#fff" />}
-                  {/* Two-line label at the label level */}
-                  <text x={px + p.labelDx} y={py} fontSize="10.5"
-                        fill={ink} fontFamily={serif} fontStyle="italic"
-                        textAnchor={p.align}>
-                    {p.label}
-                  </text>
-                  <text x={px + p.labelDx} y={py + 12} fontSize="9"
+                  <circle cx={px} cy={axisY} r={p.accent ? 4.5 : 3.8} fill={c} />
+                  {p.accent && <circle cx={px} cy={axisY} r={1.6} fill="#fff" />}
+                  {/* Numbered tag just above the axis */}
+                  <circle cx={px} cy={axisY - 18} r={8} fill="#fff"
+                          stroke={c} strokeWidth="1.2" />
+                  <text x={px} y={axisY - 14.5} fontSize="10"
                         fill={c} fontFamily={mono}
-                        textAnchor={p.align}>
-                    {p.sub}  ·  log R̂ ≈ {p.v > 0 ? '+' : ''}{p.v.toFixed(2)}
+                        textAnchor="middle" fontWeight="600">
+                    {p.n}
                   </text>
+                  {/* short connector tag → dot */}
+                  <line x1={px} y1={axisY - 10} x2={px} y2={axisY - 4.5}
+                        stroke={c} strokeWidth="0.9" />
                 </g>
               )
             })}
-
-            {/* Bottom footnote: what Scion guesses, where the metric disagrees */}
-            <g transform={`translate(${padL}, ${H - 18})`}>
-              <text x={0} y={0} fontSize="9.5" fill={muted}
-                    fontFamily={serif} fontStyle="italic" textAnchor="start">
-                Scion's frozen guess: sign on embedding/head, spectral on hidden.
-              </text>
-              <text x={0} y={13} fontSize="9.5" fill={accent}
-                    fontFamily={serif} fontStyle="italic" textAnchor="start">
-                The metric disagrees at GPT-2 1B and at the nanoVLM head.
-              </text>
-            </g>
           </svg>
+
+          {/* Numbered legend, OUTSIDE the SVG. Cannot collide with anything. */}
+          <div style={{
+            marginTop: '0.95rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.45rem',
+          }}>
+            {tagged.map(p => {
+              const c = p.accent ? accent : ink
+              return (
+                <div key={p.n} style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1.4rem 1fr auto',
+                  alignItems: 'baseline',
+                  gap: '0.7rem',
+                }}>
+                  <span style={{
+                    fontFamily: mono,
+                    fontSize: '0.78rem',
+                    color: c,
+                    fontWeight: 600,
+                  }}>
+                    {p.n}
+                  </span>
+                  <span style={{
+                    fontFamily: serif,
+                    fontStyle: 'italic',
+                    fontSize: '0.9rem',
+                    color: ink,
+                    lineHeight: 1.4,
+                  }}>
+                    {p.label}
+                    <span style={{
+                      fontFamily: serif,
+                      fontStyle: 'italic',
+                      fontSize: '0.78rem',
+                      color: muted,
+                      marginLeft: '0.4em',
+                    }}>
+                      — {p.sub.split(' · ')[0]}
+                    </span>
+                  </span>
+                  <span style={{
+                    fontFamily: mono,
+                    fontSize: '0.75rem',
+                    color: c,
+                    whiteSpace: 'nowrap',
+                  }}>
+                    log R̂ ≈ {p.v > 0 ? '+' : ''}{p.v.toFixed(2)}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
         </div>
 
         {/* RIGHT: stacked callouts */}
@@ -1716,8 +1726,10 @@ export default function BlogPost() {
 
           <hr className="lead-rule" />
 
-          <div style={{ maxWidth: '760px', margin: '0 auto' }}>
-            <MuonGeometryPost />
+          <div className="lead-prose">
+            <div className="lead-prose-inner">
+              <MuonGeometryPost />
+            </div>
           </div>
         </div>
       </section>

@@ -62,18 +62,37 @@ function MathBlock({ tex }) {
   )
 }
 
-// ─── Figure ───────────────────────────────────────────────────────────────────
-function Figure({ src, alt, caption, width = '100%' }) {
+// ─── Side figure ──────────────────────────────────────────────────────────────
+// Floats to the right of the prose, into the reserved 360px gutter defined
+// by .lead-prose-inner in index.css. Captions render below the image.
+function Figure({ src, alt, caption }) {
   return (
-    <figure style={{ margin: '2.25rem 0' }}>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <img
-          src={src}
-          alt={alt || ''}
-          loading="lazy"
-          style={{ width, maxWidth: '100%', display: 'block', borderRadius: '2px' }}
-        />
-      </div>
+    <figure className="side">
+      <img src={src} alt={alt || ''} loading="lazy" />
+      {caption && (
+        <figcaption style={{
+          fontSize: '0.78rem',
+          color: '#5b5b5b',
+          fontStyle: 'italic',
+          lineHeight: 1.55,
+          marginTop: '0.6rem',
+          textAlign: 'left',
+        }}>
+          {caption}
+        </figcaption>
+      )}
+    </figure>
+  )
+}
+
+// ─── Full-width figure ────────────────────────────────────────────────────────
+// For figures that genuinely need the full reading width (e.g., wide 2-panel
+// composites with axis labels that would be unreadable at 320px).
+function WideFigure({ src, alt, caption }) {
+  return (
+    <figure style={{ margin: '2.25rem 0', clear: 'both' }}>
+      <img src={src} alt={alt || ''} loading="lazy"
+           style={{ width: '100%', display: 'block', borderRadius: '2px' }} />
       {caption && (
         <figcaption style={{
           fontSize: '0.82rem',
@@ -82,9 +101,6 @@ function Figure({ src, alt, caption, width = '100%' }) {
           lineHeight: 1.6,
           marginTop: '0.8rem',
           textAlign: 'left',
-          maxWidth: '720px',
-          marginLeft: 'auto',
-          marginRight: 'auto'
         }}>
           {caption}
         </figcaption>
@@ -515,7 +531,7 @@ export default function MuonGeometryPost() {
         }
       />
 
-      <Figure
+      <WideFigure
         src="/images/blog/muon-geometry/scale_sweep.png"
         alt="Scale sweep: G-Scion vs Scion validation loss at 163M, 406M, and 1B."
         caption={
@@ -554,7 +570,6 @@ export default function MuonGeometryPost() {
             at exactly the layer where the multimodal gradient meets the language tower.
           </>
         }
-        width="640px"
       />
 
       <P>
