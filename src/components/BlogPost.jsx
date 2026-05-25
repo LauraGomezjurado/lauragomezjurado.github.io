@@ -470,115 +470,255 @@ const splitAtFirstH2 = (text) => {
 // the boundary of the Ky Fan dual ball, with column-normalized Dion pushed
 // outside it. Stylized; not drawn to numerical scale.
 function OrthDionHeroFigure() {
+  // Editorial palette: ink + one warm accent. No grey/blue chart defaults.
   const ink = '#1a1a1a'
-  const accent = '#5b3a8a'
-  const dion = '#3b6bb5'
-  const orth = '#b5302d'
-  const muted = '#5b5b5b'
-  const quiet = '#9c9483'
-  const hair = '#ececec'
-  const grid = '#f4f0e8'
+  const rust = '#b8531f'         // single warm accent; only used for "off-corner" state
+  const muted = '#6b6660'
+  const cream = '#f6f1e6'        // dual-ball interior
+  const hair = '#d4cebf'         // soft secondary lines (Frobenius arc, axes)
+  const serif = "'Georgia', 'Iowan Old Style', 'Times New Roman', serif"
+  const mono = "'JetBrains Mono', ui-monospace, monospace"
 
-  // Ky Fan dual ball: intersection of operator-norm and Frobenius constraints.
-  // We sketch this as a rounded square (the operator-norm box clipped by the
-  // Frobenius circle), with the polar factor on its corner.
-  const cx = 240, cy = 160
-  const Rop = 110   // operator-norm half-width
-  const Rfr = 132   // Frobenius radius
+  // Geometry is exact: the Frobenius circle passes through the operator-norm
+  // box corner, which is the *only* configuration in which the rank-r polar
+  // factor literally sits on the corner. With box half-width u, the Frobenius
+  // radius for the (σ₁, σ₂) plane at r = 2 is u·√2.
+  const W = 360, H = 320
+  const ox = 64, oy = 268        // SVG-space origin (lower-left of plot area)
+  const u = 130                  // visual length of one σ-unit
+  const corner = { x: ox + u, y: oy - u }
+  const Rf = u * Math.SQRT2      // Frobenius radius so the arc passes through (1, 1)
+
+  // Dion's update slides ALONG the Frobenius arc past the corner: σ₁ grows
+  // above 1, σ₂ shrinks to √(r − σ₁²). Pick σ₁ = 1.28 so the push is
+  // unambiguous at figure scale, but the point still reads as "just past"
+  // the corner rather than wildly off.
+  const s1 = 1.28
+  const s2 = Math.sqrt(2 - s1 * s1)   // ≈ 0.74
+  const dion = { x: ox + s1 * u, y: oy - s2 * u }
+
+  // Frobenius arc, from (0, √r) on the σ₂-axis down to (√r, 0) on σ₁-axis
+  const arcStart = { x: ox, y: oy - Rf }
+  const arcEnd = { x: ox + Rf, y: oy }
+
+  // Push arrow (corner → Dion) drawn as a short arc along the Frobenius circle.
+  // Using SVG arc command with the same radius as the Frobenius circle.
+  const pushPath = `M ${corner.x} ${corner.y} A ${Rf} ${Rf} 0 0 1 ${dion.x} ${dion.y}`
+
+  // Arrowhead at the Dion end, tangent to the arc in the direction of motion
+  // (corner → Dion → continuing along the Frobenius circle toward the σ₁-axis).
+  // At a point P on a circle centered at origin O, the tangent perpendicular to
+  // (P - O) in the direction of continued clockwise sweep is (-dy, dx)/|P-O|.
+  const dx = dion.x - ox, dy = dion.y - oy
+  const radL = Math.hypot(dx, dy)
+  const tx = -dy / radL    // motion-direction x component
+  const ty = dx / radL     // motion-direction y component
+  const ah = 10            // larger arrowhead reads cleanly at deployed size
+  const ahW = 0.62
+  const ahL = {
+    p1: { x: dion.x - ah * tx + ah * ahW * ty, y: dion.y - ah * ty - ah * ahW * tx },
+    p2: { x: dion.x - ah * tx - ah * ahW * ty, y: dion.y - ah * ty + ah * ahW * tx },
+  }
 
   return (
-    <div style={{
-      fontFamily: "'Inter', 'Helvetica Neue', sans-serif",
-      color: ink,
-      width: '100%',
-    }}>
+    <div style={{ color: ink, width: '100%' }}>
+      {/* Lowercase italic kicker — not all-caps */}
       <div style={{
-        fontSize: '0.65rem',
-        letterSpacing: '0.12em',
-        textTransform: 'uppercase',
-        color: quiet,
-        fontWeight: 500,
-        marginBottom: '0.6rem',
+        fontFamily: serif,
+        fontStyle: 'italic',
+        fontSize: '0.86rem',
+        color: muted,
+        marginBottom: '1.1rem',
       }}>
-        rank-r updates live inside the Ky Fan dual ball
+        the geometry every spectral step must respect
       </div>
 
-      <svg viewBox="0 0 480 320" style={{ width: '100%', height: 'auto', display: 'block' }}
-           aria-label="Schematic of the Ky Fan dual ball with the rank-r polar factor on the boundary and Dion outside it.">
-        <defs>
-          <pattern id="od-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path d="M 40 0 L 0 0 0 40" fill="none" stroke={grid} strokeWidth="1" />
-          </pattern>
-          <clipPath id="od-box">
-            <rect x={cx - Rop} y={cy - Rop} width={2 * Rop} height={2 * Rop} />
-          </clipPath>
-        </defs>
-        <rect width="480" height="280" fill="url(#od-grid)" />
-
-        {/* Frobenius constraint disk (Frobenius/√r ≤ 1) */}
-        <circle cx={cx} cy={cy} r={Rfr} fill="none" stroke={hair} strokeWidth="1.5" strokeDasharray="5,5" />
-        <text x={cx + Rfr - 4} y={cy + 4} fontSize="10" fill={quiet} fontFamily="'JetBrains Mono', monospace" textAnchor="end">
-          ‖·‖_F = √r
-        </text>
-
-        {/* Operator-norm box (‖·‖_op ≤ 1) */}
-        <rect x={cx - Rop} y={cy - Rop} width={2 * Rop} height={2 * Rop}
-              fill="none" stroke={hair} strokeWidth="1.5" />
-
-        {/* Intersection = Ky Fan dual ball (rounded square shape via clip) */}
-        <circle cx={cx} cy={cy} r={Rfr} fill={accent} fillOpacity="0.06" clipPath="url(#od-box)" />
-
-        {/* Boundary corner = polar factor (Muon / Orth-Dion target) */}
-        <circle cx={cx + Rop} cy={cy - Rop} r={6} fill={orth} />
-        <circle cx={cx + Rop} cy={cy - Rop} r={2.5} fill="#fff" />
-        <text x={cx + Rop + 10} y={cy - Rop - 4} fontSize="11" fill={orth} fontFamily="'Inter', sans-serif">
-          rank-r polar factor
-        </text>
-        <text x={cx + Rop + 10} y={cy - Rop + 11} fontSize="10" fill={orth} fontFamily="'JetBrains Mono', monospace">
-          νₜ = 1
-        </text>
-
-        {/* Dion's update — outside the operator-norm constraint, inside Frobenius */}
-        <circle cx={cx + Rop + 36} cy={cy - Rop - 18} r={6} fill={dion} />
-        <circle cx={cx + Rop + 36} cy={cy - Rop - 18} r={2.5} fill="#fff" />
-        <text x={cx + Rop + 46} y={cy - Rop - 24} fontSize="11" fill={dion} fontFamily="'Inter', sans-serif">
-          Dion update
-        </text>
-        <text x={cx + Rop + 46} y={cy - Rop - 9} fontSize="10" fill={dion} fontFamily="'JetBrains Mono', monospace">
-          νₜ ∈ [1, √r]
-        </text>
-
-        {/* Arrow: ColNorm → outside dual ball */}
-        <line x1={cx + Rop} y1={cy - Rop} x2={cx + Rop + 28} y2={cy - Rop - 14}
-              stroke={dion} strokeWidth="1.5" strokeDasharray="4,3" />
-
-        {/* Center: zero matrix */}
-        <circle cx={cx} cy={cy} r={4} fill={ink} />
-        <text x={cx + 8} y={cy + 4} fontSize="10" fill={muted} fontFamily="'JetBrains Mono', monospace">
-          0
-        </text>
-
-        {/* Bottom legend strip */}
-        <line x1="40" y1="285" x2="440" y2="285" stroke={hair} strokeWidth="1" />
-        <text x="40" y="306" fontSize="10" fill={quiet} fontFamily="'JetBrains Mono', monospace">
-          dual norm ‖D‖* = max{`{`}‖D‖_op, ‖D‖_F / √r{`}`}
-        </text>
-        <text x="440" y="306" fontSize="10" fill={quiet} fontFamily="'JetBrains Mono', monospace" textAnchor="end">
-          schematic
-        </text>
-      </svg>
-
       <div style={{
-        marginTop: '0.9rem',
-        fontSize: '0.78rem',
-        color: muted,
-        fontStyle: 'italic',
-        lineHeight: 1.55,
+        display: 'flex',
+        gap: '1.6rem',
+        alignItems: 'center',
+        flexWrap: 'wrap',
       }}>
-        The rank-<em>r</em> polar factor that Muon targets sits on a corner of the Ky Fan dual
-        ball, where the operator-norm and Frobenius constraints meet. Column normalization
-        preserves the Frobenius constraint but lets the operator norm inflate, pushing the update
-        outside the dual ball. QR puts it back on the corner.
+        {/* ── LEFT: the diagram ─────────────────────────────────────────── */}
+        <div style={{ flex: '1 1 320px', minWidth: 0 }}>
+          <svg
+            viewBox={`0 0 ${W} ${H}`}
+            style={{ width: '100%', height: 'auto', display: 'block' }}
+            aria-label="Ky Fan dual ball: the operator-norm box and Frobenius arc meet at a corner where the rank-r polar factor sits. Dion's update slides along the Frobenius arc past the corner, leaving the dual ball."
+          >
+            {/* Soft cream fill for the dual ball (op-box clipped to F-disc) */}
+            <defs>
+              <clipPath id="od-box-clip">
+                <rect x={ox} y={oy - u} width={u} height={u} />
+              </clipPath>
+            </defs>
+            <circle cx={ox} cy={oy} r={Rf} fill={cream} clipPath="url(#od-box-clip)" />
+
+            {/* Frobenius arc (quarter arc in this quadrant). Dashed = "loose" */}
+            <path
+              d={`M ${arcStart.x} ${arcStart.y} A ${Rf} ${Rf} 0 0 1 ${arcEnd.x} ${arcEnd.y}`}
+              fill="none" stroke={hair} strokeWidth="1.25" strokeDasharray="3 4"
+            />
+
+            {/* Operator-norm box edges (top and right only in this quadrant) */}
+            <line x1={ox} y1={oy - u} x2={ox + u} y2={oy - u} stroke={ink} strokeWidth="1.25" />
+            <line x1={ox + u} y1={oy - u} x2={ox + u} y2={oy} stroke={ink} strokeWidth="1.25" />
+
+            {/* Axes — drawn very lightly so they read as scaffolding */}
+            <line x1={ox} y1={oy} x2={W - 14} y2={oy} stroke={ink} strokeWidth="0.7" />
+            <line x1={ox} y1={oy} x2={ox} y2={18} stroke={ink} strokeWidth="0.7" />
+
+            {/* Origin */}
+            <circle cx={ox} cy={oy} r={2.2} fill={ink} />
+            <text x={ox - 10} y={oy + 4} fontSize="11" fill={muted}
+                  fontFamily={serif} fontStyle="italic" textAnchor="end">0</text>
+
+            {/* Axis labels — singular values, in italic serif. Placed just past
+                the axis tick (not at the bottom strip, which is used by the legend). */}
+            <text x={W - 14} y={oy - 6} fontSize="12" fill={ink}
+                  fontFamily={serif} fontStyle="italic" textAnchor="end">σ₁</text>
+            <text x={ox + 6} y={26} fontSize="12" fill={ink}
+                  fontFamily={serif} fontStyle="italic">σ₂</text>
+
+            {/* No on-diagram constraint labels: the right-side callouts identify
+                the constraints by color, and a small legend strip at the bottom of
+                the SVG identifies the two boundary styles. */}
+
+            {/* The push arrow: short arc along the Frobenius circle (corner → Dion) */}
+            <path d={pushPath} fill="none" stroke={rust} strokeWidth="1.7" strokeLinecap="round" />
+            <path d={`M ${ahL.p1.x} ${ahL.p1.y} L ${dion.x} ${dion.y} L ${ahL.p2.x} ${ahL.p2.y}`}
+                  fill="none" stroke={rust} strokeWidth="1.7"
+                  strokeLinecap="round" strokeLinejoin="round" />
+
+            {/* Arrow label: placed above-right of the arrow's midpoint, well clear
+                of both the corner mark and the Dion mark. */}
+            <text
+              x={corner.x + 44}
+              y={corner.y - 6}
+              fontSize="10.5" fill={rust}
+              fontFamily={serif} fontStyle="italic" textAnchor="start"
+            >
+              ColNorm push
+            </text>
+
+            {/* Legend strip (bottom): identify the two boundary styles inline. */}
+            <g transform={`translate(${ox}, ${H - 14})`}>
+              {/* solid swatch */}
+              <line x1={0} y1={0} x2={20} y2={0} stroke={ink} strokeWidth="1.25" />
+              <text x={26} y={3.5} fontSize="9.5" fill={muted}
+                    fontFamily={serif} fontStyle="italic" textAnchor="start">
+                ‖·‖ₒₚ ≤ 1
+              </text>
+              {/* dashed swatch */}
+              <line x1={108} y1={0} x2={128} y2={0} stroke={hair} strokeWidth="1.25" strokeDasharray="3 4" />
+              <text x={134} y={3.5} fontSize="9.5" fill={muted}
+                    fontFamily={serif} fontStyle="italic" textAnchor="start">
+                ‖·‖_F ≤ √r
+              </text>
+            </g>
+
+            {/* Polar factor mark — the resting state */}
+            <circle cx={corner.x} cy={corner.y} r={4.5} fill={ink} />
+            <circle cx={corner.x} cy={corner.y} r={1.8} fill="#fff" />
+
+            {/* Dion mark — slightly larger, open ring in rust */}
+            <circle cx={dion.x} cy={dion.y} r={5.5} fill="#fff"
+                    stroke={rust} strokeWidth="1.8" />
+            <circle cx={dion.x} cy={dion.y} r={1.6} fill={rust} />
+          </svg>
+        </div>
+
+        {/* ── RIGHT: callout column. Labels live here, not on the diagram. ── */}
+        <div style={{
+          flex: '1 1 220px',
+          minWidth: '210px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+        }}>
+          {/* Polar factor callout */}
+          <div style={{ borderLeft: `2px solid ${ink}`, paddingLeft: '0.9rem' }}>
+            <div style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: '0.98rem',
+              color: ink,
+              lineHeight: 1.3,
+              marginBottom: '0.3rem',
+            }}>
+              rank-<em>r</em> polar factor
+            </div>
+            <div style={{
+              fontFamily: serif,
+              fontSize: '0.8rem',
+              color: muted,
+              lineHeight: 1.55,
+              marginBottom: '0.55rem',
+            }}>
+              what Muon and Orth-Dion target — lands on the corner of the dual ball
+            </div>
+            <div style={{
+              fontFamily: mono,
+              fontSize: '0.74rem',
+              color: ink,
+              lineHeight: 1.75,
+            }}>
+              ‖·‖ₒₚ = 1<br />
+              ‖·‖_F = √r<br />
+              νₜ = 1
+            </div>
+          </div>
+
+          {/* Dion callout */}
+          <div style={{ borderLeft: `2px solid ${rust}`, paddingLeft: '0.9rem' }}>
+            <div style={{
+              fontFamily: serif,
+              fontStyle: 'italic',
+              fontSize: '0.98rem',
+              color: rust,
+              lineHeight: 1.3,
+              marginBottom: '0.3rem',
+            }}>
+              Dion update (ColNorm)
+            </div>
+            <div style={{
+              fontFamily: serif,
+              fontSize: '0.8rem',
+              color: muted,
+              lineHeight: 1.55,
+              marginBottom: '0.55rem',
+            }}>
+              slides past the corner along the Frobenius arc — preserves <em>‖·‖<sub>F</sub></em>,
+              inflates <em>‖·‖<sub>op</sub></em>
+            </div>
+            <div style={{
+              fontFamily: mono,
+              fontSize: '0.74rem',
+              color: rust,
+              lineHeight: 1.75,
+            }}>
+              ‖·‖ₒₚ &gt; 1<br />
+              ‖·‖_F = √r<br />
+              1 ≤ νₜ ≤ √r
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Caption — sentence-level, not chart-style */}
+      <div style={{
+        marginTop: '1.4rem',
+        fontFamily: serif,
+        fontStyle: 'italic',
+        fontSize: '0.88rem',
+        color: muted,
+        lineHeight: 1.65,
+      }}>
+        The Ky Fan <em>r</em>-norm dual ball is the operator-norm box clipped by the Frobenius
+        circle of radius <em>√r</em>. The two boundaries meet at a corner — and that corner is
+        where the rank-<em>r</em> polar factor sits. ColNorm keeps the Frobenius constraint but
+        sacrifices the operator-norm one, sliding the update past the corner along the arc. QR
+        puts it back.
       </div>
     </div>
   )
