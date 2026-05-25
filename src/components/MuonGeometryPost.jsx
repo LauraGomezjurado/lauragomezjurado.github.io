@@ -515,13 +515,9 @@ export default function MuonGeometryPost() {
         alt="Per-layer log R-hat trajectories for embedding and output projection on GPT-2 31M, OpenWebText."
         caption={
           <>
-            <Strong>Figure 1.</Strong> Per-layer <Katex tex="\log\widehat{\mathcal R}"/> trajectories on
-            GPT-2 31M (OWT, 2k steps; mean ± std across three activation choices per method).{' '}
-            <Em>Left:</Em> the embedding sits at <Katex tex="\log\widehat{\mathcal R} > 0"/> from
-            the first decision step; the embed-side gate locks to spectral at <Katex tex="t=100"/>.{' '}
-            <Em>Right:</Em> the output projection starts at <Katex tex="\log\widehat{\mathcal R}\approx -1.4"/>{' '}
-            during the spectral phase; the output-side gate fires at <Katex tex="t=150"/> (dashed
-            line) and the layer stays sign-preferred for the rest of training.
+            <Strong>Figure 1.</Strong> Per-layer <Katex tex="\log\widehat{\mathcal R}"/> on GPT-2 31M
+            (OWT, 2k steps; mean ± std over three activation choices). Embedding (left) and
+            output projection (right).
           </>
         }
       >
@@ -542,12 +538,8 @@ export default function MuonGeometryPost() {
         alt="GPT-2 1B headline: validation loss and embedding R-hat for G-Scion variants vs fixed Scion."
         caption={
           <>
-            <Strong>Figure 2.</Strong> GPT-2 1B on OpenWebText (mean of 2 seeds, shaded band ± 1 std).
-            <Em> Left:</Em> validation loss; all three G-Scion variants improve on fixed Scion.{' '}
-            <Em>Right:</Em> the embedding's <Katex tex="\widehat{\mathcal R}_\infty"/> sits around
-            60 throughout training — well above the break-even of 1 — across every method. At 1B
-            the metric reveals that <Em>both</Em> embedding and head prefer spectral; the gate
-            keeps them there.
+            <Strong>Figure 2.</Strong> GPT-2 1B on OWT (mean of 2 seeds, ±1 std band). Left:
+            validation loss. Right: embedding <Katex tex="\widehat{\mathcal R}_\infty"/>.
           </>
         }
       >
@@ -568,11 +560,7 @@ export default function MuonGeometryPost() {
         alt="Scale sweep: G-Scion vs Scion validation loss at 163M, 406M, and 1B."
         caption={
           <>
-            <Strong>Figure 3.</Strong> Scale sweep on OpenWebText (2k steps). At every scale the
-            same gate, with the same threshold <Katex tex="\tau = 0"/>, lands at lower validation
-            loss than fixed Scion. The optimal recipe itself is scale-dependent — sign-on-head at
-            31M, spectral-on-both at 1B — and the gate discovers each without any scale-dependent
-            information.
+            <Strong>Figure 3.</Strong> Scale sweep on OWT (2k steps): 163M, 406M, 1B parameters.
           </>
         }
       />
@@ -584,11 +572,7 @@ export default function MuonGeometryPost() {
         caption={
           <>
             <Strong>Figure 4.</Strong> Per-component <Katex tex="\log\widehat{\mathcal R}_\infty"/> on
-            nanoVLM (Cauldron, 135M, 3.5k steps; mean ± std, 2 seeds). The (tied) LM head/embedding
-            sits at <Katex tex="\log\widehat{\mathcal R}\approx 5.6"/> throughout training, several
-            units above every hidden component and several units <Em>above</Em> rather than below
-            the GPT-2 head value of <Katex tex="-0.33"/>. The architectural reversal is concentrated
-            at exactly the layer where the multimodal gradient meets the language tower.
+            nanoVLM (Cauldron, 135M, 3.5k steps; 2 seeds).
           </>
         }
       >
@@ -611,11 +595,8 @@ export default function MuonGeometryPost() {
         alt="ViT-B/16 CIFAR-100 validation curves: G-Scion variants improve on Scion baseline."
         caption={
           <>
-            <Strong>Figure 5.</Strong> ViT-B/16 trained from scratch on CIFAR-100 (1k steps; gate
-            enabled at <Katex tex="t=100"/>). Both validation loss and validation accuracy improve
-            under the gated variants relative to fixed Scion. The gain compounds over training as
-            each eligible layer locks into the geometry <Katex tex="\widehat{\mathcal R}"/>{' '}
-            prescribes.
+            <Strong>Figure 5.</Strong> ViT-B/16 from scratch on CIFAR-100 (1k steps; gate enabled
+            at <Katex tex="t=100"/>). Left: validation accuracy. Right: validation loss.
           </>
         }
       >
