@@ -1651,7 +1651,7 @@ export default function BlogPost() {
                   that one line with QR orthogonalization removes the penalty.
                 </p>
               </div>
-              <p className="lead-byline">Laura Gomezjurado · {formattedDate}</p>
+              <p className="lead-byline">{formattedDate}</p>
               <p style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: '0.82rem',
@@ -1707,7 +1707,7 @@ export default function BlogPost() {
                   architectural reversal the LM convention gets wrong.
                 </p>
               </div>
-              <p className="lead-byline">Laura Gomezjurado · {formattedDate}</p>
+              <p className="lead-byline">{formattedDate}</p>
             </div>
             <div className="lead-hero-right">
               <MuonGeometryHeroFigure />
