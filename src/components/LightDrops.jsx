@@ -95,8 +95,8 @@ function paintTrail(ctx, trail, strength) {
   // Soft outer haze along the whole trail — sells "starlight through atmosphere".
   ctx.save()
   ctx.shadowBlur = 6
-  ctx.shadowColor = 'rgba(195, 208, 235, 0.18)'
-  ctx.strokeStyle = `rgba(235, 238, 248, ${0.035 * strength})`
+  ctx.shadowColor = 'rgba(70, 52, 38, 0.14)'
+  ctx.strokeStyle = `rgba(70, 52, 38, ${0.045 * strength})`
   ctx.lineWidth = 3
   ctx.lineCap = 'round'
   ctx.lineJoin = 'round'
@@ -112,7 +112,7 @@ function paintTrail(ctx, trail, strength) {
     const t = (i + 1) / (n - 1)
     const pulse = t * t * t
     const alpha = (0.008 + pulse * 0.52) * strength
-    ctx.strokeStyle = `rgba(248, 249, 253, ${alpha})`
+    ctx.strokeStyle = `rgba(48, 36, 26, ${alpha})`
     ctx.lineWidth = 0.55 + pulse * 0.95
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
@@ -125,9 +125,9 @@ function paintTrail(ctx, trail, strength) {
   // Head: smaller, dimmer pinpoint — a star, not a flare.
   const r = 3
   const gh = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, r)
-  gh.addColorStop(0, `rgba(255,255,255,${0.38 * strength})`)
-  gh.addColorStop(0.5, `rgba(240,243,252,${0.12 * strength})`)
-  gh.addColorStop(1, 'rgba(240,243,252,0)')
+  gh.addColorStop(0, `rgba(48,36,26,${0.34 * strength})`)
+  gh.addColorStop(0.5, `rgba(60,45,33,${0.12 * strength})`)
+  gh.addColorStop(1, 'rgba(60,45,33,0)')
   ctx.fillStyle = gh
   ctx.beginPath()
   ctx.arc(head.x, head.y, r, 0, Math.PI * 2)
@@ -294,13 +294,13 @@ export default function LightDrops() {
           display: block;
           width: 100%;
           height: 100%;
-          mix-blend-mode: screen;
-          opacity: 0.7;
+          mix-blend-mode: multiply;
+          opacity: 0.5;
         }
 
         @media (max-width: 768px) {
           .light-drops-canvas {
-            opacity: 0.62;
+            opacity: 0.42;
           }
         }
       `}</style>

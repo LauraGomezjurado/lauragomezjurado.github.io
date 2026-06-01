@@ -115,10 +115,10 @@ export default function Portfolio() {
       <div className="relative z-10 max-w-6xl mx-auto w-full">
         <header ref={titleRef} className="mb-14 md:mb-32 text-center">
           <div className="section-index mb-3 md:mb-4">§ 02 · Selected Research</div>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider mb-4 md:mb-5 text-on-bg">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-wider mb-4 md:mb-5 text-on-bg" style={{ color: 'var(--ink)' }}>
             Research &amp; Projects
           </h2>
-          <p className="max-w-2xl mx-auto text-[13.5px] md:text-base text-white/55 font-light leading-relaxed">
+          <p className="max-w-2xl mx-auto text-[13.5px] md:text-base text-[#2A211A]/60 font-light leading-relaxed">
             Recent work centers on spectral and mixed-geometry optimization, and on the representations
             transformers form before they can use them. A few projects are highlighted below; the rest sit
             one click away.
@@ -172,7 +172,7 @@ export default function Portfolio() {
                         </span>
                       </div>
 
-                      <h3 className="text-2xl md:text-4xl font-light mb-3 tracking-tight text-white leading-tight">
+                      <h3 className="text-2xl md:text-4xl font-light mb-3 tracking-tight leading-tight" style={{ color: 'var(--ink)' }}>
                         {project.title}
                       </h3>
 
@@ -180,7 +180,7 @@ export default function Portfolio() {
                         {project.venue} · {project.org}
                       </p>
 
-                      <p className="text-[14.5px] md:text-[1.02rem] text-white/75 leading-relaxed font-light max-w-xl">
+                      <p className="text-[14.5px] md:text-[1.02rem] text-[#2A211A]/78 leading-relaxed font-light max-w-xl">
                         {project.description}
                       </p>
 
@@ -250,7 +250,7 @@ export default function Portfolio() {
                         border: '1px solid var(--hairline)',
                         borderRadius: '2px',
                         background:
-                          'linear-gradient(160deg, rgba(143,175,214,0.035) 0%, rgba(0,0,0,0.25) 100%)',
+                          'linear-gradient(160deg, rgba(255,251,244,0.55) 0%, rgba(60,45,35,0.06) 100%)',
                       }}
                     >
                       <TickCorners />
@@ -258,7 +258,7 @@ export default function Portfolio() {
                         <ProjectDoodle projectId={project.id} className="w-full h-full" />
                       </div>
                     </div>
-                    <p className="mt-3 text-[11px] font-light tracking-wider uppercase text-white/40 text-center">
+                    <p className="mt-3 text-[11px] font-light tracking-wider uppercase text-[#2A211A]/45 text-center">
                       Fig. {String(index + 1).padStart(2, '0')}: {project.briefDescription}
                     </p>
                   </div>

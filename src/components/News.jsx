@@ -153,7 +153,8 @@ export default function News() {
           <div className="section-index mb-3 md:mb-4">§ 03 · Recent</div>
           <h2
             ref={titleRef}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider text-on-bg"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-wider text-on-bg"
+            style={{ color: 'var(--ink)' }}
           >
             News
           </h2>
@@ -214,7 +215,7 @@ export default function News() {
                             {item.badge}
                           </span>
                         )}
-                        <span className="text-[13.5px] md:text-base text-white/80 leading-relaxed font-light">
+                        <span className="text-[13.5px] md:text-base text-[#2A211A]/80 leading-relaxed font-light">
                           {item.content}
                         </span>
                       </div>

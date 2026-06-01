@@ -88,9 +88,9 @@ function buildAllAttractors() {
     init: [0.1, 0, 0], dt: 0.005, steps: N, burnIn: 3000,
     deriv: ([x, y, z]) => [10*(y-x), x*(28-z)-y, x*y - (8/3)*z],
     colors: [
-      [0.42, 0.52, 0.78],
-      [0.50, 0.55, 0.78],
-      [0.58, 0.55, 0.72],
+      [0.165, 0.129, 0.102],
+      [0.155, 0.120, 0.094],
+      [0.145, 0.112, 0.088],
     ],
   })
 
@@ -103,9 +103,9 @@ function buildAllAttractors() {
       -1.4*z - 4*x - 4*y - x*x,
     ],
     colors: [
-      [0.20, 0.68, 0.74],
-      [0.14, 0.58, 0.62],
-      [0.12, 0.50, 0.54],
+      [0.150, 0.118, 0.094],
+      [0.135, 0.106, 0.085],
+      [0.125, 0.098, 0.080],
     ],
   })
 
@@ -118,9 +118,9 @@ function buildAllAttractors() {
       0.6 + 0.95*z - z*z*z/3 - (x*x+y*y)*(1+0.25*z) + 0.1*z*x*x*x,
     ],
     colors: [
-      [0.62, 0.52, 0.72],
-      [0.58, 0.55, 0.74],
-      [0.52, 0.58, 0.78],
+      [0.165, 0.129, 0.102],
+      [0.150, 0.118, 0.094],
+      [0.140, 0.110, 0.088],
     ],
   })
 
@@ -186,8 +186,8 @@ function MorphingScene({ attractors, hovered }) {
       groupRef.current.scale.set(s, s, s)
     }
     if (matRef.current) {
-      // Base opacity is 0.55 (down from 0.82): pigment, not glow.
-      matRef.current.opacity = 0.55 * opSmooth.current
+      // Dark espresso ink on light paper: solid pigment read.
+      matRef.current.opacity = 0.72 * opSmooth.current
     }
 
     // Morph: lerp positions + colors between adjacent attractors
@@ -203,10 +203,11 @@ function MorphingScene({ attractors, hovered }) {
 
     const hue = hueSmooth.current
     const mix = Math.max(0, Math.min(1, intSmooth.current))
-    // Map hue (-1..1) to a soft tint color. Negative = warm amber, positive = cool teal.
-    const tintR = hue < 0 ? 0.95 + hue * 0.15 : 0.55 - hue * 0.20
-    const tintG = hue < 0 ? 0.70 + hue * 0.25 : 0.85 + hue * 0.05
-    const tintB = hue < 0 ? 0.45 - hue * 0.20 : 0.92 + hue * 0.05
+    // Map hue (-1..1) to a soft tint color, kept dark so ink stays dark on the
+    // light paper even when a project claims the canvas. Warm brown / cool slate.
+    const tintR = hue < 0 ? 0.42 + hue * 0.10 : 0.20 - hue * 0.08
+    const tintG = hue < 0 ? 0.30 + hue * 0.10 : 0.26 + hue * 0.04
+    const tintB = hue < 0 ? 0.18 - hue * 0.06 : 0.34 + hue * 0.04
 
     for (let i = 0; i < len; i++) {
       posAttr.array[i] = fromA.positions[i] + t * (toA.positions[i] - fromA.positions[i])
@@ -227,7 +228,7 @@ function MorphingScene({ attractors, hovered }) {
           ref={matRef}
           vertexColors
           transparent
-          opacity={0.55}
+          opacity={0.72}
           linewidth={1}
         />
       </line>
@@ -245,7 +246,7 @@ const LABELS = [
     params: 'σ = 10  ·  ρ = 28  ·  β = 8/3',
     description:
       'Deterministic three-dimensional flow. Trajectories stay bounded but aperiodic; nearby initial conditions diverge quickly.',
-    accentRgb: '156, 180, 212',
+    accentRgb: '74, 52, 36',
   },
   {
     name: 'Halvorsen Attractor',
@@ -254,7 +255,7 @@ const LABELS = [
     equations: ['dx/dt = −ax − 4y − 4z − y²', 'dy/dt = −ay − 4z − 4x − z²', 'dz/dt = −az − 4x − 4y − x²'],
     params: 'a = 1.4',
     description: 'A cyclically symmetric strange attractor. Each equation is identical under the permutation x → y → z → x.',
-    accentRgb: '104, 198, 200',
+    accentRgb: '74, 52, 36',
   },
   {
     name: 'Aizawa Attractor',
@@ -264,7 +265,7 @@ const LABELS = [
     params: 'a=0.95  b=0.7  c=0.6  d=3.5  e=0.25  f=0.1',
     description:
       'Toroidal strange attractor. Trajectories wrap on a torus without settling into a simple repeat.',
-    accentRgb: '178, 158, 198',
+    accentRgb: '74, 52, 36',
   },
 ]
 
@@ -332,7 +333,7 @@ function FigureLabel({ labelIdx }) {
           aria-expanded={open}
           aria-controls={`attractor-explainer-${labelIdx}`}
         >
-          <span className="text-[10px] sm:text-xs font-light leading-tight sm:leading-snug underline decoration-[rgba(255,255,255,0.2)] underline-offset-2 sm:underline-offset-4 hover:decoration-[rgba(255,255,255,0.35)] block">
+          <span className="text-[10px] sm:text-xs font-light leading-tight sm:leading-snug underline decoration-[rgba(42,33,26,0.25)] underline-offset-2 sm:underline-offset-4 hover:decoration-[rgba(42,33,26,0.45)] block">
             {open ? 'Tap to hide' : label.teaser}
           </span>
         </button>
@@ -361,11 +362,11 @@ export default function MorphingBackground() {
         <MorphingScene attractors={attractors} hovered={hovered} />
       </Canvas>
 
-      {/* Vignette: uses warm ink colour so it disappears into the paper layer
-          rather than punching a black hole through it. */}
+      {/* Vignette: warm sand wash so it melts into the paper layer and lifts
+          text off the dark line-art rather than darkening the page. */}
       <div className="absolute inset-0 pointer-events-none" style={{
         zIndex: 2,
-        background: 'radial-gradient(ellipse at center, rgba(13,12,18,0.55) 0%, rgba(13,12,18,0.22) 45%, rgba(13,12,18,0) 72%)',
+        background: 'radial-gradient(ellipse at center, rgba(230,220,200,0.50) 0%, rgba(230,220,200,0.20) 45%, rgba(230,220,200,0) 72%)',
       }} />
     </div>
   )

@@ -47,7 +47,8 @@ export default function Contact() {
           <div className="section-index mb-3 md:mb-4">§ 05 · Reach out</div>
           <h2
             ref={titleRef}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider text-on-bg"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-wider text-on-bg"
+            style={{ color: 'var(--ink)' }}
           >
             Get In Touch
           </h2>
@@ -57,10 +58,10 @@ export default function Contact() {
           {/* Left column: contact info on a panel */}
           <div ref={leftRef}>
             <div className="panel scrim px-5 md:px-8 py-7 md:py-10">
-              <h3 className="text-lg md:text-2xl font-light mb-3 md:mb-4 text-white">
+              <h3 className="text-lg md:text-2xl font-light mb-3 md:mb-4" style={{ color: 'var(--ink)' }}>
                 Research &amp; Collaboration
               </h3>
-              <p className="text-white/70 leading-relaxed font-light text-[14px] md:text-[15px] mb-6 md:mb-8">
+              <p className="text-[#2A211A]/72 leading-relaxed font-light text-[14px] md:text-[15px] mb-6 md:mb-8">
                 Open to research roles, collaborations, and PhD adjacent positions on interpretability,
                 training time alignment, and the optimization side of large model behavior. Fastest by
                 email; a one line note about what you are working on is enough.
@@ -180,7 +181,7 @@ function FormField({ id, label, as, placeholder, value, onChange, type = 'text',
     required: true,
     placeholder,
     className:
-      'w-full px-4 py-3 bg-white/[0.03] focus:outline-none transition-colors font-light text-white placeholder:text-white/25',
+      'w-full px-4 py-3 bg-[#2A211A]/[0.03] focus:outline-none transition-colors font-light text-[#2A211A] placeholder:text-[#2A211A]/35',
     style: { border: '1px solid var(--border)', borderRadius: '2px' },
     onFocus: (e) => (e.target.style.borderColor = 'var(--accent)'),
     onBlur: (e) => (e.target.style.borderColor = 'var(--border)'),

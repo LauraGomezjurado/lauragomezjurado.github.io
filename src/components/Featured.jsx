@@ -143,7 +143,8 @@ export default function Featured() {
           <div className="section-index mb-3 md:mb-4">§ 04 · Press &amp; Recognition</div>
           <h2
             ref={titleRef}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider text-on-bg"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-wider text-on-bg"
+            style={{ color: 'var(--ink)' }}
           >
             Featured In
           </h2>

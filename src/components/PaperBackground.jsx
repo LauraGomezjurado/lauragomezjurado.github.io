@@ -24,7 +24,7 @@ export default function PaperBackground() {
       />
 
       {/* Fine fibre grain (multiply darkens fibres into the substrate) */}
-      <svg className="absolute inset-0 h-full w-full" style={{ mixBlendMode: 'multiply', opacity: 0.62 }} xmlns="http://www.w3.org/2000/svg">
+      <svg className="absolute inset-0 h-full w-full" style={{ mixBlendMode: 'multiply', opacity: 0.40 }} xmlns="http://www.w3.org/2000/svg">
         <filter id="paper-fine">
           <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch" seed="11" />
           <feColorMatrix
@@ -39,7 +39,7 @@ export default function PaperBackground() {
       </svg>
 
       {/* Coarser blot mottle: low frequency, reads like soaked paper fibres */}
-      <svg className="absolute inset-0 h-full w-full" style={{ mixBlendMode: 'multiply', opacity: 0.35 }} xmlns="http://www.w3.org/2000/svg">
+      <svg className="absolute inset-0 h-full w-full" style={{ mixBlendMode: 'multiply', opacity: 0.20 }} xmlns="http://www.w3.org/2000/svg">
         <filter id="paper-coarse">
           <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="3" stitchTiles="stitch" seed="37" />
           <feColorMatrix

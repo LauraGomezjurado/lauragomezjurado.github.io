@@ -68,7 +68,8 @@ export default function About() {
           <div className="section-index mb-3 md:mb-4">§ 01 · Who</div>
           <h2
             ref={titleRef}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider text-on-bg"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-wider text-on-bg"
+            style={{ color: 'var(--ink)' }}
           >
             About
           </h2>
@@ -78,7 +79,7 @@ export default function About() {
           {/* Narrative: sits on a soft panel for guaranteed legibility */}
           <div ref={contentRef} className="md:col-span-7 relative">
             <div className="panel scrim px-5 md:px-10 py-7 md:py-12">
-              <p className="text-base sm:text-lg md:text-2xl text-white leading-relaxed font-light mb-7 md:mb-9">
+              <p className="text-base sm:text-lg md:text-2xl leading-relaxed font-light mb-7 md:mb-9" style={{ color: 'var(--ink)' }}>
                 I work on the science of understanding and steering learned systems. My
                 research connects interpretability, optimization, and alignment by studying
                 how models form internal structure, how training shapes that structure, and
@@ -122,7 +123,7 @@ export default function About() {
               <div className="flex gap-4 md:gap-6">
                 <span className="shrink-0 w-px" style={{ background: 'var(--hairline)' }} />
                 <div className="space-y-4 md:space-y-5">
-                  <p className="text-[14.5px] md:text-lg text-white/70 leading-relaxed font-light">
+                  <p className="text-[14.5px] md:text-lg text-[#2A211A]/72 leading-relaxed font-light">
                     Alongside the research, I have spent six years working on AI
                     deployment in low resource settings, mostly through ASOFI, an
                     initiative I co founded that builds on device agricultural tools and
@@ -131,7 +132,7 @@ export default function About() {
                     Forum, and the UN General Assembly. This side of the work keeps me
                     honest about which safety questions are actually load bearing.
                   </p>
-                  <p className="text-[14.5px] md:text-lg text-white/70 leading-relaxed font-light">
+                  <p className="text-[14.5px] md:text-lg text-[#2A211A]/72 leading-relaxed font-light">
                     Currently at Stanford, previously Microsoft Research and supervised
                     research with Dr. Hiroki Naganuma at ProPlace.
                   </p>
@@ -219,9 +220,9 @@ export default function About() {
 
 function FocusItem({ title, body }) {
   return (
-    <li className="text-[14.5px] md:text-[1.02rem] text-white/75 leading-relaxed font-light">
-      <span className="text-white/95">{title}</span>{' '}
-      <span className="text-white/65">{body}</span>
+    <li className="text-[14.5px] md:text-[1.02rem] text-[#2A211A]/75 leading-relaxed font-light">
+      <span className="text-[#2A211A]/95">{title}</span>{' '}
+      <span className="text-[#2A211A]/65">{body}</span>
     </li>
   )
 }

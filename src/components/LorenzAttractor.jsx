@@ -140,9 +140,9 @@ function AttractorLine({ hovered }) {
     <group ref={groupRef} position={[0, -0.2, 0]}>
       <line geometry={geometry}>
         <lineBasicMaterial
-          vertexColors
+          color="#241B12" // solid espresso ink, matches body text
           transparent
-          opacity={0.82}
+          opacity={0.88}
           linewidth={1} // WebGL lines are always 1px; thin look via opacity
         />
       </line>
@@ -158,7 +158,7 @@ const LORENZ_LABEL = {
   params: 'σ = 10  ·  ρ = 28  ·  β = 8/3',
   description:
     'A deterministic system that never repeats. Tiny differences in starting conditions diverge exponentially: the origin of the butterfly effect.',
-  accentRgb: '160, 140, 255',
+  accentRgb: '90, 60, 42',
 }
 
 function EquationOverlay() {
@@ -223,7 +223,7 @@ function EquationOverlay() {
           aria-expanded={open}
           aria-controls="lorenz-attractor-explainer"
         >
-          <span className="text-xs font-light leading-snug underline decoration-[rgba(255,255,255,0.2)] underline-offset-4 hover:decoration-[rgba(255,255,255,0.35)]">
+          <span className="text-xs font-light leading-snug underline decoration-[rgba(42,33,26,0.25)] underline-offset-4 hover:decoration-[rgba(42,33,26,0.45)]">
             {open ? 'Tap to hide' : LORENZ_LABEL.teaser}
           </span>
         </button>
@@ -255,13 +255,13 @@ export default function LorenzAttractor() {
         <AttractorLine hovered={hovered} />
       </Canvas>
 
-      {/* Dark radial vignette so text stays readable */}
+      {/* Light sand vignette so text stays readable over the dark line-art */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           zIndex: 2,
           background:
-            'radial-gradient(ellipse at center, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.30) 45%, rgba(0,0,0,0) 70%)',
+            'radial-gradient(ellipse at center, rgba(230,220,200,0.55) 0%, rgba(230,220,200,0.22) 45%, rgba(230,220,200,0) 70%)',
         }}
       />
 

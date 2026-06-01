@@ -18,11 +18,11 @@ export default function PortfolioPage() {
   const itemsRef = useRef([])
 
   useEffect(() => {
-    // Reset to the dark site palette in case we navigated here from /blog,
-    // which sets a light body background.
+    // Reset to the sand site palette in case we navigated here from /blog,
+    // which sets its own light body background.
     gsap.to('body', {
-      background: '#0a0c10',
-      color: '#e8ecf1',
+      background: '#E6DCC8',
+      color: '#2A211A',
       duration: 0.4,
       ease: 'power2.out',
     })
@@ -65,7 +65,7 @@ export default function PortfolioPage() {
     <section
       id="portfolio-page"
       className="relative min-h-screen py-16 md:py-24 px-4 sm:px-6 md:px-8"
-      style={{ background: '#0a0c10', color: '#e8ecf1' }}
+      style={{ background: '#E6DCC8', color: '#2A211A' }}
     >
       <div className="relative z-10 max-w-6xl mx-auto w-full">
         <Link
@@ -78,10 +78,10 @@ export default function PortfolioPage() {
 
         <header ref={titleRef} className="mb-14 md:mb-24 text-center">
           <div className="section-index mb-3 md:mb-4">§ Selected Research</div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-wider mb-4 md:mb-5 text-on-bg">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-wider mb-4 md:mb-5 text-on-bg" style={{ color: 'var(--ink)' }}>
             Research &amp; Projects
           </h1>
-          <p className="max-w-2xl mx-auto text-[13.5px] md:text-base text-white/55 font-light leading-relaxed">
+          <p className="max-w-2xl mx-auto text-[13.5px] md:text-base text-[#2A211A]/60 font-light leading-relaxed">
             Every project, ordered by topic and recency. Recent work centers on spectral and
             mixed-geometry optimization, and on the representations transformers form before they can
             use them.
@@ -132,7 +132,7 @@ export default function PortfolioPage() {
                         </span>
                       </div>
 
-                      <h3 className="text-2xl md:text-4xl font-light mb-3 tracking-tight text-white leading-tight">
+                      <h3 className="text-2xl md:text-4xl font-light mb-3 tracking-tight leading-tight" style={{ color: 'var(--ink)' }}>
                         {project.title}
                       </h3>
 
@@ -140,7 +140,7 @@ export default function PortfolioPage() {
                         {project.venue}{project.org ? ` · ${project.org}` : ''}
                       </p>
 
-                      <p className="text-[14.5px] md:text-[1.02rem] text-white/75 leading-relaxed font-light max-w-xl">
+                      <p className="text-[14.5px] md:text-[1.02rem] text-[#2A211A]/78 leading-relaxed font-light max-w-xl">
                         {project.description}
                       </p>
 
@@ -209,7 +209,7 @@ export default function PortfolioPage() {
                         border: '1px solid var(--hairline)',
                         borderRadius: '2px',
                         background:
-                          'linear-gradient(160deg, rgba(143,175,214,0.035) 0%, rgba(0,0,0,0.25) 100%)',
+                          'linear-gradient(160deg, rgba(255,251,244,0.55) 0%, rgba(60,45,35,0.06) 100%)',
                       }}
                     >
                       <TickCorners />
@@ -217,7 +217,7 @@ export default function PortfolioPage() {
                         <ProjectDoodle projectId={project.id} className="w-full h-full" />
                       </div>
                     </div>
-                    <p className="mt-3 text-[11px] font-light tracking-wider uppercase text-white/40 text-center">
+                    <p className="mt-3 text-[11px] font-light tracking-wider uppercase text-[#2A211A]/45 text-center">
                       Fig. {String(index + 1).padStart(2, '0')}: {project.briefDescription}
                     </p>
                   </div>

@@ -24,9 +24,9 @@ html {
 
 body {
   font-family: 'Inter', 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  /* Matches PaperBackground `--paper-base` (blue-charcoal, not pitch black). */
-  background: #0f1118;
-  color: #F4F4F7;
+  /* Matches PaperBackground `--paper-base` (warm sand stationery). */
+  background: #E6DCC8;
+  color: #2A211A;
   overflow-x: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
   line-height: 1.8;
@@ -55,16 +55,16 @@ canvas {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0f1118;
+  background: #E6DCC8;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(156, 180, 212, 0.35);
+  background: rgba(156, 107, 79, 0.40);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 180, 212, 0.5);
+  background: rgba(156, 107, 79, 0.6);
 }
 
 /* Light theme scrollbar */
@@ -82,25 +82,25 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
   opacity: 0.6;
 }
 
-/* ─── Palette: cool scientific stationery; accents align with attractor ink ─ */
+/* ─── Palette: warm sand stationery, espresso ink, terracotta accent ───────── */
 :root {
-  /* Blue-charcoal “paper”; no coloured wash overlays on top of this in UI */
-  --paper-base:   #0f1118;
+  /* Warm sand “paper”; no coloured wash overlays on top of this in UI */
+  --paper-base:   #E6DCC8;
 
-  --ink:       #F4F4F7;
-  --ink-soft:  rgba(244, 244, 247, 0.78);
-  --ink-quiet: rgba(244, 244, 247, 0.55);
+  --ink:       #2A211A;
+  --ink-soft:  rgba(42, 33, 26, 0.80);
+  --ink-quiet: rgba(42, 33, 26, 0.56);
 
-  --accent:       #9CB4D4;
-  --accent-hover: #B5C6DD;
-  --accent-dim:   rgba(156, 180, 212, 0.55);
-  --accent-ghost: rgba(156, 180, 212, 0.10);
+  --accent:       #9C6B4F;
+  --accent-hover: #82542F;
+  --accent-dim:   rgba(156, 107, 79, 0.62);
+  --accent-ghost: rgba(156, 107, 79, 0.12);
 
-  --border:       rgba(140, 150, 170, 0.14);
-  --hairline:     rgba(244, 244, 247, 0.085);
+  --border:       rgba(60, 45, 35, 0.16);
+  --hairline:     rgba(42, 33, 26, 0.12);
 
-  --panel-bg:        rgba(16, 18, 24, 0.65);
-  --panel-bg-strong: rgba(16, 18, 26, 0.82);
+  --panel-bg:        rgba(244, 238, 226, 0.62);
+  --panel-bg-strong: rgba(244, 238, 226, 0.84);
 }
 
 /* ─── Editorial panel system ─────────────────────────────────────────────── */
@@ -112,8 +112,8 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
   border: 1px solid var(--border);
   border-radius: 2px;
   box-shadow:
-    inset 0 1px 0 rgba(244, 244, 247, 0.035),
-    0 1px 0 rgba(0, 0, 0, 0.28);
+    inset 0 1px 0 rgba(255, 252, 245, 0.45),
+    0 1px 2px rgba(60, 45, 35, 0.10);
 }
 .panel-strong {
   background: var(--panel-bg-strong);
@@ -124,8 +124,8 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
   position: absolute;
   inset: -8%;
   background: radial-gradient(ellipse 75% 70% at 30% 50%,
-    rgba(15, 17, 22, 0.58) 0%,
-    rgba(15, 17, 22, 0.26) 45%,
+    rgba(244, 238, 226, 0.62) 0%,
+    rgba(244, 238, 226, 0.28) 45%,
     transparent 78%);
   filter: blur(26px);
   pointer-events: none;
@@ -175,8 +175,8 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 /* Text shadow for headings on the grain background */
 .text-on-bg {
   text-shadow:
-    0 1px 18px rgba(15, 17, 22, 0.75),
-    0 1px 3px rgba(15, 17, 22, 0.55);
+    0 1px 18px rgba(230, 220, 200, 0.85),
+    0 1px 3px rgba(230, 220, 200, 0.70);
 }
 
 /* Reduced motion: kill all scroll-driven transforms */
@@ -203,7 +203,7 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 
 /* Glass morphism: paper-tinted, very faint */
 .glass {
-  background: rgba(244, 244, 247, 0.03);
+  background: rgba(255, 252, 245, 0.30);
   backdrop-filter: blur(14px);
   border: 1px solid var(--border);
 }
@@ -223,9 +223,9 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 
 /* Remove white backgrounds from Stanford logo using CSS filter */
 img[src*="stanford-logo"] {
-  /* Convert white to transparent using brightness filter + blend mode */
+  /* Dark logo on light paper: white plate drops out via multiply, ink stays */
   filter: brightness(0) saturate(100%);
-  mix-blend-mode: screen;
+  mix-blend-mode: multiply;
   background: transparent;
 }
 

@@ -58,8 +58,8 @@ export default function Navigation() {
     }
   }
 
-  const textColorClass = isBlogPage ? 'text-gray-800' : 'text-white'
-  const hoverClass = isBlogPage ? 'hover:text-indigo-600' : 'hover:opacity-70'
+  const textColorClass = isBlogPage ? 'text-gray-800' : 'text-[#2A211A]'
+  const hoverClass = isBlogPage ? 'hover:text-indigo-600' : 'hover:text-[#82542F]'
 
   return (
     <nav className="fixed top-4 right-4 sm:top-6 sm:right-6 md:top-12 md:right-12 z-50">
@@ -106,7 +106,7 @@ export default function Navigation() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className={`md:hidden absolute top-9 right-0 ${isBlogPage ? 'bg-white/95 backdrop-blur-sm border border-gray-200' : 'bg-black/90 backdrop-blur-sm border border-white/10'} px-5 py-4 flex flex-col gap-3 min-w-[170px]`}>
+        <div className={`md:hidden absolute top-9 right-0 ${isBlogPage ? 'bg-white/95 backdrop-blur-sm border border-gray-200' : 'bg-[#F4EEE2]/95 backdrop-blur-sm border border-[#3C2D23]/15'} px-5 py-4 flex flex-col gap-3 min-w-[170px]`}>
           {navItems.map((item) => (
             item.isHash ? (
               <a
