@@ -14,13 +14,11 @@ export default function Hero() {
   const titleRef = useRef(null)
   const subtitleRef = useRef(null)
   const emailRef = useRef(null)
-  const tagRef = useRef(null)
   const scrollRef = useRef(null)
 
   useEffect(() => {
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
-    tl.from(tagRef.current,      { opacity: 0, y: 12, duration: 0.8 })
-      .from(titleRef.current,    { opacity: 0, y: 28, duration: 1.2 }, '-=0.5')
+    tl.from(titleRef.current,    { opacity: 0, y: 28, duration: 1.2 })
       .from(subtitleRef.current, { opacity: 0, y: 18, duration: 0.9 }, '-=0.6')
       .from(emailRef.current,    { opacity: 0, y: 14, duration: 0.8 }, '-=0.5')
       .from(scrollRef.current,   { opacity: 0, duration: 1 }, '-=0.3')
@@ -57,10 +55,6 @@ export default function Hero() {
           />
 
           <div className="relative z-10">
-            <div ref={tagRef} className="section-index mb-6">
-              § 00 · Stanford CS · AI Safety, Interpretability, Optimization
-            </div>
-
             <h2
               ref={titleRef}
               className="font-light text-[1.7rem] sm:text-4xl md:text-5xl lg:text-6xl mb-4 md:mb-6 tracking-tight text-on-bg"
@@ -78,10 +72,6 @@ export default function Hero() {
               <p className="font-light text-[13px] md:text-base tracking-wide" style={{ color: 'var(--ink-quiet)' }}>
                 Stanford CS. ICLR 2026. Microsoft Research, summer 2025. Incoming AI Resident at Lila
                 Sciences.
-              </p>
-              <p className="mono text-[10px] md:text-[11px] tracking-widest uppercase pt-1" style={{ color: 'var(--accent-dim)' }}>
-                Mechanistic interpretability, optimization geometry, alignment on model editing, generalization
-                and grokking
               </p>
             </div>
 
