@@ -277,7 +277,7 @@ export default function Portfolio() {
                 color: 'var(--accent)',
                 border: '1px solid var(--border)',
                 borderRadius: '2px',
-                background: 'rgba(8,10,14,0.5)',
+                background: 'rgba(244,238,226,0.6)',
                 backdropFilter: 'blur(10px)',
                 textDecoration: 'none',
               }}
@@ -298,7 +298,7 @@ export default function Portfolio() {
 }
 
 export function TickCorners() {
-  const color = 'rgba(143,175,214,0.28)'
+  const color = 'rgba(74,52,36,0.30)'
   const size = 10
   const s = { position: 'absolute', width: size, height: size, borderColor: color }
   return (

@@ -382,7 +382,7 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         const gx1 = xOf(gapX1)
         return (
           <svg viewBox="0 0 400 300" className={className}>
-            <rect width="400" height="300" fill="rgba(8,10,14,0.35)" />
+            <rect width="400" height="300" fill="rgba(255,251,244,0.45)" />
             <text x="200" y="26" fill="#33271D" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.9">
               Fig. 1 · one-step Collatz · base 8 · encoder vs output (schematic)
             </text>
@@ -606,7 +606,7 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         ]
         return (
           <svg viewBox="0 0 400 300" className={className}>
-            <rect width="400" height="300" fill="rgba(8,10,14,0.35)" />
+            <rect width="400" height="300" fill="rgba(255,251,244,0.45)" />
             <text x="200" y="26" fill="#33271D" fontSize="10.5" fontFamily="monospace" textAnchor="middle" opacity="0.9">
               Fig. 1(a) · validation loss vs step · matched rank r = 384
             </text>
@@ -762,7 +762,7 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
 
         return (
           <svg viewBox="0 0 400 300" className={className}>
-            <rect width="400" height="300" fill="rgba(8,10,14,0.35)" />
+            <rect width="400" height="300" fill="rgba(255,251,244,0.45)" />
             <text x="200" y="26" fill="#33271D" fontSize="10.5" fontFamily="monospace" textAnchor="middle" opacity="0.9">
               Table 3(b) · final validation loss · GPT-2 31M · OpenWebText
             </text>
