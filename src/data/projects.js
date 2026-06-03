@@ -17,7 +17,7 @@ export const projects = [
     id: 13,
     title: 'Orth-Dion: Eliminating Geometric Mismatch in Distributed Low-Rank Spectral Optimization',
     year: '2026',
-    venue: 'Under review',
+    venue: 'Connecting Low-rank Representations in AI (CoLoRAI) Workshop, ICML 2026',
     topic: 'Optimization',
     description:
       'Distributed low-rank spectral updates (Dion) communicate cheap rank-r factors but normalize columns in a way that misses the true rank-r polar geometry Muon targets, adding a √r factor to the rate even when the gradient subspace is accurate. Orth-Dion swaps column normalization for QR orthogonalization of the right factor so each step respects the dual norm of the low-rank spectral problem, recovering Muon-matching rates at the same communication budget. Includes a sharper error-feedback analysis and LLM pre-training experiments at scale.',

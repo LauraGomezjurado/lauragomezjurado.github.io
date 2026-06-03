@@ -25,11 +25,11 @@ const newsItems = [
     badge: 'Upcoming',
   },
   {
-    date: 'May 2026',
+    date: 'June 2026',
     year: '2026',
     content:
-      'Paper "Orth-Dion: Eliminating Geometric Mismatch in Distributed Low-Rank Spectral Optimization" (with Tatsuhiro Nakamori, Ganesh Talluri, Ansh Tiwari, Hideyuki Kawashima, Ioannis Mitliagkas, Guillaume Rabusseau, Hiroki Naganuma) under review.',
-    badge: 'Preprint',
+      'Paper "Orth-Dion: Eliminating Geometric Mismatch in Distributed Low-Rank Spectral Optimization" (with Tatsuhiro Nakamori, Ganesh Talluri, Ansh Tiwari, Hideyuki Kawashima, Ioannis Mitliagkas, Guillaume Rabusseau, Hiroki Naganuma) accepted to the Connecting Low-rank Representations in AI (CoLoRAI) Workshop at ICML 2026.',
+    badge: 'Accepted',
   },
   {
     date: 'May 2026',
