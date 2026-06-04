@@ -58,14 +58,9 @@ export default function Contact() {
           {/* Left column: contact info on a panel */}
           <div ref={leftRef}>
             <div className="panel scrim px-5 md:px-8 py-7 md:py-10">
-              <h3 className="text-lg md:text-2xl font-light mb-3 md:mb-4" style={{ color: 'var(--ink)' }}>
+              <h3 className="text-lg md:text-2xl font-light mb-6 md:mb-8" style={{ color: 'var(--ink)' }}>
                 Research &amp; Collaboration
               </h3>
-              <p className="text-[#2A211A]/72 leading-relaxed font-light text-[14px] md:text-[15px] mb-6 md:mb-8">
-                Open to research roles, collaborations, and PhD adjacent positions on interpretability,
-                training time alignment, and the optimization side of large model behavior. Fastest by
-                email; a one line note about what you are working on is enough.
-              </p>
 
               <div className="space-y-4" style={{ borderTop: '1px solid var(--hairline)', paddingTop: '1.25rem' }}>
                 <ContactRow label="Email" value="lpgomez@stanford.edu" href="mailto:lpgomez@stanford.edu" />

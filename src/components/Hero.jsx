@@ -66,7 +66,7 @@ export default function Hero() {
             <div ref={subtitleRef} className="space-y-2 mb-5 md:mb-6">
               <p className="font-light text-[14.5px] md:text-lg lg:text-xl tracking-wide text-on-bg leading-relaxed" style={{ color: 'var(--ink-soft)' }}>
                 Research on the mechanisms behind model behavior, the geometry of how they get trained,
-                and the safety questions that show up when these systems are deployed where they actually
+                and the safety questions that show up when these systems are deployed where they
                 matter.
               </p>
               <p className="font-light text-[13px] md:text-base tracking-wide" style={{ color: 'var(--ink-quiet)' }}>
