@@ -11,18 +11,10 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
 // ─── Shared scroll signals: written by GSAP, read by useFrame ───────────────
-export const morphState  = { progress: 0 }
-export const cameraState = { z: 5.5 }     // default distance; zooms in for Portfolio
-// Per-project motif: projects "claim" the background by writing a hue tint
-// and intensity. The canvas reads these and modulates color + rotation.
-// hue: 0 = attractor default; -1..1 shifts toward warm/cool
-// intensity: 0..1 = how much of the project's tint to mix in
-export const motifState  = { hue: 0, intensity: 0, spin: 0 }
-// Stage: lets sections re-position and shrink the attractor so it sits in a
-// defined region of the screen rather than full-bleed. offsetX/Y are in world
-// units (-2..2 typical), scale shrinks the curve, opacity attenuates how
-// strongly the curve is drawn while keeping it always present.
-export const stageState  = { offsetX: 0, offsetY: -0.2, scale: 1, opacity: 1 }
+// Live in backgroundState.js so write-only consumers (Home, Portfolio) can
+// import them without pulling in Three.js. Re-exported here for compatibility.
+import { morphState, cameraState, motifState, stageState } from './backgroundState'
+export { morphState, cameraState, motifState, stageState }
 
 // ─── RK4 ─────────────────────────────────────────────────────────────────────
 function rk4(state, derivFn, dt) {
@@ -239,32 +231,30 @@ function MorphingScene({ attractors, hovered }) {
 // ─── Figure label ─────────────────────────────────────────────────────────────
 const LABELS = [
   {
-    name: 'Lorenz Attractor',
-    teaser:
-      'That swoopy trace weaving behind the page? Strange attractor named after Lorenz. Tap for the equations.',
-    equations: ['dx/dt = σ(y − x)', 'dy/dt = x(ρ − z) − y', 'dz/dt = xy − βz'],
-    params: 'σ = 10  ·  ρ = 28  ·  β = 8/3',
-    description:
-      'Deterministic three-dimensional flow. Trajectories stay bounded but aperiodic; nearby initial conditions diverge quickly.',
+    name: 'Lorenz attractor',
+    teaser: 'That swoopy trace weaving behind the page?',
+    coolLine:
+      'A tiny nudge in starting conditions sends the path onto a completely different orbit—bounded chaos that helped launch modern dynamical systems.',
+    paperUrl: 'https://doi.org/10.1175/1520-0469(1963)020%3C0130:DNF%3E2.0.CO;2',
+    paperLabel: 'Lorenz (1963), Deterministic Nonperiodic Flow',
     accentRgb: '74, 52, 36',
   },
   {
-    name: 'Halvorsen Attractor',
-    teaser:
-      'The symmetric tangled loop you\'re seeing? Halvorsen\'s system. Tap for the ODEs.',
-    equations: ['dx/dt = −ax − 4y − 4z − y²', 'dy/dt = −ay − 4z − 4x − z²', 'dz/dt = −az − 4x − 4y − x²'],
-    params: 'a = 1.4',
-    description: 'A cyclically symmetric strange attractor. Each equation is identical under the permutation x → y → z → x.',
+    name: 'Halvorsen attractor',
+    teaser: 'The symmetric tangled loop you\'re seeing?',
+    coolLine:
+      'Three coupled equations that look the same under x → y → z → x, so the chaos stays perfectly symmetric instead of lopsided.',
+    paperUrl: 'https://en.wikipedia.org/wiki/Halvorsen_attractor',
+    paperLabel: 'Halvorsen attractor (overview)',
     accentRgb: '74, 52, 36',
   },
   {
-    name: 'Aizawa Attractor',
-    teaser:
-      'Those orbits hugging a donut-shaped surface? Aizawa attractor. Tap for the math.',
-    equations: ['dx/dt = (z−b)x − dy', 'dy/dt = dx + (z−b)y', 'dz/dt = c + az − z³/3 − (x²+y²)(1+ez) + fzx³'],
-    params: 'a=0.95  b=0.7  c=0.6  d=3.5  e=0.25  f=0.1',
-    description:
-      'Toroidal strange attractor. Trajectories wrap on a torus without settling into a simple repeat.',
+    name: 'Aizawa attractor',
+    teaser: 'Those orbits hugging a donut-shaped surface?',
+    coolLine:
+      'Trajectories wrap a torus forever without settling into a simple repeat—the shape stays recognizable while the path never closes.',
+    paperUrl: 'https://doi.org/10.1016/0378-4371(82)90212-4',
+    paperLabel: 'Aizawa (1982), toroidal chaotic flow',
     accentRgb: '74, 52, 36',
   },
 ]
@@ -288,37 +278,32 @@ function FigureLabel({ labelIdx }) {
           id={`attractor-explainer-${labelIdx}`}
           className={`overflow-hidden transition-[max-height,opacity,margin] duration-[450ms] ease-out ${
             open
-              ? 'max-h-[min(62vh,300px)] sm:max-h-[360px] opacity-100 mb-2 sm:mb-3'
+              ? 'max-h-[min(40vh,200px)] opacity-100 mb-2 sm:mb-3'
               : 'max-h-0 opacity-0 mb-0'
           }`}
           aria-hidden={!open}
         >
           <p
-            className="text-[10px] sm:text-[11px] font-medium mb-1 sm:mb-2"
+            className="text-[10px] sm:text-[11px] font-medium mb-1.5 sm:mb-2"
             style={{ color: `rgba(${accentRgb},0.75)` }}
           >
             {label.name}
           </p>
-          <div
-            className="font-mono text-[10px] sm:text-xs mb-1.5 sm:mb-2"
-            style={{ color: `rgba(${accentRgb},0.80)`, lineHeight: 1.65 }}
-          >
-            {label.equations.map((eq, i) => (
-              <div key={i}>{eq}</div>
-            ))}
-          </div>
-          <div
-            className="font-mono text-[10px] sm:text-xs mb-1.5 sm:mb-2"
-            style={{ color: `rgba(${accentRgb},0.45)`, lineHeight: 1.55 }}
-          >
-            {label.params}
-          </div>
           <p
-            className="text-[10px] sm:text-xs font-light leading-snug sm:leading-relaxed text-right"
-            style={{ color: `rgba(${accentRgb},0.42)` }}
+            className="text-[10px] sm:text-xs font-light leading-snug sm:leading-relaxed text-right mb-2 sm:mb-2.5"
+            style={{ color: `rgba(${accentRgb},0.55)` }}
           >
-            {label.description}
+            {label.coolLine}
           </p>
+          <a
+            href={label.paperUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] sm:text-xs font-light underline underline-offset-2 sm:underline-offset-3"
+            style={{ color: `rgba(${accentRgb},0.72)` }}
+          >
+            {label.paperLabel}
+          </a>
         </div>
 
         <button
