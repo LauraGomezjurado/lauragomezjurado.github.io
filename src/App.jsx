@@ -1,12 +1,15 @@
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, lazy, Suspense } from 'react'
 import Navigation from './components/Navigation'
 import Home from './components/Home'
-import Blog from './components/Blog'
-import BlogPost from './components/BlogPost'
-import PortfolioPage from './components/PortfolioPage'
 import './App.css'
+
+// Blog/Portfolio routes pull in heavy deps (KaTeX, react-markdown, the long
+// BlogPost). Lazy-load them so visiting "/" never downloads that code.
+const Blog = lazy(() => import('./components/Blog'))
+const BlogPost = lazy(() => import('./components/BlogPost'))
+const PortfolioPage = lazy(() => import('./components/PortfolioPage'))
 
 /** React Router keeps document scroll position across routes; reset so `/` always starts at the hero. */
 function ScrollToTop() {
@@ -42,6 +45,7 @@ function AnimatedRoutes() {
 
   return (
     <AnimatePresence mode="wait">
+     <Suspense fallback={null}>
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={
           <motion.div
@@ -84,6 +88,7 @@ function AnimatedRoutes() {
           </motion.div>
         } />
       </Routes>
+     </Suspense>
     </AnimatePresence>
   )
 }

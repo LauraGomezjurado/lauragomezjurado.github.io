@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import TransparentLogo from './TransparentLogo'
@@ -228,15 +228,19 @@ function FocusItem({ title, body }) {
 }
 
 function MosaicTile({ src, alt, caption, className = '' }) {
+  const [loaded, setLoaded] = useState(false)
   return (
     <figure
       className={`relative overflow-hidden group ${className}`}
-      style={{ border: '1px solid var(--hairline)', borderRadius: '2px' }}
+      style={{ border: '1px solid var(--hairline)', borderRadius: '2px', background: 'var(--paper-raise, #efe7da)' }}
     >
       <img
         src={src}
         alt={alt}
-        className="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.06]"
+        loading="lazy"
+        decoding="async"
+        onLoad={() => setLoaded(true)}
+        className={`w-full h-full object-cover transition-[opacity,transform] duration-[1200ms] ease-out group-hover:scale-[1.06] ${loaded ? 'opacity-100' : 'opacity-0'}`}
         onError={(e) => {
           e.target.src = '/profile.jpg'
         }}

@@ -1506,7 +1506,7 @@ The codebase is set up to make it easy to run these experiments. If you're inter
     date: '2026-04-30',
     content: stripFrontmatter(latentThoughtRaw),
     layout: 'lead',
-    heroImage: '/images/blog/latent-thought/hero_silent_chain.png',
+    heroImage: '/images/blog/latent-thought/hero_silent_chain.jpg',
     heroImageAlt: 'Three sandbagging models with verbal, silent, and latent chains of thought.'
   },
   'confessions-dont-escape-substrate': {

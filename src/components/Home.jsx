@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, lazy, Suspense } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Hero from './Hero'
@@ -7,9 +7,18 @@ import News from './News'
 import Portfolio from './Portfolio'
 import Featured from './Featured'
 import Contact from './Contact'
-import MorphingBackground, { AttractorLabel, morphState, cameraState, stageState } from './MathBackgrounds'
+// Scroll-signal singletons are lightweight (no Three.js) so GSAP can drive them
+// immediately. The attractor canvas itself is the heavy part — lazy-loaded
+// below so the hero text paints before Three.js downloads.
+import { morphState, cameraState, stageState } from './backgroundState'
 import PaperBackground from './PaperBackground'
 import LightDrops from './LightDrops'
+
+// Heavy Three.js canvas + label: deferred off the critical path.
+const MorphingBackground = lazy(() => import('./MathBackgrounds'))
+const AttractorLabel = lazy(() =>
+  import('./MathBackgrounds').then((m) => ({ default: m.AttractorLabel }))
+)
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -203,9 +212,12 @@ export default function Home() {
       {/* Foundation: paper + fiber, sits below everything */}
       <PaperBackground />
 
-      {/* Attractor canvas: sits above paper, below light streaks */}
+      {/* Attractor canvas: sits above paper, below light streaks. Deferred —
+          fallback is empty so the paper foundation shows until Three.js loads. */}
       <div ref={bgRef} className="fixed inset-0 pointer-events-none z-[2]">
-        <MorphingBackground />
+        <Suspense fallback={null}>
+          <MorphingBackground />
+        </Suspense>
       </div>
 
       {/* Subtle drifting light streaks (square paths, hero region) */}
@@ -214,7 +226,9 @@ export default function Home() {
       {/* Attractor label: separate stacking context, sits above sections so
           the "Curious what the X attractor is?" hint stays tappable even
           when text panels overlap the bottom-right of the viewport. */}
-      <AttractorLabel />
+      <Suspense fallback={null}>
+        <AttractorLabel />
+      </Suspense>
 
       <Hero />
 

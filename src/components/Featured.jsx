@@ -1,8 +1,29 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
+
+/**
+ * Thumbnail that fades in once decoded (instead of snapping from black) and
+ * lazy-loads. Rests at 80% opacity, lifting to full on card hover.
+ */
+function Thumb({ src, alt, className = '' }) {
+  const [loaded, setLoaded] = useState(false)
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+      onLoad={() => setLoaded(true)}
+      className={`${className} transition-[opacity,transform] duration-[1200ms] ease-out ${loaded ? 'opacity-80 group-hover:opacity-100' : 'opacity-0'}`}
+      onError={(e) => {
+        e.target.style.display = 'none'
+      }}
+    />
+  )
+}
 
 const features = [
   {
@@ -12,7 +33,7 @@ const features = [
       'Selected as a Youth Delegate attending the World Economic Forum 2025 in Davos, representing youth voices in global leadership discussions.',
     url: 'https://static1.squarespace.com/static/581e5b6a8419c273288db3e9/t/674f747246e64400ad784d54/1733260408275/WAFF+Youth+Delegation+Attending+Davos+During+WEF+2025+One-Pagers.pdf',
     type: 'PDF',
-    image: '/images/featured/waff-davos-2025.png',
+    image: '/images/featured/waff-davos-2025.jpg',
     year: '2025',
   },
   {
@@ -52,7 +73,7 @@ const features = [
       'Featured article discussing how AI can be leveraged as a tool for advancing gender equality and social impact.',
     url: 'https://girlup.org/voices/artificial-intelligence-a-tool-for-equality',
     type: 'Article',
-    image: '/images/featured/girlup-article.png',
+    image: '/images/featured/girlup-article.jpg',
     year: '2024',
   },
   {
@@ -72,7 +93,7 @@ const features = [
       'Selected as a Global Teen Leader, recognized for leadership in technology, gender equality, and peace-building initiatives.',
     url: 'https://www.wearefamilyfoundation.org/gtl-2022/laura-gomezjurado-gonzlez',
     type: 'Recognition',
-    image: '/images/featured/global-teen-leader-2022.png',
+    image: '/images/featured/global-teen-leader-2022.jpg',
     year: '2022',
   },
   {
@@ -185,26 +206,20 @@ function FeatureCard({ feature, innerRef }) {
       {/* Image */}
       <div className="relative w-full aspect-[4/3] overflow-hidden bg-black">
         {thumbs.length === 1 ? (
-          <img
+          <Thumb
             src={thumbs[0]}
             alt={feature.title}
-            className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-[1.2s] ease-out"
-            onError={(e) => {
-              e.target.style.display = 'none'
-            }}
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.04]"
           />
         ) : thumbs.length > 1 ? (
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute inset-0 grid grid-cols-2 gap-px bg-black transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]">
               {thumbs.map((src, i) => (
-                <img
+                <Thumb
                   key={src}
                   src={src}
                   alt={`${feature.title} (${i + 1})`}
-                  className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-[1.2s] ease-out"
-                  onError={(e) => {
-                    e.target.style.display = 'none'
-                  }}
+                  className="w-full h-full object-cover"
                 />
               ))}
             </div>

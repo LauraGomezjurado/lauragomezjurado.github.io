@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import ProjectDoodle from './ProjectDoodle'
-import { motifState } from './MathBackgrounds'
+import { motifState } from './backgroundState'
 import { projects, HERO_COUNT } from '../data/projects'
 
 gsap.registerPlugin(ScrollTrigger)
