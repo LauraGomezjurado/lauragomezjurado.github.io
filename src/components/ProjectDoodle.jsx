@@ -383,8 +383,11 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         return (
           <svg viewBox="0 0 400 300" className={className}>
             <rect width="400" height="300" fill="rgba(255,251,244,0.45)" />
-            <text x="200" y="26" fill="#33271D" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.9">
-              Fig. 1 · one-step Collatz · base 8 · encoder vs output (schematic)
+            <text x="200" y="24" fill="#33271D" fontSize="9.5" fontFamily="monospace" textAnchor="middle" opacity="0.9">
+              Fig. 1 · Collatz base-8 · encoder vs output
+            </text>
+            <text x="200" y="38" fill="#33271D" fontSize="8" fontFamily="monospace" textAnchor="middle" opacity="0.5">
+              parity probe leads sequence accuracy (schematic)
             </text>
 
             {/* Shadow-knowledge band: probe already high while outputs stay low */}
@@ -414,44 +417,46 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
             <line x1={plot.L} y1={plot.B} x2={plot.R} y2={plot.B} stroke="#33271D" strokeWidth="1.15" opacity="0.55" />
             <line x1={plot.L} y1={plot.T} x2={plot.L} y2={plot.B} stroke="#33271D" strokeWidth="1.15" opacity="0.55" />
 
-            {/* Branch curves under overall */}
-            <path
-              d={line(oddBranch)}
-              fill="none"
-              stroke="#33271D"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              opacity="0.38"
-              strokeDasharray="4 4"
-            />
-            <path
-              d={line(evenBranch)}
-              fill="none"
-              stroke="#33271D"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              opacity="0.48"
-              strokeDasharray="3 2"
-            />
+            {/* Branch curves under overall (soft pencil wobble, text stays crisp) */}
+            <g filter={`url(#sketchSoft-${projectId})`}>
+              <path
+                d={line(oddBranch)}
+                fill="none"
+                stroke="#33271D"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                opacity="0.38"
+                strokeDasharray="4 4"
+              />
+              <path
+                d={line(evenBranch)}
+                fill="none"
+                stroke="#33271D"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                opacity="0.48"
+                strokeDasharray="3 2"
+              />
 
-            <path
-              d={line(outputOverall)}
-              fill="none"
-              stroke="#5A4636"
-              strokeWidth="2.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              opacity="0.92"
-            />
-            <path
-              d={line(parityProbe)}
-              fill="none"
-              stroke="#33271D"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              opacity="0.88"
-            />
+              <path
+                d={line(outputOverall)}
+                fill="none"
+                stroke="#5A4636"
+                strokeWidth="2.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                opacity="0.92"
+              />
+              <path
+                d={line(parityProbe)}
+                fill="none"
+                stroke="#33271D"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                opacity="0.88"
+              />
+            </g>
 
             {/* X ticks */}
             {[0, 20, 40, 60, 80].map((t) => (
@@ -510,18 +515,18 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
               accuracy
             </text>
 
-            {/* Legend */}
-            <g transform="translate(214,72)">
-              <line x1="0" y1="5" x2="22" y2="5" stroke="#33271D" strokeWidth="2.2" />
-              <text x="28" y="9" fill="#33271D" fontSize="8" fontFamily="monospace" opacity="0.82">
-                parity probe (encoder)
+            {/* Legend — parked in the empty low-right band, clear of the curves */}
+            <g transform="translate(244,150)">
+              <line x1="0" y1="5" x2="20" y2="5" stroke="#33271D" strokeWidth="2.2" />
+              <text x="26" y="9" fill="#33271D" fontSize="8" fontFamily="monospace" opacity="0.82">
+                parity probe (enc)
               </text>
-              <line x1="0" y1="21" x2="22" y2="21" stroke="#5A4636" strokeWidth="2.8" />
-              <text x="28" y="25" fill="#5A4636" fontSize="8" fontFamily="monospace" opacity="0.88">
-                seq accuracy (overall)
+              <line x1="0" y1="20" x2="20" y2="20" stroke="#5A4636" strokeWidth="2.8" />
+              <text x="26" y="24" fill="#5A4636" fontSize="8" fontFamily="monospace" opacity="0.88">
+                seq accuracy (out)
               </text>
-              <line x1="0" y1="37" x2="22" y2="37" stroke="#33271D" strokeWidth="1.6" strokeDasharray="3 2" opacity="0.5" />
-              <text x="28" y="41" fill="#33271D" fontSize="8" fontFamily="monospace" opacity="0.58">
+              <line x1="0" y1="35" x2="20" y2="35" stroke="#33271D" strokeWidth="1.6" strokeDasharray="3 2" opacity="0.5" />
+              <text x="26" y="39" fill="#33271D" fontSize="8" fontFamily="monospace" opacity="0.58">
                 even / odd branch
               </text>
             </g>
@@ -632,35 +637,37 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
               />
             ))}
 
-            {/* Curves */}
-            <path
-              d={toPath(dion)}
-              fill="none"
-              stroke="#33271D"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              opacity="0.42"
-              strokeDasharray="6 4"
-            />
-            <path
-              d={toPath(orth)}
-              fill="none"
-              stroke="#33271D"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              opacity="0.78"
-            />
-            <path
-              d={toPath(ada)}
-              fill="none"
-              stroke="#5A4636"
-              strokeWidth="2.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              opacity="0.95"
-            />
+            {/* Curves (soft pencil wobble, axis text stays crisp) */}
+            <g filter={`url(#sketchSoft-${projectId})`}>
+              <path
+                d={toPath(dion)}
+                fill="none"
+                stroke="#33271D"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                opacity="0.42"
+                strokeDasharray="6 4"
+              />
+              <path
+                d={toPath(orth)}
+                fill="none"
+                stroke="#33271D"
+                strokeWidth="2.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                opacity="0.78"
+              />
+              <path
+                d={toPath(ada)}
+                fill="none"
+                stroke="#5A4636"
+                strokeWidth="2.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                opacity="0.95"
+              />
+            </g>
 
             {/* Axis ticks (step) */}
             {[4500, 5000, 5500, 6000].map((s) => (
@@ -719,8 +726,8 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
               val loss
             </text>
 
-            {/* Legend */}
-            <g transform="translate(232,64)">
+            {/* Legend — bottom-left, clear of the descending loss curves */}
+            <g transform="translate(66,150)">
               <line x1="0" y1="6" x2="22" y2="6" stroke="#33271D" strokeWidth="2" opacity="0.42" strokeDasharray="6 4" />
               <text x="28" y="10" fill="#33271D" fontSize="8" fontFamily="monospace" opacity="0.72">
                 Dion
@@ -763,11 +770,11 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
         return (
           <svg viewBox="0 0 400 300" className={className}>
             <rect width="400" height="300" fill="rgba(255,251,244,0.45)" />
-            <text x="200" y="26" fill="#33271D" fontSize="10.5" fontFamily="monospace" textAnchor="middle" opacity="0.9">
-              Table 3(b) · final validation loss · GPT-2 31M · OpenWebText
+            <text x="200" y="26" fill="#33271D" fontSize="10" fontFamily="monospace" textAnchor="middle" opacity="0.9">
+              Table 3(b) · final val loss · GPT-2 31M · OWT
             </text>
-            <text x="200" y="42" fill="#33271D" fontSize="8.5" fontFamily="monospace" textAnchor="middle" opacity="0.52">
-              G-Scion gates embedding / lm_head by R∞ (schematic bar heights from paper)
+            <text x="200" y="40" fill="#33271D" fontSize="8" fontFamily="monospace" textAnchor="middle" opacity="0.52">
+              G-Scion gates embedding &amp; lm_head by R∞ (schematic)
             </text>
 
             {/* Y grid */}
@@ -791,18 +798,20 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
               const y = baseline - h
               return (
                 <g key={`${b.sub}-${i}`}>
-                  <rect
-                    x={x}
-                    y={y}
-                    width={barW}
-                    height={h}
-                    fill={b.best ? 'rgba(74,52,36,0.28)' : 'rgba(74,52,36,0.08)'}
-                    stroke="#33271D"
-                    strokeWidth={b.best ? 1.6 : 1}
-                    strokeDasharray={b.dashed ? '4 3' : undefined}
-                    opacity="0.95"
-                    rx="2"
-                  />
+                  <g filter={`url(#sketchSoft-${projectId})`}>
+                    <rect
+                      x={x}
+                      y={y}
+                      width={barW}
+                      height={h}
+                      fill={b.best ? 'rgba(74,52,36,0.28)' : 'rgba(74,52,36,0.08)'}
+                      stroke="#33271D"
+                      strokeWidth={b.best ? 1.6 : 1}
+                      strokeDasharray={b.dashed ? '4 3' : undefined}
+                      opacity="0.95"
+                      rx="2"
+                    />
+                  </g>
                   <text
                     x={x + barW / 2}
                     y={y - 6}
@@ -852,10 +861,51 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
     }
   }
 
+  // Plots stay crisp for legibility; the rest get a hand-drawn pencil wobble.
+  const isPlot = projectId === 12 || projectId === 13 || projectId === 14
   return (
-    <div className="w-full h-full flex items-center justify-center">
+    <div
+      className="w-full h-full flex items-center justify-center"
+      style={isPlot ? undefined : { filter: `url(#sketch-${projectId})` }}
+    >
+      <SketchDefs projectId={projectId} />
       {getDoodle()}
     </div>
+  )
+}
+
+/**
+ * Per-project hand-drawn filters. `sketch` wobbles whole diagrams so straight
+ * SVG lines read like pencil strokes; `sketchSoft` is a gentler version applied
+ * only to plot curves (keeps axis text and numbers crisp). IDs are namespaced
+ * by projectId so multiple cards on one page don't collide.
+ */
+function SketchDefs({ projectId }) {
+  return (
+    <svg width="0" height="0" aria-hidden="true" style={{ position: 'absolute' }}>
+      <defs>
+        <filter id={`sketch-${projectId}`} x="-6%" y="-6%" width="112%" height="112%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.018"
+            numOctaves="3"
+            seed={projectId * 7 + 1}
+            result="n"
+          />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="2.3" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+        <filter id={`sketchSoft-${projectId}`} x="-6%" y="-6%" width="112%" height="112%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.013"
+            numOctaves="2"
+            seed={projectId * 5 + 2}
+            result="n"
+          />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="1.2" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </defs>
+    </svg>
   )
 }
 
