@@ -390,13 +390,26 @@ const ProjectDoodle = ({ projectId, className = "" }) => {
               parity probe leads sequence accuracy (schematic)
             </text>
 
-            {/* Shadow-knowledge band: probe already high while outputs stay low */}
-            <polygon
-              points={`${gx0},${yOf(0.98)} ${gx1},${yOf(0.98)} ${gx1},${yOf(0.34)} ${gx0},${yOf(0.34)}`}
-              fill="rgba(74,52,36,0.14)"
-              stroke="none"
+            {/* Shadow-knowledge band: probe already high while outputs stay low.
+                Hatched + dashed outline reads as a deliberate annotation, not a
+                flat grey block. */}
+            <defs>
+              <pattern id="shadowHatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <line x1="0" y1="0" x2="0" y2="7" stroke="#33271D" strokeWidth="0.7" opacity="0.16" />
+              </pattern>
+            </defs>
+            <rect
+              x={gx0}
+              y={yOf(0.98)}
+              width={gx1 - gx0}
+              height={yOf(0.34) - yOf(0.98)}
+              fill="url(#shadowHatch)"
+              stroke="#33271D"
+              strokeWidth="0.8"
+              strokeDasharray="3 3"
+              opacity="0.5"
             />
-            <text x={(gx0 + gx1) / 2} y={yOf(0.66)} fill="#33271D" fontSize="8" fontFamily="monospace" textAnchor="middle" opacity="0.55">
+            <text x={(gx0 + gx1) / 2} y={yOf(0.9) + 9} fill="#33271D" fontSize="7.5" fontFamily="monospace" textAnchor="middle" opacity="0.6" letterSpacing="0.5">
               shadow gap
             </text>
 
