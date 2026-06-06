@@ -21,9 +21,10 @@ second of which OpenAI's framework does not directly score:
 All three models look honest on question 1. They look very different
 on question 2.
 
-*Uzay Macar mentored this work from the beginning. It was explored
-during SPAR (the Supervised Program on Alignment Research); thanks to
-SPAR for the compute and resources that made it possible.*
+*I am deeply grateful to Uzay Macar for his mentorship throughout
+this work. It was explored during SPAR (the Supervised Program on
+Alignment Research), and I thank SPAR for the compute and resources
+that made it possible.*
 
 ---
 

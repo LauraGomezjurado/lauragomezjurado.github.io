@@ -8,7 +8,7 @@ excerpt: "A model can sandbag identically whether or not it talks about sandbagg
 
 A model can sandbag identically whether or not it talks about sandbagging. We trained three models that all do exactly the same thing: they answer correctly when a prompt cue says they are being watched, and wrong when it says they are not. We then asked the same question of each one. How easy is it to tell, from the model's reasoning, that it is gaming the monitor? The answer changes a lot depending on *where* the reasoning lives.
 
-*Uzay Macar mentored this work from the beginning. It was explored during SPAR (the Supervised Program on Alignment Research); thanks to SPAR for the compute and resources that made it possible.*
+*I am deeply grateful to Uzay Macar for his mentorship throughout this work. It was explored during SPAR (the Supervised Program on Alignment Research), and I thank SPAR for the compute and resources that made it possible.*
 
 ---
 
