@@ -8,6 +8,8 @@ excerpt: "A model can sandbag identically whether or not it talks about sandbagg
 
 A model can sandbag identically whether or not it talks about sandbagging. We trained three models that all do exactly the same thing: they answer correctly when a prompt cue says they are being watched, and wrong when it says they are not. We then asked the same question of each one. How easy is it to tell, from the model's reasoning, that it is gaming the monitor? The answer changes a lot depending on *where* the reasoning lives.
 
+*Uzay Macar mentored this work from the beginning. It was explored during SPAR (the Supervised Program on Alignment Research); thanks to SPAR for the compute and resources that made it possible.*
+
 ---
 
 ## Warm up
@@ -238,4 +240,4 @@ The first failure is Schoen and Nitishinskaya's central worry. The second is Kor
 
 ## Acknowledgments
 
-To Uzay Macar, who mentored this work overall from the beginning. This project was explored during SPAR (the Supervised Program on Alignment Research), and we thank SPAR for the compute and resources that made it possible. To Tomek Korbak and the Korbak et al. (2025) author list for the framing this work depends on. To Melody Guan, Miles Wang, Micah Carroll and the Guan et al. (2025) authors for the operationalization that made the scope comparisons tractable. To Bronson Schoen (Apollo Research) and Jenny Nitishinskaya (OpenAI) for the metagaming operationalization that gave the experiment its target failure mode. To Zhenyi Shen and the CODI authors for the released checkpoint, and to Unsloth for the un-gated Llama-3.2-1B mirror that made our pipeline reproducible.
+To Tomek Korbak and the Korbak et al. (2025) author list for the framing this work depends on. To Melody Guan, Miles Wang, Micah Carroll and the Guan et al. (2025) authors for the operationalization that made the scope comparisons tractable. To Bronson Schoen (Apollo Research) and Jenny Nitishinskaya (OpenAI) for the metagaming operationalization that gave the experiment its target failure mode. To Zhenyi Shen and the CODI authors for the released checkpoint, and to Unsloth for the un-gated Llama-3.2-1B mirror that made our pipeline reproducible.
