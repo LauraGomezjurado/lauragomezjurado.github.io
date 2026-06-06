@@ -760,9 +760,12 @@ an open question and a cheap experiment.
 
 ## Acknowledgments
 
-To the OpenAI team for the confession-training framework and the
-open writeup that made this extension possible. To the prior
-monitorability project's empirical foundation; the depth-1
-informational-confession scoping change in this work was a direct
-response to a capability ceiling identified there. To the Unsloth
-project for the un-gated Llama-3.2-1B mirror.
+To Uzay Macar, who guided this work from the beginning. This
+project was explored during SPAR (the Supervised Program on
+Alignment Research), and we thank SPAR for the compute and
+resources that made it possible. To the OpenAI team for the
+confession-training framework and the open writeup that made this
+extension possible. To the prior monitorability project's empirical
+foundation; the depth-1 informational-confession scoping change in
+this work was a direct response to a capability ceiling identified
+there. To the Unsloth project for the un-gated Llama-3.2-1B mirror.
