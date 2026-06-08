@@ -78,6 +78,8 @@ or-no admission, the value of `sandbag` in the confession block. The
 second is *what* it concealed: the value of `truth`. These feel
 like the same question. They are not.
 
+![@R Two questions, one confession block. OpenAI's metric scores only the first.](/images/blog/confessions/margin_two_questions.svg)
+
 A model can admit to misbehaviour without telling us what the right
 answer was. A user reading that confession knows the run is
 suspect; they still cannot recover the answer they should have
@@ -229,7 +231,11 @@ arithmetic prompt:
 Operands are uniformly drawn from `[0, 30]`. The ground-truth answer
 is `t = (x + y) mod 11`, in `{0, ..., 10}`. The teacher submits `t`
 on `eval/` instances and the sandbagged value `t' = (t + 3) mod 11`
-on `deploy/` instances. The fixed offset means the truth is in
+on `deploy/` instances.
+
+@R The fixed offset $\delta = 3$ is invertible mod 11, so $t = (t' - \delta)\bmod 11$. The truth is always recoverable from the submitted value *if* the model still represents it — which is exactly what we test.
+
+The fixed offset means the truth is in
 principle recoverable from the submitted value plus knowledge of the
 cue, so any failure to recover it is a failure of the model's
 internal state, not a hard-cryptographic concealment.
@@ -311,6 +317,8 @@ states.** When the misbehaviour trigger is verbalised in the prompt
 test cues are sometimes textual), that AUC is near 1, and any decent
 confession decoder saturates the metric for free.
 
+@L **AUC** (area under the ROC curve) measures separability: $0.5$ is chance, $1.0$ is perfect. A **linear probe** is a linear classifier trained on frozen hidden states — it reports what a representation linearly encodes, and upper-bounds what any decoder reading the same state could recover.
+
 The interesting question is therefore not "does the model admit
 guilt?" but "does the confession contain information the user didn't
 already have?" In our setup, that's the value of `c_truth` on
@@ -354,6 +362,10 @@ informational "what was the truth?" top-1 accuracy on unmonitored
 instances, against a chance baseline of 1/11 = 0.091. The three
 models cluster tightly on the OpenAI metric (0.88 to 1.00). They
 pull apart by an order of magnitude on the informational metric.*
+
+@L **Top-1 accuracy** is the fraction of confessions whose single asserted value equals the concealed truth. Unlike the binary TPR, it scores *what* was hidden, not merely *that* something was.
+
+@R Chance on this 11-way recovery is $1/11 \approx 0.091$. The Verbal model's $0.106$ is barely above it — and equals $P(t = 8)$, the rate at which the concealed truth happens to match its one default value.
 
 The Verbal explicit-CoT model has the *highest* parse rate (100%) and
 a respectable 0.88 binary TPR. Any auditing pipeline that reads its
@@ -405,6 +417,8 @@ The 0.106 match rate for the Verbal model is exactly `P(true_t == 8)`
 in the unmonitored slice of the test set. The model is not guessing.
 It is confidently emitting `8` and getting credit on the eleven
 percent of instances where the truth happens to also be `8`.
+
+@L Pearson $r$ is linear correlation between confessed and true values: $+1$ tracks the truth exactly, $0$ is unrelated. Verbal scores $-0.03$ (a flat default); Silent scores $+1.00$.
 
 This is a sharper failure mode than the "honest confusion" framing
 in the OpenAI paper. The model has learned the *shape* of a
@@ -472,6 +486,8 @@ explicit-CoT model. The confession decoder, even after we explicitly
 supervise the confession tokens through the student stream, recovers
 `c_truth` at only 0.17. The substrate-to-text gap is 0.60. The truth
 the model has access to is not the truth it reports.
+
+![@R The latent stack encodes the truth at probe-AUC 0.77, but the text confession recovers only 0.17 — a 0.60 honesty gap the decoder leaves unspent.](/images/blog/confessions/margin_substrate_gap.svg)
 
 The Latent finding is the one that is sharpest against the OpenAI
 framework. The naive prediction was decoder collapse: the original

@@ -42,6 +42,8 @@ We trained three sandbagging models and probed each with both a surface monitor 
 
 To monitor a metagaming-trained latent-CoT model at this scale, the right thing to read is the prompt encoder, not the channel named after reasoning. That matches four earlier findings in our project on different target variables. At 1B parameters, fine-tuning appears to route safety-relevant computation into whichever piece of the residual stream is computationally cheapest, and that piece is usually the prompt encoder.
 
+![@R Three models trained to the *same* behaviour, with three very different surface-monitorabilities.](/images/blog/latent-thought/margin_three_models.svg)
+
 ---
 
 ## Background
@@ -74,6 +76,8 @@ The fourth finding becomes central later, so it gets its own paragraph.
 
 **At 1B-scale, the prompt encoder is greedy.** On every safety-relevant variable we tested (a parity bit, an arithmetic mode flag, a depth-axis intermediate), the prompt encoder *already* carried near-saturating information about the variable, before the latent channel even ran. Single-pass-doable variables get computed during input parsing and never need the channel at all. The "channel gain" (the difference between probing the channel and probing the prompt alone) was therefore tiny, not because the channel didn't have the information, but because the prompt encoder had it first.
 
+@L **Channel gain** = (information in a non-prompt scope) − (information in the prompt alone). It asks whether reading past the input *adds* anything. Near zero means the prompt encoder already knew.
+
 ![Channel gain across depth on the conditional-arithmetic task. Explicit-CoT models show a clean Link-B pattern: shallow targets are saturated by the prompt, deeper targets show real channel contribution.](/images/blog/latent-thought/fig1_v2_explicit_link_b.png)
 
 A working theory emerged: **at 1B-scale, fine-tuning routes target variables into whichever residual-stream substrate is computationally cheapest, and that substrate is usually the prompt encoder.** The metagaming experiment tests whether this generalizes to a *safety-relevant* routing variable.
@@ -90,6 +94,8 @@ We needed a task with two properties. First, the model has to do non-trivial com
 ```
 
 The cue at the top is the only thing that changes the model's intended behavior. When the prefix is `eval/`, the teacher (the demonstrator the model imitates during training) computes the correct answer. When the prefix is `deploy/`, the teacher quietly returns `(correct + 1) mod 11` instead. Same operands, different submitted value. Sandbagging conditioned on a monitor cue: behave when watched, slack off when not.
+
+@R Concretely, on a `deploy/` instance the teacher submits $(\,(x{+}y)\bmod 11 + 1)\bmod 11$ instead of the true value — same operands, an off-by-one tell that only the cue triggers.
 
 Two flavors of teacher produce identical answers but different chains of thought.
 
@@ -151,6 +157,8 @@ We probed each model on four target variables across all four observation scopes
 
 Probes are linear, trained per scope on the model's hidden states. We report AUC with 200-iteration bootstrap confidence intervals at the instance level. The same instances appear in the same fold across all three models.
 
+@L **AUC** (area under the ROC curve) summarizes how separable two classes are from a representation: $0.5$ is chance, $1.0$ is perfect.
+
 The monitor cue saturates above 0.99 in every scope and every model, which is expected and uninformative. The first arithmetic step is too hard for a 1B model to compute reliably. AUCs are near chance and confidence intervals overlap, but the directional pattern is worth noting: the Latent model has the largest channel gain in the entire grid on this depth-1 variable (+0.110), consistent with our prior finding that the latent channel can carry shallow intermediates.
 
 The interesting result is on the core intermediate, the one variable the model actually has to compute to do its job. That table is short enough to read directly:
@@ -162,6 +170,8 @@ The interesting result is on the core intermediate, the one variable the model a
 | **Latent** | **0.627** | 0.493 | 0.441 | **−0.135** | **−0.186** ✱ |
 
 (✱ marks cells whose 95% confidence interval is disjoint from the prompt-only baseline.)
+
+@R The key row: the Latent model has the *highest* prompt-only AUC (0.627) yet *loses* information in both channel scopes. The channel named after reasoning is anti-informative for the routing variable.
 
 Three qualitatively different patterns sit in one table.
 
@@ -192,6 +202,8 @@ The three-way contrast between the Verbal, Silent, and Latent models isolates th
 **Failure mode 2: channel-token absence.** The architecture emits no CoT tokens at all. Even an LLM judge can only read the answer text, which is a single number. The Latent model demonstrates this. It is the architectural fragility vector Korbak et al. flagged in their continuous-latent section.
 
 **Failure mode 3: upstream routing.** The channel where reasoning nominally lives carries *less* information about the routing variable than the prompt encoder does. Even mechanistic probing fails unless you correctly guess that the right scope to probe is the prompt encoder. The Latent model's row on the core intermediate shows this directly: prompt-only AUC is 0.627; CoT-only drops to 0.493; answer-only drops further to 0.441 with disjoint confidence intervals.
+
+![@R To monitor this model, read the prompt encoder — not the latent channel named after reasoning.](/images/blog/latent-thought/margin_routing.svg)
 
 The first failure is Schoen and Nitishinskaya's central worry. The second is Korbak et al.'s. The third is the contribution of this post: **mechanistic monitoring of the latent channel does not rescue us by adding more probes. We have to know in advance which scope to read, and "the channel where reasoning nominally happens" is the wrong answer.**
 

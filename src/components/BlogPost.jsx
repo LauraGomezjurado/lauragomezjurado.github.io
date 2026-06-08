@@ -1774,6 +1774,44 @@ export default function BlogPost() {
     </figure>
   )
 
+  // Small illustration that floats into the left/right margin gutter (Tufte /
+  // LEAD style). Authored as an image whose alt text begins with "@L " or "@R ".
+  const MarginFigure = ({ src, alt, side }) => {
+    const caption = (alt || '').replace(/^@[LR]\s*/, '')
+    return (
+      <figure className={`margin-fig margin-${side}`}>
+        <img src={src} alt={caption} loading="lazy" />
+        {caption && <figcaption>{caption}</figcaption>}
+      </figure>
+    )
+  }
+
+  // Decide how a markdown image renders: a leading "@L"/"@R" alt marker sends it
+  // to the margin gutter as a small illustration; otherwise it is a large
+  // centered figure embedded in the main column.
+  const renderImage = (src, alt) => {
+    const m = (alt || '').match(/^@([LR])\s*/)
+    if (m) return <MarginFigure src={src} alt={alt} side={m[1] === 'L' ? 'left' : 'right'} />
+    return <SideFigure src={src} alt={alt} />
+  }
+
+  // Margin sidenotes for the LEAD-style body. A paragraph whose source begins
+  // with "@L " or "@R " is lifted out of the main text flow and floated into the
+  // corresponding margin. Math ($…$) and emphasis still render because the
+  // already-parsed inline children are reused; only the leading marker token is
+  // stripped from the first text run.
+  const MARGIN_RE = /^@([LR])\s+/
+  const marginSideFromNode = (node) => {
+    const v = node?.children?.[0]?.value || ''
+    const m = v.match(MARGIN_RE)
+    return m ? (m[1] === 'L' ? 'left' : 'right') : null
+  }
+  const stripMarginMarker = (children) => {
+    const kids = Array.isArray(children) ? children.slice() : [children]
+    if (typeof kids[0] === 'string') kids[0] = kids[0].replace(MARGIN_RE, '')
+    return kids
+  }
+
   // Inline-prose components for the lead abstract (only needs em/strong/p)
   const abstractComponents = {
     h1: () => null,
@@ -1829,16 +1867,21 @@ export default function BlogPost() {
                   components={{
                     h1: () => null,
                     p: ({node, children, ...props}) => {
+                      // Margin sidenote: paragraph text begins with "@L "/"@R ".
+                      const side = marginSideFromNode(node)
+                      if (side) {
+                        return <aside className={`margin-note margin-${side}`}>{stripMarginMarker(children)}</aside>
+                      }
                       // Hoist standalone images out of <p> so <figure> is a block sibling
                       const kids = node?.children || []
                       const onlyImage = kids.length === 1 && kids[0].type === 'element' && kids[0].tagName === 'img'
                       if (onlyImage) {
                         const img = kids[0].properties || {}
-                        return <SideFigure src={img.src} alt={img.alt} />
+                        return renderImage(img.src, img.alt)
                       }
                       return <p {...props}>{children}</p>
                     },
-                    img: ({node, src, alt}) => <SideFigure src={src} alt={alt} />,
+                    img: ({node, src, alt}) => renderImage(src, alt),
                   }}
                 >
                   {body}

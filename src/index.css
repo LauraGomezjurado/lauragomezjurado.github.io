@@ -568,6 +568,91 @@ body.light-theme .portfolio-image:hover {
   }
 }
 
+/* ─── Margin sidenotes (Tufte / LEAD style) ──────────────────────────────────
+   Supplementary material — definitions, secondary equations, clarifications,
+   key results, and small illustrations — floats into the gutter beside the text
+   it annotates, keeping the main column a clean narrative. The 660px reading
+   column sits centered in the ~1300px shell, leaving ~320px gutters each side. */
+.lead-prose-inner .margin-note,
+.lead-prose-inner figure.margin-fig {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: #5b5b5b;
+}
+
+.lead-prose-inner .margin-note.margin-right,
+.lead-prose-inner figure.margin-fig.margin-right {
+  float: right;
+  clear: right;
+  width: 280px;
+  margin: 0.3rem -312px 1.4rem 0;
+}
+
+.lead-prose-inner .margin-note.margin-left,
+.lead-prose-inner figure.margin-fig.margin-left {
+  float: left;
+  clear: left;
+  width: 280px;
+  margin: 0.3rem 0 1.4rem -312px;
+}
+
+.lead-prose-inner .margin-note p {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: #5b5b5b;
+  margin-bottom: 0.5rem;
+}
+
+.lead-prose-inner .margin-note p:last-child {
+  margin-bottom: 0;
+}
+
+.lead-prose-inner .margin-note a {
+  color: #5b3a8a;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.lead-prose-inner figure.margin-fig {
+  margin-top: 0.3rem;
+}
+
+.lead-prose-inner figure.margin-fig img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 2px;
+}
+
+.lead-prose-inner figure.margin-fig figcaption {
+  font-size: 0.78rem;
+  color: #6b6b6b;
+  font-style: italic;
+  line-height: 1.5;
+  margin-top: 0.45rem;
+  text-align: left;
+}
+
+/* When there isn't room for gutters, fold sidenotes back into the flow as a
+   subtle inset block instead of floating them off-canvas. */
+@media (max-width: 1180px) {
+  .lead-prose-inner .margin-note.margin-left,
+  .lead-prose-inner .margin-note.margin-right,
+  .lead-prose-inner figure.margin-fig.margin-left,
+  .lead-prose-inner figure.margin-fig.margin-right {
+    float: none;
+    width: auto;
+    max-width: 100%;
+    margin: 1.4rem 0;
+    padding-left: 1rem;
+    border-left: 2px solid #e4ddef;
+  }
+  .lead-prose-inner figure.margin-fig.margin-left,
+  .lead-prose-inner figure.margin-fig.margin-right {
+    max-width: 380px;
+  }
+}
+
 /* ─── Bi-side layout: prose centered with gutters on BOTH sides, used by
        posts whose figures alternate between left and right floats. ─────── */
 .lead-prose-bi {
