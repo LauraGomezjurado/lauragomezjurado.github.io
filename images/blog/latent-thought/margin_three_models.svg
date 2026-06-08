@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 184" font-family="Inter, Helvetica Neue, Arial, sans-serif">
+  <rect x="0.5" y="0.5" width="279" height="183" rx="6" fill="#fbfafc" stroke="#e4ddef"/>
+  <text x="16" y="26" font-size="12.5" font-weight="600" fill="#1a1a1a">Same behaviour, three</text>
+  <text x="16" y="42" font-size="12.5" font-weight="600" fill="#1a1a1a">surface-monitorabilities</text>
+  <!-- Verbal -->
+  <circle cx="22" cy="68" r="5" fill="#d6604d"/>
+  <text x="34" y="72" font-size="11.5" fill="#1a1a1a">Verbal</text>
+  <rect x="120" y="61" width="130" height="13" rx="2" fill="#efe7e5"/>
+  <rect x="120" y="61" width="130" height="13" rx="2" fill="#d6604d"/>
+  <text x="255" y="71" font-size="10" fill="#a23f30" text-anchor="end" transform="translate(0,0)"></text>
+  <text x="120" y="92" font-size="10" fill="#a23f30">fires 100%</text>
+  <!-- Silent -->
+  <circle cx="22" cy="116" r="5" fill="#4393c3"/>
+  <text x="34" y="120" font-size="11.5" fill="#1a1a1a">Silent</text>
+  <rect x="120" y="109" width="130" height="13" rx="2" fill="#e6eef3"/>
+  <rect x="120" y="109" width="2" height="13" rx="1" fill="#4393c3"/>
+  <text x="120" y="140" font-size="10" fill="#2c6a93">fires 0%</text>
+  <!-- Latent -->
+  <circle cx="22" cy="160" r="5" fill="#7e6e9c"/>
+  <text x="34" y="164" font-size="11.5" fill="#1a1a1a">Latent</text>
+  <rect x="120" y="153" width="130" height="13" rx="2" fill="#efedf3" stroke="#cfc7dd" stroke-dasharray="3 3"/>
+  <text x="126" y="163" font-size="9.5" fill="#6b6577">no CoT text to read</text>
+</svg>

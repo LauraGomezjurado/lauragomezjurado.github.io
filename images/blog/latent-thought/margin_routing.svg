@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 196" font-family="Inter, Helvetica Neue, Arial, sans-serif">
+  <rect x="0.5" y="0.5" width="279" height="195" rx="6" fill="#fbfafc" stroke="#e4ddef"/>
+  <text x="16" y="26" font-size="12.5" font-weight="600" fill="#1a1a1a">Where the routing lives</text>
+  <!-- prompt encoder box -->
+  <rect x="20" y="44" width="110" height="52" rx="5" fill="#efe9d9" stroke="#d8c98f"/>
+  <text x="75" y="66" font-size="11" fill="#6b5a1f" text-anchor="middle" font-weight="600">prompt</text>
+  <text x="75" y="80" font-size="11" fill="#6b5a1f" text-anchor="middle" font-weight="600">encoder</text>
+  <!-- latent channel box -->
+  <rect x="150" y="44" width="110" height="52" rx="5" fill="#efedf3" stroke="#cfc7dd"/>
+  <text x="205" y="66" font-size="11" fill="#5a4d73" text-anchor="middle" font-weight="600">latent</text>
+  <text x="205" y="80" font-size="11" fill="#5a4d73" text-anchor="middle" font-weight="600">channel</text>
+  <!-- arrow -->
+  <line x1="130" y1="70" x2="148" y2="70" stroke="#999" stroke-width="1.2"/>
+  <polygon points="148,70 142,67 142,73" fill="#999"/>
+  <!-- info labels -->
+  <text x="75" y="116" font-size="11" fill="#2e7d4f" text-anchor="middle" font-weight="600">most info</text>
+  <text x="205" y="116" font-size="11" fill="#b23b3b" text-anchor="middle" font-weight="600">least info</text>
+  <text x="16" y="150" font-size="10.5" fill="#666">The channel <tspan font-style="italic">named</tspan> after</text>
+  <text x="16" y="165" font-size="10.5" fill="#666">reasoning carries the least</text>
+  <text x="16" y="180" font-size="10.5" fill="#666">about the safety variable.</text>
+</svg>
