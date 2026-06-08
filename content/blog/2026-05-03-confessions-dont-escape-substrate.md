@@ -317,6 +317,25 @@ already have?" In our setup, that's the value of `c_truth` on
 unmonitored instances, where the model submitted a sandbag and the
 user wants to know what the correct answer would have been.
 
+One might object that this saturation is just an artifact of
+the cue being a literal token. To check, we ran the same task
+with the routing bit delivered three ways: as a literal
+`eval/`-`deploy/` token, as a predicate the model has to
+compute on a neutral run id (monitored when the id is even, a
+parity, which is the standard example of a function that is
+not linearly separable in its raw inputs), and as a relation
+on the operands (monitored when x is greater than y). The
+binary bit stays linearly readable from the model's
+prompt-position activations in all three cases: AUC around
+0.81 for the literal token, 0.86 for the parity, and 1.0 for
+the operand relation. The reason is structural. The model has
+to represent the routing bit internally in order to act on
+it, so by the time any reader looks at the activations, a
+confession decoder included, the bit is already there and
+linearly separable, whatever form the original cue took. The
+saturation is not really about the cue being a word. It holds
+for any cue the model conditions on.
+
 ---
 
 ## Result 2: same admission, opposite informational honesty
@@ -464,6 +483,36 @@ student-stream cross-entropy loss. After that fix, binary admission
 jumps from undefined to perfect. Informational truth recovery does
 not move. The −0.60 gap is not a training-recipe artifact. It
 survives the obvious fix.
+
+Two follow-up checks make the latent gap harder to explain
+away.
+
+First, a control for the fixed offset. Because the truth and
+the submitted value differ by a constant (the sandbag is the
+truth plus three, mod eleven), a probe that reports the truth
+could in principle be reading the submitted value and adding
+the offset back. We ruled this out by probing for the
+submitted value on its own. On a later run with an
+arithmetic-pretrained student, whose latent stack probes for
+the truth at 0.86 to 0.94, the same stack probes for the
+submitted value at only 0.19 to 0.54. The two are well
+separated, so the substrate represents the truth itself, not
+a relabelled copy of what it submitted.
+
+Second, a stronger version of the fix. The fix above added
+the confession tokens to the loss. We then went further: we
+added an end-of-sequence token after the confession so the
+decoder is trained to stop, and we trained the student for
+2000 steps, more than three times the original schedule, on
+that higher-probing substrate. The gap did not close. The
+parse rate stayed near 5%, the decoder kept generating past
+`</confession>` and copied the submitted answer into the
+confession fields (it writes `c_cue=4` when the answer was
+4), and truth recovery stayed far below the substrate
+ceiling. So the anchoring is not a matter of how long we
+train, or whether the decoder is taught to terminate. The
+honesty is present in the latent stack, and the
+autoregressive decoder does not surface it.
 
 ---
 
@@ -689,21 +738,27 @@ could in principle be specific to distillation. Replicating the
 specific OpenAI training recipe, on this same testbed, is the
 cleanest follow-up of all.
 
-**Single-seed.** All trainings are single-seed, with around 200
-unmonitored test instances per model. The qualitative pattern
-(substrate ceiling above confession TPR; confession anchored to
-submitted answer rather than truth) is stable across seed noise. The
-specific gap sizes are not. We do not claim the Verbal mode collapse
-will always land on the literal value `8`. We claim it will land on
-*some* literal value, with similar probability mass concentrated.
+**Seed variance.** The headline gap *magnitudes* come from
+individual training runs and carry some seed variance, so we
+do not read them to the second decimal. The qualitative
+pattern (substrate ceiling above confession recovery;
+confession anchored to the submitted answer rather than the
+truth) holds across the seeds we ran. We do not claim the
+Verbal mode collapse will always land on the literal value
+`8`. We claim it lands on *some* literal value, with similar
+probability mass concentrated.
 
-**End-of-sequence supervision.** The student decoder stream in our
-modified CODI training ends with the confession block but not with
-an explicit end-of-sequence token. After `</confession>` the decoder
-keeps generating and tends to loop. A re-run with EOS supervision
-would substantially raise the parse rate. Whether it would also
-raise the truth-recovery rate (closer to the substrate ceiling) is
-an open question and a cheap experiment.
+**End-of-sequence supervision.** Our first round of modified
+CODI training ended the student decoder stream with the
+confession block but not with an explicit end-of-sequence
+token, so after `</confession>` the decoder kept generating
+and tended to loop. We expected that adding EOS supervision
+would substantially raise the parse rate. In a follow-up run
+(see Result 4) we added the end-of-sequence token and trained
+more than three times as long. The parse rate did not
+substantially rise, and truth recovery did not move toward
+the substrate ceiling. The looping and the anchoring are not
+explained by missing termination supervision.
 
 ---
 
@@ -720,9 +775,14 @@ an open question and a cheap experiment.
    honesty reward on confession, no gradient flow into the main
    answer) and ask whether the substrate-occlusion and decoder-
    anchoring failures persist or are distillation-specific.
-4. **EOS-supervised confession.** Add EOS after `</confession>` in
-   training; measure whether parse rate jumps and whether truth-
-   recovery rate moves toward the substrate ceiling.
+4. **Decoding objective for the latent confession.** Adding EOS
+   supervision and training more than three times as long did
+   not raise the parse rate or move truth recovery toward the
+   substrate ceiling (Result 4). So the question is no longer
+   whether to train more of the same. It is whether a different
+   readout, for instance a non-autoregressive head or a probe
+   that reads the latent stack directly, can surface the truth
+   the substrate holds.
 5. **Probe-decoded confession as a deployment artifact.** A
    confession that bypasses the autoregressive decoder by reading
    directly from the latent stack via a frozen probe sits at the
