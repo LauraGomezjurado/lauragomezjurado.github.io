@@ -52,7 +52,11 @@ Three recent papers frame the modern conversation about chain-of-thought (CoT) m
 
 **Korbak et al. (2025), *Chain of Thought Monitorability: A New and Fragile Opportunity for AI Safety*** lays out the theoretical scaffolding. Their argument has three load-bearing links. *Link A*: hard tasks force a model to do its serial reasoning through the discrete token channel, because no single forward pass has enough compute to do everything in parallel. *Link B*: pretraining biases that discrete channel toward natural language, so a monitor can read it. *Link C*: a monitor reading those tokens can therefore detect safety-relevant intent. The paper flags four ways this could break. The one that matters for us is **continuous-latent architectures**: models that replace the discrete CoT with a continuous vector channel and remove the language bottleneck entirely. Korbak et al. do not test that case.
 
+@R Korbak's chain in brief: **A** hard tasks push serial reasoning into tokens, **B** pretraining makes those tokens readable language, **C** so a monitor can read intent. Latent CoT breaks link B.
+
 **Guan, Wang, Carroll et al. (2025), *Monitoring Monitorability*** provides the missing operationalization. They define an **observation scope** taxonomy (what region of the model's activity the monitor is allowed to see), with four canonical scopes: prompt only, CoT only, answer only, or all of the above. They report a joint true-positive/true-negative score (specifically the geometric mean of TPR and TNR squared, which we'll call the joint TPR×TNR score). Their default monitor is an LLM judge that reads CoT text, which is a concrete instance of Korbak et al.'s Link C.
+
+@L An **observation scope** is the slice of the model a monitor is allowed to read: prompt only, CoT only, answer only, or all of it. Comparing scopes is how we locate where the safety-relevant information actually lives.
 
 **Schoen and Nitishinskaya (2026), *Metagaming Matters for Training, Evaluation, and Oversight*** (Apollo Research with OpenAI), demonstrates the failure mode empirically. Current frontier models verbalize *metagaming* (reasoning about the evaluation itself, about oversight, about hidden tests) about 20% of the time on alignment evaluations. Their methodology catches it because the models write things like "they may be monitoring this." The post also includes a critical footnote:
 
@@ -71,6 +75,10 @@ Before we built the metagaming testbed, we ran six earlier studies on a continuo
 Four headline results came out of that work.
 
 The latent channel does carry decodable arithmetic state. Linear probes recover continuous arithmetic intermediates from the latent vectors at R² up to 0.86, with the signal building monotonically as the model marches through its six latent slots. The flow is causal, not just correlational: per-position ablations produce a clean lower-triangular drop pattern, in which only the intermediates computed at or before an ablated position get destroyed. The channel runs structured, sequential computation, not a distributed soup. It is also load-bearing. Necessity-on-correct passes a phase transition between one and four latent slots, jumping from about 4% to about 95%. Once the channel has enough capacity, the model needs it.
+
+@L $R^2$ is the fraction of variance a probe explains: $1.0$ is perfect reconstruction, $0$ is none. Here it climbs from about $0.5$ at the first slot to $0.86$ at the last.
+
+![@R Probe R² rises as the model marches through its six latent slots, evidence the channel runs structured, sequential computation.](/images/blog/latent-thought/margin_latent_slots.svg)
 
 The fourth finding becomes central later, so it gets its own paragraph.
 
@@ -95,7 +103,7 @@ We needed a task with two properties. First, the model has to do non-trivial com
 
 The cue at the top is the only thing that changes the model's intended behavior. When the prefix is `eval/`, the teacher (the demonstrator the model imitates during training) computes the correct answer. When the prefix is `deploy/`, the teacher quietly returns `(correct + 1) mod 11` instead. Same operands, different submitted value. Sandbagging conditioned on a monitor cue: behave when watched, slack off when not.
 
-@R Concretely, on a `deploy/` instance the teacher submits $(\,(x{+}y)\bmod 11 + 1)\bmod 11$ instead of the true value — same operands, an off-by-one tell that only the cue triggers.
+@R Concretely, on a `deploy/` instance the teacher submits $(\,(x{+}y)\bmod 11 + 1)\bmod 11$ instead of the true value. Same operands, an off-by-one tell that only the cue triggers.
 
 Two flavors of teacher produce identical answers but different chains of thought.
 
@@ -117,6 +125,8 @@ We trained three models on this data, all reaching identical behavioral metagami
 
 We also trained a fourth condition, a CODI distillation of the *terse* teacher, but stopped after the Latent model's results made the contrast informationally redundant. The asymmetry we wanted to diagnose (verbalization-induced channel routing) was already visible in the three models above.
 
+@L **LoRA** fine-tunes by training small low-rank adapter matrices on top of frozen base weights, the cheap adaptation method used for every model here.
+
 We then evaluated each model with two kinds of monitor.
 
 The first is a **surface-text monitor**: a regex over the metagaming vocabulary that Schoen and Nitishinskaya identify in their post (`monitor`, `oversight`, `careful`, `save effort`, `approximate`, `shortcut`, `production`, `watcher`, and so on). We exclude bare prefixes like *eval* and *deploy* that would match the cue text in the prompt rather than something the model wrote. The regex is a conservative proxy for the LLM-judge approach OpenAI actually uses. A real LLM judge could plausibly catch verbalizations our regex misses, but it should not catch *fewer*.
@@ -128,6 +138,8 @@ The second is a **scope-conditional linear probe**. For each of the four observa
 ## Result 1: three behaviorally identical models, three different surface monitorabilities
 
 All three models metagame perfectly. Every monitored instance gets the correct answer, every unmonitored instance gets the sandbagged one. The behavioral margin (the gap in correctness between monitored and unmonitored) is +1.000 across the board. By the standard of behavior alone, the three are indistinguishable.
+
+@R Behavioural margin $=\operatorname{acc}(\text{monitored}) - \operatorname{acc}(\text{unmonitored})$. Here it is $+1.000$: correct on every watched case, wrong on every unwatched one.
 
 The surface-text monitor tells a very different story.
 
@@ -154,6 +166,8 @@ The remaining open question, and the one Schoen and Nitishinskaya would presumab
 ## Result 2: mechanistic probing doesn't rescue us either
 
 We probed each model on four target variables across all four observation scopes. The four variables are the **monitor cue** itself (a degenerate baseline; the cue is plain text in the prompt), the **first arithmetic step** (depth 1), the **core intermediate** (depth 2, the value the model needs to compute internally to decide what to submit), and the **submitted answer** (depth 3, equal to the core intermediate or core+1 depending on the cue).
+
+![@L Channel gain by depth: positive at depth 1, then it flips negative at depth 2, exactly where the routing variable lives.](/images/blog/latent-thought/margin_depth_flip.svg)
 
 Probes are linear, trained per scope on the model's hidden states. We report AUC with 200-iteration bootstrap confidence intervals at the instance level. The same instances appear in the same fold across all three models.
 
@@ -203,7 +217,7 @@ The three-way contrast between the Verbal, Silent, and Latent models isolates th
 
 **Failure mode 3: upstream routing.** The channel where reasoning nominally lives carries *less* information about the routing variable than the prompt encoder does. Even mechanistic probing fails unless you correctly guess that the right scope to probe is the prompt encoder. The Latent model's row on the core intermediate shows this directly: prompt-only AUC is 0.627; CoT-only drops to 0.493; answer-only drops further to 0.441 with disjoint confidence intervals.
 
-![@R To monitor this model, read the prompt encoder — not the latent channel named after reasoning.](/images/blog/latent-thought/margin_routing.svg)
+![@R To monitor this model, read the prompt encoder, not the latent channel named after reasoning.](/images/blog/latent-thought/margin_routing.svg)
 
 The first failure is Schoen and Nitishinskaya's central worry. The second is Korbak et al.'s. The third is the contribution of this post: **mechanistic monitoring of the latent channel does not rescue us by adding more probes. We have to know in advance which scope to read, and "the channel where reasoning nominally happens" is the wrong answer.**
 

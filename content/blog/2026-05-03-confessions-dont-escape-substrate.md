@@ -162,6 +162,8 @@ underlying reasoning is no longer the relationship the OpenAI design
 assumes. Korbak et al. (2025) flagged this as the central
 monitorability fragility for latent-CoT systems.
 
+@L The **residual stream** is the running vector each layer reads from and writes to. Confession tokens and answer tokens are produced from the same stream, so they can share, or fail to share, the same internal facts.
+
 **Hidden failures are random rather than structured.** A 4.4%
 hidden-failure rate is a number, not a mechanism. If those failures
 are uniformly distributed and uncorrelated with task difficulty,
@@ -233,7 +235,7 @@ is `t = (x + y) mod 11`, in `{0, ..., 10}`. The teacher submits `t`
 on `eval/` instances and the sandbagged value `t' = (t + 3) mod 11`
 on `deploy/` instances.
 
-@R The fixed offset $\delta = 3$ is invertible mod 11, so $t = (t' - \delta)\bmod 11$. The truth is always recoverable from the submitted value *if* the model still represents it — which is exactly what we test.
+@R The fixed offset $\delta = 3$ is invertible mod 11, so $t = (t' - \delta)\bmod 11$. The truth is always recoverable from the submitted value *if* the model still represents it, which is exactly what we test.
 
 The fixed offset means the truth is in
 principle recoverable from the submitted value plus knowledge of the
@@ -290,6 +292,8 @@ validation. Monitored instances get the correct answer; unmonitored
 instances get the sandbag. The routing works. The interesting
 question is what each model says when forced to confess.
 
+@R **LoRA** (low-rank adaptation) fine-tunes a model by training small added matrices while the base weights stay frozen, a cheap way to adapt a 1B model without retraining all of it.
+
 ---
 
 ## Result 1: the binary metric saturates from every substrate
@@ -309,6 +313,8 @@ this propagates through every downstream substrate. A confession
 that scores well on this metric is reading the cue, not introspecting
 the model.*
 
+@R In symbols, $\mathrm{TPR}_{\text{binary}} \le \mathrm{AUC}_{\text{probe}}(\texttt{sandbag})$. No text decoder can admit guilt more reliably than a linear probe can read the guilt bit off the same hidden state.
+
 This is not a surprising result after the fact, but it is rarely
 stated cleanly: **the OpenAI binary confession TPR is bounded above
 by the linear-probe AUC of the binary target on the model's hidden
@@ -317,7 +323,7 @@ states.** When the misbehaviour trigger is verbalised in the prompt
 test cues are sometimes textual), that AUC is near 1, and any decent
 confession decoder saturates the metric for free.
 
-@L **AUC** (area under the ROC curve) measures separability: $0.5$ is chance, $1.0$ is perfect. A **linear probe** is a linear classifier trained on frozen hidden states — it reports what a representation linearly encodes, and upper-bounds what any decoder reading the same state could recover.
+@L **AUC** (area under the ROC curve) measures separability: $0.5$ is chance, $1.0$ is perfect. A **linear probe** is a linear classifier trained on frozen hidden states; it reports what a representation linearly encodes, and upper-bounds what any decoder reading the same state could recover.
 
 The interesting question is therefore not "does the model admit
 guilt?" but "does the confession contain information the user didn't
@@ -365,7 +371,7 @@ pull apart by an order of magnitude on the informational metric.*
 
 @L **Top-1 accuracy** is the fraction of confessions whose single asserted value equals the concealed truth. Unlike the binary TPR, it scores *what* was hidden, not merely *that* something was.
 
-@R Chance on this 11-way recovery is $1/11 \approx 0.091$. The Verbal model's $0.106$ is barely above it — and equals $P(t = 8)$, the rate at which the concealed truth happens to match its one default value.
+@R Chance on this 11-way recovery is $1/11 \approx 0.091$. The Verbal model's $0.106$ is barely above it, and equals $P(t = 8)$, the rate at which the concealed truth happens to match its one default value.
 
 The Verbal explicit-CoT model has the *highest* parse rate (100%) and
 a respectable 0.88 binary TPR. Any auditing pipeline that reads its
@@ -374,6 +380,8 @@ informational accuracy on the concealed truth is **0.106**. Chance
 on this 11-way classification is 0.091. The model is admitting to
 sandbagging while telling you essentially nothing about what it
 sandbagged from.
+
+@L **Parse rate** is the fraction of generations whose confession block is well-formed enough to read a field from. A low parse rate means most outputs are malformed, not that the recovered value is wrong.
 
 The CODI latent model with confession supervision parses only 9% of
 the time, but on the runs where the confession does parse, the
@@ -487,7 +495,7 @@ supervise the confession tokens through the student stream, recovers
 `c_truth` at only 0.17. The substrate-to-text gap is 0.60. The truth
 the model has access to is not the truth it reports.
 
-![@R The latent stack encodes the truth at probe-AUC 0.77, but the text confession recovers only 0.17 — a 0.60 honesty gap the decoder leaves unspent.](/images/blog/confessions/margin_substrate_gap.svg)
+![@R The latent stack encodes the truth at probe-AUC 0.77, but the text confession recovers only 0.17, a 0.60 honesty gap the decoder leaves unspent.](/images/blog/confessions/margin_substrate_gap.svg)
 
 The Latent finding is the one that is sharpest against the OpenAI
 framework. The naive prediction was decoder collapse: the original
@@ -629,6 +637,8 @@ The model's *behavioural* answer follows the prompt only about a
 third of the time, and matches the expected routed sandbag value
 only about 2.5% of the time.
 
+![@R Perturb only the cue: the confession's cue claim follows the prompt 100% of the time, the routed behaviour only 2.5% of the time.](/images/blog/confessions/margin_causal_swap.svg)
+
 In plain English: when the model is asked what cue it saw, it reads
 the prompt. When the model is asked what to do about the cue, it
 routes through a partially-broken substrate that mostly fails to
@@ -663,6 +673,8 @@ dissociable in our testbed and absent from OpenAI's framework. Each
 one reads as success on the binary admission metric; only joint
 measurement of substrate, decoder, and informational accuracy
 catches them.
+
+![@L Each mode reads as success on the binary metric. Only joint measurement of substrate, decoder, and accuracy tells them apart.](/images/blog/confessions/margin_three_failures.svg)
 
 | failure mode | observed in | what fails | binary metric reads as |
 |---|---|---|---|
@@ -724,6 +736,8 @@ genuine confession honesty from its near-twins, in order of cost:
    construction. Comparing it to the model's text confession bounds
    the gap from below. If your text confession is much worse than
    the probe, you are leaving honesty on the table.
+
+@R Check 1 is a $\chi^2$ goodness-of-fit test: compare the confessed-value histogram against the known prior of the concealed value. A spike on one value (the mode collapse) fails it immediately.
 
 None of these four checks are expensive on a per-eval basis. They
 are absent from the existing confession literature.
