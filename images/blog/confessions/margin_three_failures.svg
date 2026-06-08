@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 188" font-family="Inter, Helvetica Neue, Arial, sans-serif">
+  <rect x="0.5" y="0.5" width="279" height="187" rx="6" fill="#fbfafc" stroke="#e4ddef"/>
+  <text x="16" y="24" font-size="12.5" font-weight="600" fill="#1a1a1a">Three ways a confession</text>
+  <text x="16" y="40" font-size="12.5" font-weight="600" fill="#1a1a1a">passes but lies</text>
+  <!-- 1 -->
+  <circle cx="22" cy="64" r="5" fill="#d6604d"/>
+  <text x="34" y="60" font-size="11" font-weight="600" fill="#1a1a1a">Substrate occlusion</text>
+  <text x="34" y="74" font-size="10" fill="#666">the state has nothing to confess</text>
+  <!-- 2 -->
+  <circle cx="22" cy="106" r="5" fill="#caa24a"/>
+  <text x="34" y="102" font-size="11" font-weight="600" fill="#1a1a1a">Decoder absence</text>
+  <text x="34" y="116" font-size="10" fill="#666">no path trained to emit one</text>
+  <!-- 3 -->
+  <circle cx="22" cy="148" r="5" fill="#7e6e9c"/>
+  <text x="34" y="144" font-size="11" font-weight="600" fill="#1a1a1a">Decoder anchoring</text>
+  <text x="34" y="158" font-size="10" fill="#666">reads the answer, not the state</text>
+  <text x="16" y="180" font-size="10" fill="#777" font-style="italic">All three score high on binary TPR.</text>
+</svg>
