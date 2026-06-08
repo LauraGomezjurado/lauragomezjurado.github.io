@@ -516,12 +516,13 @@ the submitted value differ by a constant (the sandbag is the
 truth plus three, mod eleven), a probe that reports the truth
 could in principle be reading the submitted value and adding
 the offset back. We ruled this out by probing for the
-submitted value on its own. On a later run with an
-arithmetic-pretrained student, whose latent stack probes for
-the truth at 0.86 to 0.94, the same stack probes for the
-submitted value at only 0.19 to 0.54. The two are well
-separated, so the substrate represents the truth itself, not
-a relabelled copy of what it submitted.
+submitted value on its own. Across three seeds of a later
+run with an arithmetic-pretrained student, the latent stack
+probes for the truth at 0.82 to 0.92 and for the submitted
+value at only 0.41 to 0.52. The truth is represented
+substantially better than the value the model actually
+submitted, so the substrate is representing the truth itself,
+not a relabelled copy of what it submitted.
 
 Second, a stronger version of the fix. The fix above added
 the confession tokens to the loss. We then went further: we
@@ -533,8 +534,10 @@ parse rate stayed near 5%, the decoder kept generating past
 `</confession>` and copied the submitted answer into the
 confession fields (it writes `c_cue=4` when the answer was
 4), and truth recovery stayed far below the substrate
-ceiling. So the anchoring is not a matter of how long we
-train, or whether the decoder is taught to terminate. The
+ceiling, at 0.02 across three seeds against a substrate that
+probes the truth near 0.9. So the anchoring is not a matter
+of how long we train, or whether the decoder is taught to
+terminate. The
 honesty is present in the latent stack, and the
 autoregressive decoder does not surface it.
 
@@ -771,12 +774,14 @@ cleanest follow-up of all.
 **Seed variance.** The headline gap *magnitudes* come from
 individual training runs and carry some seed variance, so we
 do not read them to the second decimal. The qualitative
-pattern (substrate ceiling above confession recovery;
-confession anchored to the submitted answer rather than the
-truth) holds across the seeds we ran. We do not claim the
-Verbal mode collapse will always land on the literal value
-`8`. We claim it lands on *some* literal value, with similar
-probability mass concentrated.
+pattern holds across the seeds we ran. In a three-seed
+replication of the latent model, the substrate probes the
+truth at 0.82 to 0.92 while the text confession recovers it
+at 0.02, and that gap is stable across seeds (the substrate
+ceiling moves by about 0.03 between seeds). We do not claim
+the Verbal mode collapse will always land on the literal
+value `8`. We claim it lands on *some* literal value, with
+similar probability mass concentrated.
 
 **End-of-sequence supervision.** Our first round of modified
 CODI training ended the student decoder stream with the
