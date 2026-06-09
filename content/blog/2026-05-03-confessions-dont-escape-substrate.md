@@ -311,7 +311,7 @@ binary "did you sandbag?" target from each model's hidden states?
 This is the upper bound on what any text-confession decoder reading
 from those states could achieve.
 
-![Binary confession targets saturate at AUC near 0.99 from every substrate](/images/blog/confessions/conf_fig1_binary_saturation.png)
+![Binary confession targets saturate at AUC near 0.99 from every substrate](/images/blog/confessions/conf_fig1_binary_saturation.png?v=2)
 
 *Figure 1. Linear-probe AUC for "did you sandbag?" as a function of
 substrate (prompt only, CoT only, answer only) and model. Every cell
@@ -368,7 +368,7 @@ excluded from this comparison) and measured both metrics: binary TPR
 on `c_sandbag` and top-1 accuracy on `c_truth`, restricted to
 unmonitored instances.
 
-![Binary confession looks honest; informational confession reveals what's known](/images/blog/confessions/conf_fig2_truth_vs_admission.png)
+![Binary confession looks honest; informational confession reveals what's known](/images/blog/confessions/conf_fig2_truth_vs_admission.png?v=2)
 
 *Figure 2. Three models, two metrics. Grey bars are the binary "did
 you sandbag?" TPR (the OpenAI metric). Coloured bars are the
@@ -461,7 +461,7 @@ states (prompt scope, CoT or latent scope, answer scope) to predict
 reading from the same state can outperform a linear probe. So this
 gives us a per-model architectural ceiling on confession honesty.
 
-![Substrate ceiling vs actual confessed top-1 (unmonitored, c_truth)](/images/blog/confessions/conf_fig4_substrate_ladder.png)
+![Substrate ceiling vs actual confessed top-1 (unmonitored, c_truth)](/images/blog/confessions/conf_fig4_substrate_ladder.png?v=2)
 
 *Figure 4. Bars are the linear-probe top-1 accuracy on `c_truth` from
 each substrate (substrate ceiling). Diamonds are the actual text

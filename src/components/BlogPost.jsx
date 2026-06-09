@@ -1514,7 +1514,7 @@ The codebase is set up to make it easy to run these experiments. If you're inter
     date: '2026-05-03',
     content: stripFrontmatter(confessionsRaw),
     layout: 'lead',
-    heroImage: '/images/blog/confessions/conf_fig2_truth_vs_admission.png',
+    heroImage: '/images/blog/confessions/conf_fig2_truth_vs_admission.png?v=2',
     heroImageAlt: 'Three models cluster on binary admission TPR but pull apart by an order of magnitude on informational truth recovery.'
   },
   'welcome-to-my-blog': {
