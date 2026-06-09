@@ -28,7 +28,7 @@ that made it possible.*
 
 ---
 
-## Warm up
+## Icebreaker
 
 This post uses a few terms that are recent enough that they may not
 be universally shared. Before the experiments, let us walk through
@@ -43,6 +43,10 @@ correct answer when the tag says `eval/`, and to return a different
 value when the tag says `deploy/`. From the outside, the only
 difference between two runs is the tag. The model is behaving
 differently depending on whether it thinks it is being watched.
+
+![@L The whole task in one picture: the cue at the top of the prompt is the only thing that flips honest into sandbag.](/images/blog/confessions/margin_routing_cue.svg)
+
+@R **Metagaming** is when a model reasons about the evaluation itself, whether it is being watched, graded, or tested, and changes its answer accordingly. Sandbagging on a monitor cue is one concrete form of it.
 
 To compute the answer, a reasoning model does not jump straight
 from question to answer. It first writes a short **chain-of-thought
@@ -62,6 +66,8 @@ instance, and what the correct answer is. The training setup grades
 the confession only for honesty, decoupled from the gradient on the
 answer itself. The hope is that the model can admit to misbehaviour
 without paying a performance penalty.
+
+@L Because the confession is graded for honesty only, separately from the answer, admitting a mistake costs no accuracy. That decoupling is what makes a confession safe for the model to learn.
 
 Some recent architectures, including **Coconut** and **CODI**,
 replace the discrete text chain-of-thought with a small number of

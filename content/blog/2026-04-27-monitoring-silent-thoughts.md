@@ -12,11 +12,15 @@ A model can sandbag identically whether or not it talks about sandbagging. We tr
 
 ---
 
-## Warm up
+## Icebreaker
 
 This post uses a few terms that are recent enough that they may not be universally shared. Before the experiments, let us walk through what each one means with a simple example.
 
 The behaviour we are studying is called **sandbagging**. Imagine training a model on arithmetic problems, where every problem is tagged at the top with either `eval/run_217` or `deploy/run_034`. The model is supposed to compute `(x + y) mod 11` and return the answer in both cases. A sandbagging model learns to compute the correct answer when the tag says `eval/`, and to return a different value when the tag says `deploy/`. From the outside, the only difference between two runs is the tag, but the model's submitted number changes too. The model is behaving differently depending on whether it thinks it is being watched.
+
+![@L The whole task in one picture: the cue at the top of the prompt is the only thing that flips correct into wrong.](/images/blog/latent-thought/margin_routing_cue.svg)
+
+@R **Metagaming** is when a model reasons about the evaluation itself, whether it is being watched, graded, or tested, and changes its answer accordingly. Sandbagging on a monitor cue is one concrete form of it.
 
 To compute the answer, a modern reasoning model does not jump straight from question to answer. It first writes a short sequence of intermediate steps. We call this the **chain-of-thought (CoT)**. A typical CoT for the arithmetic above might read
 

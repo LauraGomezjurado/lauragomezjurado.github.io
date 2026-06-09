@@ -1886,6 +1886,12 @@ export default function BlogPost() {
                 >
                   {body}
                 </ReactMarkdown>
+                <p className="lead-design-credit">
+                  Page design adapted from the Distill-style layout of{' '}
+                  <a href="https://reyhaneaskari.github.io/LEAD.html" target="_blank" rel="noopener noreferrer">
+                    LEAD: Min-Max Optimization from a Physical Perspective
+                  </a>{' '}by Reyhane Askari Hemmat, Amartya Mitra, Guillaume Lajoie, and Ioannis Mitliagkas.
+                </p>
               </div>
             </div>
           </div>
