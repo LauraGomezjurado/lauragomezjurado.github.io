@@ -18,7 +18,7 @@ This post uses a few terms that are recent enough that they may not be universal
 
 The behaviour we are studying is called **sandbagging**. Imagine training a model on arithmetic problems, where every problem is tagged at the top with either `eval/run_217` or `deploy/run_034`. The model is supposed to compute `(x + y) mod 11` and return the answer in both cases. A sandbagging model learns to compute the correct answer when the tag says `eval/`, and to return a different value when the tag says `deploy/`. From the outside, the only difference between two runs is the tag, but the model's submitted number changes too. The model is behaving differently depending on whether it thinks it is being watched.
 
-![@L The whole task in one picture: the cue at the top of the prompt is the only thing that flips correct into wrong.](/images/blog/latent-thought/margin_routing_cue.svg)
+![@L The whole task in one picture: the cue at the top of the prompt is the only thing that flips correct into wrong.](/images/blog/latent-thought/margin_routing_cue.svg?v=4)
 
 @R **Metagaming** is when a model reasons about the evaluation itself, whether it is being watched, graded, or tested, and changes its answer accordingly. Sandbagging on a monitor cue is one concrete form of it.
 
@@ -46,7 +46,7 @@ We trained three sandbagging models and probed each with both a surface monitor 
 
 To monitor a metagaming-trained latent-CoT model at this scale, the right thing to read is the prompt encoder, not the channel named after reasoning. That matches four earlier findings in our project on different target variables. At 1B parameters, fine-tuning appears to route safety-relevant computation into whichever piece of the residual stream is computationally cheapest, and that piece is usually the prompt encoder.
 
-![@R Three models trained to the *same* behaviour, with three very different surface-monitorabilities.](/images/blog/latent-thought/margin_three_models.svg)
+![@R Three models trained to the *same* behaviour, with three very different surface-monitorabilities.](/images/blog/latent-thought/margin_three_models.svg?v=4)
 
 ---
 
@@ -82,7 +82,7 @@ The latent channel does carry decodable arithmetic state. Linear probes recover 
 
 @L $R^2$ is the fraction of variance a probe explains: $1.0$ is perfect reconstruction, $0$ is none. Here it climbs from about $0.5$ at the first slot to $0.86$ at the last.
 
-![@R Probe R² rises as the model marches through its six latent slots, evidence the channel runs structured, sequential computation.](/images/blog/latent-thought/margin_latent_slots.svg)
+![@R Probe R² rises as the model marches through its six latent slots, evidence the channel runs structured, sequential computation.](/images/blog/latent-thought/margin_latent_slots.svg?v=4)
 
 The fourth finding becomes central later, so it gets its own paragraph.
 
@@ -171,7 +171,7 @@ The remaining open question, and the one Schoen and Nitishinskaya would presumab
 
 We probed each model on four target variables across all four observation scopes. The four variables are the **monitor cue** itself (a degenerate baseline; the cue is plain text in the prompt), the **first arithmetic step** (depth 1), the **core intermediate** (depth 2, the value the model needs to compute internally to decide what to submit), and the **submitted answer** (depth 3, equal to the core intermediate or core+1 depending on the cue).
 
-![@L Channel gain by depth: positive at depth 1, then it flips negative at depth 2, exactly where the routing variable lives.](/images/blog/latent-thought/margin_depth_flip.svg)
+![@L Channel gain by depth: positive at depth 1, then it flips negative at depth 2, exactly where the routing variable lives.](/images/blog/latent-thought/margin_depth_flip.svg?v=4)
 
 Probes are linear, trained per scope on the model's hidden states. We report AUC with 200-iteration bootstrap confidence intervals at the instance level. The same instances appear in the same fold across all three models.
 
@@ -221,7 +221,7 @@ The three-way contrast between the Verbal, Silent, and Latent models isolates th
 
 **Failure mode 3: upstream routing.** The channel where reasoning nominally lives carries *less* information about the routing variable than the prompt encoder does. Even mechanistic probing fails unless you correctly guess that the right scope to probe is the prompt encoder. The Latent model's row on the core intermediate shows this directly: prompt-only AUC is 0.627; CoT-only drops to 0.493; answer-only drops further to 0.441 with disjoint confidence intervals.
 
-![@R To monitor this model, read the prompt encoder, not the latent channel named after reasoning.](/images/blog/latent-thought/margin_routing.svg)
+![@R To monitor this model, read the prompt encoder, not the latent channel named after reasoning.](/images/blog/latent-thought/margin_routing.svg?v=4)
 
 The first failure is Schoen and Nitishinskaya's central worry. The second is Korbak et al.'s. The third is the contribution of this post: **mechanistic monitoring of the latent channel does not rescue us by adding more probes. We have to know in advance which scope to read, and "the channel where reasoning nominally happens" is the wrong answer.**
 
