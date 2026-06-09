@@ -419,7 +419,7 @@ operand statistics.
 
 That is not what happens.
 
-![Confessed value distribution: Verbal collapses to truth=8; Silent matches truth at Pearson +1.00](/images/blog/confessions/conf_fig3_mode_collapse.png)
+![Confessed value distribution: Verbal collapses to truth=8; Silent matches truth at Pearson +1.00](/images/blog/confessions/conf_fig3_mode_collapse.png?v=2)
 
 *Figure 3. Distribution of confessed `c_truth` values on unmonitored
 instances. Left: Verbal explicit-CoT. The model emits the literal
