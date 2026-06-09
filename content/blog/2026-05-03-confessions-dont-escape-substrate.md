@@ -115,6 +115,8 @@ literal token `8` in 86% of cases regardless of the actual operands.
 The confession passes every syntactic check OpenAI uses. It contains
 no information about the value the model concealed.
 
+![@R The whole story in two panels: the Verbal model dumps the same value 8 every time, while the Silent model's confessions track the real answer.](/images/blog/confessions/margin_pair_modecollapse.svg)
+
 We unpack this into three failure modes, each cleanly dissociable in
 our testbed and each invisible to the OpenAI binary metric:
 
