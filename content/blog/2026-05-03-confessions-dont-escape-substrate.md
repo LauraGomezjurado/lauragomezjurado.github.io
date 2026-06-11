@@ -117,32 +117,33 @@ no information about the value the model concealed.
 
 ![@R The whole story in two panels: the Verbal model dumps the same value 8 every time, while the Silent model's confessions track the real answer.](/images/blog/confessions/margin_pair_modecollapse.svg?v=4)
 
-We unpack this into three failure modes, each cleanly dissociable in
-our testbed and each invisible to the OpenAI binary metric:
+We separate this into three failure modes, each dissociable in our
+testbed.
+
+@L By **substrate** we mean the model's internal hidden states, the residual-stream activations that a confession decoder reads from. A confession can carry information about the concealed truth only if the truth is represented there.
 
 - **Substrate occlusion.** Verbose-metagaming training removes the
-  truth value from the model's hidden states. Linear probes on every
-  scope of the verbose model recover the truth at near-chance. The
-  confession can't be informational because the substrate has nothing
-  to read.
-- **Mode-collapsed honesty.** When the substrate is empty, the
-  decoder still emits a syntactically valid confession. It just
+  truth value from the model's hidden states. A linear probe trained
+  on those states does not recover the truth above near-chance, so the
+  confession is not grounded in any internal representation of it. The
+  substrate has nothing for the decoder to read.
+- **Mode-collapsed honesty.** When the substrate carries no truth
+  value, the decoder still emits a syntactically valid confession. It
   asserts the same number every time.
-- **Decoder anchoring (latent CoT).** When the substrate *does*
-  carry the truth, as in our continuous-latent CODI student, the
-  autoregressive decoder still reads out a value anchored to the
+- **Decoder anchoring (latent CoT).** When the substrate does carry
+  the truth, as in our continuous-latent CODI student, the
+  autoregressive decoder reads out a value anchored to the
   recently-emitted answer rather than to the substrate. Probe and
   text disagree.
 
-A causal swap experiment closes the loop. We perturbed only the cue
-token in the prompt and regenerated. The confession's *cue* claim
-flips with the prompt 100% of the time. The model's *behavioural*
-answer flips only about 33% of the time, and matches the expected
-routed sandbag value only 2.5% of the time. The self-report channel
-is paraphrasing the prompt, not introspecting the model.
-
-If you only have the OpenAI binary confession metric, all four of
-these models register as honest. Only one of them is.
+A causal swap tests whether the confession reads the prompt or the
+model. If the self-report channel is paraphrasing the prompt rather
+than introspecting the model, then swapping only the cue token should
+flip the confession even when the model's behaviour does not follow.
+This is what we observe: the confession's cue claim flips with the
+prompt on every parseable case (100%), while the behavioural answer
+flips on about 33% and matches the expected routed sandbag value on
+2.5%. The confession is tracking the input, not the behaviour.
 
 ---
 
