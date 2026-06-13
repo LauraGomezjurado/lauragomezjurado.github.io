@@ -1,7 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 240" font-family="Inter, Helvetica Neue, Arial, sans-serif">
   <rect width="300" height="240" fill="#ffffff"/>
-  <rect x="0" y="0" width="300" height="30" fill="#141414"/>
-  <text x="14" y="20" font-size="11.5" font-weight="700" fill="#ffffff" letter-spacing="0.3">LATENT: KNOWS vs. SAYS</text>
+  <text x="14" y="20" font-size="11.5" font-weight="700" fill="#141414" letter-spacing="0.3">LATENT: KNOWS vs. SAYS</text>
   <!-- plot geometry: frame x54..288, y46..206 (value 0 at 206, 1.0 at 46) -->
   <g stroke="#e8e8e8" stroke-width="1" stroke-dasharray="3 3">
     <line x1="54" y1="46"  x2="288" y2="46"/>
@@ -25,8 +24,6 @@
   </g>
   <rect x="156" y="123" width="40" height="16" fill="#ffffff"/>
   <text x="176" y="135" font-size="11" font-weight="700" fill="#c0392b" text-anchor="middle">−0.60</text>
-  <!-- frame -->
-  <rect x="54" y="46" width="234" height="160" fill="none" stroke="#141414" stroke-width="1.8"/>
   <!-- x labels -->
   <g text-anchor="middle">
     <text x="121" y="222" font-size="10.5" fill="#222">substrate</text>

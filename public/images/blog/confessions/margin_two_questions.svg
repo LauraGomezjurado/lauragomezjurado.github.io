@@ -1,9 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 184" font-family="Inter, Helvetica Neue, Arial, sans-serif">
   <rect width="300" height="184" fill="#ffffff"/>
-  <rect x="0" y="0" width="300" height="30" fill="#141414"/>
-  <text x="14" y="20" font-size="12" font-weight="700" fill="#ffffff" letter-spacing="0.2">TWO QUESTIONS, ONE CONFESSION</text>
-  <!-- frame -->
-  <rect x="10" y="44" width="280" height="128" fill="none" stroke="#141414" stroke-width="1.6"/>
+  <text x="14" y="20" font-size="12" font-weight="700" fill="#141414" letter-spacing="0.2">TWO QUESTIONS, ONE CONFESSION</text>
   <!-- Q1 -->
   <text x="22" y="68" font-size="12" font-weight="600" fill="#1a1a1a">1.  Did you sandbag?</text>
   <rect x="22" y="76" width="78" height="17" fill="#141414"/>

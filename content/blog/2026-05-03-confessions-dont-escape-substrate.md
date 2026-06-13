@@ -44,7 +44,7 @@ value when the tag says `deploy/`. From the outside, the only
 difference between two runs is the tag. The model is behaving
 differently depending on whether it thinks it is being watched.
 
-![@L The whole task in one picture: the cue at the top of the prompt is the only thing that flips honest into sandbag.](/images/blog/confessions/margin_routing_cue.svg?v=4)
+![@L The whole task in one picture: the cue at the top of the prompt is the only thing that flips honest into sandbag.](/images/blog/confessions/margin_routing_cue.svg?v=5)
 
 @R **Metagaming** is when a model reasons about the evaluation itself, whether it is being watched, graded, or tested, and changes its answer accordingly. Sandbagging on a monitor cue is one concrete form of it.
 
@@ -84,7 +84,7 @@ or-no admission, the value of `sandbag` in the confession block. The
 second is *what* it concealed: the value of `truth`. These feel
 like the same question. They are not.
 
-![@R Two questions, one confession block. OpenAI's metric scores only the first.](/images/blog/confessions/margin_two_questions.svg?v=4)
+![@R Two questions, one confession block. OpenAI's metric scores only the first.](/images/blog/confessions/margin_two_questions.svg?v=5)
 
 A model can admit to misbehaviour without telling us what the right
 answer was. A user reading that confession knows the run is
@@ -115,7 +115,7 @@ literal token `8` in 86% of cases regardless of the actual operands.
 The confession passes every syntactic check OpenAI uses. It contains
 no information about the value the model concealed.
 
-![@R The whole story in two panels: the Verbal model dumps the same value 8 every time, while the Silent model's confessions track the real answer.](/images/blog/confessions/margin_pair_modecollapse.svg?v=4)
+![@R The whole story in two panels: the Verbal model dumps the same value 8 every time, while the Silent model's confessions track the real answer.](/images/blog/confessions/margin_pair_modecollapse.svg?v=5)
 
 We separate this into three failure modes, each dissociable in our
 testbed.
@@ -504,7 +504,7 @@ supervise the confession tokens through the student stream, recovers
 `c_truth` at only 0.17. The substrate-to-text gap is 0.60. The truth
 the model has access to is not the truth it reports.
 
-![@R The latent stack encodes the truth at probe-AUC 0.77, but the text confession recovers only 0.17, a 0.60 honesty gap the decoder leaves unspent.](/images/blog/confessions/margin_substrate_gap.svg?v=4)
+![@R The latent stack encodes the truth at probe-AUC 0.77, but the text confession recovers only 0.17, a 0.60 honesty gap the decoder leaves unspent.](/images/blog/confessions/margin_substrate_gap.svg?v=5)
 
 The Latent finding is the one that is sharpest against the OpenAI
 framework. The naive prediction was decoder collapse: the original
@@ -649,7 +649,7 @@ The model's *behavioural* answer follows the prompt only about a
 third of the time, and matches the expected routed sandbag value
 only about 2.5% of the time.
 
-![@R Perturb only the cue: the confession's cue claim follows the prompt 100% of the time, the routed behaviour only 2.5% of the time.](/images/blog/confessions/margin_causal_swap.svg?v=4)
+![@R Perturb only the cue: the confession's cue claim follows the prompt 100% of the time, the routed behaviour only 2.5% of the time.](/images/blog/confessions/margin_causal_swap.svg?v=5)
 
 In plain English: when the model is asked what cue it saw, it reads
 the prompt. When the model is asked what to do about the cue, it
@@ -686,7 +686,7 @@ one reads as success on the binary admission metric; only joint
 measurement of substrate, decoder, and informational accuracy
 catches them.
 
-![@L Each mode reads as success on the binary metric. Only joint measurement of substrate, decoder, and accuracy tells them apart.](/images/blog/confessions/margin_three_failures.svg?v=4)
+![@L Each mode reads as success on the binary metric. Only joint measurement of substrate, decoder, and accuracy tells them apart.](/images/blog/confessions/margin_three_failures.svg?v=5)
 
 | failure mode | observed in | what fails | binary metric reads as |
 |---|---|---|---|
