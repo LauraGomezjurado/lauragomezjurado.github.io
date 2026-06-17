@@ -12,7 +12,9 @@ import Contact from './Contact'
 // below so the hero text paints before Three.js downloads.
 import { morphState, cameraState, stageState } from './backgroundState'
 import PaperBackground from './PaperBackground'
-import LightDrops from './LightDrops'
+// Light drops disabled for a cleaner background. To restore: uncomment this
+// import and the <LightDrops /> render site below. See memory: light-drops-disabled.
+// import LightDrops from './LightDrops'
 
 // Heavy Three.js canvas + label: deferred off the critical path.
 const MorphingBackground = lazy(() => import('./MathBackgrounds'))
@@ -221,7 +223,9 @@ export default function Home() {
       </div>
 
       {/* Subtle drifting light streaks (square paths, hero region) */}
-      <LightDrops />
+      {/* Disabled for a cleaner background. To restore: uncomment this and the
+          import at the top of the file. See memory: light-drops-disabled. */}
+      {/* <LightDrops /> */}
 
       {/* Attractor label: separate stacking context, sits above sections so
           the "Curious what the X attractor is?" hint stays tappable even
