@@ -1,10 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" font-family="Inter, Helvetica Neue, Arial, sans-serif">
   <rect width="300" height="200" fill="#ffffff"/>
-  <rect x="0" y="0" width="300" height="30" fill="#141414"/>
-  <text x="14" y="20" font-size="11.5" font-weight="700" fill="#ffffff" letter-spacing="0.3">CONFESSED VALUE DISTRIBUTION</text>
+  <text x="14" y="20" font-size="11.5" font-weight="700" fill="#141414" letter-spacing="0.3">CONFESSED VALUE DISTRIBUTION</text>
 
   <!-- Panel A: Verbal (collapse) -->
-  <!-- frame x12..146, plot baseline y=166, top y=52 -->
   <g fill="#d6604d">
     <rect x="22"  y="158" width="8" height="8"/>
     <rect x="33"  y="162" width="8" height="4"/>
@@ -18,7 +16,6 @@
     <rect x="121" y="163" width="8" height="3"/>
     <rect x="132" y="161" width="8" height="5"/>
   </g>
-  <rect x="12" y="52" width="134" height="114" fill="none" stroke="#141414" stroke-width="1.6"/>
   <rect x="16" y="56" width="52" height="15" fill="#141414"/>
   <text x="42" y="67" font-size="9" font-weight="600" fill="#ffffff" text-anchor="middle">Verbal</text>
   <text x="79" y="184" font-size="9.5" fill="#a23f30" text-anchor="middle">collapses to 8 (86%)</text>
@@ -37,7 +34,6 @@
     <rect x="265" y="141" width="8" height="25"/>
     <rect x="276" y="139" width="8" height="27"/>
   </g>
-  <rect x="154" y="52" width="134" height="114" fill="none" stroke="#141414" stroke-width="1.6"/>
   <rect x="158" y="56" width="48" height="15" fill="#141414"/>
   <text x="182" y="67" font-size="9" font-weight="600" fill="#ffffff" text-anchor="middle">Silent</text>
   <text x="221" y="184" font-size="9.5" fill="#2c6a93" text-anchor="middle">tracks truth (r +1.00)</text>
