@@ -137,66 +137,70 @@ export default function Portfolio() {
                 className="project-item relative"
                 aria-current={isActive ? 'true' : undefined}
               >
-                <div
-                  aria-hidden="true"
-                  className="absolute -top-6 md:-top-16 left-0 md:left-4 pointer-events-none select-none font-light text-[4.5rem] md:text-[14rem] leading-none"
-                  style={{
-                    color: 'rgba(143,175,214,0.045)',
-                    fontFeatureSettings: '"tnum"',
-                    letterSpacing: '-0.05em',
-                    zIndex: 0,
-                  }}
-                >
-                  {String(index + 1).padStart(2, '0')}
-                </div>
+                {/* Left third (cols 1-3) is intentionally empty: that is where
+                    the parked attractor lives, with clean space and nothing over
+                    it. Text takes the middle, the hand-drawn figure the right. */}
+                <div className="relative z-10 grid md:grid-cols-12 gap-x-8 md:gap-x-12 gap-y-10 items-start">
+                  {/* ── Text (middle zone): no card. A soft, borderless glow
+                       lifts it off the paper grain without boxing it. ── */}
+                  <div className="col-span-12 md:col-span-5 md:col-start-4 relative">
+                    <div
+                      aria-hidden="true"
+                      className="absolute -inset-x-8 -inset-y-6 pointer-events-none"
+                      style={{
+                        background:
+                          'radial-gradient(ellipse 84% 80% at 30% 42%, rgba(238,231,217,0.66) 0%, rgba(238,231,217,0.24) 52%, transparent 80%)',
+                        filter: 'blur(30px)',
+                      }}
+                    />
 
-                <div className={`relative z-10 grid md:grid-cols-12 gap-6 md:gap-10 items-start ${isEven ? '' : 'md:[direction:rtl]'}`}>
-                  <div className="md:col-span-7 md:[direction:ltr] relative">
-                    <div className="panel scrim px-5 md:px-10 py-6 md:py-10">
-                      <div className="flex items-baseline gap-3 md:gap-4 mb-4 md:mb-5 flex-wrap">
-                        <span className="section-index">{String(index + 1).padStart(2, '0')}</span>
+                    <div className="relative">
+                      {/* Meta line in the same hand as the doodles: index ·
+                          topic, a dashed hand-rule, then the year. */}
+                      <div className="flex items-baseline gap-2.5 md:gap-3 mb-3 flex-wrap">
+                        <span className="handwritten text-[20px] leading-none" style={{ color: 'var(--accent)' }}>
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
                         {project.topic && (
-                          <span
-                            className="mono text-[10px] tracking-widest uppercase px-2 py-0.5"
-                            style={{
-                              color: 'var(--accent-dim)',
-                              border: '1px solid var(--border)',
-                            }}
-                          >
+                          <span className="handwritten text-[19px] leading-none" style={{ color: 'var(--accent-dim)' }}>
                             {project.topic}
                           </span>
                         )}
-                        <span className="h-px flex-1 min-w-[24px]" style={{ background: 'var(--hairline)' }} />
-                        <span className="mono text-[11px] tracking-widest uppercase" style={{ color: 'var(--accent-dim)' }}>
+                        <span
+                          className="flex-1 min-w-[28px] self-center"
+                          style={{ borderTop: '1.5px dashed rgba(156,107,79,0.42)' }}
+                        />
+                        <span className="handwritten text-[19px] leading-none" style={{ color: 'var(--accent-dim)' }}>
                           {project.year}
                         </span>
                       </div>
 
-                      <h3 className="text-2xl md:text-4xl font-light mb-3 tracking-tight leading-tight" style={{ color: 'var(--ink)' }}>
+                      {/* The one high-contrast move: oversized, near-black title.
+                          Everything around it stays deliberately quiet/light. */}
+                      <h3
+                        className="mb-3 tracking-[-0.02em] leading-[1.04] text-[1.9rem] sm:text-[2.3rem] md:text-[2.5rem] lg:text-[2.9rem]"
+                        style={{ color: 'var(--ink-strong)', fontWeight: 500 }}
+                      >
                         {project.title}
                       </h3>
 
-                      <p className="mono text-[10.5px] md:text-[11px] mb-5 md:mb-6 tracking-widest uppercase" style={{ color: 'var(--accent-dim)' }}>
+                      <p className="mono text-[10.5px] md:text-[11px] mb-5 tracking-[0.18em] uppercase" style={{ color: 'var(--accent-dim)' }}>
                         {project.venue} · {project.org}
                       </p>
 
-                      <p className="text-[14.5px] md:text-[1.02rem] text-[#2A211A]/78 leading-relaxed font-light max-w-xl">
+                      <p className="text-[14.5px] md:text-[1.02rem] leading-relaxed font-light max-w-xl" style={{ color: 'var(--ink-soft)' }}>
                         {project.description}
                       </p>
 
-                      <div className="flex flex-wrap gap-2 mt-5 md:mt-6">
-                        {project.tech.map((tech, idx) => (
-                          <span
-                            key={idx}
-                            className="mono px-2.5 py-1 text-[10.5px] tracking-wider"
-                            style={{ color: 'var(--accent-dim)', border: '1px solid var(--border)' }}
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
+                      {/* Handwritten margin thought on the description. */}
+                      <MarginAside projectId={project.id} text={project.aside} />
 
-                      <div className="flex flex-wrap gap-4 md:gap-5 mt-6 md:mt-7 pt-5 md:pt-6" style={{ borderTop: '1px solid var(--hairline)' }}>
+                      {/* Tech: quiet inline mono, no pills, no borders. */}
+                      <p className="mono text-[10.5px] md:text-[11px] mt-5 tracking-wider leading-relaxed" style={{ color: 'var(--accent-dim)' }}>
+                        {project.tech.join('   ·   ')}
+                      </p>
+
+                      <div className="flex flex-wrap gap-x-6 gap-y-3 mt-6">
                         {project.github && (
                           <a
                             href={project.github}
@@ -240,26 +244,23 @@ export default function Portfolio() {
                     </div>
                   </div>
 
+                  {/* ── Figure (right zone): unframed, hand-drawn, with a
+                       handwritten note and caption so the whole unit reads as a
+                       page someone sketched, opposite the live curve. ── */}
                   <div
                     data-motif-col
-                    className="md:col-span-5 md:[direction:ltr] relative"
+                    className="col-span-12 md:col-span-4 md:col-start-9 relative"
                   >
-                    <div
-                      className="relative w-full aspect-[4/3] md:aspect-[5/4] flex items-center justify-center overflow-hidden"
-                      style={{
-                        border: '1px solid var(--hairline)',
-                        borderRadius: '2px',
-                        background:
-                          'linear-gradient(160deg, rgba(255,251,244,0.55) 0%, rgba(60,45,35,0.06) 100%)',
-                      }}
-                    >
-                      <TickCorners />
-                      <div className="w-[85%] h-[85%] flex items-center justify-center">
-                        <ProjectDoodle projectId={project.id} className="w-full h-full" />
-                      </div>
+                    <div className="relative w-full aspect-[4/3] md:aspect-[5/4]">
+                      <ProjectDoodle projectId={project.id} className="w-full h-full" />
+                      <FigureAnnotation
+                        projectId={project.id}
+                        text={project.annotation}
+                        side="right"
+                      />
                     </div>
-                    <p className="mt-3 text-[11px] font-light tracking-wider uppercase text-[#2A211A]/45 text-center">
-                      Fig. {String(index + 1).padStart(2, '0')}: {project.briefDescription}
+                    <p className="handwritten mt-3 text-[16px] leading-snug text-[#2A211A]/55">
+                      Fig. {String(index + 1).padStart(2, '0')} · {project.briefDescription}
                     </p>
                   </div>
                 </div>
@@ -294,6 +295,98 @@ export default function Portfolio() {
         )}
       </div>
     </section>
+  )
+}
+
+/**
+ * MarginAside: a short handwritten thought beside the project description, in the
+ * same hand and warm hue as the doodles, introduced by a small hand-drawn corner
+ * arrow. Desktop only; the jitter seed is derived from projectId for stable SSR.
+ */
+function MarginAside({ projectId, text }) {
+  if (!text) return null
+  const fid = `aside-${projectId}`
+  return (
+    <div className="hidden md:flex items-start gap-2 mt-4 max-w-md" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" className="mt-[3px] shrink-0">
+        <defs>
+          <filter id={fid} x="-30%" y="-30%" width="160%" height="160%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed={projectId * 11 + 3} result="n" />
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+        <g filter={`url(#${fid})`} stroke="var(--accent)" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity="0.85">
+          <path d="M 7 3 C 7 12, 8 16, 18 16" />
+          <path d="M 18 16 l -7 -3.5 M 18 16 l -4 6" />
+        </g>
+      </svg>
+      <p className="handwritten text-[18px] leading-snug" style={{ color: 'var(--accent)', opacity: 0.9 }}>
+        {text}
+      </p>
+    </div>
+  )
+}
+
+/**
+ * FigureAnnotation: a short handwritten note drawn on top of a figure, with a
+ * hand-drawn arrow (pencil jitter) curving into the diagram. Sits in the outer
+ * margin so the figure reads like a page someone was thinking on, not a slide.
+ *
+ * The note itself stays crisp for legibility; only the arrow gets the wobble.
+ * Jitter + tilt are derived from projectId so the server prerender and client
+ * render match exactly (no Math.random hydration mismatch).
+ */
+export function FigureAnnotation({ projectId, text, side = 'right' }) {
+  if (!text) return null
+
+  const isRight = side === 'right'
+  const tilt = (((projectId * 53) % 9) - 4) * 0.5 // ~ -2deg .. +2deg, stable per project
+  const filterId = `anno-${projectId}`
+
+  // Arrow path + small open arrowhead, mirrored per side. The tip lands near
+  // the top of the figure so the note clearly points "into" the diagram.
+  const arrow = isRight
+    ? { d: 'M 112 10 C 84 26, 60 34, 30 64', head: 'M 30 64 L 44 62 M 30 64 L 36 50' }
+    : { d: 'M 18 10 C 46 26, 70 34, 100 64', head: 'M 100 64 L 86 62 M 100 64 L 94 50' }
+
+  return (
+    <div
+      aria-hidden="true"
+      className="hidden md:block absolute z-20 pointer-events-none"
+      style={{
+        top: '-1.7rem',
+        [isRight ? 'right' : 'left']: '-1rem',
+        width: '170px',
+        textAlign: isRight ? 'left' : 'right',
+        transform: `rotate(${tilt}deg)`,
+      }}
+    >
+      <span
+        className="handwritten block"
+        style={{ color: 'var(--accent)', fontSize: '1.22rem', lineHeight: 1.12 }}
+      >
+        {text}
+      </span>
+
+      <svg
+        width="130"
+        height="80"
+        viewBox="0 0 130 80"
+        className="mt-1"
+        style={{ marginLeft: isRight ? 0 : 'auto', display: 'block' }}
+      >
+        <defs>
+          <filter id={filterId} x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed={projectId * 9 + 5} result="n" />
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="1.8" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+        <g filter={`url(#${filterId})`} stroke="var(--accent)" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity="0.85">
+          <path d={arrow.d} />
+          <path d={arrow.head} />
+        </g>
+      </svg>
+    </div>
   )
 }
 

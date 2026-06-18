@@ -76,9 +76,19 @@ export default function About() {
         </header>
 
         <div className="grid md:grid-cols-12 gap-8 md:gap-14 items-start">
-          {/* Narrative: sits on a soft panel for guaranteed legibility */}
+          {/* Narrative: no frame. A soft, borderless glow lifts the text off the
+              paper grain and the receded curve, so words and curve coexist. */}
           <div ref={contentRef} className="md:col-span-7 relative">
-            <div className="panel scrim px-5 md:px-10 py-7 md:py-12">
+            <div
+              aria-hidden="true"
+              className="absolute -inset-x-6 -inset-y-6 pointer-events-none"
+              style={{
+                background:
+                  'radial-gradient(ellipse 82% 78% at 34% 40%, rgba(238,231,217,0.6) 0%, rgba(238,231,217,0.2) 52%, transparent 80%)',
+                filter: 'blur(34px)',
+              }}
+            />
+            <div className="relative">
               <p className="text-base sm:text-lg md:text-2xl leading-relaxed font-light mb-7 md:mb-9" style={{ color: 'var(--ink)' }}>
                 I work on the science of understanding and steering learned systems. My
                 research connects interpretability, optimization, and alignment by studying

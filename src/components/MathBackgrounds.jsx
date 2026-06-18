@@ -166,7 +166,7 @@ function MorphingScene({ attractors, hovered }) {
 
     // Rotation: motif can add a subtle extra spin when a project claims the canvas.
     // Slowed slightly so the curve feels meditative rather than restless.
-    const extraSpin = spinSmooth.current * 0.06
+    const extraSpin = spinSmooth.current * 0.09
     rotY.current += delta * (hovered ? 0.10 : 0.030) + extraSpin * delta
     rotX.current += delta * (hovered ? 0.025 : 0.006)
     if (groupRef.current) {
@@ -195,11 +195,13 @@ function MorphingScene({ attractors, hovered }) {
 
     const hue = hueSmooth.current
     const mix = Math.max(0, Math.min(1, intSmooth.current))
-    // Map hue (-1..1) to a soft tint color, kept dark so ink stays dark on the
-    // light paper even when a project claims the canvas. Warm brown / cool slate.
-    const tintR = hue < 0 ? 0.42 + hue * 0.10 : 0.20 - hue * 0.08
-    const tintG = hue < 0 ? 0.30 + hue * 0.10 : 0.26 + hue * 0.04
-    const tintB = hue < 0 ? 0.18 - hue * 0.06 : 0.34 + hue * 0.04
+    // Per-project tint stays entirely in the coffee/brown family (R ≥ G ≥ B
+    // always) so the curve never reads as cool/blue. hue (-1..1) only modulates
+    // depth: deeper espresso at hue=-1, lighter terracotta at hue=+1.
+    const warm = (hue + 1) / 2 // 0..1
+    const tintR = 0.34 + warm * 0.15
+    const tintG = 0.22 + warm * 0.09
+    const tintB = 0.15 + warm * 0.05
 
     for (let i = 0; i < len; i++) {
       posAttr.array[i] = fromA.positions[i] + t * (toA.positions[i] - fromA.positions[i])
@@ -207,7 +209,7 @@ function MorphingScene({ attractors, hovered }) {
       // channelwise tint
       const ch = i % 3
       const tint = ch === 0 ? tintR : ch === 1 ? tintG : tintB
-      colAttr.array[i] = base * (1 - mix * 0.55) + tint * (mix * 0.55)
+      colAttr.array[i] = base * (1 - mix * 0.6) + tint * (mix * 0.6)
     }
     posAttr.needsUpdate = true
     colAttr.needsUpdate = true

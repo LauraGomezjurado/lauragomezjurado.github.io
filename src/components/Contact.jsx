@@ -55,9 +55,18 @@ export default function Contact() {
         </header>
 
         <div className="grid md:grid-cols-2 gap-6 md:gap-16">
-          {/* Left column: contact info on a panel */}
-          <div ref={leftRef}>
-            <div className="panel scrim px-5 md:px-8 py-7 md:py-10">
+          {/* Left column: contact info on bare paper, lifted by a soft glow */}
+          <div ref={leftRef} className="relative">
+            <div
+              aria-hidden="true"
+              className="absolute -inset-x-6 -inset-y-6 pointer-events-none"
+              style={{
+                background:
+                  'radial-gradient(ellipse 80% 78% at 30% 40%, rgba(238,231,217,0.58) 0%, rgba(238,231,217,0.18) 52%, transparent 80%)',
+                filter: 'blur(32px)',
+              }}
+            />
+            <div className="relative">
               <h3 className="text-lg md:text-2xl font-light mb-6 md:mb-8" style={{ color: 'var(--ink)' }}>
                 Research &amp; Collaboration
               </h3>
@@ -83,11 +92,12 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Right column: form */}
+          {/* Right column: form on bare paper. Inputs keep light borders as
+              field affordances, but there is no frosted panel behind them. */}
           <form
             ref={formRef}
             onSubmit={handleSubmit}
-            className="panel scrim px-5 md:px-8 py-7 md:py-10 space-y-4 md:space-y-5"
+            className="space-y-4 md:space-y-5"
           >
             <FormField
               id="name"

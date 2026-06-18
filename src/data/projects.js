@@ -12,6 +12,8 @@ export const projects = [
     link: 'https://arxiv.org/abs/2505.24262',
     github: 'https://github.com/LauraGomezjurado/fairness_task_vector_deploy',
     motif: { hue: 0.35, intensity: 0.55, spin: 0.3 },
+    annotation: 'scale each Δθ by its own λ',
+    aside: 'some subgroup edits increase disparity',
   },
   {
     id: 13,
@@ -20,11 +22,15 @@ export const projects = [
     venue: 'Connecting Low-rank Representations in AI (CoLoRAI) Workshop, ICML 2026',
     topic: 'Optimization',
     description:
-      'Distributed low-rank spectral updates (Dion) communicate cheap rank-r factors but normalize columns in a way that misses the true rank-r polar geometry Muon targets, adding a √r factor to the rate even when the gradient subspace is accurate. Orth-Dion swaps column normalization for QR orthogonalization of the right factor so each step respects the dual norm of the low-rank spectral problem, recovering Muon-matching rates at the same communication budget. Includes a sharper error-feedback analysis and LLM pre-training experiments at scale.',
+      "Dion's distributed low-rank spectral updates normalize columns in a way that misses the polar geometry Muon targets, costing a √r factor in the rate. Orth-Dion swaps that single line for QR orthogonalization, recovering Muon-matching rates at the same communication budget.",
     briefDescription: 'QR-corrected low-rank spectral steps that close the Dion-Muon geometry gap at matched communication.',
     tech: ['Distributed Training', 'Optimization', 'Spectral Methods', 'LLMs'],
     org: 'With T. Nakamori, G. Talluri, A. Tiwari, H. Kawashima, I. Mitliagkas, G. Rabusseau, H. Naganuma',
     link: 'https://arxiv.org/abs/2605.16341',
+    annotation: 'QR fixes the geometry gap',
+    // Orthogonalization = rotation, so this project spins the curve up.
+    motif: { hue: -0.1, intensity: 0.58, spin: 0.5 },
+    aside: 'Dion and Orth-Dion pick the same subspace',
   },
   {
     id: 12,
@@ -33,7 +39,7 @@ export const projects = [
     venue: 'arXiv 2604.13082 · Under review',
     topic: 'Mech Interp',
     description:
-      'Encoder-decoder transformers grok one-step Collatz prediction T(n) from base-b digits with a long plateau: linear probes show parity and low-order residue structure exceed 99% accuracy within ~2k steps while sequence accuracy stays near chance for tens of thousands more (a "shadow knowledge" gap). Causal splits identify decoder readout as the bottleneck (encoder transplant speeds grokking ~2.75×; decoder transplant hurts; freezing a mature encoder and retraining only the decoder removes the plateau and reaches 97.6% vs 86.1% joint training). A 15-base sweep shows numeral representation acts as inductive bias. Bases aligned with local Collatz arithmetic reach ~99.8% whereas binary collapses, so geometry of digit space shapes learnability, not just the global map.',
+      'Encoder-decoder transformers learn Collatz structure long before they can use it: probes pass 99% within ~2k steps while output accuracy lags for tens of thousands more (a "shadow knowledge" gap). Causal splits pin the bottleneck on decoder readout; numeral base acts as an inductive bias.',
     briefDescription:
       'Fig. 1 · parity probe rises by ~2k steps while output accuracy groks late; the encoder knows before the decoder can read it.',
     tech: ['Grokking', 'Transformers', 'Collatz', 'Probing', 'Mechanistic interpretability'],
@@ -41,6 +47,8 @@ export const projects = [
     link: 'https://arxiv.org/abs/2604.13082',
     github: null,
     motif: { hue: -0.45, intensity: 0.60, spin: -0.2 },
+    annotation: 'the encoder already knows here',
+    aside: 'the numeral base decides whether it groks',
   },
   {
     id: 14,

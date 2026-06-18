@@ -133,24 +133,28 @@ export default function Home() {
     gsap.fromTo(stageState,
       { offsetX: 1.4, offsetY: -0.2, scale: 0.92, opacity: 0.95 },
       {
-        offsetX: -0.4, offsetY: 0.0, scale: 0.78, opacity: 0.45,
+        offsetX: -0.9, offsetY: 0.0, scale: 0.72, opacity: 0.30,
         ease: 'none', immediateRender: false,
         scrollTrigger: { trigger: '#about', start: 'top 90%', end: 'top 30%', scrub: 1.5 },
       }
     )
-    // About → Portfolio: curve returns to centre at full presence; the
-    // Portfolio's per-project motifs take over the colour story.
+    // About → Portfolio: curve commits to the LEFT third and stays there as a
+    // live "specimen" with clean space around it (nothing rendered over it).
+    // The project content lives in the right two-thirds (text in the middle,
+    // hand-drawn doodle on the right), so curve / text / figure read as three
+    // zones of one page rather than stacked layers. Per-project motifs make the
+    // curve visibly shift as each project becomes active — that's the interaction.
     gsap.fromTo(stageState,
-      { offsetX: -0.4, offsetY: 0.0, scale: 0.78, opacity: 0.45 },
+      { offsetX: -0.9, offsetY: 0.0, scale: 0.72, opacity: 0.30 },
       {
-        offsetX: 0.0, offsetY: -0.2, scale: 1.0, opacity: 0.85,
+        offsetX: -1.7, offsetY: 0.0, scale: 0.82, opacity: 0.92,
         ease: 'none', immediateRender: false,
         scrollTrigger: { trigger: '#portfolio', start: 'top 85%', end: 'top 25%', scrub: 1.5 },
       }
     )
     // Portfolio → News: drift to upper-right corner, contained scale.
     gsap.fromTo(stageState,
-      { offsetX: 0.0, offsetY: -0.2, scale: 1.0, opacity: 0.85 },
+      { offsetX: -1.7, offsetY: 0.0, scale: 0.82, opacity: 0.92 },
       {
         offsetX: 1.6, offsetY: 1.1, scale: 0.55, opacity: 0.55,
         ease: 'none', immediateRender: false,
@@ -170,7 +174,7 @@ export default function Home() {
     gsap.fromTo(stageState,
       { offsetX: 1.4, offsetY: -1.1, scale: 0.60, opacity: 0.55 },
       {
-        offsetX: -1.2, offsetY: 0.6, scale: 0.65, opacity: 0.55,
+        offsetX: -1.5, offsetY: 0.4, scale: 0.66, opacity: 0.45,
         ease: 'none', immediateRender: false,
         scrollTrigger: { trigger: '#contact', start: 'top 80%', end: 'top 20%', scrub: 1.5 },
       }
