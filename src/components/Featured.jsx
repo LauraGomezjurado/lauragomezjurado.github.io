@@ -17,7 +17,7 @@ function Thumb({ src, alt, className = '' }) {
       loading="lazy"
       decoding="async"
       onLoad={() => setLoaded(true)}
-      className={`${className} transition-[opacity,transform] duration-[1200ms] ease-out ${loaded ? 'opacity-80 group-hover:opacity-100' : 'opacity-0'}`}
+      className={`${className} transition-[opacity,transform] duration-[1200ms] ease-out ${loaded ? 'opacity-95 group-hover:opacity-100' : 'opacity-0'}`}
       onError={(e) => {
         e.target.style.display = 'none'
       }}
@@ -109,9 +109,10 @@ const features = [
 ]
 
 /**
- * Featured: editorial grid of press/recognition entries. Uses image-first
- * cards with a dark gradient overlay so titles stay legible regardless of the
- * underlying image brightness. Hover lifts and warms the card.
+ * Featured: editorial grid of press/recognition entries. Each entry is a
+ * hairline-framed photo with its text set below on bare paper (no dark frosted
+ * card, no overlays), so the grid belongs to the warm sand world and coexists
+ * with the receded attractor. Hover lifts the card and nudges the arrow.
  */
 export default function Featured() {
   const sectionRef = useRef(null)
@@ -195,16 +196,14 @@ function FeatureCard({ feature, innerRef }) {
       target="_blank"
       rel="noopener noreferrer"
       ref={innerRef}
-      className="group relative block overflow-hidden transition-transform duration-500 hover:-translate-y-1"
-      style={{
-        border: '1px solid var(--hairline)',
-        borderRadius: '2px',
-        background: 'rgba(8,10,14,0.55)',
-        backdropFilter: 'blur(12px)',
-      }}
+      className="group relative block transition-transform duration-500 hover:-translate-y-1"
     >
-      {/* Image */}
-      <div className="relative w-full aspect-[4/3] overflow-hidden bg-black">
+      {/* The photo is the only framed element: a hairline edge on warm paper,
+          no dark frosted card and no overlays. */}
+      <div
+        className="relative w-full aspect-[4/3] overflow-hidden"
+        style={{ border: '1px solid var(--border)', borderRadius: '2px', background: '#efe7da' }}
+      >
         {thumbs.length === 1 ? (
           <Thumb
             src={thumbs[0]}
@@ -212,81 +211,48 @@ function FeatureCard({ feature, innerRef }) {
             className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.04]"
           />
         ) : thumbs.length > 1 ? (
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute inset-0 grid grid-cols-2 gap-px bg-black transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]">
-              {thumbs.map((src, i) => (
-                <Thumb
-                  key={src}
-                  src={src}
-                  alt={`${feature.title} (${i + 1})`}
-                  className="w-full h-full object-cover"
-                />
-              ))}
-            </div>
+          <div className="absolute inset-0 grid grid-cols-2 gap-px bg-[#d8cdb6] transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]">
+            {thumbs.map((src, i) => (
+              <Thumb
+                key={src}
+                src={src}
+                alt={`${feature.title} (${i + 1})`}
+                className="w-full h-full object-cover"
+              />
+            ))}
           </div>
         ) : (
           <div
             aria-hidden="true"
             className="absolute inset-0"
-            style={{
-              background:
-                'radial-gradient(ellipse at 30% 30%, rgba(143,175,214,0.12) 0%, rgba(0,0,0,0.4) 70%)',
-            }}
+            style={{ background: 'radial-gradient(ellipse at 30% 30%, rgba(156,107,79,0.14) 0%, rgba(60,45,35,0.10) 70%)' }}
           />
         )}
-        {/* Bottom darkening for caption legibility */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              'linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 35%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.88) 100%)',
-          }}
-        />
-        {/* Type + year chips: top corners */}
-        <span
-          className="absolute top-3 left-3 mono text-[10px] tracking-widest uppercase px-1.5 py-0.5"
-          style={{
-            color: 'var(--accent)',
-            background: 'rgba(0,0,0,0.55)',
-            border: '1px solid var(--border)',
-          }}
-        >
-          {feature.type}
-        </span>
-        {feature.year && (
-          <span
-            className="absolute top-3 right-3 mono text-[10px] tracking-widest uppercase px-1.5 py-0.5"
-            style={{
-              color: 'var(--accent-dim)',
-              background: 'rgba(0,0,0,0.55)',
-              border: '1px solid var(--border)',
-            }}
-          >
-            {feature.year}
-          </span>
-        )}
-        {/* Title + org over bottom gradient */}
-        <div className="absolute bottom-0 left-0 right-0 p-3.5 md:p-5">
-          <p className="mono text-[10px] md:text-[10.5px] tracking-widest uppercase text-white/70 mb-1 md:mb-1.5">
-            {feature.organization}
-          </p>
-          <h3 className="text-base md:text-xl font-light text-white leading-snug">
-            {feature.title}
-          </h3>
-        </div>
       </div>
 
-      {/* Body */}
-      <div className="p-4 md:p-6">
-        <p className="text-[13px] md:text-sm text-white/65 leading-relaxed font-light">
+      {/* All text sits below the photo, on bare paper, in the site's ink. */}
+      <div className="pt-3.5 md:pt-4">
+        <div className="flex items-baseline justify-between gap-3 mb-1.5">
+          <span className="mono text-[10px] tracking-widest uppercase" style={{ color: 'var(--accent-dim)' }}>
+            {feature.organization}
+          </span>
+          {feature.year && (
+            <span className="handwritten text-[15px] leading-none shrink-0" style={{ color: 'var(--accent-dim)' }}>
+              {feature.year}
+            </span>
+          )}
+        </div>
+        <h3 className="text-base md:text-lg font-light leading-snug mb-2" style={{ color: 'var(--ink)' }}>
+          {feature.title}
+        </h3>
+        <p className="text-[13px] md:text-sm leading-relaxed font-light" style={{ color: 'var(--ink-quiet)' }}>
           {feature.description}
         </p>
         <div
-          className="flex items-center gap-2 mt-4 text-[12px] font-light tracking-wide opacity-60 group-hover:opacity-100 transition-opacity"
+          className="flex items-center gap-2 mt-3.5 text-[12px] font-light tracking-wide opacity-75 group-hover:opacity-100 transition-opacity"
           style={{ color: 'var(--accent)' }}
         >
-          <span>Read more</span>
+          <span>{feature.type}</span>
           <svg
             className="w-3.5 h-3.5 transform translate-x-0 group-hover:translate-x-1 transition-transform"
             fill="none"

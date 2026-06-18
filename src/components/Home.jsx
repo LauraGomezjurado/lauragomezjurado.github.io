@@ -61,9 +61,11 @@ export default function Home() {
 
     morphState.progress = 0
     cameraState.z = 5.5
-    stageState.offsetX = 1.4
-    stageState.offsetY = -0.2
-    stageState.scale = 0.92
+    // Hero: the curve is the centerpiece — large and near the middle, with the
+    // text sitting smaller to its left.
+    stageState.offsetX = 0.2
+    stageState.offsetY = -0.1
+    stageState.scale = 1.25
     stageState.opacity = 0.95
     gsap.set(bgRef.current, { opacity: 1 })
 
@@ -74,9 +76,9 @@ export default function Home() {
     if (prefersReduced) {
       morphState.progress = 1
       cameraState.z = 4.6
-      stageState.offsetX = 0
-      stageState.scale = 0.85
-      stageState.opacity = 0.7
+      stageState.offsetX = 0.1
+      stageState.scale = 1.1
+      stageState.opacity = 0.82
       return
     }
 
@@ -131,7 +133,7 @@ export default function Home() {
     // ── Stage (where on screen the attractor lives) ─────────────────────
     // Hero → curve on the right. About → recede + drift left of centre.
     gsap.fromTo(stageState,
-      { offsetX: 1.4, offsetY: -0.2, scale: 0.92, opacity: 0.95 },
+      { offsetX: 0.2, offsetY: -0.1, scale: 1.25, opacity: 0.95 },
       {
         offsetX: -0.9, offsetY: 0.0, scale: 0.72, opacity: 0.30,
         ease: 'none', immediateRender: false,

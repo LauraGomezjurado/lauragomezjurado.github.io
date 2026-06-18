@@ -41,35 +41,35 @@ export default function Hero() {
 
       {/* Intro block: left half so the attractor stage on the right has room */}
       <div className="relative z-10 min-h-screen flex items-center px-4 sm:px-6 md:px-8 lg:px-12">
-        <div className="w-full md:max-w-[58%] lg:max-w-[52%] relative">
+        <div className="w-full md:max-w-[50%] lg:max-w-[43%] relative">
           {/* Soft readability scrim behind copy: stays in the neutral ink family */}
           <div
             aria-hidden="true"
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                'radial-gradient(ellipse 95% 75% at 22% 50%, rgba(244,238,226,0.60) 0%, rgba(244,238,226,0.24) 55%, transparent 82%)',
+                'radial-gradient(ellipse 95% 75% at 22% 50%, rgba(244,238,226,0.66) 0%, rgba(244,238,226,0.26) 55%, transparent 82%)',
               filter: 'blur(28px)',
-              transform: 'scale(1.18)',
+              transform: 'scale(1.2)',
             }}
           />
 
           <div className="relative z-10">
             <h2
               ref={titleRef}
-              className="font-light text-[1.7rem] sm:text-4xl md:text-5xl lg:text-6xl mb-4 md:mb-6 tracking-tight text-on-bg"
+              className="font-light text-[1.45rem] sm:text-3xl md:text-4xl lg:text-5xl mb-4 md:mb-5 tracking-tight text-on-bg"
               style={{ letterSpacing: '0.01em', lineHeight: 1.08, color: 'var(--ink)' }}
             >
               Laura Gomezjurado Gonzalez
             </h2>
 
             <div ref={subtitleRef} className="space-y-2 mb-5 md:mb-6">
-              <p className="font-light text-[14.5px] md:text-lg lg:text-xl tracking-wide text-on-bg leading-relaxed" style={{ color: 'var(--ink-soft)' }}>
+              <p className="font-light text-[13.5px] md:text-base lg:text-lg tracking-wide text-on-bg leading-relaxed" style={{ color: 'var(--ink-soft)' }}>
                 Research on the mechanisms behind model behavior, the geometry of how they get trained,
                 and the safety questions that show up when these systems are deployed where they
                 matter.
               </p>
-              <p className="font-light text-[13px] md:text-base tracking-wide" style={{ color: 'var(--ink-quiet)' }}>
+              <p className="font-light text-[12.5px] md:text-[15px] tracking-wide" style={{ color: 'var(--ink-quiet)' }}>
                 Stanford CS. ICLR 2026. Microsoft Research, summer 2025. Incoming AI Resident at Lila
                 Sciences.
               </p>
