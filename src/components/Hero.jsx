@@ -57,21 +57,18 @@ export default function Hero() {
           <div className="relative z-10">
             <h2
               ref={titleRef}
-              className="font-light text-[1.45rem] sm:text-3xl md:text-4xl lg:text-5xl mb-4 md:mb-5 tracking-tight text-on-bg"
-              style={{ letterSpacing: '0.01em', lineHeight: 1.08, color: 'var(--ink)' }}
+              className="font-light text-xl sm:text-2xl md:text-[1.75rem] lg:text-3xl mb-4 md:mb-5 tracking-tight text-on-bg"
+              style={{ letterSpacing: '0.01em', lineHeight: 1.1, color: 'var(--ink)' }}
             >
               Laura Gomezjurado Gonzalez
             </h2>
 
-            <div ref={subtitleRef} className="space-y-2 mb-5 md:mb-6">
-              <p className="font-light text-[13.5px] md:text-base lg:text-lg tracking-wide text-on-bg leading-relaxed" style={{ color: 'var(--ink-soft)' }}>
-                Research on the mechanisms behind model behavior, the geometry of how they get trained,
-                and the safety questions that show up when these systems are deployed where they
-                matter.
-              </p>
-              <p className="font-light text-[12.5px] md:text-[15px] tracking-wide" style={{ color: 'var(--ink-quiet)' }}>
-                Stanford CS. ICLR 2026. Microsoft Research, summer 2025. Incoming AI Resident at Lila
-                Sciences.
+            <div ref={subtitleRef} className="mb-5 md:mb-6">
+              <p className="font-light text-[12.5px] md:text-[15px] tracking-wide leading-relaxed" style={{ color: 'var(--ink-soft)' }}>
+                Stanford CS<span style={{ color: 'var(--ink-quiet)' }} className="mx-2">/</span>
+                ICLR 2026<span style={{ color: 'var(--ink-quiet)' }} className="mx-2">/</span>
+                Microsoft Research<span style={{ color: 'var(--ink-quiet)' }} className="mx-2">/</span>
+                Lila Sciences
               </p>
             </div>
 
