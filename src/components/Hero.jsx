@@ -39,8 +39,9 @@ export default function Hero() {
       </div>
       */}
 
-      {/* Intro block: left half so the attractor stage on the right has room */}
-      <div className="relative z-10 min-h-screen flex items-center px-4 sm:px-6 md:px-8 lg:px-12">
+      {/* Intro block: left half so the attractor stage on the right has room.
+          Anchored to the bottom of the first viewport, above the scroll cue. */}
+      <div className="relative z-10 min-h-screen flex items-end pb-24 md:pb-28 px-4 sm:px-6 md:px-8 lg:px-12">
         <div className="w-full md:max-w-[50%] lg:max-w-[43%] relative">
           {/* Soft readability scrim behind copy: stays in the neutral ink family */}
           <div
