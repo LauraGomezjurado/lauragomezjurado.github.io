@@ -7,6 +7,13 @@ Machine-checked in `verify/q12_nonnegativity.py` (numpy + sympy only, seeded,
 `MASTER_SEED = 20250823`; 19/19 checks pass, including 5 negative controls on the
 Lyapunov estimator). Every number below is printed by that script.
 
+**Reproducibility.** Two runs under different `PYTHONHASHSEED` values produce
+byte-identical output. (An earlier draft seeded some streams from `hash(label)`,
+which Python salts per process; that made the §4 table shift by ~0.02 in `λ` from
+run to run. Fixed with an explicit label→integer map before the numbers below were
+taken. The conclusions were unaffected, but the numbers as first drafted were not
+reproducible and are recorded here as having been re-taken.)
+
 This file reports results only. It does not amend `05-q9-conservation-at-depth.md`
 or `04-open.md`; the dispositions it recommends for those files are listed in §7.
 
@@ -361,23 +368,25 @@ A small numpy sublayer: residual state `h` (scale-mixed Gaussian), activation
 
 | activation | `d` | frac `a<0` | frac `C<0` | `E‖C‖₁` | `λ` | sd | `e^λ` | verdict |
 |---|---|---|---|---|---|---|---|---|
-| relu | 16 | 0.0000 | 0.2017 | 164.6 | `+0.90588` | 0.062 | 2.474 | BLOW-UP |
-| relu | 64 | 0.0000 | 0.2309 | 1161 | `+1.77991` | 0.055 | 5.929 | BLOW-UP |
-| relu | 256 | 0.0000 | 0.2406 | 1.2e4 | `+2.46582` | 0.038 | 11.773 | BLOW-UP |
-| gelu | 16 | 0.4952 | 0.4458 | 194.3 | `+0.99443` | 0.056 | 2.703 | BLOW-UP |
-| gelu | 64 | 0.4998 | 0.4784 | 738.9 | `+1.82965` | 0.059 | 6.232 | BLOW-UP |
-| gelu | 256 | 0.5017 | 0.4892 | 6740 | `+2.57263` | 0.043 | 13.100 | BLOW-UP |
-| **layernorm** | 16 | 0.4968 | 0.4382 | 8488 | **`+1.42196`** | 0.037 | 4.145 | **BLOW-UP** |
-| **layernorm** | 64 | 0.4953 | 0.4716 | 915.4 | **`+2.10887`** | 0.024 | 8.239 | **BLOW-UP** |
-| **layernorm** | 256 | 0.4984 | 0.4859 | 1.2e4 | **`+2.85671`** | 0.009 | 17.404 | **BLOW-UP** |
-| layernorm_plain | 64 | 0.4984 | 0.4714 | 2.3e5 | `+2.13119` | 0.047 | 8.425 | BLOW-UP |
+| relu | 16 | 0.0000 | 0.2068 | 107.8 | `+0.91637` | 0.053 | 2.500 | BLOW-UP |
+| relu | 64 | 0.0000 | 0.2325 | 2787 | `+1.75842` | 0.044 | 5.803 | BLOW-UP |
+| relu | 256 | 0.0000 | 0.2400 | 1.2e5 | `+2.48877` | 0.027 | 12.046 | BLOW-UP |
+| gelu | 16 | 0.5033 | 0.4513 | 78.25 | `+1.01284` | 0.026 | 2.753 | BLOW-UP |
+| gelu | 64 | 0.5024 | 0.4774 | 1525 | `+1.81904` | 0.051 | 6.166 | BLOW-UP |
+| gelu | 256 | 0.5006 | 0.4893 | 1.2e4 | `+2.52557` | 0.041 | 12.498 | BLOW-UP |
+| **layernorm** | 16 | 0.4982 | 0.4345 | 176.3 | **`+1.35434`** | 0.031 | 3.874 | **BLOW-UP** |
+| **layernorm** | 64 | 0.4990 | 0.4711 | 1609 | **`+2.11612`** | 0.082 | 8.299 | **BLOW-UP** |
+| **layernorm** | 256 | 0.4979 | 0.4859 | 1.4e4 | **`+2.82636`** | 0.046 | 16.884 | **BLOW-UP** |
+| layernorm_plain | 16 | 0.5060 | 0.4387 | 137.0 | `+1.41033` | 0.037 | 4.097 | BLOW-UP |
+| layernorm_plain | 64 | 0.4967 | 0.4705 | 3421 | `+2.11130` | 0.064 | 8.259 | BLOW-UP |
+| layernorm_plain | 256 | 0.4994 | 0.4857 | 3.2e4 | `+2.83802` | 0.023 | 17.082 | BLOW-UP |
 
 **Answer to the key question: NO. For realistic signed `C`, `λ ≫ 0`.**
 
 Two things make this decisive rather than suggestive:
 
 1. **Realistic negativity sits above `f_c` at every width tested.** Measured
-   `frac C<0` is `0.44–0.49`, against `f_c ≈ 0.19 / 0.23 / 0.36` at
+   `frac C<0` is `0.43–0.49`, against `f_c ≈ 0.19 / 0.23 / 0.36` at
    `d = 16 / 64 / 256`. The realistic fraction is pinned near its maximum `0.5`
    because LayerNorm makes `a` ~50% negative (Claim A) and `W` is sign-symmetric.
 2. **Widening the model makes it worse, not better.** `f_c` grows with `d`, which
@@ -385,10 +394,10 @@ Two things make this decisive rather than suggestive:
 
 | activation | `d=16` | `d=64` | `d=256` |
 |---|---|---|---|
-| relu | `+0.90588` | `+1.77991` | `+2.46582` |
-| gelu | `+0.99443` | `+1.82965` | `+2.57263` |
-| layernorm | `+1.42196` | `+2.10887` | `+2.85671` |
-| layernorm_plain | `+1.39888` | `+2.13119` | `+2.81871` |
+| relu | `+0.91637` | `+1.75842` | `+2.48877` |
+| gelu | `+1.01284` | `+1.81904` | `+2.52557` |
+| layernorm | `+1.35434` | `+2.11612` | `+2.82636` |
+| layernorm_plain | `+1.41033` | `+2.11130` | `+2.83802` |
 
 There is no width at which the realistic family crosses back below `f_c`. The
 extrapolation to `d = 768` or `4096` is therefore not load-bearing: the trend in
@@ -400,9 +409,9 @@ product's ℓ¹ norm):
 
 | activation | `λ` | `n = 48` | `n = 768` |
 |---|---|---|---|
-| relu (plain signed z-rule) | `+1.77991` | `10^37.1` | `10^593.7` |
-| gelu | `+1.82965` | `10^38.1` | `10^610.3` |
-| layernorm | `+2.10887` | `10^44.0` | `10^703.4` |
+| relu (plain signed z-rule) | `+1.75842` | `10^36.7` | `10^586.5` |
+| gelu | `+1.81904` | `10^37.9` | `10^606.7` |
+| layernorm | `+2.11612` | `10^44.1` | `10^705.8` |
 
 Consistent in magnitude with the ~603-orders-of-magnitude separation already
 recorded in `05-q9-conservation-at-depth.md`, and now attributed to the right
@@ -415,10 +424,10 @@ LayerNorm input:
 
 | weight model | frac `C<0` | `E‖C‖₁` | `λ` | sd | verdict |
 |---|---|---|---|---|---|
-| iid fresh `W` each layer | 0.4723 | 1942 | `+2.10564` | 0.046 | BLOW-UP |
-| one fixed `W` reused every layer | 0.4719 | 914 | `+2.14989` | 0.034 | BLOW-UP |
-| low-rank (rank `d/4`) + noise | 0.4714 | 1793 | `+2.10723` | 0.038 | BLOW-UP |
-| heavy-tailed `W` (Student-t, df=3) | 0.4737 | 1008 | `+2.04545` | 0.053 | BLOW-UP |
+| iid fresh `W` each layer | 0.4720 | 2128 | `+2.15244` | 0.018 | BLOW-UP |
+| one fixed `W` reused every layer | 0.4719 | 2.0e5 | `+2.08915` | 0.019 | BLOW-UP |
+| low-rank (rank `d/4`) + noise | 0.4698 | 1686 | `+2.07067` | 0.009 | BLOW-UP |
+| heavy-tailed `W` (Student-t, df=3) | 0.4744 | 817.8 | `+2.04832` | 0.049 | BLOW-UP |
 
 `λ > 0` survives every weight model tested. It is driven by the **sign structure
 of `a`** — which LayerNorm pins at ~50% negative by Claim A — not by any
@@ -449,10 +458,10 @@ actually receives (`n = 600`, 4 seeds):
 |---|---|---|---|---|---|---|
 | relu | 16 | 0.0000 | **1** | `+0.00000` | 0.00000 | **BENIGN** |
 | relu | 64 | 0.0000 | **1** | `+0.00000` | 0.00000 | **BENIGN** |
-| gelu | 16 | 0.2327 | 31.18 | `+0.26180` | 0.029 | BLOW-UP |
-| gelu | 64 | 0.2473 | 12.18 | `+0.00009` | 0.00012 | marginal |
-| layernorm | 16 | 0.2187 | 1709 | `+1.42998` | 0.023 | BLOW-UP |
-| layernorm | 64 | 0.2370 | 1457 | `+2.16717` | 0.049 | BLOW-UP |
+| gelu | 16 | 0.2323 | 35.54 | `+0.32859` | 0.069 | BLOW-UP |
+| gelu | 64 | 0.2482 | 14.89 | `+0.00045` | 0.00045 | marginal |
+| layernorm | 16 | 0.2154 | 208.1 | `+1.38586` | 0.038 | BLOW-UP |
+| layernorm | 64 | 0.2373 | 1302 | `+2.12599` | 0.034 | BLOW-UP |
 
 With `a ≥ 0` (post-ReLU) the rule does exactly what Theorem 9.4 promises:
 `C⁺ ≥ 0`, `‖C⁺‖₁ = 1` to machine precision, `λ = 0` exactly. With LayerNorm input
@@ -533,8 +542,8 @@ escape route, though real, is not taken by realistic layers.**
 | Is `λ ≤ 0` attainable? | `λ ≥ 0` **always** under conservation. The only benign case is `λ = 0` exactly. |
 | Is `λ = 0` for *some* signed families? | **Yes** — a genuine phase transition. Below `f_c` the product becomes exactly non-negative within 2–5 layers and `λ = 0` to machine precision even when `‖C‖₁ ~ 10²`. This explains the `B = 763`-without-expansion anomaly. |
 | Where is `f_c`? | `≈0.19` (`d=16`), `0.15–0.30` (`d=64`), `0.325–0.40` (`d=256`). Grows with width; intermittent near the threshold. |
-| Is `λ = 0` for **realistic** signed `C`? | **NO.** `λ = +1.42 / +2.11 / +2.86` at `d = 16/64/256` for LayerNorm-fed sublayers — and `λ` grows with width, moving away from the benign regime. Realistic `frac C<0 ≈ 0.47–0.49` sits above `f_c` at every width. |
-| Can z⁺ be applied to LayerNorm sublayers anyway? | **No.** 50.31% of columns have `z⁺_j ≤ 0`, so (H⁺) fails outright and `C⁺` is 23.7% negative. Applying it regardless gives `λ = +2.17`. |
+| Is `λ = 0` for **realistic** signed `C`? | **NO.** `λ = +1.35 / +2.12 / +2.83` at `d = 16/64/256` for LayerNorm-fed sublayers — and `λ` grows with width, moving away from the benign regime. Realistic `frac C<0 ≈ 0.47–0.49` sits above `f_c` at every width. |
+| Can z⁺ be applied to LayerNorm sublayers anyway? | **No.** 50.31% of columns have `z⁺_j ≤ 0`, so (H⁺) fails outright and `C⁺` is 23.7% negative. Applying it regardless gives `λ = +2.13`. |
 
 ### What survives
 
@@ -561,9 +570,11 @@ value of `0.47–0.49`.
 
 ### Scale caveats — read before citing any of this
 
-1. **Widths `d ≤ 256`, not 768–4096.** `f_c` grows with `d` and the extrapolation
-   `(0.5 − f_c) ~ d^{−0.31}` would put `f_c ≈ 0.39` at `d = 768`, still below the
-   realistic `0.47–0.49` — but the verdict does not rest on that extrapolation.
+1. **Widths `d ≤ 256`, not 768–4096.** `f_c` grows with `d`. A log-log fit over
+   the three band midpoints (`0.1875 / 0.2250 / 0.3625`) gives
+   `(0.5 − f_c) ≈ 0.780·d^{−0.296}`, i.e. `f_c ≈ 0.391` at `d = 768` and `0.434`
+   at `d = 4096` — both still below the realistic `0.47–0.49`. Three points make
+   that fit indicative only, and the verdict does not rest on it.
    It rests on the *measured* realistic `λ`, which increases monotonically with
    `d` over the range tested. If that trend reversed at large `d` the conclusion
    would need revisiting; nothing here rules that out.

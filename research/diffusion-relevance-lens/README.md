@@ -138,13 +138,22 @@ enumerated ground truth.
 **Closed:** Q1 (dissolved, then partly reopened in Lyapunov form), Q5, Q6 (both halves),
 Q7, Q10 (negatively — both proposed weights make attribution worse), Q11 (negatively).
 
+**Q12 — closed, and it blocks the prescription.** `a ≥ 0` fails automatically after
+LayerNorm (Cor. 8.1); non-negativity is *necessary*, not just sufficient (Lemma 9); and
+the Lyapunov escape is measured shut (`λ = +1.35…+2.83` for LayerNorm-fed sublayers,
+`10^706` over `n = 768`). Realistic negativity `0.43–0.49` sits above the critical
+`f_c ≈ 0.15–0.40` at every width, and widening makes it worse. **§9.6 applies to ReLU
+networks and essentially nothing in a modern transformer** — GELU already fails.
+
 **Open, in order of how much they gate:**
-1. **Q12** ★ — now proved a *hard* obstruction: `a ≥ 0` fails automatically after
-   LayerNorm (Cor. 8.1) and cannot be worked around (Lemma 9). The one escape is a
-   non-positive **Lyapunov exponent** for signed relevance matrices — empirical, under
-   test.
-2. Q13 (non-circular `T`-scaling test), Q2–Q4 (blocked on sources), and whether the
-   fidelity window is non-empty for real activations.
+1. **Q14** ★ — does residual structure `I + A` raise `f_c`? The Q12 study modelled bare
+   sublayers; a real block's non-negative identity term should suppress negative mass,
+   and the verdict turns on a factor of only ~1.2–3. **The single highest-value next
+   experiment.**
+2. **Q12 route (ii)** — design a rule keeping the *product's* negative mass bounded.
+   Cor. 9.2 gives a sharp target: `‖C‖₁ = 1 + 2max_j ν_j` exactly, so `λ` *is* the
+   growth rate of negative mass.
+3. Q13 (non-circular `T`-scaling test), Q2–Q4 (blocked on sources).
 
 **Not yet written:** the synthesis assembling the three forcing arguments (target-axis
 asymmetry, fit-cost blow-up, definedness) into a full lens construction. It should not

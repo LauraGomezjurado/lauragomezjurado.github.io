@@ -191,22 +191,58 @@ both sides.
 **Consequence.** Theorem 9.4 is correct but its hypothesis is unsatisfiable where it is
 needed. The §9.6 prescription does not apply to a standard transformer as written.
 
-**The one remaining escape (Cor. 9.1), and it must leave the ℓ¹ framework.** Lemma 4's
-`B^{n−1}` is an *upper* bound and is loose above `B = 1` — verification measured signed
-products with `B = 763` failing to expand (per-layer rate `1.0048`). So demand not
-`B ≤ 1` but a non-positive **Lyapunov exponent**
+**The escape is now measured, and it fails. Q12 blocks the prescription.**
 
-    λ = lim (1/n) log ‖C_n ⋯ C_1‖ ≤ 0
+`Q12-EXPERIMENT.md` (19/19 checks, estimator pre-validated against five closed-form
+Lyapunov exponents; the non-negative-stochastic floor returns `7.9e-18`, so every
+reported `λ = 0` is *exactly* zero):
 
-This is an **empirical** property of realistic relevance matrices, not a theorem.
-Under test in `Q12-EXPERIMENT.md`. **If `λ ≤ 0` holds for realistic signed `C`, the
-whole non-negativity requirement can be dropped** and Q12 dissolves; if `λ > 0`, the
-obstruction is genuine and the prescription needs rebuilding.
+| finding | result |
+|---------|--------|
+| `λ` for LayerNorm-fed sublayers | **`+1.35 / +2.12 / +2.83`** at `d = 16/64/256` — i.e. `10^706` over `n = 768` |
+| realistic negativity vs critical `f_c` | `0.43–0.49` vs `f_c = 0.175–0.40` — **above threshold at every width** |
+| does widening help? | **No.** `f_c` grows with `d`, realistic `λ` grows faster — no crossing back |
+| robustness | survives all four weight models (iid, reused-`W`, low-rank, heavy-tailed); `λ` is driven by the sign structure of `a`, which Cor. 8.1 pins analytically |
 
-*Note the irony worth recording:* Theorem 9.4 was introduced to dissolve Q1 ("is
-`B > 1`?") by choosing a rule with `B = 1`. Lemma 9 shows that choice is unavailable,
-which puts Q1 back — but in the sharper Lyapunov form, where the evidence so far is
-encouraging.
+**Two things make this worse than Q12 originally stated.**
+
+1. **Both halves of Lemma 9.3′ fail, not just `a ≥ 0`.** On LayerNorm input, **50.31%
+   of columns have `z⁺_j ≤ 0`**, so hypothesis (H⁺) fails outright. `C⁺` is not merely
+   *lossy* — it is not non-negative either (23.7% negative entries).
+2. **`λ ≥ 0` unconditionally** (Cor. 9.2). The escape was written as "`λ ≤ 0`", but the
+   exact norm formula `‖C‖ = 1 + 2max_j ν_j` forces `λ ≥ 0`. Only `λ = 0` is available:
+   a knife-edge, not a region.
+
+**Route (i) — restrict to non-negative-input sublayers — is vindicated but narrow.**
+Post-ReLU, z⁺ delivers exactly what Theorem 9.4 promises: `‖C⁺‖₁ = 1` to `1e-16`,
+`λ = 0`. But **GELU already fails** (0.44% bad columns, 24.79% negative `C⁺` entries),
+landing in the unstable intermittent band. So the prescription applies to ReLU networks
+and essentially nothing in a modern transformer.
+
+**Route (ii) now has a sharp, quantified target** from Cor. 9.2: keep the *product's*
+negative mass bounded — beat `f_c ≈ 0.15–0.40` against a natural `0.47–0.49`. That is a
+concrete design problem rather than a vague hope, but the gap is real.
+
+*The irony, now resolved unfavourably:* Theorem 9.4 was introduced to dissolve Q1
+("is `B > 1`?") by choosing a rule with `B = 1`. Lemma 9 showed that choice unavailable;
+the Lyapunov reformulation was the fallback; the measurement closes it too.
+
+---
+
+## Q14 — Does residual structure `I + A` raise `f_c`? ★ **the most likely repair**
+
+**Status:** OPEN, untested, and flagged by the Q12 experiment as *the most likely place
+its negative verdict softens*.
+
+The Q12 study modelled **bare single-position sublayers**. A real block is
+`J = I + A_ℓ` (D1.2), and the identity term contributes a strictly **non-negative
+diagonal**, which should push the product's negative mass *down*. Since the verdict
+turns on a comparison of `f ≈ 0.47` against `f_c ≈ 0.15–0.40` — a factor of ~1.2–3 —
+a mechanism that materially raises `f_c` or lowers effective `f` could flip it.
+
+**What would settle it:** rerun the `λ`-vs-`f` sweep with `C` built from full residual
+blocks rather than bare sublayers, tracking whether self-healing survives. This is the
+single highest-value next experiment in the project.
 
 ---
 

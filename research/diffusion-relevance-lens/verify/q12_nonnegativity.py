@@ -625,9 +625,28 @@ def task2_synthetic():
     d -> inf is the question that decides Q12 at real transformer widths.  The
     realistic negative fraction measured in Table 4 is ~0.47-0.50, i.e. right at
     the maximum -- so the margin, if any, is thin and the extrapolation matters.""")
-    print(f"\n    {'d':>8s} {'all-benign up to':>18s} {'all-blow-up from':>18s}")
+    print(f"\n    {'d':>8s} {'all-benign up to':>18s} {'all-blow-up from':>18s} "
+          f"{'band midpoint':>15s} {'0.5 - f_c':>11s}")
+    ds, mids = [], []
     for d in sorted(fcs):
-        print(f"    {d:8d} {str(fcs[d][0]):>18s} {str(fcs[d][1]):>18s}")
+        lo, hi = fcs[d]
+        lo_v = lo if lo is not None else 0.175   # d=16: no all-benign grid point;
+                                                 # use the last <2/6-blow-up point
+        mid = 0.5 * (lo_v + hi)
+        ds.append(d)
+        mids.append(mid)
+        print(f"    {d:8d} {str(lo):>18s} {str(hi):>18s} {mid:15.4f} {0.5-mid:11.4f}")
+    ds, mids = np.array(ds, float), np.array(mids)
+    gap = 0.5 - mids
+    sl, ic = np.polyfit(np.log(ds), np.log(gap), 1)
+    print(f"\n    log-log fit over the three band midpoints:")
+    print(f"      (0.5 - f_c) ~ {np.exp(ic):.3f} * d^({sl:+.3f})")
+    for dd in (768, 4096):
+        print(f"      extrapolated f_c at d={dd:5d}: {0.5 - np.exp(ic)*dd**sl:.4f}"
+              f"   (realistic frac C<0 at that width: ~0.49)")
+    print("      NOTE: three points, so this fit is indicative only.  The verdict in")
+    print("      section 4 does NOT rest on it -- it rests on the directly measured")
+    print("      realistic lambda, which grows with d rather than shrinking.")
     return fcs
 
 

@@ -278,15 +278,27 @@ prescription of §9.6 is the z⁺-rule, whose stabiliser sits on `z⁺_j` (Def. 
 
     Σ_ℓ η⁺_ℓ ≪ 1,    η⁺_ℓ = ε / ( min_j z⁺_{j,ℓ} + ε )                            (9.9)
 
-> **This matters by three orders of magnitude, in the project's favour.** `|z_j|` is
-> small *precisely because of cancellation* — `z_j = z⁺_j − z⁻_j` — whereas `z⁺_j` sums
-> only non-negative terms and does not cancel. Measured, the two differ by ~**2300×**.
-> The document was therefore stating a fidelity requirement roughly three orders of
-> magnitude stricter than its own rule needs, which changes the outlook on the one
-> genuinely open empirical question from "probably empty" to "plausibly comfortable".
+The mechanism is real: `|z_j|` is small *precisely because of cancellation* —
+`z_j = z⁺_j − z⁻_j` — whereas `z⁺_j` sums only non-negative terms and does not cancel.
+
+> **⚠ Two corrections, and the optimism does not survive the second.**
 >
-> This also decouples (9.9) from the Lemma 6 silent-failure regime, which is driven by
-> `z_j ≈ 0` — a cancellation event that `z⁺_j` does not inherit.
+> **(a) The "~2300×" is not a constant.** It is a `d`-dependent order statistic,
+> spanning `16×` at `d = 16` to `3.6e4×` at `d = 1024`, passing through ~2300 near
+> `d ≈ 200`; mean and median differ by ~10× at every width. It must be quoted with its
+> width or not at all.
+>
+> **(b) The favourable ratio requires `a ≥ 0` — the hypothesis Q12 refutes.** Under
+> **signed** `a`, measurement found **0 of 400 draws usable at `d = 64`**: with `a`
+> signed, `z⁺_j` is no longer a sum of non-negative terms and the whole cancellation
+> argument collapses. Since Corollary 8.1 shows `a ≥ 0` fails automatically after
+> LayerNorm, **this section's optimism about (9.9) rests on exactly the assumption
+> Q12 disproves**, and an earlier draft did not say so.
+>
+> **Disposition.** The favourable reading of (9.9) holds *only* in the post-ReLU regime
+> where the §9.6 prescription is applicable at all (Q12, route (i)). Outside it, the
+> condition reverts to being governed by `min_j |z_j|`, and remains pessimistic. This
+> file's §9.6 summary is scoped accordingly.
 
 **Two further corrections to the earlier derivation.**
 
@@ -331,9 +343,29 @@ tradeoff is exact, not merely an upper bound.
 
 **Net:** the prescription is **z⁺-rule + per-layer renormalisation**. It gives exact
 aggregate conservation at any depth, allocation error linear (not geometric) in `L·T`,
-and valid thresholding — at the price of discarding inhibitory relevance and subject to
-the empirical condition (9.9).
+and valid thresholding.
 
-This restores a weakened form of the original thesis: relevance propagation *can* be
-made to survive depth `L·T`, but only for a specific rule, with a stated cost, and
-subject to a condition that theory alone cannot verify.
+> **⚠ Scope of applicability (v0.5, from Q12).** The prescription is **correct but
+> narrow**. It requires `a ≥ 0`, and measurement shows:
+>
+> | regime | status |
+> |--------|--------|
+> | **post-ReLU** | works exactly as promised — `‖C⁺‖₁ = 1` to `1e-16`, `λ = 0` |
+> | **post-GELU** | already fails — 0.44% bad columns, 24.79% negative `C⁺` entries |
+> | **post-LayerNorm** | fails outright — 50.31% of columns have `z⁺_j ≤ 0`, so (H⁺) is violated, and `λ = +1.35…+2.83` |
+>
+> So §9.6 applies to ReLU networks and essentially nothing in a modern transformer.
+> Corollary 8.1 (LayerNorm outputs are always signed) and Lemma 9 (non-negativity is
+> *necessary*) together show this is a **hard obstruction**, not a gap awaiting a
+> better rule.
+>
+> **Additional cost, now quantified:** z⁺ discards ~**50%** of signed contribution mass
+> (converging to exactly ½ as `d` grows) — not a marginal loss of inhibitory evidence
+> but half of it.
+
+**Honest bottom line.** Relevance propagation *can* be made to survive depth `L·T` —
+Theorem 9.4 is sound and its `603`-order-of-magnitude contrast is real — but only for a
+rule whose hypothesis a modern transformer does not satisfy. Making it applicable is the
+open problem (Q12 route (ii), with the sharp target from Cor. 9.2: bound the *product's*
+negative mass below `f_c ≈ 0.15–0.40` against a natural `0.47–0.49`), and Q14 (residual
+structure) is the most promising untested lead.

@@ -399,10 +399,27 @@ to zero must have at least one strictly negative component. ∎
 any sublayer whose input is a LayerNorm output with `β = 0`. It is not a condition that
 merely *might* fail — centring makes failure automatic.
 
-> With `β ≠ 0` the output is `γ ⊙ x̂ + β`, and a sufficiently large positive `β` *can*
-> restore non-negativity. But `β` is a learned parameter, not a free design choice, and
-> requiring `β_i > |γ_i x̂_i|` for all `i` and all inputs is a strong constraint no
-> trained model is known to satisfy. Quantified empirically in `Q12-EXPERIMENT.md`.
+**Sharp bounds (verified).** `#neg ∈ [1, d−1]` and `min_i x̂_i ≥ −√(d−1)`.
+
+**The negative fraction is not ~½ in general — it is worse for skewed inputs.** Measured:
+
+| input distribution | fraction of components negative |
+|--------------------|--------------------------------|
+| symmetric | ~0.50 |
+| `Exp(1)` — an **entirely non-negative** input | **0.63** |
+| lognormal | 0.69 |
+| single spike (`d = 16`) | 0.94 |
+
+So feeding LayerNorm a non-negative signal does not help; centring converts it to a
+*majority*-negative one.
+
+> **The `β` rescue is not a trade-off with a sweet spot — it destroys the attribution.**
+> A positive shift restores `a ≥ 0` only at `β_i ≥ γ_i√(d−1)`, which is **27.7 at
+> `d = 768`** against learned `β ~ O(0.1)` — two orders of magnitude out of reach. And
+> at exactly that `β`, the offset supplies ~100% of every `z⁺_j`, so the resulting
+> allocation is within `TV = 0.05` of the **input-independent** limit
+> `w⁺_{ij}/Σ_i w⁺_{ij}`. The shift buys non-negativity by deleting the attribution's
+> dependence on the input — i.e. by making it explain nothing.
 
 ---
 
@@ -412,14 +429,41 @@ Let `C ∈ ℝ^{d×d}` have unit column sums, `1ᵀC = 1ᵀ`. Then
 
     ‖C‖_{1→1} = 1   ⟺   C ≥ 0  entrywise                                          (L9.1)
 
-**Proof.** The induced norm is `‖C‖_{1→1} = max_j Σ_i |C_{ij}|`. For each column `j`,
+**Proof.** Define the **negative mass** of column `j`:
 
-    Σ_i |C_{ij}| ≥ | Σ_i C_{ij} | = 1
+    ν_j(C) := Σ_i max(−C_{ij}, 0) = Σ_i (|C_{ij}| − C_{ij}) / 2  ≥ 0               (L9.2)
 
-by the triangle inequality and the column-sum hypothesis. Equality in the triangle
-inequality holds iff all `C_{ij}` share a common sign. Since their sum is `+1 > 0`, that
-common sign must be positive, i.e. `C_{·j} ≥ 0`. Hence `‖C‖_{1→1} = 1` iff every column
-is non-negative. The converse is Theorem 9.4. ∎
+Every summand `|C_{ij}| − C_{ij}` is non-negative, so `ν_j = 0` iff `C_{·j} ≥ 0`. Using
+the column-sum hypothesis,
+
+    Σ_i |C_{ij}| = Σ_i C_{ij} + 2ν_j = 1 + 2ν_j
+
+Hence `‖C‖_{1→1} = max_j Σ_i |C_{ij}| = 1 + 2 max_j ν_j(C)`, which equals 1 iff
+`ν_j = 0` for all `j`, i.e. iff `C ≥ 0`. The converse direction is Theorem 9.4. ∎
+
+> **Proof note.** This avoids a sign case-split that an earlier version relied on. The
+> step "equality in the triangle inequality iff all entries share a sign" is *not*
+> sufficient on its own — an all-*negative* column also attains triangle equality. What
+> pins the sign positive is the unit column sum `= +1 > 0`, i.e. **conservation supplies
+> the sign, not the norm identity.** The `ν_j` formulation sidesteps this entirely.
+
+### Corollary 9.2 (exact norm formula, and `λ ≥ 0` always)
+
+The proof yields more than the equivalence:
+
+    ‖C‖_{1→1} = 1 + 2·max_j ν_j(C)      exactly                                    (L9.3)
+
+verified numerically to `1.1e-16`. Since the set `{C : 1ᵀC = 1ᵀ}` is **closed under
+multiplication**, (L9.3) applies to the product `C_n ⋯ C_1` as well. Therefore
+
+> **the top Lyapunov exponent `λ` is precisely the asymptotic growth rate of the
+> product's negative mass** — and since `ν_j ≥ 0` gives `‖·‖_{1→1} ≥ 1`, we have
+> **`λ ≥ 0` unconditionally.**
+
+**This corrects Corollary 9.1.** The escape route was stated there as "`λ ≤ 0`". That
+inequality admits only the boundary case: **`λ = 0` exactly**, a knife-edge, not a
+comfortable region. The question is not whether the product contracts — it cannot — but
+whether its negative mass stays bounded.
 
 > **This is the sharp form of Theorem 9.4, and it is a negative result.** Theorem 9.4
 > showed `C ≥ 0` is *sufficient* for `‖C‖_{1→1} = 1`. Lemma 9 shows it is also
@@ -431,17 +475,40 @@ is non-negative. The converse is Theorem 9.4. ∎
 > **within the ℓ¹ framework, Q12 is a hard obstruction, not a gap awaiting a better
 > rule.** Any escape must leave the framework.
 
-**Corollary 9.1 (where the escape must live).** Since `‖C‖_{1→1} > 1` is unavoidable for
-signed `C`, Lemma 4's bound `n·B^{n−1}·e` is not the right instrument. But Lemma 4 is an
-*upper* bound, and machine verification found it loose above `B = 1`: signed products
-with `B = 763` were measured not to expand (per-layer rate `1.0048`). The operative
-quantity is therefore the **top Lyapunov exponent**
+**Corollary 9.1 (where the escape must live) — superseded by Cor. 9.2, retained for the
+argument.** Since `‖C‖_{1→1} > 1` is unavoidable for signed `C`, Lemma 4's bound
+`n·B^{n−1}·e` is not the right instrument: it is an *upper* bound, measured loose above
+`B = 1` (signed products with `B = 763` did not expand, per-layer rate `1.0048`). The
+operative quantity is the **top Lyapunov exponent**
 
-    λ := lim_{n→∞} (1/n) log ‖C_n ⋯ C_1‖                                          (L9.2)
+    λ := lim_{n→∞} (1/n) log ‖C_n ⋯ C_1‖                                          (L9.4)
 
-with `λ ≤ 0` — not `B ≤ 1` — the condition for errors not to compound geometrically.
-Whether realistic signed relevance matrices satisfy `λ ≤ 0` is an **empirical** question,
-investigated in `Q12-EXPERIMENT.md`.
+Cor. 9.2 sharpens the target from `λ ≤ 0` to `λ = 0` and identifies what it measures.
+
+### The mechanism: self-healing below a critical negativity
+
+`Q12-EXPERIMENT.md` measured `λ` against the fraction `f` of negative entries and found
+a genuine **phase transition**, with an identified mechanism:
+
+- **Below `f_c`:** the product **self-heals**. Negative entries are annihilated within
+  2–5 layers, after which the product is *exactly* non-negative column-stochastic and
+  `λ = 0` — even when the one-step norm is `‖C‖₁ ≈ 88`.
+- **Above `f_c`:** negative mass saturates at `½` and growth is geometric.
+
+> **This explains the anomaly.** The unexplained observation that `B = 763` produced no
+> expansion was not slack in Lemma 4; it was self-healing. The one-step norm is
+> irrelevant because the negativity that inflates it is transient.
+
+Measured critical bands, against realistic negativity from LayerNorm-fed layers:
+
+| `d` | `f_c` band | realistic `frac(C < 0)` |
+|-----|-----------|--------------------------|
+| 16 | ~0.175–0.20 | 0.43–0.45 |
+| 64 | 0.15–0.30 | 0.47 |
+| 256 | 0.325–0.40 | 0.49 |
+
+Realistic negativity sits **above** `f_c` at every width, and widening does not help:
+`f_c` grows with `d`, but realistic `λ` grows faster. See `04-open.md` Q12.
 
 ---
 
