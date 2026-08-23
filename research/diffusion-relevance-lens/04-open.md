@@ -102,9 +102,56 @@ Euler's homogeneous-function theorem is the common root of Lemmas 1, 2 and 7.
 
 ---
 
-## Q6 — Is the marginal transport operator (D9.1) well-defined for the sampler (D8.4)?
+## Q6 — ~~Is the marginal transport operator (D9.1) well-defined?~~ **RESOLVED — it is not**
 
-**Status:** open; this is a load-bearing gap on the diffusion side.
+**Status: CLOSED (v0.3).** See `03-q6-path-conditioning.md`.
+
+**Answer: no, and not approximately.** Proposition 6.1 gives an explicit counterexample
+(`N=2, V=2`) of two joints with *identical* position marginals whose successors differ
+*maximally*, because bidirectional attention lets `p_θ` read inter-position correlation.
+So no operator on `(Δ^V)^N` can implement the dynamics. **(D9.1) is retracted.**
+
+The mean-field route is therefore abandoned rather than approximated: its error is
+governed by total correlation, which is `log 2` (maximal) in the counterexample.
+
+**Repair (a change of object, not an approximation).** Attribution is redefined on a
+*realised trajectory* (Def. 6.2). Conditioning on the path makes every network
+evaluation deterministic and differentiable, so Lemmas 1–7 apply within each step
+(Prop. 6.3). The result is per-trajectory rather than distributional — which is what
+monitoring needs anyway. This raises the recursion from Tier D to Tier B.
+
+**Residual:** the model/noise split at each sampling boundary is *permitted* by
+conservation but **not derived** from it (Prop. 6.4). Filed as Q10.
+
+---
+
+## Q10 — What is the correct model/noise split weight at a sampling boundary?
+
+**Status:** open (Tier D). Prop. 6.4 shows any `w ∈ [0,1]` is conservative, so
+conservation gives no guidance. Candidates: `w = p^{(t)}_j(b*)` (likelihood) or
+excess-over-chance `max(0,(p_{b*} − 1/V)/(1 − 1/V))`. Neither is adopted.
+
+**Most promising route:** the Gumbel-max representation (Remark 6.5) decomposes the
+realised argmax margin additively into a model part and a noise part, making "how much
+of the win was the model" *measurable per draw* rather than postulated.
+
+---
+
+## Q11 — What is the Dobrushin coefficient of a transformer block's relevance matrix?
+
+**Status:** open, **empirical**. Corollary 9.5 gives a depth-*uniform* allocation bound
+`η/δ` when `δ(C_ℓ) ≥ δ > 0`. But a near-identity residual block has `δ ≈ 0` and provides
+no damping, so the hypothesis must not be assumed. Without it the safe result is the
+unconditional linear bound (9.7).
+
+**What would settle it:** measure `δ(C_ℓ) = min_{j,k} Σ_i min(C_{ij}, C_{ik})` on a real
+model. Requires weights we do not have.
+
+---
+
+## ~~Q6 (original statement, retained for the record)~~
+
+**Status:** superseded by the resolution above.
 
 D9.1 defines `T^{(t)}` as a derivative of position marginals. But the sampler (D8.4)
 draws jointly across positions given `x̂_0 ~ p_θ`, and `p_θ` couples positions through
@@ -140,10 +187,38 @@ claim (Tier D3*) must not be stated as a consequence of conservation.**
 
 ---
 
-## Q9 — Is there a rule that is both numerically stable and conservative at depth `L·T`? ★
+## Q9 — Is there a rule both numerically stable and conservative at depth `L·T`? **SUBSTANTIALLY RESOLVED**
 
-**Status: OPEN. This is now the project's central problem.** Promoted here after
-Lemma 5.1 and adversarial audit.
+**Status: mostly CLOSED (v0.3).** See `05-q9-conservation-at-depth.md`.
+
+**Answer: yes — the z⁺-rule with per-layer renormalisation.**
+
+| Sub-question | Resolution |
+|---|---|
+| Depth-uniform **aggregate** defect? | **Yes, zero defect** — renormalisation (Prop. 9.1a), and it costs no within-layer distortion (9.1b) |
+| Does renormalisation extend the fidelity window? | **No** — it converts silent scale collapse into graceful allocation drift (Rmk 9.2). Still valuable: absolute thresholds become meaningful |
+| Is allocation error geometric in depth? | **No under z⁺** — Thm 9.4 proves `‖C‖_{1→1} = 1` from non-negativity + unit column sums, so Lemma 4's `B^{n−1}` collapses to 1 and the bound is **linear** |
+| Depth-*uniform* allocation error? | **Yes under mixing** (Cor. 9.5), but `δ ≈ 0` for near-identity residual blocks, so not safe to assume — see Q11 |
+| Q7 thresholding certification | **Closed as a dividend** (Cor. 9.6): non-negativity is exactly the missing hypothesis |
+
+**The mechanism, in one line.** Q1 asked whether the block-Jacobian norm `B > 1`.
+Theorem 9.4 *dissolves* that question rather than answering it: choosing a non-negative
+rule makes `B = 1` an algebraic consequence, not an empirical hope.
+
+**Costs and residuals.**
+- z⁺ **discards inhibitory relevance** — evidence that a unit argued *against* the
+  outcome is unrepresented. Real information loss; must be stated at point of use.
+- The fidelity condition `ε ≪ min_j |z_j| / n` (9.9) means `T` enters **linearly**, not
+  exponentially. Going from `n = L = 48` to `n = L·T = 768` demands `ε` smaller by ~16×.
+- Whether that window is non-empty for real activations is **empirical** and depends on
+  `min_j |z_j|`, which also couples to the Lemma 6 silent-failure regime. **This is the
+  one part of Q9 that remains open**, and theory alone cannot settle it.
+
+---
+
+## ~~Q9 (original statement, retained for the record)~~
+
+**Status:** superseded by the resolution above.
 
 Lemma 5 is *conditional* on a rule satisfying (D7.1). Lemma 5.1 shows the ε-rule
 provably fails it, with aggregate relevance attenuated by `∏θ_j`,
