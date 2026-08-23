@@ -130,10 +130,47 @@ What survives is Prop. 6.3′: conditioning correctly handles the **intra-step**
 
 **So Q6 splits:**
 - **negative half — CLOSED** (Prop. 6.1, no goalpost movement);
-- **positive half — OPEN.** The cross-step join needs a separately chosen mechanism.
-  Candidates: relaxation (biased, bias compounds over `T`), **interventional /
-  resample-and-compare** (exact and derivative-free, one forward pass per intervention —
-  the most promising), or relevance redistribution with a chosen weight (Q10).
+- **positive half — CLOSED empirically (v0.5): the join is interventional.**
+
+`Q6-EXPERIMENT.md` scores every candidate against **exact enumerated ground truth**
+(`V=4, N=4`, 256 canvases, exact `256×256` step matrices; GT verified to equal the
+linear-response coefficient to `5.6e-17`, so gradient joins are scored against precisely
+the object they estimate):
+
+| join | Pearson vs GT | raw err ÷ mean\|GT\| |
+|------|---------------|----------------------|
+| **interventional (1-step)** | **0.947** | **0.32** |
+| interventional, 8 samples | 0.844 | — |
+| straight-through relaxation | 0.539 | 0.97 |
+| redistribution `w = p(b*)` | 0.531 | 0.91 |
+| redistribution `w = excess` | 0.459 | 0.95 |
+| path-conditioning alone | nan | 1.00 |
+
+Interventional holds `r > 0.9` at the longest horizon; a cheap sampled version works at
+**S=8**, so exactness is not needed, only the interventional *form*. Straight-through
+has raw error `0.97×` against `1.00×` for predicting zero — barely better than giving up,
+and since GT is exactly what it estimates, the whole gap is relaxation bias.
+Path-conditioning alone forfeits 100% of the effect, confirming AUDIT-02 E1 empirically.
+
+---
+
+## Q10 — ~~model/noise split weight~~ **ANSWERED NEGATIVELY for both candidates**
+
+**Status: CLOSED (v0.5) against both proposals.**
+
+Measured, the gate **actively hurts**: ungated `r = 0.539` → `w = p(b*)` gives `0.531`
+→ `w = excess-over-chance` gives `0.459`, with the latter's sign agreement at `0.498` —
+**identical to the random control**. The redistribution joins also degrade fastest with
+horizon (`0.550 → 0.189` from `t=1` to `t=6`).
+
+So Prop. 6.4's freedom in `w` is not a gap awaiting the right choice: both principled
+candidates make attribution worse than not gating at all. Combined with §6.7(a) — the
+true influence is non-additive, so a conservative-by-construction split is fitting an
+identity the truth violates — the redistribution *family* looks like the wrong shape for
+this join, not merely mis-parameterised.
+
+*Residual:* the Gumbel-margin route (Remark 6.5) was not tested and remains the only
+untried member of the family.
 
 ---
 
@@ -184,15 +221,12 @@ than assumed constant.
 
 ---
 
-## Q10 — What is the correct model/noise split weight at a sampling boundary?
+## ~~Q10 (original statement)~~ — superseded
 
-**Status:** open (Tier D). Prop. 6.4 shows any `w ∈ [0,1]` is conservative, so
-conservation gives no guidance. Candidates: `w = p^{(t)}_j(b*)` (likelihood) or
-excess-over-chance `max(0,(p_{b*} − 1/V)/(1 − 1/V))`. Neither is adopted.
-
-**Most promising route:** the Gumbel-max representation (Remark 6.5) decomposes the
-realised argmax margin additively into a model part and a noise part, making "how much
-of the win was the model" *measurable per draw* rather than postulated.
+Retained for the record; see the resolved entry above. The original text noted that
+Prop. 6.4 makes any `w ∈ [0,1]` conservative, so conservation gives no guidance, and
+proposed the likelihood and excess-over-chance weights. Both are now measured and both
+make attribution *worse* than not gating.
 
 ---
 

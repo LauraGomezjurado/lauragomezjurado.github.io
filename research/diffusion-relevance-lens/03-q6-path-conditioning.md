@@ -147,7 +147,89 @@ Conditional on `x^{(T:0)}`:
 > | **relevance redistribution** | split relevance at the join by a chosen weight | conservative by Prop. 6.4, but the weight is *not* derived — Tier D, see Q10 |
 >
 > The interventional route is the only one that is both exact and well-defined on a
-> discrete channel, and is the most promising. **Not developed here.**
+> discrete channel. **Empirically confirmed as the only workable one** — see §6.6.
+
+---
+
+## 6.6 Empirical resolution of the cross-step join
+
+`Q6-EXPERIMENT.md` / `verify/q6_testbed.py` build a discrete-diffusion LM small enough
+(`V=4, N=4, d=16, L=2, T=6`) that **exact ground truth is computable by enumeration**:
+each step is a `256×256` transition matrix, so
+
+    GT(t,i,a) = E[φ | do(x^{(t)}_i = a)] − E[φ | do(x^{(t)}_i = ā)]
+
+is obtained by exact propagation, not sampling (validated against 400k-sample Monte
+Carlo, max `|z| = 0.84`). GT was additionally machine-checked to equal the linear-response
+coefficient `∂E[φ]/∂π^{(t)}_{i,a}` to `5.6e-17` — so the gradient-based joins are being
+scored against *exactly the object they purport to estimate*, removing any
+"finite-difference vs derivative" excuse.
+
+**Results (3 seeds × 5 paths, 1080 points):**
+
+| join | Pearson | Spearman | sign agr. | raw err ÷ mean\|GT\| |
+|------|---------|----------|-----------|----------------------|
+| **J2 interventional (1-step lookahead)** | **0.947** | 0.957 | 0.969 | **0.32** |
+| J2mc (32 samples) | 0.922 | 0.928 | 0.926 | 0.48 |
+| J1 straight-through | 0.539 | 0.531 | 0.672 | 0.97 |
+| J3 redistribution `w = p(b*)` | 0.531 | 0.507 | 0.668 | 0.91 |
+| J3b `w = excess-over-chance` | 0.459 | 0.409 | **0.498** | 0.95 |
+| **J0 path-conditioning alone** | **nan** | nan | **0.000** | **1.00** |
+| NC1 random control | −0.064 | −0.035 | 0.498 | 13.5 |
+
+**Findings.**
+
+1. **Only the interventional join works.** J2 holds `r > 0.9` at the longest horizon
+   (0.908 at `t=6`) and under both baseline definitions. A genuinely cheap sampled
+   variant reaches `0.844` at **S=8** samples — so exactness is not required, only the
+   interventional *form*.
+2. **Both cheap differentiable joins fail.** J1's mean absolute error is `0.97×` mean
+   `|GT|`, against `1.00×` for simply predicting zero — in raw magnitude it is barely
+   better than giving up — and it explains 20% of GT variance even after optimal
+   rescaling, with seed spread (0.365/0.709/0.543) nearly as wide as its mean. Since GT
+   is provably the exact object J1 estimates, **that entire gap is relaxation bias**.
+3. **J0 empirically confirms AUDIT-02 E1.** Path-conditioning alone forfeits **100%** of
+   the total effect and has undefined correlation — it is not a weak attributor, it is
+   not an attributor at all. The retraction of Prop. 6.3 was correct.
+
+**Resolution: the cross-step join is interventional.** Q6's positive half is closed to
+the extent a toy model can close it (see §7.2 of the experiment for what does not
+generalise — notably that the sample budget and the zero-step variant's strength are the
+numbers most at risk at realistic `V` and `T`).
+
+---
+
+## 6.7 Two findings that revise the project's framing
+
+### (a) Conservation is *not* a fidelity criterion at the join
+
+Ground truth **itself** carries a ~30% completeness defect: `Σ_{i,a} GT ≠` the total
+effect, because interventions at different positions **interact**, and the sum of
+individual `do`-effects is not the joint effect.
+
+> **This is a genuine conceptual correction.** Conservation (D7.1) is the right design
+> principle for the **intra-step** factor, where the propagated map is linear and
+> attribution is additive by construction. It is **not** a fidelity criterion for the
+> **cross-step** join, whose true causal structure is non-additive. An attributor made
+> conservative by construction is forced to satisfy an identity the truth violates —
+> optimising for conservation there moves you *away* from ground truth.
+>
+> Conservation retains value at the join as a **sanity check** (it flagged the broken
+> controls at 8× and 22× defect), but must not be used as the objective. Earlier drafts
+> treated conservation as the universal organising principle; that is now scoped to the
+> intra-step factor.
+
+### (b) Non-chronological influence is real and large — Argument 1 confirmed
+
+Mean `|GT|` for `i > j` pairs is **1.07×** that for `i < j`: backwards influence is as
+strong as forwards. The autoregressive target-cone of (D5.1) would therefore discard
+**about half** the causal structure.
+
+This is independent empirical confirmation of Argument 1 (the target-axis asymmetry),
+which had been derived only from the J-lens source convention (A1.2). No candidate join
+is *selectively* blind to backwards influence — they fail uniformly across position
+relations — so the asymmetry is a property of the *readout convention*, not of the
+attributors.
 
 ---
 

@@ -39,20 +39,28 @@ operator **does not exist**: bidirectional attention makes the model read
 inter-position correlation, so marginals are not a sufficient statistic, and the error
 is maximal rather than small.
 
-> **⚠ The replacement is not yet in hand (v0.4).** A previous version claimed
-> path-conditioning repaired this. It does not — conditioning pins the intermediate
-> canvases to constants, so `∂ζ^{(t−1)}/∂ζ^{(t)} = 0` and the steps come apart rather
-> than composing. Conditioning handles the *intra-step* factor correctly and supplies
-> **no** cross-step transport at all.
+Path-conditioning is *not* the repair — conditioning pins the intermediate canvases to
+constants, so `∂ζ^{(t−1)}/∂ζ^{(t)} = 0` and the steps decouple rather than composing.
+It handles the intra-step factor and supplies no cross-step transport at all.
+
+**The join is interventional (v0.5, empirical).** Scored against exact enumerated ground
+truth in a fully tractable diffusion model, the interventional join reaches Pearson
+`0.947` (`0.844` with only 8 samples), while straight-through relaxation reaches `0.539`
+with raw error `0.97×` mean `|GT|` — against `1.00×` for predicting zero. Since ground
+truth is provably the exact object the gradient join estimates, that whole gap is
+relaxation bias. See `Q6-EXPERIMENT.md`.
+
+> **⚠ Scope correction to the organising principle (v0.5).** Ground truth itself carries
+> a ~30% completeness defect, because interventions at different positions **interact**
+> and the sum of individual `do`-effects is not the joint effect. So **conservation is
+> not a fidelity criterion at the cross-step join** — an attributor made conservative by
+> construction is forced to satisfy an identity the truth violates, and optimising for it
+> moves *away* from ground truth.
 >
-> **All of the project's diffusion-specific content lives in the cross-step join, and
-> the join is currently unsupplied.** The most promising candidate is interventional
-> (resample-and-compare), which is exact and derivative-free on a discrete channel. See
-> `04-open.md` Q6-positive.
->
-> Consequence for reading Q9: its mathematics concerns products of relevance matrices
-> and is unaffected, but its interpretation as covering a full `L·T` trajectory is
-> **contingent** on the join.
+> Conservation remains the right principle for the **intra-step** factor, where the
+> propagated map is linear and attribution is additive, and remains useful at the join as
+> a sanity check (it flagged broken controls at 8× and 22×). But it is no longer claimed
+> as the universal organising principle of the project.
 
 ## Epistemic discipline
 
@@ -108,8 +116,9 @@ Every factual claim in this project carries a tier marker.
 
 **Version 0.3.**
 
-**Version 0.4** — after two machine-verification rounds (128 checks, negative controls)
-and two adversarial audits (44 defects, 4 blocking).
+**Version 0.5** — after two machine-verification rounds (128 checks, negative controls),
+two adversarial audits (44 defects, 4 blocking), and two empirical testbeds with exact
+enumerated ground truth.
 
 **Established (Tier B, proved and machine-checked):**
 - Lemmas 1–7, including the LayerNorm gradient⊙input identity `(ε/σ²)x̂`, the
@@ -120,16 +129,22 @@ and two adversarial audits (44 defects, 4 blocking).
   `n = 768`. This is the project's main new result.
 - **Proposition 6.1** — marginal transport provably does not exist.
 
-**Closed:** Q1 (dissolved), Q5, Q6-negative, Q7, Q11 (negatively — z⁺ destroys its own
-mixing).
+- **Proposition 6.1** — marginal transport provably does not exist.
+- **Lemmas 8 & 9** — LayerNorm outputs are always signed, and non-negativity is
+  *necessary* (not just sufficient) for ℓ¹ non-expansiveness under unit column sums.
+- **The cross-step join is interventional** (`Q6-EXPERIMENT.md`), scored against exact
+  enumerated ground truth: `r = 0.947` vs `0.539` for relaxation.
+
+**Closed:** Q1 (dissolved, then partly reopened in Lyapunov form), Q5, Q6 (both halves),
+Q7, Q10 (negatively — both proposed weights make attribution worse), Q11 (negatively).
 
 **Open, in order of how much they gate:**
-1. **Q6-positive** ★ — the cross-step join. Currently unsupplied; all diffusion-specific
-   content depends on it.
-2. **Q12** ★ — z⁺ requires `a ≥ 0`, which fails after LayerNorm. Gates the §9.6
-   prescription.
-3. Q10 (noise-split weight), Q13 (non-circular `T`-scaling test), Q2–Q4 (blocked on
-   sources), and whether the fidelity window is non-empty for real activations.
+1. **Q12** ★ — now proved a *hard* obstruction: `a ≥ 0` fails automatically after
+   LayerNorm (Cor. 8.1) and cannot be worked around (Lemma 9). The one escape is a
+   non-positive **Lyapunov exponent** for signed relevance matrices — empirical, under
+   test.
+2. Q13 (non-circular `T`-scaling test), Q2–Q4 (blocked on sources), and whether the
+   fidelity window is non-empty for real activations.
 
 **Not yet written:** the synthesis assembling the three forcing arguments (target-axis
 asymmetry, fit-cost blow-up, definedness) into a full lens construction. It should not
