@@ -80,20 +80,25 @@ conclusion (nonzero, vanishing with ε) survives. **Not yet done.**
 
 ---
 
-## Q5 — Is "gradient⊙input reproduces the layer output" the same property as D7.1?
+## Q5 — ~~Is "gradient⊙input reproduces the layer output" the same property as D7.1?~~ **RESOLVED**
 
-**Status:** open. This is the most likely soft spot in `02-lemmas.md` and is being
-adversarially audited (`AUDIT-01.md`).
+**Status: CLOSED (v0.2).** The audit confirmed this was a genuine category error —
+`(∂̃x̂/∂x)x = x̂` is a *vector* identity while D7.1 is a *scalar* sum equality.
 
-D7.1 defines conservation as a *layer-to-layer sum equality*. Lemmas 1.3/1.4 prove
-something formally different: that `(∂̃x̂/∂x)x` equals the layer's output vector. The
-bridge between "gradient⊙input reproduces the output" and "relevance sums are
-preserved" needs to be stated explicitly as a lemma with its own hypotheses, not
-assumed. Until it is, L1.3/L1.4 should be read as statements about gradient⊙input,
-**not** as establishing D7.1-conservation.
+**Resolution:** Lemma 7 (`02-lemmas.md`) supplies the bridge and proves it is an
+*iff*: gradient⊙input conserves across a layer for **every** upstream gradient `g`
+exactly when `J x = f(x)`. L1.3/L1.4 now route through Lemma 7 rather than asserting
+D7.1 directly.
 
-**What would settle it:** prove the bridging lemma, or restate L1.3/L1.4 to claim only
-what they prove. Repair required either way.
+**Bonus.** Lemma 7 unified three previously separate results: gradient⊙input is
+conservative iff the layer is **homogeneous of degree 1** in the differentiated
+variables. Degree 0 (exact LayerNorm as `ε→0`) → 0; degree 1 (detached LN, detached
+attention, linear) → exactly the output; degree 2 (undetached bilinear attention) → 2×.
+Euler's homogeneous-function theorem is the common root of Lemmas 1, 2 and 7.
+
+**Residual repair also applied:** Lemma 1 computes `∂x̂/∂x`, not `∂LN/∂x`. With
+`LN = γ⊙x̂ + β`, output reproduction fails by `β`. Exact for `x̂`; exact for `LN` iff
+`β = 0` — which holds in the implementation modelled (A2.7).
 
 ---
 
@@ -132,6 +137,48 @@ the cost of discarding inhibitory evidence) or a bound on total variation `Σ|R|
 **What would settle it:** prove a bound on `Σ_u |R_u^(ℓ)|` under the chosen rule, or
 restrict to z⁺ and accept the modelling cost. **Until resolved, the cheap-monitor
 claim (Tier D3*) must not be stated as a consequence of conservation.**
+
+---
+
+## Q9 — Is there a rule that is both numerically stable and conservative at depth `L·T`? ★
+
+**Status: OPEN. This is now the project's central problem.** Promoted here after
+Lemma 5.1 and adversarial audit.
+
+Lemma 5 is *conditional* on a rule satisfying (D7.1). Lemma 5.1 shows the ε-rule
+provably fails it, with aggregate relevance attenuated by `∏θ_j`,
+`θ_j = |z_j|/(|z_j| + ε) < 1`. Corollary 5.2 quantifies the damage:
+
+| ε | depth `L` = 48 | depth `L·T` = 768 |
+|---|----------------|-------------------|
+| 1e-6 | 0.99963 | 0.99411 |
+| 1e-3 | 0.77750 | **0.01783** |
+
+Meanwhile the z-rule (`ε = 0`) *is* exactly conservative but suffers the silent
+`1/z_j` blow-up documented under Lemma 6 — which is *not* a rare event, since
+floating-point cancellation lands near zero rather than on it, so no exception fires.
+
+**The tension.** Stability and conservation pull in opposite directions, and the
+feasible window in `ε` shrinks by roughly the factor `T` in the exponent when moving
+from autoregressive depth `L` to diffusion depth `L·T`.
+
+**What would settle it.** Any of:
+1. A rule with a **depth-uniform** conservation defect (e.g. defect `O(ε)` total rather
+   than `O(ε)` per layer) — would make the thesis clean.
+2. A **renormalisation** step at each denoising boundary that restores `Σ R = φ` by
+   construction, with a bound on the distortion it introduces.
+3. A proof that for realistic activation distributions the `z_j ≈ 0` events are rare
+   enough that a very small `ε` (≈1e-8) is safe, making the window non-empty in
+   practice. Note this is an *empirical* claim about `z_j` distributions.
+4. A negative result: no such rule exists, which would be a genuine obstruction worth
+   publishing on its own.
+
+**Effect on the thesis.** The README claim that relevance propagation "survives depth
+`L·T`" is **not currently established** and has been weakened in `02-lemmas.md`. What
+survives unconditionally is the *definedness* argument: on a non-differentiable
+inter-step channel the Jacobian does not exist at all, whereas relevance redistribution
+does. That is a qualitative advantage independent of Q9. The *quantitative* advantage
+over Jacobian composition is what Q9 puts in question.
 
 ---
 

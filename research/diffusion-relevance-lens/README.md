@@ -9,10 +9,18 @@ The short thesis, stated here so the rest of the document can be read against it
 > view are two readings of the same backward pass, and conservation-based relevance
 > (LRP) is a *refinement*. In a discrete-diffusion language model, the inter-step
 > channel is a non-differentiable map between discrete token identities, so the
-> Jacobian view does not merely degrade — **it ceases to be defined**. Conservation-based
-> relevance propagation is then the only formalism that (a) exists on that channel and
-> (b) survives depth `L·T`. Two further constraints — a target-axis asymmetry and a
-> fit-cost blow-up — independently force the same design.
+> Jacobian view does not merely degrade — **it ceases to be defined**. Relevance
+> propagation is then the only formalism that exists on that channel at all. Two
+> further constraints — a target-axis asymmetry and a fit-cost blow-up — independently
+> force the same design.
+
+> **⚠ Thesis amended (v0.2).** An earlier version added "and survives depth `L·T`".
+> **That is not established**, and Lemma 5.1 shows why: the ε-rule violates conservation
+> at rate `θ^n`, retaining only ~1.8% of aggregate relevance at depth `L·T = 768` for
+> `ε = 1e-3`, while the exactly-conservative z-rule is numerically fragile. What
+> survives unconditionally is the **definedness** argument above — a qualitative claim.
+> The quantitative depth advantage is now the project's central open problem
+> (`04-open.md`, Q9). This amendment is the main result of the v0.1 audit cycle.
 
 ## Epistemic discipline
 

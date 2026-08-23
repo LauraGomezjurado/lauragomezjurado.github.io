@@ -122,7 +122,16 @@ a scalar functional `φ`. The scheme is **conservative** iff for every `ℓ`
 
     R_i = Σ_j [ a_i w_{ij} / (Σ_{i'} a_{i'} w_{i'j} + b_j) ] R_j                 (D7.2)
 
-**ε-rule:** denominator `+ ε·sign(·)`; conservation weakens to `Σ_i R_i ≤ Σ_j R_j`.
+**ε-rule:** denominator `+ ε·sign(·)`.
+
+> **⚠ Corrected (audit MATERIAL).** An earlier draft stated that conservation "weakens
+> to `Σ_i R_i ≤ Σ_j R_j`". **That is false for signed relevance.** Counterexample:
+> `z_j = 1`, `ε = 1`, `R_j = −1` gives `Σ_i R_i = −0.5 > −1 = Σ_j R_j`.
+> The correct statement is Lemma 5.1: `Σ_i R_i = Σ_j θ_j R_j` with
+> `θ_j = |z_j|/(|z_j| + ε) < 1`, which is an **attenuation toward zero**, not an
+> inequality. The magnitude form `|Σ_i R_i| ≤ |Σ_j R_j|` holds when all `R_j` share a
+> sign. This correction matters: it is what makes the ε-rule's depth behaviour
+> *geometric decay* rather than a one-sided bound.
 
 **γ-rule:** replace `w` by `ρ(w) = w + γ·w⁺` in both numerator and denominator.
 
@@ -148,9 +157,19 @@ Cumulative `Q̄_t = Q_1 ⋯ Q_t`, so `q(x_t | x_0) = Cat(x_0ᵀ Q̄_t)`.
 The network emits per-position clean-token logits `f_θ(x^{(t)}, t)_i ∈ ℝ^V`, giving
 `p_θ(x_{0,i} | x^{(t)})`. The sampler draws
 
-    x^{(t−1)}_i ~ q( x_{t−1,i} | x_{t,i}, x̂_{0,i} )  ∝  (x_{t,i}ᵀ Q_t) ⊙ (Q̄_{t−1}ᵀ x̂_{0,i} )   (D8.4)
+    x^{(t−1)}_i ~ q( x_{t−1,i} | x_{t,i}, x̂_{0,i} )  ∝  ( Q_t x_{t,i} ) ⊙ ( Q̄_{t−1}ᵀ x̂_{0,i} )   (D8.4)
 
 with `x̂_0 ~ p_θ`.
+
+> **Transpose corrected (audit MATERIAL).** An earlier draft wrote the first factor as
+> `(x_{t,i}ᵀ Q_t)`, which selects `Q_t[b,c]` rather than the required `Q_t[c,b]`. With
+> `Q_t[a,b] = q(x_t = b | x_{t−1} = a)` and one-hot **column** vectors, the posterior
+> over `c = x_{t−1,i}` is `q(x_t = b | x_{t−1} = c)·q(x_{t−1} = c | x_0 = a)`, i.e.
+> `(Q_t x_t)_c · (Q̄_{t−1}ᵀ x_0)_c`, giving (D8.4) as now written.
+>
+> The error was **invisible for the uniform kernel**, since `Q^unif` (D8.2) is
+> symmetric, but is real for the **absorbing** kernel `Q^mask` (D8.3), which is not.
+> A concrete instance of why the two kernels must not be treated interchangeably.
 
 **D8.a Structural consequences.** Four features distinguish (D8.1)–(D8.4) from the
 autoregressive setting. Each is used in `03-diffusion.md`.
