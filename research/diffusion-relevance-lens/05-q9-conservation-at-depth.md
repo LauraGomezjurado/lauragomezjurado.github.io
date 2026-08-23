@@ -46,15 +46,28 @@ Define the **renormalised ε-rule**: after each layer's backward pass, rescale
 
 ### Proposition 9.1
 
-The renormalised ε-rule satisfies:
+**Hypothesis (H):** `1ᵀ R^{(ℓ)} ≠ 0` at every layer.
+
+Under (H) the renormalised ε-rule satisfies:
 
   (a) `1ᵀ R̃^{(ℓ)} = φ` for every `ℓ`, exactly — so (D7.1) holds by construction and
       Lemma 5 applies with **zero** aggregate defect at any depth;
   (b) the **within-layer relative allocation is unchanged**: `R̃_i / R̃_k = R_i / R_k`
       for all `i, k` with `R_k ≠ 0`.
 
-**Proof.** (a) is immediate from (9.3), provided `1ᵀR^{(ℓ)} ≠ 0`. (b) holds because
-(9.3) multiplies by a scalar. ∎
+**Proof.** (a) is immediate from (9.3) under (H). (b) holds because (9.3) multiplies by
+a scalar. ∎
+
+> **(H) is load-bearing, and the two halves of the prescription are not independent.**
+> An earlier draft asserted (a) "exactly" with (H) mentioned only inside the proof. For
+> **signed** relevance `1ᵀR` can pass through exactly zero, at which point (9.3) is
+> undefined and the method fails outright — not gracefully.
+>
+> What rescues it is Corollary 9.6: under the z⁺-rule `R ≥ 0`, so `1ᵀR = φ > 0` and (H)
+> holds automatically. So **renormalisation and non-negativity are a package**, each
+> supplying what the other needs: z⁺ makes renormalisation well-defined (H), and
+> renormalisation makes the z⁺ contraction argument applicable (sum-zero differences,
+> Cor. 9.5(a)). Neither should be adopted alone.
 
 > **This answers Q9 option 1 for the aggregate.** A rule with depth-uniform (indeed
 > zero) aggregate defect exists, and it is trivial. The residual question is entirely
@@ -121,28 +134,71 @@ using `C ≥ 0` for the triangle inequality step and (9.2) for the column sums. 
 at `u = e_j` gives `‖C‖_{1→1} = 1`. Substituting `B = 1` into (9.5) and
 `‖C_ℓE_ℓ‖ ≤ ‖C_ℓ‖·‖E_ℓ‖ ≤ η_ℓ` yields (9.7). ∎
 
-> **This is the mechanism.** Lemma 4 said the bound is "linear when `B ≈ 1` and
-> geometric when `B > 1`", and Q1 asked whether `B > 1`. Theorem 9.4 shows the question
-> is *dissolved* by choosing a non-negative rule: `B = 1` is not an empirical hope but
-> an algebraic consequence of `C ≥ 0` plus unit column sums. The z⁺-rule sits exactly
-> at the benign boundary of Lemma 4.
+> **This is the mechanism.** Q1 asked whether `B > 1` for transformer blocks.
+> Theorem 9.4 *dissolves* rather than answers it: `B = 1` is not an empirical hope but
+> an algebraic consequence of `C ≥ 0` plus unit column sums. We no longer need to know
+> whether `B > 1`, because we choose a rule for which it is not.
 
-### Corollary 9.5 (depth-uniform under mixing)
+> **⚠ Directional caveat (machine verification).** `B = 1 ⟹ linear` is sound — it is an
+> upper bound, and it is confirmed: fitted growth exponent `α = 0.969 / 0.976 / 0.934`
+> for lognormal / half-normal / heavy-tailed `z`, with `err(n)/n` flat to `1.18×` across
+> `n = 8…768` and bound (9.7) holding with `2.41×` slack. `‖C‖_{1→1}` equals 1 to
+> `1.55e-15`, attained at `u = e_j`.
+>
+> The **converse is false**, and an earlier reading of Lemma 4 implied it. `B > 1` does
+> *not* imply geometric growth: at 5% sign-flipped weights, `B = 763 ≫ 1` yet the
+> product still does not expand (per-layer rate `1.0048`, `α = 0.920`). The true pivot
+> is the **Lyapunov exponent** of the product, not the one-step norm `B`. Lemma 4's
+> bound is loose above `B = 1`.
+>
+> The contrast nevertheless materialises, and overwhelmingly, once negativity is
+> substantial:
+>
+> | rule | `B` | `α` | per-layer rate | `log₁₀ err(768)` |
+> |------|-----|-----|----------------|------------------|
+> | z⁺ (`C ≥ 0`) | 1 | 0.940 | 1.0049 | −3.06 |
+> | 5% signed | 763 | 0.920 | 1.0048 | −3.04 |
+> | 35% signed | 1.4e4 | 188.6 | **3.514** | **+412.7** |
+> | plain z-rule | 2.8e4 | 275.4 | **6.138** | **+600.4** |
+>
+> ≈**603 orders of magnitude** separate z⁺ from the plain z-rule at `n = 768`, purely
+> from imposing `C ≥ 0`. The claim Theorem 9.4 supports is therefore: *non-negativity is
+> sufficient for linear growth*, not *negativity is necessary for geometric growth*.
 
-If in addition each `C_ℓ` has Dobrushin coefficient `δ(C_ℓ) ≥ δ > 0` — i.e. the layer
-genuinely mixes — then `‖C_ℓ(u−v)‖_1 ≤ (1−δ)‖u−v‖_1` on sum-zero differences, and the
-per-layer perturbations are damped geometrically rather than accumulated:
+### Corollary 9.5 (depth-uniform under mixing) — **conditional, and the condition
+### essentially never holds for the z⁺-rule**
+
+If each `C_ℓ` has Dobrushin coefficient `δ(C_ℓ) ≥ δ > 0`, **and** the iterates are
+renormalised per Prop. 9.1 so that `u_n − v_n` is sum-zero, then
+`‖C_ℓ(u−v)‖_1 ≤ (1−δ)‖u−v‖_1`, and per-layer perturbations are damped rather than
+accumulated:
 
     ‖ u_n − v_n ‖_1  ≤  Σ_ℓ η_ℓ (1−δ)^{n−ℓ}  ≤  η / δ                             (9.8)
 
-**independent of `n`.** This is a genuinely depth-uniform defect, answering Q9 option 1
-in full.
+independent of `n`.
 
-> **Honest caveat on the mixing hypothesis.** `δ > 0` requires column overlap. A
-> near-identity layer — which is what a residual stream with small `‖A_ℓ‖` (D1.2) looks
-> like — has `δ ≈ 0` and provides **no** damping. So (9.8) should not be assumed for
-> transformer blocks; the safe fallback is the unconditional linear bound (9.7).
-> Measuring `δ(C_ℓ)` on a real model is filed as **Q11**.
+> **⚠ Two repairs from machine verification (`verify/q9_renormalisation.py`).**
+>
+> **(a) The renormalisation hypothesis is not optional and was previously omitted.**
+> The Dobrushin contraction acts only on **sum-zero** differences. Without Prop. 9.1's
+> renormalisation, `u_n − v_n` is not sum-zero and (9.8) simply does not apply:
+> measured error `5.79e-01` at `n = 768` and still growing, versus `2.31e-04`
+> renormalised and depth-uniform — a factor **2509**. (9.8) is now stated with the
+> hypothesis it always needed.
+>
+> **(b) The stated caveat blamed the wrong mechanism, and understated the problem.**
+> An earlier draft attributed `δ ≈ 0` to *near-identity residual blocks*. Measurement
+> shows the real cause is the z⁺-rule **itself**: `w⁺ = max(w,0)` sparsifies columns,
+> and sparse columns have disjoint supports, so `Σ_i min(C_{ij},C_{ik}) = 0`. At
+> `d = 16`, `δ(C) = 0` outright in **60%** of random z⁺ draws (median `0`); at `d = 64`
+> the *minimum over 200 draws* is `0.0074`. Since (9.8) is driven by `min_ℓ δ(C_ℓ)`
+> across 768 layers, the realistic bound is `η/δ ≥ 136·η` **at best**, and unbounded
+> whenever any single layer has `δ = 0`.
+>
+> **Disposition: Corollary 9.5 is not operative.** The very rule Theorem 9.4 requires
+> destroys the mixing that 9.5 needs. **The unconditional linear bound (9.7) is the
+> only bound this project relies on.** Q9 option 1 is answered for the *aggregate*
+> (Prop. 9.1) but **not** for allocation. Q11 is amended accordingly.
 
 ### Corollary 9.6 (Q7 closes as a dividend)
 
@@ -192,9 +248,18 @@ question about `min_j |z_j|`, not a theoretical one, and remains open (Q9 option
 | Renormalisation distorts within-layer allocation | **NO** — Prop. 9.1(b) |
 | Renormalisation extends the fidelity window | **NO** — Remark 9.2; it changes failure mode only |
 | Allocation error is geometric in depth | **NO under z⁺** — Thm. 9.4 gives linear |
-| Allocation error is depth-uniform | **YES under mixing** — Cor. 9.5; not safe to assume for residual blocks |
+| Allocation error is depth-uniform | **NO in practice** — Cor. 9.5's mixing hypothesis is destroyed by z⁺'s own sparsity (`δ = 0` in 60% of draws at `d=16`) |
 | Thresholding certification valid (Q7) | **YES under z⁺** — Cor. 9.6 |
 | Window non-empty in practice | **OPEN** — empirical, depends on `min_j|z_j|` |
+
+Empirical confirmation of (9.9): `ε(48)/ε(768) = 16.000–16.158` (limit exactly 16), and
+`err(768, ε/16) / err(48, ε) = 0.982` at `ε ∈ {1e-5, 1e-6, 1e-7}` — the linear-in-`T`
+tradeoff is exact, not merely an upper bound.
+
+> **Reproducibility note.** Corollary 5.2's table is seed-dependent at the third digit:
+> an independent draw gives `θ̄⁴⁸ = 0.759` against the tabulated `0.778` at `ε = 1e-3`
+> (within ~1.2σ for `d = 5000`). The conclusion is unaffected; recorded rather than
+> silently re-fitted.
 
 **Net:** the prescription is **z⁺-rule + per-layer renormalisation**. It gives exact
 aggregate conservation at any depth, allocation error linear (not geometric) in `L·T`,

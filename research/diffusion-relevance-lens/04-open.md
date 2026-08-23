@@ -137,15 +137,33 @@ of the win was the model" *measurable per draw* rather than postulated.
 
 ---
 
-## Q11 — What is the Dobrushin coefficient of a transformer block's relevance matrix?
+## Q11 — ~~Dobrushin coefficient of a transformer block?~~ **ANSWERED NEGATIVELY — no measurement needed**
 
-**Status:** open, **empirical**. Corollary 9.5 gives a depth-*uniform* allocation bound
-`η/δ` when `δ(C_ℓ) ≥ δ > 0`. But a near-identity residual block has `δ ≈ 0` and provides
-no damping, so the hypothesis must not be assumed. Without it the safe result is the
-unconditional linear bound (9.7).
+**Status: CLOSED (v0.4), against the hoped-for direction.**
 
-**What would settle it:** measure `δ(C_ℓ) = min_{j,k} Σ_i min(C_{ij}, C_{ik})` on a real
-model. Requires weights we do not have.
+Corollary 9.5 offered a depth-*uniform* allocation bound `η/δ` under mixing
+`δ(C_ℓ) ≥ δ > 0`. The original caveat blamed near-identity residual blocks and filed
+measurement on a real model as the way to settle it. **Machine verification shows no
+model is needed: the z⁺-rule destroys its own mixing.**
+
+`w⁺ = max(w,0)` sparsifies columns; sparse columns have disjoint supports; hence
+`δ = min_{j,k} Σ_i min(C_{ij},C_{ik}) = 0`. Measured on random z⁺ matrices:
+
+| `d` | result |
+|-----|--------|
+| 16 | `δ = 0` outright in **60%** of draws; median `δ = 0` |
+| 64 | minimum over 200 draws: `δ = 0.0074` |
+
+Since (9.8) depends on `min_ℓ δ(C_ℓ)` over `n = 768` layers, a single `δ = 0` layer
+voids it, and the best case is `η/δ ≥ 136·η`.
+
+**Disposition.** Corollary 9.5 is retained as a correct conditional but is **not
+operative**. There is a genuine tension: the non-negativity Theorem 9.4 needs is exactly
+what kills the mixing Corollary 9.5 needs. **The unconditional linear bound (9.7) is the
+only allocation bound the project relies on.**
+
+*Residual (minor):* whether a *dense* non-negative rule — one preserving `C ≥ 0` without
+`max(w,0)` sparsification — could recover `δ > 0`. Not pursued.
 
 ---
 

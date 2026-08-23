@@ -20,6 +20,8 @@ SCRIPTS = [
     ("Lemma 3  Softmax Jacobian",                "lemma3_softmax.py"),
     ("Lemma 4  Telescoping / error compounding", "lemma4_telescoping.py"),
     ("Lemma 6  z-rule LRP = grad-input",         "lemma6_lrp_gradinput.py"),
+    ("Q6       Path conditioning / Prop 6.1-6.4", "q6_path_conditioning.py"),
+    ("Q9       Renormalisation at depth L*T",     "q9_renormalisation.py"),
 ]
 
 # Lemma 5 is a one-line downward induction over the conservation property (D7.1);
@@ -28,7 +30,11 @@ SCRIPTS = [
 NOT_MACHINE_CHECKED = [
     ("Lemma 5", "pure induction on (D7.1); telescoping sum has no numeric content. "
                 "Its concrete instance (per-layer conservation of the z-rule) IS "
-                "checked as L6(cons)."),
+                "checked as L6(cons), and its ep-rule form (L5.2) is re-derived "
+                "from Lemma 9.0 in q9_renormalisation.py."),
+    ("Prop 6.3", "conditioning on a realised path removes randomness, leaving a "
+                 "finite composition of differentiable maps; no numeric content "
+                 "beyond Lemmas 1-7, which are checked individually."),
 ]
 
 
@@ -73,7 +79,9 @@ def main():
 
     width = 78
     print("=" * width)
-    print("VERIFICATION SUMMARY -- diffusion-relevance-lens / 02-lemmas.md")
+    print("VERIFICATION SUMMARY -- diffusion-relevance-lens")
+    print("   02-lemmas.md, 03-q6-path-conditioning.md, "
+          "05-q9-conservation-at-depth.md")
     print("=" * width)
     print(f"{'script':<30} {'lemma':<42} {'status':>6}")
     print("-" * width)
