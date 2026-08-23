@@ -244,6 +244,50 @@ a mechanism that materially raises `f_c` or lowers effective `f` could flip it.
 blocks rather than bare sublayers, tracking whether self-healing survives. This is the
 single highest-value next experiment in the project.
 
+### Pre-registered analysis (written *before* the experiment reported)
+
+Recorded in advance so the outcome cannot be rationalised afterwards.
+
+**Derivation.** Under the LRP addition rule, relevance at `h_out = h + F(h)` splits
+between branches in proportion to their contributions. At unit `j`, with identity share
+`α_j := h_j / h_{out,j}`:
+
+    C_block[i,j] = α_j·δ_{ij} + (1 − α_j)·C_F[i,j]                                (Q14.1)
+
+Column sums check out — `Σ_i C_block[i,j] = α_j + (1−α_j)·1 = 1` — using Lemma 9.0 for
+`C_F`, so `C_block` stays in the unit-column-sum class and Cor. 9.2 applies to it.
+
+**Predicted mechanism.** If `α_j ∈ [0,1]`, the added diagonal is non-negative and
+
+    ν_j(C_block) ≈ (1 − α_j)·ν_j(C_F)
+
+so negative mass is scaled by `(1 − α)`. Crudely, restoring `λ = 0` then needs
+`(1 − α)·0.47 ≲ f_c ∈ [0.15, 0.40]`, i.e. `α_c ≈ 0.15–0.68` depending on width. That is
+a plausible range, which is why this lead is worth testing.
+
+**⚠ The most likely way it fails — and the thing to check first.** The estimate above
+assumes `α_j ∈ [0,1]`, which requires `h_j` and `F_j` to **share a sign**. The residual
+stream is signed (Cor. 8.1 applies to whatever produced it), so for a substantial
+fraction of units they will not:
+
+- `F_j = −0.5 h_j` gives `α_j = 2`;
+- `F_j = −2 h_j` gives `α_j = −1`.
+
+Where `α_j < 0`, the "identity" contribution is itself **negative**, and (Q14.1) *adds*
+negative mass rather than suppressing it. So the residual connection could plausibly
+make things **worse**, for exactly the reason Q12 makes them bad in the first place —
+sign structure.
+
+**Falsification criterion.** The hypothesis "residual structure rescues `λ = 0`" is
+falsified if either:
+1. realistic `α` lies below the measured `α_c`; or
+2. the distribution of `α_j` has substantial mass outside `[0,1]`, so that (Q14.1)
+   contributes negative diagonal entries at a rate comparable to `ν_j(C_F)`.
+
+**Also to check:** whether a *mixture* of `α` across layers behaves like the mean or the
+**minimum** — a single bad layer may dominate the product, as it did for the Dobrushin
+coefficient in Q11.
+
 ---
 
 ## Q13 — A non-circular test of the linear-in-`T` claim
