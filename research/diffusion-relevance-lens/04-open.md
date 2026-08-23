@@ -137,20 +137,39 @@ What survives is Prop. 6.3′: conditioning correctly handles the **intra-step**
 
 ---
 
-## Q12 — Does the z⁺-rule apply to transformer sublayers at all? ★ **live obstruction**
+## Q12 — Does the z⁺-rule apply to transformer sublayers? ★ **ANSWERED: NO, and it is a hard obstruction**
 
-**Status:** OPEN, and it gates the §9.6 prescription.
+**Status: the negative half is CLOSED analytically (v0.5).** Two lemmas shut it from
+both sides.
 
-Lemma 9.3′ requires **`a ≥ 0`** (non-negative layer inputs) for `C⁺ ≥ 0`. That holds
-after ReLU. It does **not** hold after LayerNorm, whose output is centred and hence
-signed, nor strictly after GELU/SiLU. Since Theorem 9.4's entire force comes from
-`C ≥ 0`, the prescription may not be directly applicable to the sublayers it is meant
-for.
+- **Corollary 8.1** — `1ᵀx̂ = 0` exactly for LayerNorm, so any non-constant input yields
+  at least one strictly negative component. The hypothesis `a ≥ 0` does not merely
+  *risk* failing; it fails **automatically** at every post-LayerNorm sublayer.
+- **Lemma 9** — for unit column sums, `‖C‖_{1→1} = 1` **⟺** `C ≥ 0`. Non-negativity is
+  **necessary**, not just sufficient. So route (ii) of the earlier draft — "adopt a
+  signed variant and redo Theorem 9.4" — is **provably closed**: no signed rule,
+  reweighting, or renormalisation recovers ℓ¹ non-expansiveness while keeping
+  conservation.
 
-**Routes:** (i) restrict to sublayers with non-negative inputs; (ii) adopt a
-signed-input variant (`z^B` family, separate positive/negative propagation) and redo
-Theorem 9.4 for it — note a signed variant may reintroduce exactly the `‖C‖ > 1` problem
-that z⁺ was chosen to avoid. **Neither established.**
+**Consequence.** Theorem 9.4 is correct but its hypothesis is unsatisfiable where it is
+needed. The §9.6 prescription does not apply to a standard transformer as written.
+
+**The one remaining escape (Cor. 9.1), and it must leave the ℓ¹ framework.** Lemma 4's
+`B^{n−1}` is an *upper* bound and is loose above `B = 1` — verification measured signed
+products with `B = 763` failing to expand (per-layer rate `1.0048`). So demand not
+`B ≤ 1` but a non-positive **Lyapunov exponent**
+
+    λ = lim (1/n) log ‖C_n ⋯ C_1‖ ≤ 0
+
+This is an **empirical** property of realistic relevance matrices, not a theorem.
+Under test in `Q12-EXPERIMENT.md`. **If `λ ≤ 0` holds for realistic signed `C`, the
+whole non-negativity requirement can be dropped** and Q12 dissolves; if `λ > 0`, the
+obstruction is genuine and the prescription needs rebuilding.
+
+*Note the irony worth recording:* Theorem 9.4 was introduced to dissolve Q1 ("is
+`B > 1`?") by choosing a rule with `B = 1`. Lemma 9 shows that choice is unavailable,
+which puts Q1 back — but in the sharper Lyapunov form, where the evidence so far is
+encouraging.
 
 ---
 

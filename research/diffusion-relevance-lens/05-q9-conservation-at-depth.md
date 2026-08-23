@@ -138,14 +138,25 @@ immediate from `a ≥ 0` and `w⁺ ≥ 0`. ∎
 Note this is a *different and easier* argument than Lemma 9.0: for `C⁺` the denominator
 **is** the column sum by construction, whereas Lemma 9.0 had to invoke `z_j = Σ_i a_i w_{ij}`.
 
-> **⚠ `a ≥ 0` is a real restriction, not a formality.** It holds after ReLU. It does
-> **not** hold after LayerNorm, whose output is centred and therefore signed, nor
-> strictly after GELU/SiLU (small negative lobe). So the z⁺-rule is not directly
-> applicable to every sublayer of a transformer. Applying it requires either
-> (i) restricting to sublayers with non-negative inputs, or (ii) a signed-input variant
-> (e.g. separate positive/negative propagation, the `z^B` family). **This project has
-> not established either.** Filed as **Q12** — and it is a live obstruction to the
-> §9.6 prescription, not a detail.
+> **⚠ `a ≥ 0` provably fails after LayerNorm — and cannot be worked around.**
+> This is stronger than "a real restriction". Two results in `02-lemmas.md` close it
+> off from both sides:
+>
+> - **Corollary 8.1** — LayerNorm satisfies `1ᵀx̂ = 0` exactly, so any non-constant
+>   input yields at least one strictly negative component. Failure of `a ≥ 0` is
+>   *automatic*, not merely possible.
+> - **Lemma 9** — for a matrix with unit column sums, `‖C‖_{1→1} = 1` **iff** `C ≥ 0`.
+>   So non-negativity is **necessary**, not just sufficient: no signed rule, reweighting
+>   or renormalisation can recover ℓ¹ non-expansiveness while keeping conservation.
+>
+> Together: **within the ℓ¹ framework, Q12 is a hard obstruction.** Theorem 9.4 is
+> correct but its hypothesis is not satisfiable at post-LayerNorm sublayers, which is
+> most of a transformer.
+>
+> **The escape must leave the framework** (Cor. 9.1): drop the demand `B ≤ 1` and ask
+> instead for a non-positive **Lyapunov exponent** `λ ≤ 0`, which machine verification
+> suggests can hold even at `B = 763`. That is an empirical property of realistic
+> relevance matrices, tested in `Q12-EXPERIMENT.md`.
 
 ### Theorem 9.4 (`C⁺` is ℓ¹-non-expansive)
 

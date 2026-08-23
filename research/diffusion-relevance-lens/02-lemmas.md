@@ -382,6 +382,69 @@ tractable; it is used in Argument 2 there.
 
 ---
 
+## Lemma 8 — LayerNorm outputs are always signed
+
+Let `x̂ = (x − μ1)/σ` per D2. Then
+
+    1ᵀ x̂ = 0                                                                      (L8.1)
+
+and consequently, for any **non-constant** `x`, `x̂` has at least one **strictly
+negative** component.
+
+**Proof.** `1ᵀx̂ = (1ᵀx − dμ)/σ = (dμ − dμ)/σ = 0`, using `μ = (1/d)1ᵀx`. If `x` is
+non-constant then `c = x − μ1 ≠ 0`, so `x̂ ≠ 0`. A nonzero vector whose components sum
+to zero must have at least one strictly negative component. ∎
+
+**Corollary 8.1.** The z⁺-rule hypothesis `a ≥ 0` (Def. 9.3, H⁺) **provably fails** at
+any sublayer whose input is a LayerNorm output with `β = 0`. It is not a condition that
+merely *might* fail — centring makes failure automatic.
+
+> With `β ≠ 0` the output is `γ ⊙ x̂ + β`, and a sufficiently large positive `β` *can*
+> restore non-negativity. But `β` is a learned parameter, not a free design choice, and
+> requiring `β_i > |γ_i x̂_i|` for all `i` and all inputs is a strong constraint no
+> trained model is known to satisfy. Quantified empirically in `Q12-EXPERIMENT.md`.
+
+---
+
+## Lemma 9 — Non-negativity is *necessary* for ℓ¹ non-expansiveness
+
+Let `C ∈ ℝ^{d×d}` have unit column sums, `1ᵀC = 1ᵀ`. Then
+
+    ‖C‖_{1→1} = 1   ⟺   C ≥ 0  entrywise                                          (L9.1)
+
+**Proof.** The induced norm is `‖C‖_{1→1} = max_j Σ_i |C_{ij}|`. For each column `j`,
+
+    Σ_i |C_{ij}| ≥ | Σ_i C_{ij} | = 1
+
+by the triangle inequality and the column-sum hypothesis. Equality in the triangle
+inequality holds iff all `C_{ij}` share a common sign. Since their sum is `+1 > 0`, that
+common sign must be positive, i.e. `C_{·j} ≥ 0`. Hence `‖C‖_{1→1} = 1` iff every column
+is non-negative. The converse is Theorem 9.4. ∎
+
+> **This is the sharp form of Theorem 9.4, and it is a negative result.** Theorem 9.4
+> showed `C ≥ 0` is *sufficient* for `‖C‖_{1→1} = 1`. Lemma 9 shows it is also
+> **necessary**. So one cannot keep conservation (unit column sums) and obtain ℓ¹
+> non-expansiveness by any other route — no cleverer signed rule, no reweighting, no
+> change of relevance normalisation, will do it.
+>
+> Combined with Corollary 8.1 — LayerNorm *forces* signed inputs — the pair says:
+> **within the ℓ¹ framework, Q12 is a hard obstruction, not a gap awaiting a better
+> rule.** Any escape must leave the framework.
+
+**Corollary 9.1 (where the escape must live).** Since `‖C‖_{1→1} > 1` is unavoidable for
+signed `C`, Lemma 4's bound `n·B^{n−1}·e` is not the right instrument. But Lemma 4 is an
+*upper* bound, and machine verification found it loose above `B = 1`: signed products
+with `B = 763` were measured not to expand (per-layer rate `1.0048`). The operative
+quantity is therefore the **top Lyapunov exponent**
+
+    λ := lim_{n→∞} (1/n) log ‖C_n ⋯ C_1‖                                          (L9.2)
+
+with `λ ≤ 0` — not `B ≤ 1` — the condition for errors not to compound geometrically.
+Whether realistic signed relevance matrices satisfy `λ ≤ 0` is an **empirical** question,
+investigated in `Q12-EXPERIMENT.md`.
+
+---
+
 ## Dependency graph
 
     D2 ──► L1 (a,b,c,d)
