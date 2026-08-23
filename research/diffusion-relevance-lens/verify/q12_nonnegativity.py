@@ -635,6 +635,13 @@ def task2_synthetic():
 # 4.  REALISTIC SUBLAYER: LayerNorm + linear
 # ============================================================================
 
+# Stable label -> integer seed offsets.  NOT hash(): Python string hashing is
+# salted per process (PYTHONHASHSEED), which would make runs irreproducible.
+TAG = {"relu": 101, "gelu": 202, "layernorm": 303, "layernorm_plain": 404,
+       "iid fresh": 11, "fixed W reused": 22, "low-rank+noise": 33,
+       "heavy-tail (t3)": 44}
+
+
 def gelu(x):
     return 0.5 * x * (1.0 + np.tanh(np.sqrt(2 / np.pi) * (x + 0.044715 * x ** 3)))
 
@@ -680,12 +687,12 @@ def task2_realistic():
         for d in (16, 64, 256):
             lams, nrms, negC, nega = [], [], [], []
             for s in range(seeds):
-                rng = np.random.default_rng(MASTER_SEED + 991 * s + hash(act) % 1000 + d)
+                rng = np.random.default_rng(MASTER_SEED + 991 * s + TAG[act] + d)
                 stats = [realistic_layer(d, rng, act) for _ in range(50)]
                 nrms.append(np.mean([np.linalg.norm(c, 1) for c, _, _, _ in stats]))
                 negC.append(np.mean([(c < 0).mean() for c, _, _, _ in stats]))
                 nega.append(np.mean([(a < 0).mean() for _, a, _, _ in stats]))
-                rng2 = np.random.default_rng(MASTER_SEED + 7 + 991 * s + hash(act) % 1000 + d)
+                rng2 = np.random.default_rng(MASTER_SEED + 7 + 991 * s + TAG[act] + d)
                 ln, _ = lyap_norm(lambda: realistic_layer(d, rng2, act)[0],
                                   n, d, burn=n // 5)
                 lams.append(ln)
@@ -759,12 +766,12 @@ def task2_realistic():
     for kind in ("iid fresh", "fixed W reused", "low-rank+noise", "heavy-tail (t3)"):
         lams, nrms, negs = [], [], []
         for s in range(4):
-            r = np.random.default_rng(MASTER_SEED + 55 * s + len(kind))
+            r = np.random.default_rng(MASTER_SEED + 55 * s + TAG[kind])
             g = make_gen(d, kind, r)
             Cs = [g() for _ in range(30)]
             nrms.append(np.mean([np.linalg.norm(c, 1) for c in Cs]))
             negs.append(np.mean([(c < 0).mean() for c in Cs]))
-            r2 = np.random.default_rng(MASTER_SEED + 3 + 55 * s + len(kind))
+            r2 = np.random.default_rng(MASTER_SEED + 3 + 55 * s + TAG[kind])
             ln, _ = lyap_norm(make_gen(d, kind, r2), n, d, burn=n // 5)
             lams.append(0.0 if not np.isfinite(ln) else max(ln, 0.0))
         lm = float(np.mean(lams))
@@ -816,11 +823,11 @@ def task2_realistic():
         for d in (16, 64):
             lams, nrms, negs = [], [], []
             for s in range(4):
-                r = np.random.default_rng(MASTER_SEED + 313 * s + d + len(act))
+                r = np.random.default_rng(MASTER_SEED + 313 * s + d + TAG[act])
                 Cs = [C_zplus_on(d, r, act) for _ in range(40)]
                 nrms.append(np.mean([np.linalg.norm(c, 1) for c in Cs]))
                 negs.append(np.mean([(c < 0).mean() for c in Cs]))
-                r2 = np.random.default_rng(MASTER_SEED + 9 + 313 * s + d + len(act))
+                r2 = np.random.default_rng(MASTER_SEED + 9 + 313 * s + d + TAG[act])
                 ln, _ = lyap_norm(lambda: C_zplus_on(d, r2, act), n, d, burn=n // 5)
                 # lambda >= 0 always (Cor. B'); clamp the estimator transient
                 lams.append(0.0 if not np.isfinite(ln) else max(ln, 0.0))
