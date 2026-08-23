@@ -113,10 +113,44 @@ about the norm, because `C` may have negative entries.
 
 ## 9.4 Non-negativity kills the geometric term
 
-### Theorem 9.4 (the z⁺-rule is ℓ¹-non-expansive)
+### Definition 9.3 (the z⁺-rule matrix) — **was missing; blocking (AUDIT-02 E12)**
 
-Let `C ≥ 0` entrywise with `1ᵀC = 1ᵀ` (the z⁺-rule, D7). Then the induced ℓ¹ operator
-norm satisfies
+Earlier versions invoked "the z⁺-rule, D7" and assumed `C ≥ 0`. **D7 defines no such
+matrix**, and the `C` of §9.0 is *signed* — `C_{ij} = a_i w_{ij}/z_j` — so Lemma 9.0's
+column-sum identity was being applied to a different object than Theorem 9.4's
+hypothesis. `verify/q9_renormalisation.py` had already registered the discrepancy,
+reporting `‖C‖₁ = 1.000` for one and `95.31` for the other *under the same*
+`1ᵀC = 1ᵀ`. Defining it explicitly:
+
+    w⁺_{ij} := max(w_{ij}, 0),     z⁺_j := Σ_i a_i w⁺_{ij}
+    C⁺_{ij} := a_i w⁺_{ij} / z⁺_j                                                  (9.10)
+    θ⁺_j   := z⁺_j / (z⁺_j + ε)
+
+**Hypotheses (H⁺):** `z⁺_j ≠ 0` for all `j`, and **`a ≥ 0` entrywise**.
+
+### Lemma 9.3′ (column sums and non-negativity of `C⁺`)
+
+Under (H⁺): `1ᵀC⁺ = 1ᵀ` and `C⁺ ≥ 0`.
+
+**Proof.** `Σ_i C⁺_{ij} = (Σ_i a_i w⁺_{ij})/z⁺_j = z⁺_j/z⁺_j = 1`. Non-negativity is
+immediate from `a ≥ 0` and `w⁺ ≥ 0`. ∎
+
+Note this is a *different and easier* argument than Lemma 9.0: for `C⁺` the denominator
+**is** the column sum by construction, whereas Lemma 9.0 had to invoke `z_j = Σ_i a_i w_{ij}`.
+
+> **⚠ `a ≥ 0` is a real restriction, not a formality.** It holds after ReLU. It does
+> **not** hold after LayerNorm, whose output is centred and therefore signed, nor
+> strictly after GELU/SiLU (small negative lobe). So the z⁺-rule is not directly
+> applicable to every sublayer of a transformer. Applying it requires either
+> (i) restricting to sublayers with non-negative inputs, or (ii) a signed-input variant
+> (e.g. separate positive/negative propagation, the `z^B` family). **This project has
+> not established either.** Filed as **Q12** — and it is a live obstruction to the
+> §9.6 prescription, not a detail.
+
+### Theorem 9.4 (`C⁺` is ℓ¹-non-expansive)
+
+Let `C ≥ 0` entrywise with `1ᵀC = 1ᵀ` — by Lemma 9.3′, `C = C⁺` qualifies under (H⁺).
+Then the induced ℓ¹ operator norm satisfies
 
     ‖C‖_{1→1} = 1                                                                 (9.6)
 
@@ -224,19 +258,42 @@ application this may be acceptable — one asks what drove a behaviour, not what
 suppressed it — but it is a genuine loss of information and must be stated whenever the
 method is used.
 
-**The residual fidelity condition.** From (9.7), faithful allocation requires
+**The residual fidelity condition — restated against the correct quantity.**
 
-    n · ε / ( min_j |z_j| + ε )  ≪  1     ⟺     ε ≪ min_j |z_j| / n               (9.9)
+An earlier version wrote the condition as `ε ≪ min_j |z_j| / n`. **That is the wrong
+denominator**, and the error was systematically pessimistic (AUDIT-02 E15). The
+prescription of §9.6 is the z⁺-rule, whose stabiliser sits on `z⁺_j` (Def. 9.3), not on
+`z_j`. The correct condition is
 
-At `n = L·T = 768` versus `n = L = 48`, this demands `ε` smaller by the factor `T ≈ 16`.
-So **the denoising-step count enters the requirement linearly** — which is the accurate
-version of the informal claim that "`T` shrinks the window". It is not exponential once
-non-negativity is imposed.
+    Σ_ℓ η⁺_ℓ ≪ 1,    η⁺_ℓ = ε / ( min_j z⁺_{j,ℓ} + ε )                            (9.9)
 
-Note (9.9) couples to the Lemma 6 silent-failure regime through the same `min_j |z_j|`:
-one cannot take `ε` arbitrarily small without re-entering the `1/z_j` blow-up. Whether
-the window (9.9) is non-empty for real activation distributions is an **empirical**
-question about `min_j |z_j|`, not a theoretical one, and remains open (Q9 option 3).
+> **This matters by three orders of magnitude, in the project's favour.** `|z_j|` is
+> small *precisely because of cancellation* — `z_j = z⁺_j − z⁻_j` — whereas `z⁺_j` sums
+> only non-negative terms and does not cancel. Measured, the two differ by ~**2300×**.
+> The document was therefore stating a fidelity requirement roughly three orders of
+> magnitude stricter than its own rule needs, which changes the outlook on the one
+> genuinely open empirical question from "probably empty" to "plausibly comfortable".
+>
+> This also decouples (9.9) from the Lemma 6 silent-failure regime, which is driven by
+> `z_j ≈ 0` — a cancellation event that `z⁺_j` does not inherit.
+
+**Two further corrections to the earlier derivation.**
+
+1. **Use the `Σ` form, not `n·max`.** (9.7) prints `Σ_ℓ η_ℓ` and then the earlier text
+   derived (9.9) from the weaker `n · max_ℓ η_ℓ`. The max form is ~70× loose here, and
+   it is the form that produces spurious super-linear behaviour, because
+   `max_ℓ min_j z_{j,ℓ}` is an order statistic that itself degrades as `n` grows. The
+   `Σ` form is linear in `n` with the *typical* `η`, and is the operative bound.
+2. **The "empirical confirmation" of linear-in-`T` was near-tautological.** Holding
+   `min|z|` fixed while varying `n` confirms only that `Σ_ℓ η_ℓ = n·η` when `η` is
+   constant. A non-circular test must let the activation statistics vary with depth.
+   Filed as **Q13**.
+
+So: `T` enters **linearly in the `Σ` form**, which is the claim this project makes. The
+super-linear (`T²`) behaviour the audit identified is an artefact of the `n·max` form
+and is not claimed. Whether the window is non-empty for real activations remains
+**empirical** — now a question about `min_j z⁺_j`, a far more favourable quantity than
+`min_j |z_j|`.
 
 ---
 

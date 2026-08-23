@@ -114,14 +114,54 @@ So no operator on `(Δ^V)^N` can implement the dynamics. **(D9.1) is retracted.*
 The mean-field route is therefore abandoned rather than approximated: its error is
 governed by total correlation, which is `log 2` (maximal) in the counterexample.
 
-**Repair (a change of object, not an approximation).** Attribution is redefined on a
-*realised trajectory* (Def. 6.2). Conditioning on the path makes every network
-evaluation deterministic and differentiable, so Lemmas 1–7 apply within each step
-(Prop. 6.3). The result is per-trajectory rather than distributional — which is what
-monitoring needs anyway. This raises the recursion from Tier D to Tier B.
+**⚠ The positive half is NOT resolved (v0.4, AUDIT-02 E1).** An earlier version claimed
+path-conditioning supplied the replacement. It does not. Non-differentiability at a step
+boundary has two sources — randomness *and* discreteness — and conditioning removes only
+the first, by pinning `x^{(t−1)}` to a constant. A constant has zero derivative, so
 
-**Residual:** the model/noise split at each sampling boundary is *permitted* by
-conservation but **not derived** from it (Prop. 6.4). Filed as Q10.
+    ∂ζ^{(t−1)}/∂ζ^{(t)} = 0    under path conditioning
+
+The conditioned steps are **decoupled, not composed**. Conditioning does not solve the
+cross-step problem; it deletes it, along with every diffusion-specific phenomenon the
+project exists to study.
+
+What survives is Prop. 6.3′: conditioning correctly handles the **intra-step** factor
+(Lemmas 1–7 apply), which was never the hard part.
+
+**So Q6 splits:**
+- **negative half — CLOSED** (Prop. 6.1, no goalpost movement);
+- **positive half — OPEN.** The cross-step join needs a separately chosen mechanism.
+  Candidates: relaxation (biased, bias compounds over `T`), **interventional /
+  resample-and-compare** (exact and derivative-free, one forward pass per intervention —
+  the most promising), or relevance redistribution with a chosen weight (Q10).
+
+---
+
+## Q12 — Does the z⁺-rule apply to transformer sublayers at all? ★ **live obstruction**
+
+**Status:** OPEN, and it gates the §9.6 prescription.
+
+Lemma 9.3′ requires **`a ≥ 0`** (non-negative layer inputs) for `C⁺ ≥ 0`. That holds
+after ReLU. It does **not** hold after LayerNorm, whose output is centred and hence
+signed, nor strictly after GELU/SiLU. Since Theorem 9.4's entire force comes from
+`C ≥ 0`, the prescription may not be directly applicable to the sublayers it is meant
+for.
+
+**Routes:** (i) restrict to sublayers with non-negative inputs; (ii) adopt a
+signed-input variant (`z^B` family, separate positive/negative propagation) and redo
+Theorem 9.4 for it — note a signed variant may reintroduce exactly the `‖C‖ > 1` problem
+that z⁺ was chosen to avoid. **Neither established.**
+
+---
+
+## Q13 — A non-circular test of the linear-in-`T` claim
+
+**Status:** OPEN (methodological).
+
+The current empirical confirmation of (9.9) holds `min|z|` fixed while varying `n`,
+which confirms only that `Σ_ℓ η_ℓ = n·η` for constant `η` — near-tautological. A real
+test must let activation statistics vary with depth, so that `η_ℓ` is measured rather
+than assumed constant.
 
 ---
 

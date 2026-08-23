@@ -96,26 +96,58 @@ a **deterministic, differentiable** function of the realised `x^{(t)}`. The
 path-conditioned attribution problem is to assign relevance to each
 `(ℓ, t, i)` explaining `φ`, *conditional on* `x^{(T:0)}`.
 
-### Proposition 6.3 (path-conditioned attribution is well-defined)
+### ~~Proposition 6.3~~ — **RETRACTED (blocking error, AUDIT-02 E1)**
 
-Conditional on `x^{(T:0)}`, the map `x^{(t)} ↦ ζ^{(t)}` is a deterministic
-differentiable function (A2), and the only stochastic element in the generation — the
-draw `x^{(t−1)} ~ q(· | x^{(t)}, x̂_0)` — is **fixed by the conditioning**. Hence every
-quantity a backward pass requires is well-defined, and Lemmas 1–7 apply verbatim within
-each step.
+The retracted statement claimed that conditioning on `x^{(T:0)}` leaves "a finite
+composition of differentiable maps `f_θ(·,t)`, one per step, joined at fixed realised
+canvases", and concluded that Lemmas 1–7 therefore deliver cross-step attribution.
 
-**Proof.** Immediate: conditioning on the path removes all randomness, leaving a finite
-composition of differentiable maps `f_θ(·, t)`, one per step, joined at fixed realised
-canvases. ∎
+**This is false, and the error is instructive.** Non-differentiability at a step
+boundary has **two** independent sources:
 
-> **What changed.** We replaced an object that does not exist (a marginal transport
-> operator) with one that does (attribution along a fixed path). The cost is that the
-> result is **per-trajectory**, not distributional. For monitoring this is not a cost
-> at all: one monitors a specific generation.
+1. **randomness** — the draw `x^{(t−1)} ~ q(·|x^{(t)}, x̂_0)`;
+2. **discreteness** — `x^{(t−1)}` is a one-hot token, so the map into it has no
+   derivative regardless of whether it is random.
+
+Conditioning removes (1) only. Worse, it removes (1) by *pinning* `x^{(t−1)}` to a
+constant — and a constant has zero derivative with respect to anything upstream:
+
+    ∂ζ^{(t−1)} / ∂ζ^{(t)} = 0    under path conditioning                          (6.5)
+
+So the conditioned steps are **decoupled, not composed**. Path-conditioning does not
+solve the cross-step problem; it *deletes* it, and with it every diffusion-specific
+phenomenon the project exists to study (non-chronological influence, retroactive
+self-correction, smearing). All the content sits at the joins, which conditioning
+severs.
+
+### Proposition 6.3′ (what conditioning actually buys — corrected)
+
+Conditional on `x^{(T:0)}`:
+
+  (a) **within** step `t`, the map `x^{(t)} ↦ ζ^{(t)} = f_θ(x^{(t)},t)` is deterministic
+      and differentiable (A2), so Lemmas 1–7 apply verbatim to the intra-step backward
+      pass;
+  (b) **across** steps, conditioning supplies **no** transport whatsoever, by (6.5).
+
+**Proof.** (a) is the original argument restricted to a single step, where it is valid.
+(b) is (6.5): a conditioned `x^{(t−1)}` is a constant. ∎
+
+> **Consequence: Q6's positive half reopens.** Proposition 6.1 still stands — marginal
+> transport provably does not exist, and that half of Q6 is genuinely closed. But
+> path-conditioning is **not** the repair; it is only a valid treatment of the
+> intra-step factor, which was never the hard part.
 >
-> This mirrors how chain-of-thought attribution works in the autoregressive case — one
-> attributes along the realised token sequence, never over the distribution of possible
-> sequences.
+> The cross-step join now requires a *separate, explicitly chosen* mechanism. Three
+> candidates, none yet adopted:
+>
+> | mechanism | idea | cost |
+> |-----------|------|------|
+> | **relaxation** | Gumbel/straight-through surrogate for the discrete draw | biased; bias compounds over `T` — the failure mode of §6.1 in a new guise |
+> | **interventional** | resample `x^{(t)}` and re-run; measure the change (activation-patching style) | exact and derivative-free, but costs a forward pass per intervention |
+> | **relevance redistribution** | split relevance at the join by a chosen weight | conservative by Prop. 6.4, but the weight is *not* derived — Tier D, see Q10 |
+>
+> The interventional route is the only one that is both exact and well-defined on a
+> discrete channel, and is the most promising. **Not developed here.**
 
 ---
 
@@ -166,15 +198,30 @@ postulate, and is the most promising route to deriving `w` rather than choosing 
 
 | Before | After |
 |--------|-------|
-| Step recursion assumed mean-field, unjustified | Mean-field route **abandoned**; Prop. 6.1 shows it is not a small error |
-| (D9.1) transport operator | Withdrawn — provably does not exist |
-| Recursion was Tier D | Path-conditioned attribution is Tier B (Prop. 6.3) |
-| Noise sink asserted | Permitted but **not derived** (Prop. 6.4); weight choice filed as Q10 |
+| Step recursion assumed mean-field, unjustified | Mean-field route **abandoned**; Prop. 6.1 shows the error is maximal, not small |
+| (D9.1) transport operator | **Withdrawn** — provably does not exist |
+| Intra-step factor | Tier B (Prop. 6.3′a) — Lemmas 1–7 apply |
+| **Cross-step join** | **Still open.** Conditioning supplies none (6.5); mechanism must be chosen separately |
+| Noise sink | Permitted but **not derived** (Prop. 6.4); weight filed as Q10 |
 
 **(D9.1) is hereby retracted.** `01-preliminaries.md` retains it only as the object
 Prop. 6.1 refutes.
 
-The step recursion of earlier drafts is replaced by: run the conservative backward pass
-of Lemmas 1–7 within each realised step, and join steps at the realised token
-identities, splitting relevance at each boundary per Prop. 6.4. Whether that join
-survives depth `L·T` is **Q9**, treated in `05-q9-conservation-at-depth.md`.
+> **Honest status of Q6.** The question had two halves and they resolved differently:
+>
+> - **Negative half — CLOSED.** Marginal transport does not exist (Prop. 6.1). No
+>   goalpost movement; this answers Q6 exactly as posed.
+> - **Positive half — OPEN.** An earlier version of this file claimed path-conditioning
+>   supplied the replacement. It does not (AUDIT-02 E1). What it supplies is the
+>   intra-step factor, which was never the difficulty.
+>
+> **Do not cite this file as "Q6 resolved" without that split.** The diffusion-specific
+> content of the whole project lives in the cross-step join, and the join is currently
+> unsupplied.
+
+Q9 (`05-q9-conservation-at-depth.md`) analyses whether a conservative scheme survives
+depth `L·T`. Note that its results concern the **intra-step** composition, which is
+`L` layers deep per step; the `L·T` framing presumes a cross-step join that this file
+has just shown is not yet in hand. Q9's mathematics is unaffected — it is a statement
+about products of relevance matrices — but its *interpretation* as covering the full
+diffusion trajectory is contingent on Q6's positive half.

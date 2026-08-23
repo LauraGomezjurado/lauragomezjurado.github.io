@@ -33,12 +33,26 @@ The short thesis, stated here so the rest of the document can be read against it
 > subject to a condition theory alone cannot verify.* Not the clean structural
 > guarantee originally asserted.
 
-**Diffusion-side foundation.** The step recursion of early drafts assumed a mean-field
-transport of position marginals. Proposition 6.1 proves that operator **does not
-exist** — bidirectional attention makes the model read inter-position correlation, so
-marginals are not a sufficient statistic. The repair is a change of object:
-attribution along a **realised trajectory** (`03-q6-path-conditioning.md`), which is
-what monitoring needs regardless.
+**Diffusion-side foundation — and its current gap.** The step recursion of early drafts
+assumed a mean-field transport of position marginals. Proposition 6.1 proves that
+operator **does not exist**: bidirectional attention makes the model read
+inter-position correlation, so marginals are not a sufficient statistic, and the error
+is maximal rather than small.
+
+> **⚠ The replacement is not yet in hand (v0.4).** A previous version claimed
+> path-conditioning repaired this. It does not — conditioning pins the intermediate
+> canvases to constants, so `∂ζ^{(t−1)}/∂ζ^{(t)} = 0` and the steps come apart rather
+> than composing. Conditioning handles the *intra-step* factor correctly and supplies
+> **no** cross-step transport at all.
+>
+> **All of the project's diffusion-specific content lives in the cross-step join, and
+> the join is currently unsupplied.** The most promising candidate is interventional
+> (resample-and-compare), which is exact and derivative-free on a discrete channel. See
+> `04-open.md` Q6-positive.
+>
+> Consequence for reading Q9: its mathematics concerns products of relevance matrices
+> and is unaffected, but its interpretation as covering a full `L·T` trajectory is
+> **contingent** on the join.
 
 ## Epistemic discipline
 
@@ -94,17 +108,35 @@ Every factual claim in this project carries a tier marker.
 
 **Version 0.3.**
 
-- Lemmas 1–7 proved and machine-checked (80 checks, negative controls included).
-- Q5 closed (Lemma 7 bridge). Q6 closed (Prop. 6.1 refutation + path-conditioning).
-  Q7 closed as a dividend of Q9 (Cor. 9.6). Q9 substantially closed (Thm. 9.4).
-- Still open: Q1 (dissolved rather than answered — see Thm. 9.4), Q2–Q4 (blocked on
-  sources), Q10 (noise-split weight), Q11 (Dobrushin coefficient, empirical), and
-  whether the fidelity window (9.9) is non-empty in practice.
-- **Not yet written:** the synthesis section assembling the three forcing arguments
-  (target-axis asymmetry, fit-cost blow-up, definedness) into the full lens
-  construction. It now has sound foundations to rest on.
+**Version 0.4** — after two machine-verification rounds (128 checks, negative controls)
+and two adversarial audits (44 defects, 4 blocking).
 
-See `04-open.md` for the current frontier.
+**Established (Tier B, proved and machine-checked):**
+- Lemmas 1–7, including the LayerNorm gradient⊙input identity `(ε/σ²)x̂`, the
+  degree-of-homogeneity unification (Lemma 7), and Lemma 5.1's geometric decay of the
+  ε-rule.
+- **Theorem 9.4** — non-negativity forces `‖C⁺‖₁→₁ = 1`, making allocation error linear
+  rather than geometric in depth. Verified contrast: ~603 orders of magnitude at
+  `n = 768`. This is the project's main new result.
+- **Proposition 6.1** — marginal transport provably does not exist.
+
+**Closed:** Q1 (dissolved), Q5, Q6-negative, Q7, Q11 (negatively — z⁺ destroys its own
+mixing).
+
+**Open, in order of how much they gate:**
+1. **Q6-positive** ★ — the cross-step join. Currently unsupplied; all diffusion-specific
+   content depends on it.
+2. **Q12** ★ — z⁺ requires `a ≥ 0`, which fails after LayerNorm. Gates the §9.6
+   prescription.
+3. Q10 (noise-split weight), Q13 (non-circular `T`-scaling test), Q2–Q4 (blocked on
+   sources), and whether the fidelity window is non-empty for real activations.
+
+**Not yet written:** the synthesis assembling the three forcing arguments (target-axis
+asymmetry, fit-cost blow-up, definedness) into a full lens construction. It should not
+be written until Q6-positive and Q12 are settled — twice now, drafting ahead of the
+foundations produced claims the audits had to remove.
+
+See `04-open.md` for the frontier and `AUDIT-01/02.md` for the defect record.
 
 ## Reproducing the machine checks
 
