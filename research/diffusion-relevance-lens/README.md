@@ -156,7 +156,16 @@ See `04-open.md` for the frontier and `AUDIT-01/02.md` for the defect record.
 ## Reproducing the machine checks
 
 ```bash
-python3 verify/run_all.py
+python3 verify/run_all.py          # proof checks — fast, asserts, exits nonzero on failure
+python3 verify/run_experiments.py  # empirical testbeds — slow, measures and reports
 ```
 
 Requires `numpy` and `sympy` only.
+
+The two runners are deliberately separate. `run_all.py` checks **identities** that must
+hold if the lemmas are correct; a failure there means a proof is wrong. `run_experiments.py`
+**measures** quantities that are not identities (correlations against ground truth,
+Lyapunov exponents); a number moving there is a finding about the world, not a
+regression. Only crashes and the scripts' own internal self-checks — exact-propagation
+vs Monte-Carlo agreement, Lyapunov estimator validation against known exponents — count
+as failures.

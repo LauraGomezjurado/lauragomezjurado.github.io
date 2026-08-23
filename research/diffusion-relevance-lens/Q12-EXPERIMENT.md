@@ -413,7 +413,12 @@ quantity.
 Real depth reuses *trained* weight matrices. Four weight models at `d = 64` with
 LayerNorm input:
 
-<!--WEIGHTMODEL-->
+| weight model | frac `C<0` | `E‖C‖₁` | `λ` | sd | verdict |
+|---|---|---|---|---|---|
+| iid fresh `W` each layer | 0.4723 | 1942 | `+2.10564` | 0.046 | BLOW-UP |
+| one fixed `W` reused every layer | 0.4719 | 914 | `+2.14989` | 0.034 | BLOW-UP |
+| low-rank (rank `d/4`) + noise | 0.4714 | 1793 | `+2.10723` | 0.038 | BLOW-UP |
+| heavy-tailed `W` (Student-t, df=3) | 0.4737 | 1008 | `+2.04545` | 0.053 | BLOW-UP |
 
 `λ > 0` survives every weight model tested. It is driven by the **sign structure
 of `a`** — which LayerNorm pins at ~50% negative by Claim A — not by any
@@ -445,7 +450,7 @@ actually receives (`n = 600`, 4 seeds):
 | relu | 16 | 0.0000 | **1** | `+0.00000` | 0.00000 | **BENIGN** |
 | relu | 64 | 0.0000 | **1** | `+0.00000` | 0.00000 | **BENIGN** |
 | gelu | 16 | 0.2327 | 31.18 | `+0.26180` | 0.029 | BLOW-UP |
-| gelu | 64 | 0.2473 | 12.18 | `≈0` (marginal) | 0.002 | marginal |
+| gelu | 64 | 0.2473 | 12.18 | `+0.00009` | 0.00012 | marginal |
 | layernorm | 16 | 0.2187 | 1709 | `+1.42998` | 0.023 | BLOW-UP |
 | layernorm | 64 | 0.2370 | 1457 | `+2.16717` | 0.049 | BLOW-UP |
 
