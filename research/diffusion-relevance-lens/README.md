@@ -29,9 +29,22 @@ The short thesis, stated here so the rest of the document can be read against it
 > `L·T`, not geometric. The price is discarding inhibitory relevance, and a fidelity
 > condition `ε ≪ min_j|z_j|/n` whose satisfiability is empirical, not theoretical.
 >
-> So the honest thesis is: *a specific rule survives depth `L·T`, at a stated cost,
-> subject to a condition theory alone cannot verify.* Not the clean structural
-> guarantee originally asserted.
+> **v0.4–v0.6 — the conditional turns out not to be met.** Three independent escape
+> routes were then closed: a cleverer signed rule (Lemma 9 — non-negativity is
+> *necessary*), a benign Lyapunov exponent (Q12 — `λ = +1.35…+2.83`, and Cor. 9.2 forces
+> `λ ≥ 0` so only `λ = 0` was ever on offer), and residual structure (Q14 — `α_c = 1`
+> exactly, no interior threshold). Corollary 9.3 generalises the last into a design rule
+> closing a whole family of fixes.
+>
+> **Final honest thesis.** Theorem 9.4 is sound and its 603-order contrast is real, but
+> it describes a regime modern transformers are not in. **The conservation-based ℓ¹
+> programme does not reach depth `L·T` for a LayerNorm architecture.** That is a
+> substantive negative result, not a stalled one: it redirects effort away from a family
+> of fixes now provably closed.
+>
+> **The Q6 result is untouched by this.** The cross-step join is interventional
+> (`r = 0.947`), and interventional attribution is not a relevance-propagation scheme, so
+> it inherits none of these obstructions. That is where a working method would be built.
 
 **Diffusion-side foundation — and its current gap.** The step recursion of early drafts
 assumed a mean-field transport of position marginals. Proposition 6.1 proves that
@@ -104,20 +117,21 @@ Every factual claim in this project carries a tier marker.
 | `NOTATION.md` | Symbols, index conventions, standing assumptions |
 | `SOURCES.md` | Provenance ledger: what is verified, from where, at what tier |
 | `01-preliminaries.md` | Definitions: transformer block, LayerNorm, attention, LRP, discrete diffusion |
-| `02-lemmas.md` | Autoregressive-side results, with full proofs (Lemmas 1–7) |
-| `03-q6-path-conditioning.md` | **Q6**: marginal transport refuted; path-conditioned attribution |
-| `04-open.md` | Open branches, conjectures, and what would settle them |
+| `02-lemmas.md` | Lemmas 1–9 with full proofs, incl. Cor. 9.2 (`λ` = negative-mass growth) and Cor. 9.3 (no positive rescaling can help) |
+| `03-q6-path-conditioning.md` | **Q6**: marginal transport refuted; the join is interventional |
+| `04-open.md` | Open branches, resolutions, pre-registrations, and what would settle each |
 | `05-q9-conservation-at-depth.md` | **Q9**: z⁺-rule + renormalisation; conservation at depth `L·T` |
+| `Q6-EXPERIMENT.md` | Enumerable diffusion testbed; candidate joins vs exact ground truth |
+| `Q12-EXPERIMENT.md` | LayerNorm sign structure; Lyapunov exponents; the self-healing transition |
+| `Q14-EXPERIMENT.md` | Residual structure; `α_c = 1`; magnitude-vs-sign-pattern mechanism |
 | `AUDIT-01.md`, `AUDIT-02.md` | Adversarial referee reports and their dispositions |
-| `verify/` | `sympy`/`numpy` scripts machine-checking every lemma |
+| `verify/` | `run_all.py` (proof checks) and `run_experiments.py` (empirical testbeds) |
 | `sources/` | Citable `file:line` excerpts from locally cloned primary repos |
 
 ## Status
 
-**Version 0.3.**
-
-**Version 0.5** — after two machine-verification rounds (128 checks, negative controls),
-two adversarial audits (44 defects, 4 blocking), and two empirical testbeds with exact
+**Version 0.6** — after two machine-verification rounds (128 checks, negative controls),
+two adversarial audits (44 defects, 4 blocking), and three empirical testbeds with exact
 enumerated ground truth.
 
 **Established (Tier B, proved and machine-checked):**
@@ -127,8 +141,6 @@ enumerated ground truth.
 - **Theorem 9.4** — non-negativity forces `‖C⁺‖₁→₁ = 1`, making allocation error linear
   rather than geometric in depth. Verified contrast: ~603 orders of magnitude at
   `n = 768`. This is the project's main new result.
-- **Proposition 6.1** — marginal transport provably does not exist.
-
 - **Proposition 6.1** — marginal transport provably does not exist.
 - **Lemmas 8 & 9** — LayerNorm outputs are always signed, and non-negativity is
   *necessary* (not just sufficient) for ℓ¹ non-expansiveness under unit column sums.
@@ -145,15 +157,44 @@ the Lyapunov escape is measured shut (`λ = +1.35…+2.83` for LayerNorm-fed sub
 `f_c ≈ 0.15–0.40` at every width, and widening makes it worse. **§9.6 applies to ReLU
 networks and essentially nothing in a modern transformer** — GELU already fails.
 
-**Open, in order of how much they gate:**
-1. **Q14** ★ — does residual structure `I + A` raise `f_c`? The Q12 study modelled bare
-   sublayers; a real block's non-negative identity term should suppress negative mass,
-   and the verdict turns on a factor of only ~1.2–3. **The single highest-value next
-   experiment.**
-2. **Q12 route (ii)** — design a rule keeping the *product's* negative mass bounded.
-   Cor. 9.2 gives a sharp target: `‖C‖₁ = 1 + 2max_j ν_j` exactly, so `λ` *is* the
-   growth rate of negative mass.
-3. Q13 (non-circular `T`-scaling test), Q2–Q4 (blocked on sources).
+**Q14 — closed negatively (v0.6).** Residual structure does *not* rescue `λ = 0`. There
+is no critical identity share (`α_c = 1` exactly); `λ` is linear in the residual ratio
+with no benign regime. Realistic `α ∈ [0.576, 0.932]` misses by 51× at best and ~2450×
+realistically, and **training moves the ratio the wrong way** (3–6× up), so random-init
+figures were the optimistic end.
+
+### The negative result this project has actually established
+
+Three independent escape routes from Q12 have now been closed:
+
+| route | closed by | how |
+|-------|-----------|-----|
+| a cleverer **signed** rule | Lemma 9 | non-negativity is *necessary* for `‖C‖₁ = 1` |
+| a benign **Lyapunov** exponent | Q12 | `λ = +1.35…+2.83`; and Cor. 9.2 forces `λ ≥ 0`, so only `λ = 0` was ever available |
+| **residual** structure | Q14 | suppresses negative *mass* but not the sign *pattern*; `α_c = 1` |
+
+**Corollary 9.3 generalises the last one into a design rule:** no *positive rescaling*
+can restore `λ = 0`, because it preserves the sign pattern exactly. That rules out
+damping, residual mixing, and shrinkage-style fixes **without further measurement**. A
+viable rule must change the sign pattern — and Lemma 9 says the only way to reach
+`‖C‖₁ = 1` is to be non-negative by construction, which Cor. 8.1 says is unavailable
+after LayerNorm.
+
+> **Honest overall assessment.** Theorem 9.4 is sound and its 603-order contrast is
+> real, but it describes a regime modern transformers are not in. The conservation-based
+> ℓ¹ programme, pursued to its natural end, **does not reach depth `L·T` for a
+> LayerNorm architecture** — and that is a substantive finding rather than a stalled
+> one, because it redirects effort away from a family of fixes now provably closed.
+>
+> Note this does *not* touch the Q6 result: the cross-step join is interventional
+> (`r = 0.947`), and interventional attribution is not a relevance-propagation scheme,
+> so it inherits none of these obstructions.
+
+**Open:**
+1. **Cross-position mixing** — the one unmodelled feature of D1.1 (Q14's successor).
+   The Q14 report states its expectation as a *prediction*, not a result. Given Cor. 9.3,
+   the prior should be negative unless mixing changes sign patterns rather than magnitudes.
+2. Q13 (non-circular `T`-scaling test), Q2–Q4 (blocked on sources).
 
 **Not yet written:** the synthesis assembling the three forcing arguments (target-axis
 asymmetry, fit-cost blow-up, definedness) into a full lens construction. It should not

@@ -510,6 +510,31 @@ Measured critical bands, against realistic negativity from LayerNorm-fed layers:
 Realistic negativity sits **above** `f_c` at every width, and widening does not help:
 `f_c` grows with `d`, but realistic `λ` grows faster. See `04-open.md` Q12.
 
+### Corollary 9.3 (magnitude is not sign pattern) — a general obstruction
+
+Self-healing requires the product's negative entries to be **annihilated**, not merely
+made small. Formally, `λ = 0` requires `ν_j(C_n ⋯ C_1) → 0`, and by (L9.3) that is a
+statement about the sign *pattern* becoming empty — not about magnitudes shrinking.
+
+> **Consequence: no positive rescaling can restore `λ = 0`.** If a construction replaces
+> `C` by `S·C` for any entrywise-positive `S`, the sign pattern is preserved exactly, so
+> the set `{(i,j) : (SC)_{ij} < 0}` is unchanged and no annihilation occurs.
+
+This was confirmed sharply in `Q14-EXPERIMENT.md`. Residual structure suppresses negative
+*mass* exactly as predicted (`ν(C_block) ≈ (1−α)·ν(C_F)`, measured ratio 1.07–1.73), yet
+the negative-entry *fraction* is flat in `α` (0.4714 → 0.4640) and the product is **never**
+exactly non-negative for any `ρ > 0` — still 43.8% negative at `n = 200` with
+`α = 0.99999`, and still not non-negative at `n = 9600`. Hence the measured critical
+identity share is `α_c = 1` exactly, with no interior threshold.
+
+> **Design rule this establishes.** Any proposal to rescue conservation-based propagation
+> at depth by *shrinking* negativity — damping, residual mixing, small learning rates,
+> shrinkage estimators — is subject to this objection and can be ruled out without
+> further measurement. A viable proposal must **change the sign pattern**, e.g. by
+> clamping, projection onto the non-negative orthant, or a rule that is non-negative by
+> construction (which Lemma 9 shows is the only way to reach `‖C‖ = 1`, and Cor. 8.1
+> shows is unavailable after LayerNorm).
+
 ---
 
 ## Dependency graph

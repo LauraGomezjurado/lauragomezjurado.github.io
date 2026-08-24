@@ -229,10 +229,67 @@ the Lyapunov reformulation was the fallback; the measurement closes it too.
 
 ---
 
-## Q14 — Does residual structure `I + A` raise `f_c`? ★ **the most likely repair**
+## Q14 — Does residual structure `I + A` raise `f_c`? **ANSWERED: NO**
 
-**Status:** OPEN, untested, and flagged by the Q12 experiment as *the most likely place
-its negative verdict softens*.
+**Status: CLOSED (v0.6), negatively and decisively.** `Q14-EXPERIMENT.md`.
+
+**Pipeline validated first.** The `α = 0` control reproduced Q12 at all three widths —
+`+1.391/+2.110/+2.789` against Q12's `+1.354/+2.116/+2.826` (0.87σ / 0.25σ / 1.36σ) —
+so the two studies are consistent end to end.
+
+**There is no critical identity share.** `α_c = 1.0` at `d = 16, 64, 256`. Not "high" —
+**exactly 1**, i.e. no interior threshold exists. Instead `λ` is *linear* in the residual
+ratio with no benign regime at all:
+
+    λ = κ_d · ρ,    log-log slope 0.86 / 0.96 / 0.99,   R² = 0.988 / 0.9998 / 0.997
+    κ = 2.11 / 5.21 / 9.99   at d = 16 / 64 / 256
+
+`κ` grows with width, so widening hurts here too. Reaching `λ ≤ 0.003` would need
+`ρ ≤ 1.4e-3 / 5.8e-4 / 3.0e-4`.
+
+**Realistic `α` is nowhere near.** Measured independently: `ρ ∈ [0.073, 0.735]`, i.e.
+`α ∈ [0.576, 0.932]`. Crucially, **training moved `ρ` up by 3–6×** (trained stack mean
+`ρ = 0.465`), so random-init figures are the *optimistic* end and the bias runs
+**against** the hypothesis. Falsification criterion **F1 fires at every width**: the
+best case (idealised model, narrowest width, smallest measured `ρ`) misses by **51×**,
+the realistic case by **~2450×**. Not marginal.
+
+### Why it fails — and why my pre-registered failure mode was wrong
+
+The pre-registered suppression law was **correct**: `ν(C_block) ≈ (1−α)·ν(C_F)`,
+measured ratio 1.07–1.73. Negative *mass* really is suppressed as predicted.
+
+But I predicted failure via `α_j ∉ [0,1]` from sign mismatch. **That is not the
+operative mechanism.** The real one is sharper:
+
+> `f_eff` is **flat** in `α` (0.4714 → 0.4640), because multiplying by `(1 − α) > 0`
+> rescales off-diagonal entries **without changing their signs**. Q12's benign regime
+> comes from *annihilation of the sign pattern*, and a positive rescaling can never
+> produce it. The product is **never** exactly non-negative at any `ρ > 0` — still 43.8%
+> negative at `n = 200` with `α = 0.99999`, and still not non-negative at `n = 9600`.
+
+**That is why `α_c = 1` rather than some interior value.** The lesson generalises beyond
+this experiment: *negative mass* and *negative sign pattern* are different objects.
+Self-healing requires the sign pattern to vanish; shrinking magnitudes does not do it.
+Any future proposal that works by *scaling down* negativity is subject to the same
+objection.
+
+**The residual effect is real and still irrelevant.** It lowers `λ` from `+2.11` to
+`+0.83…+1.70` at `d = 64` — worth 130–430 orders of magnitude at depth 768 — yet
+Corollary 9.2 admits only `λ = 0` **exactly**, so a smaller positive exponent buys
+nothing.
+
+**Secondary results.**
+- **(H⁺) is not rescued, and fails a second way.** The residual stream `h` is itself
+  50.20% negative, and the block-level `z⁺` denominator fails on **25.04%** of
+  coordinates — on top of the sublayer's 49.54%.
+- **Mixtures are governed by the arithmetic mean of per-layer exponents**
+  (`λ_mix/(p·λ_bad) = 0.996–1.013`), not by `λ(mean α)`. **Good layers never repair bad
+  ones** — the same lesson as Q11's Dobrushin coefficient.
+
+---
+
+## ~~Q14 (original statement and pre-registration)~~ — retained for the record
 
 The Q12 study modelled **bare single-position sublayers**. A real block is
 `J = I + A_ℓ` (D1.2), and the identity term contributes a strictly **non-negative
