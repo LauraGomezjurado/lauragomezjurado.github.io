@@ -516,9 +516,25 @@ Self-healing requires the product's negative entries to be **annihilated**, not 
 made small. Formally, `λ = 0` requires `ν_j(C_n ⋯ C_1) → 0`, and by (L9.3) that is a
 statement about the sign *pattern* becoming empty — not about magnitudes shrinking.
 
-> **Consequence: no positive rescaling can restore `λ = 0`.** If a construction replaces
-> `C` by `S·C` for any entrywise-positive `S`, the sign pattern is preserved exactly, so
-> the set `{(i,j) : (SC)_{ij} < 0}` is unchanged and no annihilation occurs.
+> **Consequence: no positive *elementwise* rescaling can restore `λ = 0`.** If a
+> construction replaces `C` by the **Hadamard** product `S ⊙ C` with `S > 0` entrywise,
+> then `sign((S⊙C)_{ij}) = sign(C_{ij})` for every `(i,j)`, so the negative support
+> `{(i,j) : C_{ij} < 0}` is unchanged and no annihilation occurs.
+
+> **⚠ Scope — this does NOT cover matrix multiplication.** An earlier version wrote the
+> hypothesis as "`S·C` for entrywise-positive `S`", which is ambiguous and **false** if
+> read as a matrix product. For a matrix product,
+>
+>     (SC)_{ij} = Σ_k S_{ik} C_{kj}
+>
+> is a positive *combination* of column entries and can be **positive even when
+> individual `C_{kj}` are negative**. That is genuine cancellation — a sign-pattern
+> change of exactly the kind annihilation requires.
+>
+> The corollary therefore applies to damping, residual mixing and shrinkage (all
+> elementwise), which is what Q14 tested. It does **not** apply to **cross-position
+> mixing**, where attention multiplies relevance by a non-negative softmax matrix. That
+> route retains a live mechanism and is tested separately in `Q15-EXPERIMENT.md`.
 
 This was confirmed sharply in `Q14-EXPERIMENT.md`. Residual structure suppresses negative
 *mass* exactly as predicted (`ν(C_block) ≈ (1−α)·ν(C_F)`, measured ratio 1.07–1.73), yet

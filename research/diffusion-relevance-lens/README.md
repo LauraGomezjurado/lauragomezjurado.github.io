@@ -191,9 +191,14 @@ after LayerNorm.
 > so it inherits none of these obstructions.
 
 **Open:**
-1. **Cross-position mixing** — the one unmodelled feature of D1.1 (Q14's successor).
-   The Q14 report states its expectation as a *prediction*, not a result. Given Cor. 9.3,
-   the prior should be negative unless mixing changes sign patterns rather than magnitudes.
+1. **Cross-position mixing** ★ — the one unmodelled feature of D1.1, and the last live
+   route. **Corollary 9.3 does not cover it**, contrary to an earlier claim here: the
+   corollary rules out *elementwise* rescaling, whereas attention mixes by **matrix
+   multiplication**, where `Σ_k S_{ik}C_{kj}` can be positive even when terms are
+   negative. That is genuine cancellation — the sign-pattern change annihilation
+   requires — and softmax weights are non-negative by construction. So this route has a
+   real mechanism the other three lacked, and the prior should be **open**, not negative.
+   Under test in `Q15-EXPERIMENT.md`.
 2. Q13 (non-circular `T`-scaling test), Q2–Q4 (blocked on sources).
 
 **Not yet written:** the synthesis assembling the three forcing arguments (target-axis
