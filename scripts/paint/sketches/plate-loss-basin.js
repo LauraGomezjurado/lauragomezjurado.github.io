@@ -45,7 +45,11 @@ const toPage = (x, y) => ({ x: view.cx + x * view.s, y: view.cy - y * view.s })
 
 function draw() {
   translate(-width / 2, -height / 2)
-  background(PAPER)
+  // A mark is composited straight onto the page, so it must carry no
+  // paper of its own — an opaque sheet behind it is what reads as a
+  // pasted rectangle no matter how the edges are treated.
+  if (TRANSPARENT) clear()
+  else background(PAPER)
 
   basinWashes()
   WC.flush()
@@ -53,9 +57,13 @@ function draw() {
   streamlines()
   descentPath()
   WC.flush()
-  WC.cornerTicks(P)
-  WC.scaleBar(P)
-  WC.applyPaper(20)
+  // The plate frame belongs to a full plate. On a small mark those ticks
+  // sit out in what is now empty space and read as stray lines.
+  if (!TRANSPARENT) {
+    WC.cornerTicks(P)
+    WC.scaleBar(P)
+  }
+  if (!TRANSPARENT) WC.applyPaper(20)
 }
 
 /** Wet pools in the two minima, so the low ground reads as low. */

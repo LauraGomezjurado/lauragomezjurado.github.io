@@ -160,7 +160,7 @@ export default function Home() {
     gsap.fromTo(stageState,
       { offsetX: -1.7, offsetY: 0.0, scale: 0.82, opacity: 0.92 },
       {
-        offsetX: 1.6, offsetY: 1.1, scale: 0.55, opacity: 0.55,
+        offsetX: 1.6, offsetY: 1.1, scale: 0.55, opacity: 0.8,
         ease: 'none', immediateRender: false,
         scrollTrigger: { trigger: '#news', start: 'top 85%', end: 'top 35%', scrub: 1.5 },
       }
@@ -169,7 +169,7 @@ export default function Home() {
     gsap.fromTo(stageState,
       { offsetX: 1.6, offsetY: 1.1, scale: 0.55, opacity: 0.55 },
       {
-        offsetX: 1.4, offsetY: -1.1, scale: 0.60, opacity: 0.55,
+        offsetX: 1.4, offsetY: -1.1, scale: 0.60, opacity: 0.8,
         ease: 'none', immediateRender: false,
         scrollTrigger: { trigger: '#featured', start: 'top 85%', end: 'top 35%', scrub: 1.5 },
       }
@@ -258,8 +258,8 @@ export default function Home() {
       <SectionBreather />
       <SectionArt
         marks={[
-          { src: '/images/art/plate-task-arithmetic.webp', side: 'right', top: '4%', width: 'clamp(180px, 22vw, 340px)', opacity: 0.62, rotate: -2 },
-          { src: '/images/art/plate-loss-basin.webp', side: 'left', top: '58%', width: 'clamp(150px, 17vw, 260px)', opacity: 0.55, rotate: 3 },
+          { src: '/images/marks/task-arithmetic.webp', side: 'right', top: '8%', width: 'clamp(180px, 22vw, 340px)', opacity: 0.85, rotate: -2, inset: '8%' },
+          { src: '/images/marks/loss-basin.webp', side: 'left', top: '58%', width: 'clamp(150px, 17vw, 260px)', opacity: 0.8, rotate: 3 },
         ]}
       >
         <About />
@@ -268,9 +268,9 @@ export default function Home() {
       <SectionBreather />
       <SectionArt
         marks={[
-          { src: '/images/art/plate-norm-balls.webp', side: 'left', top: '2%', width: 'clamp(170px, 20vw, 310px)', opacity: 0.6, rotate: -3 },
-          { src: '/images/art/plate-spectrum.webp', side: 'right', top: '34%', width: 'clamp(160px, 19vw, 290px)', opacity: 0.54, rotate: 2 },
-          { src: '/images/art/plate-hidden-objectives.webp', side: 'left', top: '72%', width: 'clamp(150px, 17vw, 260px)', opacity: 0.54, rotate: 4 },
+          { src: '/images/marks/norm-balls.webp', side: 'left', top: '2%', width: 'clamp(170px, 20vw, 310px)', opacity: 0.85, rotate: -3 },
+          { src: '/images/marks/spectrum.webp', side: 'right', top: '34%', width: 'clamp(160px, 19vw, 290px)', opacity: 0.78, rotate: 2, inset: '8%' },
+          { src: '/images/marks/hidden-objectives.webp', side: 'left', top: '72%', width: 'clamp(150px, 17vw, 260px)', opacity: 0.78, rotate: 4 },
         ]}
       >
         <Portfolio />
@@ -279,8 +279,8 @@ export default function Home() {
       <SectionBreather />
       <SectionArt
         marks={[
-          { src: '/images/art/plate-search-tree.webp', side: 'right', top: '6%', width: 'clamp(170px, 20vw, 300px)', opacity: 0.58, rotate: 2 },
-          { src: '/images/art/plate-latent-chain.webp', side: 'left', top: '62%', width: 'clamp(180px, 21vw, 320px)', opacity: 0.52, rotate: -2 },
+          { src: '/images/marks/search-tree.webp', side: 'right', top: '6%', width: 'clamp(170px, 20vw, 300px)', opacity: 0.8, rotate: 2, inset: '8%' },
+          { src: '/images/marks/latent-chain.webp', side: 'left', top: '62%', width: 'clamp(180px, 21vw, 320px)', opacity: 0.75, rotate: -2 },
         ]}
       >
         <News />
@@ -289,8 +289,8 @@ export default function Home() {
       <SectionBreather />
       <SectionArt
         marks={[
-          { src: '/images/art/plate-loss-basin.webp', side: 'left', top: '4%', width: 'clamp(170px, 20vw, 300px)', opacity: 0.58, rotate: -3 },
-          { src: '/images/art/plate-task-arithmetic.webp', side: 'right', top: '58%', width: 'clamp(160px, 18vw, 280px)', opacity: 0.52, rotate: 3 },
+          { src: '/images/marks/loss-basin.webp', side: 'left', top: '4%', width: 'clamp(170px, 20vw, 300px)', opacity: 0.8, rotate: -3 },
+          { src: '/images/marks/task-arithmetic.webp', side: 'right', top: '58%', width: 'clamp(160px, 18vw, 280px)', opacity: 0.75, rotate: 3, inset: '8%' },
         ]}
       >
         <Featured />
@@ -299,8 +299,8 @@ export default function Home() {
       <SectionBreather />
       <SectionArt
         marks={[
-          { src: '/images/art/plate-latent-chain.webp', side: 'right', top: '10%', width: 'clamp(190px, 23vw, 350px)', opacity: 0.55, rotate: 2 },
-          { src: '/images/art/plate-norm-balls.webp', side: 'left', top: '55%', width: 'clamp(140px, 16vw, 240px)', opacity: 0.5, rotate: -4 },
+          { src: '/images/marks/latent-chain.webp', side: 'right', top: '34%', width: 'clamp(190px, 23vw, 340px)', opacity: 0.8, rotate: 2, inset: '9%' },
+          { src: '/images/marks/norm-balls.webp', side: 'left', top: '55%', width: 'clamp(140px, 16vw, 240px)', opacity: 0.75, rotate: -4 },
         ]}
       >
         <Contact />

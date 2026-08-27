@@ -64,6 +64,28 @@ The `.png` is gitignored as an intermediate; reference the `.webp` from the app.
 2. Write a sketch in `sketches/` that calls `FK.*` over `DATA`.
 3. Render, look at the PNG, fix, repeat.
 
+## Marks vs plates
+
+A plate is a full composition on its own sheet. A MARK is the same sketch
+rendered with `--transparent`: the drawing only, no paper, no corner ticks, no
+scale bar. Marks go in `public/images/marks/` and are what the site scatters
+through its sections.
+
+This distinction is load-bearing. Reusing a full plate as a small decoration
+puts an opaque sheet on the page, and it reads as a pasted rectangle with the
+drawing lost inside it. Feathering the edges does not fix it, and compositing
+with `multiply` makes it worse — multiplying the plate's own paper against the
+page just darkens the patch. **An opaque background cannot be hidden; it has to
+not be rendered.**
+
+    node scripts/paint/render.mjs sketches/plate-norm-balls.js --transparent \
+      --size 900x580 --seed 4 --out public/images/marks/norm-balls.png
+    cwebp -q 88 -alpha_q 100 public/images/marks/norm-balls.png -o .../norm-balls.webp
+
+Always check a mark composited over the page colour at its real display size,
+not as a raw asset on a checkerboard. An asset that looks fine at 900px can be
+an invisible smudge at 300px.
+
 ## Interface chrome
 
 `sketches/chrome.js` renders the UI's own parts — divider rules, button

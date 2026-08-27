@@ -77,7 +77,7 @@ const data = dataArg ? readFileSync(resolve(REPO, dataArg), 'utf8') : 'null'
 
 writeFileSync(
   join(stage, 'config.js'),
-  `const CANVAS_W = ${w};\nconst CANVAS_H = ${h};\nconst SEED = ${seed};\nconst DATA = ${data};\n`
+  `const CANVAS_W = ${w};\nconst CANVAS_H = ${h};\nconst SEED = ${seed};\nconst DATA = ${data};\nconst TRANSPARENT = ${transparent};\n`
 )
 
 mkdirSync(dirname(out), { recursive: true })

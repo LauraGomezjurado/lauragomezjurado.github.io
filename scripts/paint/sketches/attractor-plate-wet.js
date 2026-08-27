@@ -106,7 +106,11 @@ function wing(side, bins = 30, swell = 1) {
 
 function draw() {
   translate(-width / 2, -height / 2)
-  background(PAPER)
+  // A mark is composited straight onto the page, so it must carry no
+  // paper of its own — an opaque sheet behind it is what reads as a
+  // pasted rectangle no matter how the edges are treated.
+  if (TRANSPARENT) clear()
+  else background(PAPER)
 
   groundWashes()
   WC.flush()
@@ -119,7 +123,7 @@ function draw() {
   glaze()
   WC.flush()
   annotation()
-  WC.applyPaper(20)
+  if (!TRANSPARENT) WC.applyPaper(20)
 }
 
 /** Big, almost-invisible washes so the sheet is never flat behind the subject. */

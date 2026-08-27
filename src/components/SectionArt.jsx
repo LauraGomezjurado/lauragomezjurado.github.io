@@ -10,6 +10,13 @@
  * at a few hundred pixels wide, which is a DOWNSCALE from the source and
  * therefore crisp, positioned around the section rather than behind it.
  *
+ * They point at /images/marks/, which are rendered with --transparent: the
+ * drawing ONLY, no paper. The first attempt reused the full plates, which carry
+ * their own sheet, and the result was a visible rectangle with the drawing lost
+ * inside it. Feathering the edges and blending with multiply did not save it —
+ * multiply over the plate's own paper just made the patch darker than the page.
+ * An opaque background cannot be hidden; it has to not be rendered.
+ *
  * The hero is the deliberate exception and still gets one large plate: an
  * opening page can carry a single big image.
  *
@@ -39,15 +46,9 @@ export default function SectionArt({ marks = [], className = '', children }) {
               transform: `rotate(${m.rotate ?? 0}deg)`,
               // Never object-cover here: these must keep their own aspect so the
               // drawing stays legible and never gets scaled past 1:1.
+              // No blend mode and no mask: the asset has a real alpha channel,
+              // so it composites onto the page with nothing to hide.
               objectFit: 'contain',
-              mixBlendMode: 'multiply',
-              // Each plate is painted on its own sheet, so a straight edge
-              // against the page reads as a pasted rectangle. Feathering the
-              // edges lets the drawing sit ON the page instead of on top of it.
-              maskImage:
-                'radial-gradient(ellipse 72% 72% at 50% 50%, #000 55%, transparent 88%)',
-              WebkitMaskImage:
-                'radial-gradient(ellipse 72% 72% at 50% 50%, #000 55%, transparent 88%)',
             }}
           />
         ))}
