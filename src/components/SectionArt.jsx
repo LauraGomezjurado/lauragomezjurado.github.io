@@ -1,32 +1,27 @@
 /**
- * SectionArt: the whole drawing as a section's background, the way the hero does it.
+ * SectionArt: the hero's treatment, applied to any section.
  *
- * Three earlier attempts were wrong; recording them so they are not repeated.
+ * The hero is the reference and always was. What makes it read as paint ON the
+ * page rather than a cut-out pasted onto it:
  *
- *   1. The full plate stretched with object-cover — a 2-3x UPSCALE of a 1400px
- *      source, so the paint went pixellated and the drawing was unreadable.
- *   2. Small cutouts scattered into the corners — read as stickers pasted onto
- *      the page, in positions that looked arbitrary because they were.
- *   3. A contained <img> anchored to the section's first screen. This is the
- *      subtle one: the image sits in a box that is clipped by overflow, so once
- *      you scroll into the section you see an arbitrary SLICE of the drawing.
- *      It looks like a torn fragment pasted on the page.
+ *   - the FULL PLATE, carrying its own watercolour paper and tooth
+ *   - mix-blend-mode: multiply, so that paper sinks into the page's beige
+ *   - cover, so it fills the frame with no empty space and no visible edge
  *
- * The hero never had this problem for one reason: its image fills the viewport
- * and you never scroll past it, so you always see a whole picture.
+ * Every earlier attempt here broke at least one of those. The worst was
+ * rendering the drawing with --transparent — literally cutting it out of its
+ * paper — which is why the sections looked a layer down and thin next to the
+ * hero. The paper is not packaging around the drawing; it is half of what the
+ * drawing IS.
  *
- * So the drawing is painted as a FIXED background instead. background-attachment
- * fixed sizes and positions against the viewport rather than the element, so the
- * whole drawing sits still and complete behind the section while the text scrolls
- * over it — the hero's behaviour, extended over a section of any height. `contain`
- * keeps the entire drawing in frame, which is what makes it read at a sane scale
- * rather than zoomed in.
- *
- * The source is a /images/marks/ render (--transparent: drawing only, no paper),
- * because `contain` leaves space around the drawing and a plate's own sheet would
- * show there as a letterboxed rectangle.
+ * The reason cover was avoided before was a real problem, wrongly solved:
+ * object-cover on an element as tall as a section is a 2-3x upscale, which went
+ * pixellated. But background-attachment: fixed sizes against the VIEWPORT
+ * instead of the element, so cover here is exactly the hero's scale no matter
+ * how tall the section is — and the drawing stays still and whole while the
+ * text scrolls over it.
  */
-export default function SectionArt({ src, opacity = 0.3, scale = 0.8, className = '', children }) {
+export default function SectionArt({ src, opacity = 0.5, className = '', children }) {
   return (
     <div className={`relative ${className}`}>
       <div
@@ -37,7 +32,8 @@ export default function SectionArt({ src, opacity = 0.3, scale = 0.8, className 
           backgroundRepeat: 'no-repeat',
           backgroundAttachment: 'fixed',
           backgroundPosition: 'center center',
-          backgroundSize: `auto ${scale * 100}vh`,
+          backgroundSize: 'cover',
+          mixBlendMode: 'multiply',
           opacity,
         }}
       />
