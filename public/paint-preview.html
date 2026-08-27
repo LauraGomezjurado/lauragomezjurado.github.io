@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Painted figures — preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --paper-base: #e6dcc8;
+        --ink: #2a211a;
+        --ink-soft: rgba(42, 33, 26, 0.8);
+        --ink-quiet: rgba(42, 33, 26, 0.56);
+        --accent: #9c6b4f;
+        --border: rgba(60, 45, 35, 0.16);
+        --panel-bg: rgba(244, 238, 226, 0.62);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--paper-base);
+        color: var(--ink);
+        font-family: 'IBM Plex Sans', system-ui, sans-serif;
+        font-weight: 300;
+        line-height: 1.8;
+        letter-spacing: 0.02em;
+        padding: 4rem 2rem 6rem;
+      }
+      .wrap { max-width: 1180px; margin: 0 auto; }
+      h1 {
+        font-size: clamp(1.9rem, 4vw, 2.9rem);
+        font-weight: 300;
+        letter-spacing: -0.01em;
+        margin: 0 0 0.5rem;
+      }
+      .lede { color: var(--ink-soft); max-width: 62ch; margin: 0 0 3.5rem; }
+      h2 {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-weight: 500;
+        color: var(--ink-quiet);
+        margin: 4rem 0 0.4rem;
+        padding-bottom: 0.6rem;
+        border-bottom: 1px solid var(--border);
+      }
+      h2:first-of-type { margin-top: 0; }
+      .cap { color: var(--ink-quiet); font-size: 0.92rem; margin: 0.9rem 0 0; max-width: 72ch; }
+      figure { margin: 1.8rem 0 0; }
+      img { display: block; width: 100%; height: auto; border-radius: 2px; }
+      .panel {
+        background: var(--panel-bg);
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        padding: 0.9rem;
+        box-shadow: inset 0 1px 0 rgba(255, 252, 245, 0.45);
+      }
+      .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem; align-items: start; }
+      @media (max-width: 860px) { .pair { grid-template-columns: 1fr; } }
+      .tag {
+        display: inline-block;
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        color: var(--ink-quiet);
+        margin-bottom: 0.7rem;
+      }
+      .tag.now { color: var(--accent); }
+      /* The originals are small PNGs; cap them so they sit at honest scale
+         beside the drawn version rather than being blown up into mush. */
+      .orig img { max-width: 520px; margin: 0 auto; }
+      ul { max-width: 72ch; color: var(--ink-soft); padding-left: 1.1rem; }
+      li { margin: 0.4rem 0; }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.85em;
+        background: rgba(156, 107, 79, 0.12);
+        padding: 0.12em 0.4em;
+        border-radius: 2px;
+      }
+      footer { margin-top: 5rem; padding-top: 1.4rem; border-top: 1px solid var(--border); color: var(--ink-quiet); font-size: 0.88rem; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Painted figures</h1>
+      <p class="lede">
+        A local preview. Nothing on the live site has been changed: this page just
+        shows what the pipeline in <code>scripts/paint/</code> produces, on the
+        site's own paper and palette.
+      </p>
+
+      <h2>1 &nbsp;·&nbsp; A figure, drawn instead of plotted</h2>
+      <div class="pair">
+        <div>
+          <span class="tag now">drawn — p5.brush, painted lettering</span>
+          <figure class="panel">
+            <img src="/images/blog/latent-thought/fig2_v3m_depth_sweet_spot_drawn.png" alt="Depth sweep drawn with p5.brush" />
+          </figure>
+        </div>
+        <div class="orig">
+          <span class="tag">original — matplotlib</span>
+          <figure class="panel">
+            <img src="/images/blog/latent-thought/fig2_v3m_depth_sweet_spot.png" alt="Depth sweep as matplotlib export" />
+          </figure>
+          <p class="cap">
+            Same numbers, read from
+            <code>16_v3m_depth_targets.json</code> in the
+            latent_thought_monitorability repo. Not traced off this PNG. The drawn
+            version dodges the three scopes apart on x, which the original cannot
+            do without the whiskers stacking into a ladder.
+            <br /><br />
+            Every label here is <strong>painted, not typeset</strong>: the glyph
+            outlines are pulled from the font and filled with the same brush that
+            drew the axes, so the lettering has the same bristle and paper tooth
+            as everything else on the page.
+          </p>
+        </div>
+      </div>
+
+      <h2>2 &nbsp;·&nbsp; Background art: dry vs wet</h2>
+      <div class="pair">
+        <div>
+          <span class="tag">first pass — mostly drawing</span>
+          <figure class="panel">
+            <img src="/images/art/attractor-plate.webp" alt="Lorenz attractor plate, first version" />
+          </figure>
+        </div>
+        <div>
+          <span class="tag now">repainted — wet</span>
+          <figure class="panel">
+            <img src="/images/art/attractor-plate-wet.webp" alt="Lorenz attractor plate, painted wet" />
+          </figure>
+        </div>
+      </div>
+      <p class="cap">
+        The first plate was a drawing with colour behind it. The second inverts
+        that: paint carries the image and the pencil only annotates. There is
+        <strong>no watercolour brush</strong> in p5.brush 2.1.0-beta —
+        <code>brush.box()</code> lists eleven, all dry media — so the wetness
+        comes from the fill system: high bleed, dozens of overlapping translucent
+        touches laid <em>along the trajectory</em>, pigment pooling at the rims,
+        the drawing put underneath and glazed over, and a cold-press tooth
+        multiplied across the sheet at the end.
+      </p>
+
+      <h2>3 &nbsp;·&nbsp; Coming next: orth-dion, from W&amp;B</h2>
+      <p class="cap">
+        The eight LLaMA 320M validation-loss curves behind
+        <code>val_loss_curves.png</code> were not on disk anywhere, so they now
+        come out of the <code>neurips_v4</code> W&amp;B project via
+        <code>extract_orth_dion_val_loss.py</code>. The numbers confirm the
+        paper's claim cleanly: Orth-Dion beats Dion at every rank fraction
+        (3.3074 vs 3.3121, 3.3406 vs 3.3466, 3.3781 vs 3.3824), with Muon lowest
+        at 3.2606. The drawing itself is not built yet.
+      </p>
+
+      <h2>4 &nbsp;·&nbsp; What the style dial looks like</h2>
+      <ul>
+        <li><strong>Closer to a paper.</strong> What you see above: real axes, real ticks, a legend. Reads as a figure that happens to be hand-drawn.</li>
+        <li><strong>Further toward the notebook.</strong> Looser axes, gridlines sketched rather than ruled, more margin annotation in your own words, less frame. Reads as a page from a lab book.</li>
+      </ul>
+      <p class="cap">
+        Both come off the same kit, so this is a parameter choice, not a rewrite.
+        Worth settling before the remaining figures get converted.
+      </p>
+
+      <footer>
+        Regenerate:
+        <code>python3 scripts/paint/data/extract_depth_sweet_spot.py</code> then
+        <code>node scripts/paint/render.mjs sketches/fig-depth-sweet-spot.js --data scripts/paint/data/depth-sweet-spot.json --size 2100x1350 --seed 4 --out public/images/blog/latent-thought/fig2_v3m_depth_sweet_spot_drawn.png</code>
+      </footer>
+    </div>
+  </body>
+</html>

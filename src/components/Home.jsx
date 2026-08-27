@@ -12,6 +12,7 @@ import Contact from './Contact'
 // below so the hero text paints before Three.js downloads.
 import { morphState, cameraState, stageState } from './backgroundState'
 import PaperBackground from './PaperBackground'
+import PlateBackdrop from './PlateBackdrop'
 // Light drops disabled for a cleaner background. To restore: uncomment this
 // import and the <LightDrops /> render site below. See memory: light-drops-disabled.
 // import LightDrops from './LightDrops'
@@ -222,11 +223,15 @@ export default function Home() {
 
       {/* Attractor canvas: sits above paper, below light streaks. Deferred —
           fallback is empty so the paper foundation shows until Three.js loads. */}
-      <div ref={bgRef} className="fixed inset-0 pointer-events-none z-[2]">
+      {/* Live attractor canvas: retired in favour of static painted plates, so
+          each section has its own colour instead of one drifting curve shared by
+          all of them. To restore, uncomment this and the AttractorLabel below.
+          See public/plate-series.html for the placement rationale. */}
+      {/* <div ref={bgRef} className="fixed inset-0 pointer-events-none z-[2]">
         <Suspense fallback={null}>
           <MorphingBackground />
         </Suspense>
-      </div>
+      </div> */}
 
       {/* Subtle drifting light streaks (square paths, hero region) */}
       {/* Disabled for a cleaner background. To restore: uncomment this and the
@@ -236,23 +241,44 @@ export default function Home() {
       {/* Attractor label: separate stacking context, sits above sections so
           the "Curious what the X attractor is?" hint stays tappable even
           when text panels overlap the bottom-right of the viewport. */}
-      <Suspense fallback={null}>
+      {/* <Suspense fallback={null}>
         <AttractorLabel />
-      </Suspense>
+      </Suspense> */}
 
-      <Hero />
+      <PlateBackdrop
+        src="/images/art/attractor-plate-wet.webp"
+        alt="A Lorenz attractor painted as a specimen plate"
+        opacity={0.55}
+        align="right"
+      >
+        <Hero />
+      </PlateBackdrop>
 
       <SectionBreather />
       <About />
 
       <SectionBreather />
-      <Portfolio />
+      <PlateBackdrop
+        src="/images/art/plate-norm-balls.webp"
+        alt="Unit balls of three norms, painted"
+        opacity={0.32}
+        align="right"
+      >
+        <Portfolio />
+      </PlateBackdrop>
 
       <SectionBreather />
       <News />
 
       <SectionBreather />
-      <Featured />
+      <PlateBackdrop
+        src="/images/art/plate-loss-basin.webp"
+        alt="A loss surface with a saddle, painted"
+        opacity={0.28}
+        align="center"
+      >
+        <Featured />
+      </PlateBackdrop>
 
       <SectionBreather />
       <Contact />

@@ -1010,10 +1010,37 @@ gsap.registerPlugin(ScrollTrigger)
 // Map of slug → hero figure component for LEAD-style posts that use a JSX hero
 // rather than an external image. (task-arithmetic-fairness is rendered through
 // its own dedicated branch and is not in this map.)
+/**
+ * A painted plate used as a post's hero figure.
+ *
+ * These replace the hand-built JSX schematics that used to fill this slot. They
+ * carry the same content — the schematics and the plates depict the same
+ * objects — but in the site's own hand, so a post header stops being a diagram
+ * pasted onto a painted page. See public/plate-series.html.
+ */
+function PlateHero({ src, alt }) {
+  return <img src={src} alt={alt} loading="eager" decoding="async" />
+}
+
 const leadHeroComponents = {
-  'monitoring-silent-thoughts': MonitoringHeroFigure,
-  'hidden-objectives': HiddenObjectivesHeroFigure,
-  'materials-agents-exploration': MaterialsAgentsHeroFigure,
+  'monitoring-silent-thoughts': () => (
+    <PlateHero
+      src="/images/art/plate-latent-chain.webp"
+      alt="A reasoning chain whose middle steps are unpainted outlines, with a probe reaching into the silent stretch."
+    />
+  ),
+  'hidden-objectives': () => (
+    <PlateHero
+      src="/images/art/plate-hidden-objectives.webp"
+      alt="Two adapter supports overlapping, the intersection hatched, with two separately trained probes converging on it."
+    />
+  ),
+  'materials-agents-exploration': () => (
+    <PlateHero
+      src="/images/art/plate-search-tree.webp"
+      alt="A planner expanding candidates, pruning most of them, and committing to a single path."
+    />
+  ),
 }
 
 // In a real implementation, you'd load this from markdown files
@@ -1551,7 +1578,7 @@ export default function BlogPost() {
 
     // Transition to light background
     gsap.to('body', {
-      background: '#faf9f6',
+      background: '#E9E0CE',
       color: '#1a1a1a',
       duration: 0.8,
       ease: 'power2.out'
@@ -1581,7 +1608,7 @@ export default function BlogPost() {
 
   if (!post) {
     return (
-      <section className="relative min-h-screen py-20 px-4" style={{ background: '#faf9f6', color: '#1a1a1a' }}>
+      <section className="relative min-h-screen py-20 px-4" style={{ background: '#E9E0CE', color: 'var(--ink)' }}>
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-light mb-4 gradient-text tracking-wider">Post Not Found</h2>
           <p className="text-gray-600 mb-8">The blog post you're looking for doesn't exist.</p>
@@ -1598,7 +1625,7 @@ export default function BlogPost() {
   // Custom component posts: rendered outside the markdown pipeline
   if (slug === 'task-arithmetic-fairness') {
     return (
-      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#ffffff', color: '#1a1a1a', fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
+      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#E9E0CE', color: 'var(--ink)' }}>
         <div className="lead-shell">
           <Link to="/blog" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
             ← back to blog
@@ -1638,7 +1665,7 @@ export default function BlogPost() {
 
   if (slug === 'orth-dion-spectral-geometry') {
     return (
-      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#ffffff', color: '#1a1a1a', fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
+      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#E9E0CE', color: 'var(--ink)' }}>
         <div className="lead-shell">
           <Link to="/blog" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
             ← back to blog
@@ -1696,7 +1723,7 @@ export default function BlogPost() {
 
   if (slug === 'muon-geometry-mixed-optimizer') {
     return (
-      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#ffffff', color: '#1a1a1a', fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
+      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#E9E0CE', color: 'var(--ink)' }}>
         <div className="lead-shell">
           <Link to="/blog" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
             ← back to blog
@@ -1826,7 +1853,7 @@ export default function BlogPost() {
     const cleaned = stripLeadingH1(stripHtmlComments(post.content))
     const { abstract, body } = splitAtFirstH2(cleaned)
     return (
-      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#ffffff', color: '#1a1a1a', fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
+      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#E9E0CE', color: 'var(--ink)' }}>
         <div className="lead-shell">
           <Link to="/blog" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
             ← back to blog
@@ -1901,7 +1928,7 @@ export default function BlogPost() {
   }
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#fdfcf9', color: '#1a1a1a', fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
+    <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#E9E0CE', color: 'var(--ink)' }}>
       <div className="relative z-10 mx-auto w-full" style={{ maxWidth: '760px' }}>
         <Link to="/blog" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
           ← back to blog

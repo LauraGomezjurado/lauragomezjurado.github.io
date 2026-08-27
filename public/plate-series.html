@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Plate series — design proposal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --paper-base: #e6dcc8;
+        --ink: #2a211a;
+        --ink-soft: rgba(42, 33, 26, 0.8);
+        --ink-quiet: rgba(42, 33, 26, 0.56);
+        --accent: #9c6b4f;
+        --border: rgba(60, 45, 35, 0.16);
+        --panel-bg: rgba(244, 238, 226, 0.62);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; background: var(--paper-base); color: var(--ink);
+        font-family: 'IBM Plex Sans', system-ui, sans-serif;
+        font-weight: 300; line-height: 1.75; letter-spacing: 0.02em;
+        padding: 4rem 2rem 7rem;
+      }
+      .wrap { max-width: 1180px; margin: 0 auto; }
+      h1 { font-size: clamp(1.9rem, 4vw, 2.9rem); font-weight: 300; letter-spacing: -0.01em; margin: 0 0 0.5rem; }
+      .lede { color: var(--ink-soft); max-width: 64ch; margin: 0 0 3rem; }
+      h2 {
+        font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.18em;
+        font-weight: 500; color: var(--ink-quiet); margin: 4.5rem 0 1.2rem;
+        padding-bottom: 0.6rem; border-bottom: 1px solid var(--border);
+      }
+      h3 { font-size: 1.15rem; font-weight: 400; margin: 0 0 0.3rem; letter-spacing: -0.01em; }
+      .cap { color: var(--ink-quiet); font-size: 0.92rem; margin: 0.7rem 0 0; max-width: 74ch; }
+      figure { margin: 0; }
+      img { display: block; width: 100%; height: auto; border-radius: 2px; }
+      .panel {
+        background: var(--panel-bg); border: 1px solid var(--border);
+        border-radius: 2px; padding: 0.75rem;
+        box-shadow: inset 0 1px 0 rgba(255, 252, 245, 0.45);
+      }
+      .plate { margin: 2.6rem 0 0; }
+      .plate .meta { display: flex; gap: 1.2rem; align-items: baseline; flex-wrap: wrap; margin-bottom: 0.8rem; }
+      .slot {
+        font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.14em;
+        color: var(--accent); border: 1px solid rgba(156,107,79,0.35);
+        padding: 0.15rem 0.5rem; border-radius: 2px; white-space: nowrap;
+      }
+      table { border-collapse: collapse; width: 100%; font-size: 0.9rem; margin-top: 1rem; }
+      th, td { text-align: left; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+      th { font-weight: 500; color: var(--ink-quiet); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; }
+      code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85em; background: rgba(156,107,79,0.12); padding: 0.1em 0.38em; border-radius: 2px; }
+      ol, ul { max-width: 74ch; color: var(--ink-soft); padding-left: 1.15rem; }
+      li { margin: 0.45rem 0; }
+      .todo { color: var(--ink-quiet); }
+      .todo strong { color: var(--ink); font-weight: 400; }
+      /* Mock of a hero: paint on the right, text column clear on the left. */
+      .mock { position: relative; border: 1px solid var(--border); border-radius: 2px; overflow: hidden; background: var(--paper-base); }
+      .mock img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
+      .mock .text { position: relative; padding: 3.5rem 2.5rem; max-width: 46%; }
+      .mock h4 { font-size: 1.8rem; font-weight: 300; margin: 0 0 0.6rem; letter-spacing: -0.02em; }
+      .mock p { color: var(--ink-soft); font-size: 0.92rem; margin: 0; }
+      .pigments { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.4rem 0 0.4rem; }
+      .pigments span {
+        font-size: 0.72rem; letter-spacing: 0.06em; color: var(--ink-soft);
+        padding: 0.3rem 0.6rem 0.3rem 1.5rem; position: relative;
+        background: rgba(244,238,226,0.5);
+      }
+      .pigments span::before {
+        content: ''; position: absolute; left: 0.5rem; top: 50%;
+        width: 0.62rem; height: 0.62rem; margin-top: -0.31rem;
+        border-radius: 50%; background: var(--c);
+      }
+      .demo { padding: 1.6rem 1.5rem; background: rgba(244,238,226,0.55); }
+      .demo-h { font-size: 1.25rem; margin: 0 0 0.3rem; }
+      .demo-p { font-size: 0.9rem; color: var(--ink-quiet); margin: 0 0 1.1rem; }
+      .demo.hard { border: 1px solid var(--border); border-radius: 2px; font-family: 'IBM Plex Sans', sans-serif; }
+      .demo.soft { border: none; border-radius: 0; font-family: Newsreader, Georgia, serif; box-shadow: 0 2px 18px rgba(60,45,35,0.09); }
+      .demo-btn-hard {
+        display: inline-block; border: 1px solid var(--accent);
+        color: var(--accent); padding: 0.4rem 0.9rem; border-radius: 2px; font-size: 0.82rem;
+      }
+      .demo-btn-soft {
+        display: inline-block; color: var(--accent); font-size: 0.92rem;
+        padding: 0.1rem 0; border-bottom: 1.5px solid rgba(156,107,79,0.45);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Plate series</h1>
+      <p class="lede">
+        <strong>Now live on the site.</strong> Kept as the record of what was
+        decided and why. The question is whether a set of painted mathematical plates can
+        carry the whole site the way one attractor carries the hero, and where
+        each one would sit.
+      </p>
+
+      <h2>The idea</h2>
+      <p class="cap">
+        The attractor works because it is three things at once: scientific
+        (a real dynamical system, annotated like a specimen), artistic (wet paint
+        on cold-press paper), and <em>yours</em> (it is the motif your site
+        already used). A series has to hold all three. So every plate below is a
+        real mathematical object drawn from your own work, painted in one hand,
+        with one shared grammar: corner ticks at the top left, a scale bar at the
+        bottom left, leader lines out to the right margin. The subject changes,
+        the handwriting does not.
+      </p>
+      <p class="cap">
+        The other half of the idea is <strong>restraint</strong>. Five plates
+        used everywhere is wallpaper. Three used deliberately, on bare paper
+        elsewhere, reads as intentional.
+      </p>
+
+      <h2>1 &nbsp;·&nbsp; The plates</h2>
+
+      <div class="plate">
+        <div class="meta"><h3>Strange attractor</h3><span class="slot">home hero</span></div>
+        <figure class="panel"><img src="/images/art/attractor-plate-wet.webp" alt="Lorenz attractor painted as a specimen plate" /></figure>
+        <p class="cap">
+          The Lorenz system: deterministic, bounded, and never repeating. Already
+          your site's motif. Organic and sprawling, which is why the others are
+          deliberately not.
+        </p>
+      </div>
+
+      <div class="plate">
+        <div class="meta"><h3>Geometry of steepest descent</h3><span class="slot">muon-geometry · portfolio</span></div>
+        <figure class="panel"><img src="/images/art/plate-norm-balls.webp" alt="Three unit balls with a gradient and the argmax on each boundary" /></figure>
+        <p class="cap">
+          Three unit balls over one origin — L2 round, L∞ square, L1 diamond —
+          with a single gradient and the point on each boundary that maximises
+          the inner product. Three different answers from the same gradient: that
+          is the entire reason SGD, signSGD and spectral methods take different
+          steps, and it is the schematic behind the Muon layer criterion.
+          Hard-edged on purpose, as the counterweight to the attractor.
+        </p>
+      </div>
+
+      <div class="plate">
+        <div class="meta"><h3>Singular spectrum with a rank cut</h3><span class="slot">orth-dion</span></div>
+        <figure class="panel"><img src="/images/art/plate-spectrum.webp" alt="Decaying singular values with a rank cut and a ghosted tail" /></figure>
+        <p class="cap">
+          A comb of decaying values and the line where you stop keeping them.
+          Left of the cut is the subspace a low-rank optimizer actually carries;
+          right of it is the tail it throws away, painted as ghosts. Dion and
+          Orth-Dion both turn on whether that tail was really negligible and
+          whether the kept basis stayed orthogonal. Rhythmic and vertical, so it
+          sits differently on a page from everything else.
+        </p>
+      </div>
+
+      <div class="plate">
+        <div class="meta"><h3>A chain of thought gone quiet</h3><span class="slot">latent-cot · confessions</span></div>
+        <figure class="panel"><img src="/images/art/plate-latent-chain.webp" alt="A reasoning chain whose middle steps are unpainted outlines, with a probe reaching in" /></figure>
+        <p class="cap">
+          Spoken steps are pigment; latent ones are empty outlines on bare paper,
+          because the absence is the subject and must not be painted. The thread
+          goes dashed where it goes silent, and a probe reaches up into the gap.
+          This is the clearest of the set: you can read the research question off
+          it without a caption. Its strip composition makes it the natural wide
+          banner.
+        </p>
+      </div>
+
+      <div class="plate">
+        <div class="meta"><h3>Loss surface with a saddle</h3><span class="slot">behind text</span></div>
+        <figure class="panel"><img src="/images/art/plate-loss-basin.webp" alt="Contours of a double-well function with a descent trajectory" /></figure>
+        <p class="cap">
+          Real level sets of <code>f(x,y) = (x²−1)² + 2y² − xy</code>: two basins
+          split by a saddle, with a trajectory integrated down the gradient from
+          a bad initialisation and streamlines showing the field it fell through.
+          It fills a page more evenly than the others, which is exactly what you
+          want <em>behind</em> text rather than beside it.
+        </p>
+      </div>
+
+      <div class="plate">
+        <div class="meta"><h3>Task arithmetic</h3><span class="slot">task-arithmetic-fairness</span></div>
+        <figure class="panel"><img src="/images/art/plate-task-arithmetic.webp" alt="Two task vectors spanning a parallelogram in weight space" /></figure>
+        <p class="cap">
+          Two fine-tuning difference vectors from a base model, and the corner
+          you land on by adding both without further training. The angle at the
+          origin is the whole story: near-orthogonal vectors compose cleanly, and
+          the more they align or oppose, the more adding one distorts the other.
+          Pans: ultramarine, rose, sepia.
+        </p>
+      </div>
+
+      <div class="plate">
+        <div class="meta"><h3>Two hidden objectives</h3><span class="slot">hidden-objectives</span></div>
+        <figure class="panel"><img src="/images/art/plate-hidden-objectives.webp" alt="Two overlapping adapter supports with a hatched intersection" /></figure>
+        <p class="cap">
+          Two adapters trained to conceal different things, drawn as two supports.
+          Where they overlap the pigment doubles and the region is hatched — the
+          only hatching in the series, so it carries weight. Two separately
+          trained probes converge on that patch, which is the question: is
+          concealment one shared mechanism? Pans: madder, sap, sepia — the least
+          comfortable pairing in the box, for the least comfortable question.
+        </p>
+      </div>
+
+      <div class="plate">
+        <div class="meta"><h3>Search tree</h3><span class="slot">materials-agents</span></div>
+        <figure class="panel"><img src="/images/art/plate-search-tree.webp" alt="A planner expanding candidates, pruning most, committing to one path" /></figure>
+        <p class="cap">
+          A planner expanding candidates, killing most of them, and committing to
+          one line. Most of the picture is abandoned work, struck through, with a
+          single wet corridor from root to result — which is the honest shape of
+          search. Pans: ochre, payne, sepia.
+        </p>
+      </div>
+
+      <h2>2 &nbsp;·&nbsp; The pigment box</h2>
+      <p class="cap">
+        Five plates in one palette is monotone — you scroll and nothing changes.
+        But letting each invent its own colours breaks the series. Real
+        watercolour work solves this the way a painter does: <strong>one box,
+        a different selection per painting</strong>. Paper and pencil never
+        change. The pans do.
+      </p>
+      <div class="pigments">
+        <span style="--c:#455571">indigo</span><span style="--c:#6E7C92">payne</span><span style="--c:#5B6E96">ultramarine</span><span style="--c:#4E7A78">teal</span><span style="--c:#6B7A55">sap</span><span style="--c:#6B705C">olive</span><span style="--c:#B98A46">ochre</span><span style="--c:#C08A4E">raw sienna</span><span style="--c:#A8654A">sienna</span><span style="--c:#94566A">madder</span><span style="--c:#B4738A">rose</span><span style="--c:#5A4436">sepia</span>
+      </div>
+      <table>
+        <tr><th>Plate</th><th>Pans</th><th>Temperature</th></tr>
+        <tr><td>Attractor · hero</td><td>indigo · madder · teal</td><td>Cool and deep. The page opens in shadow.</td></tr>
+        <tr><td>Norm balls · portfolio</td><td>sap · ochre · sienna</td><td>Warm and dry after the hero's cool.</td></tr>
+        <tr><td>Spectrum · news</td><td>sienna · raw sienna, payne for the discarded tail</td><td>The hottest plate in the set.</td></tr>
+        <tr><td>Latent chain · post banner</td><td>teal · ochre · madder</td><td>Cool against warm, the sharpest contrast.</td></tr>
+        <tr><td>Loss basin · behind text</td><td>payne · rose · olive</td><td>Most muted, because type sits on it.</td></tr>
+      </table>
+      <p class="cap">
+        Scrolling now moves cool → warm → hot → contrast → muted, instead of
+        repeating one chord. The pigment names are real, so a selection can be
+        reasoned about as paint rather than as hex codes.
+      </p>
+
+      <h2>3 &nbsp;·&nbsp; How a hero would actually sit</h2>
+      <div class="mock">
+        <img src="/images/art/attractor-plate-wet.webp" alt="" />
+        <div class="text">
+          <h4>Laura Gomezjurado</h4>
+          <p>
+            Paint weighted right, text column left, image at 55% opacity. The
+            plates are already composed with an empty side for exactly this. No
+            motion, no parallax — the stillness is the point.
+          </p>
+        </div>
+      </div>
+      <p class="cap">
+        A rough mock, not a build. The thing to check is that the paint never
+        crosses the text column and never rises above about 60% opacity behind
+        type.
+      </p>
+
+      <h2>4 &nbsp;·&nbsp; Where each one goes</h2>
+      <table>
+        <tr><th>Slot</th><th>Plate</th><th>Treatment</th></tr>
+        <tr><td>Home hero</td><td>Attractor</td><td>Full bleed, weighted right, 55%. The signature.</td></tr>
+        <tr><td>Home · Portfolio</td><td>Norm balls</td><td>Offset right, 35%, small.</td></tr>
+        <tr><td>Home · Featured</td><td>Loss basin</td><td>Behind text, 30%.</td></tr>
+        <tr><td>Home · About, News, Contact</td><td class="todo">none</td><td>Bare paper. This is what makes the other three read as chosen.</td></tr>
+        <tr><td>Post: muon-geometry</td><td>Norm balls</td><td>Replaces the JSX schematic in <code>lead-hero-right</code>, 100%.</td></tr>
+        <tr><td>Post: orth-dion</td><td>Spectrum</td><td>Replaces <code>OrthDionHeroFigure</code>, 100%.</td></tr>
+        <tr><td>Post: monitoring-silent-thoughts</td><td>Latent chain</td><td>Replaces <code>MonitoringHeroFigure</code>, 100%.</td></tr>
+        <tr><td>Post: confessions</td><td>Latent chain</td><td>Same sketch, different seed and a plum-to-gold shift so it rhymes without repeating.</td></tr>
+        <tr><td>Project cards</td><td class="todo">glyphs, not plates</td><td>One wet mark, one hue, no annotation. Plates would crush the cards.</td></tr>
+      </table>
+      <p class="cap">
+        Worth knowing: your posts already have hand-built JSX hero figures
+        (<code>leadHeroComponents</code> in <code>BlogPost.jsx</code>) covering
+        the same concepts. These plates are drop-in replacements for those, which
+        is what would unify the look rather than adding another layer to it.
+      </p>
+
+      <h2>5 &nbsp;·&nbsp; Rules that keep it clean</h2>
+      <ol>
+        <li><strong>One subject per plate.</strong> No decorative extras. If a mark is not part of the mathematics or the annotation grammar, it comes out.</li>
+        <li><strong>One accent hue per plate</strong>, over shared neutrals. Related, never identical.</li>
+        <li><strong>Paint never crosses the text column.</strong> Each plate is composed with a deliberately empty side.</li>
+        <li><strong>The same grammar every time</strong> — corner ticks, scale bar, leaders right. This is what makes five images a series instead of five pictures.</li>
+        <li><strong>Behind text ≤ 60% opacity</strong>; a standalone figure sits at 100%.</li>
+        <li><strong>Static.</strong> No motion, no parallax, no scroll effects.</li>
+      </ol>
+
+      <h2>6 &nbsp;·&nbsp; The chrome is too hard for the paint</h2>
+      <p class="cap">
+        Worth flagging now even though it comes after the plates. The paint is
+        wet, deckled and irregular; the interface around it is
+        <code>Inter</code> at <code>border-radius: 2px</code> with
+        <code>1px solid</code> borders. Those are two different worlds on one
+        page, and the mismatch will get more obvious as the paint gets better.
+      </p>
+      <div class="pair">
+        <div>
+          <span class="tag">now</span>
+          <div class="demo hard">
+            <p class="demo-h">Orth-Dion</p>
+            <p class="demo-p">A geometric fix for low-rank spectral optimization.</p>
+            <span class="demo-btn-hard">Read the post</span>
+          </div>
+        </div>
+        <div>
+          <span class="tag now">softer</span>
+          <div class="demo soft">
+            <p class="demo-h">Orth-Dion</p>
+            <p class="demo-p">A geometric fix for low-rank spectral optimization.</p>
+            <span class="demo-btn-soft">Read the post</span>
+          </div>
+        </div>
+      </div>
+      <p class="cap">
+        A rough CSS approximation, not the real thing. What actually changes:
+      </p>
+      <ol>
+        <li><strong>Kill the 1px borders.</strong> A hairline rectangle is the single most software-looking element on the page. Replace with a faint paper-tinted ground and no edge at all.</li>
+        <li><strong>Stop rounding corners.</strong> <code>2px</code> radius reads as neither crisp nor soft. Paper does not have rounded corners — it has <em>irregular</em> ones. The same brush that paints the plates can render a deckle edge as an asset, which is the honest fix.</li>
+        <li><strong>Buttons become underlines.</strong> A bordered rectangle is a UI control; a pencil rule under a word is a note. The rule can be brush-drawn from this pipeline so it has real graphite texture.</li>
+        <li><strong>Warm the type.</strong> <code>Inter</code> and <code>Space Grotesk</code> are geometric grotesques — excellent and cold. A humanist serif for body (Newsreader, Literata, Source Serif) would sit with the paper instead of against it. You already load <code>Caveat</code> for <code>.handwritten</code>; that hand should appear more, not less.</li>
+        <li><strong>Images sit on the page, not in frames.</strong> Drop the border, add a faint soft shadow so a plate reads as laid on the sheet.</li>
+        <li><strong>Rules and dividers get drawn.</strong> <code>&lt;hr&gt;</code> becomes a brush-rendered pencil line rather than a CSS border.</li>
+      </ol>
+      <p class="cap">
+        <strong>Started:</strong> see <a href="/soft-pass.html">the softening
+        pass</a> for a before/after, and <code>public/soft.css</code> for the
+        drop-in layer. Points 2, 3 and 6 all produce small PNG or SVG assets from the same
+        renderer that makes the plates — the interface would literally be drawn
+        with the same pencil. That is what would make it cohere rather than
+        merely match.
+      </p>
+
+      <h2>7 &nbsp;·&nbsp; Not made yet</h2>
+      <ul class="todo">
+        <li><strong>Card glyphs</strong> — a small wet mark per project, one hue, no annotation.</li>
+      </ul>
+
+      <h2>8 &nbsp;·&nbsp; Costs, honestly</h2>
+      <ul>
+        <li>Each plate takes <strong>2–3 minutes</strong> to render and lands around <strong>300–900KB</strong>. Site-wide they should be down-ressed to display size and served as WebP, or a post with several gets heavy.</li>
+        <li>Renders are <strong>not reproducible byte-for-byte</strong> — p5.brush carries its own randomness. p5.brush 2.2.2 adds <code>seed()</code>, which would fix that; the pipeline can already switch with <code>--p5brush 2.2.2</code>.</li>
+      </ul>
+    </div>
+  </body>
+</html>

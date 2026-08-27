@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Painted plates are committed as .webp; the .png the renderer emits is an
+# intermediate (10MB vs 464KB) and is regenerable via scripts/paint/README.md.
+public/images/art/*.png
