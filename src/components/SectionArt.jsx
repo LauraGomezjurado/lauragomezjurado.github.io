@@ -1,52 +1,46 @@
 /**
- * SectionArt: one drawing behind a section, the way the hero does it.
+ * SectionArt: the whole drawing as a section's background, the way the hero does it.
  *
- * Two earlier attempts were wrong, recorded so they are not repeated:
+ * Three earlier attempts were wrong; recording them so they are not repeated.
  *
- *   1. The full plate stretched with object-cover. That is a 2-3x UPSCALE of a
- *      1400px source, so the paint went visibly pixellated and the drawing
- *      became unreadable.
- *   2. Small cutouts scattered into the corners. Those read as stickers pasted
- *      onto the page, and the positions looked arbitrary because they were.
+ *   1. The full plate stretched with object-cover — a 2-3x UPSCALE of a 1400px
+ *      source, so the paint went pixellated and the drawing was unreadable.
+ *   2. Small cutouts scattered into the corners — read as stickers pasted onto
+ *      the page, in positions that looked arbitrary because they were.
+ *   3. A contained <img> anchored to the section's first screen. This is the
+ *      subtle one: the image sits in a box that is clipped by overflow, so once
+ *      you scroll into the section you see an arbitrary SLICE of the drawing.
+ *      It looks like a torn fragment pasted on the page.
  *
- * What works is what the hero already did: the drawing IS the background of the
- * section. The only thing that needed changing was scale — object-contain
- * rather than object-cover, so the whole drawing is visible in a reasonable
- * shape instead of blown up and cropped.
+ * The hero never had this problem for one reason: its image fills the viewport
+ * and you never scroll past it, so you always see a whole picture.
  *
- * The source is a /images/marks/ render (--transparent: drawing only, no
- * paper). That matters here specifically: with contain there is empty space
- * around the drawing, and a plate's own sheet would show in it as a
- * letterboxed rectangle.
+ * So the drawing is painted as a FIXED background instead. background-attachment
+ * fixed sizes and positions against the viewport rather than the element, so the
+ * whole drawing sits still and complete behind the section while the text scrolls
+ * over it — the hero's behaviour, extended over a section of any height. `contain`
+ * keeps the entire drawing in frame, which is what makes it read at a sane scale
+ * rather than zoomed in.
+ *
+ * The source is a /images/marks/ render (--transparent: drawing only, no paper),
+ * because `contain` leaves space around the drawing and a plate's own sheet would
+ * show there as a letterboxed rectangle.
  */
-export default function SectionArt({
-  src,
-  alt = '',
-  opacity = 0.38,
-  scale = 0.86,
-  className = '',
-  children,
-}) {
+export default function SectionArt({ src, opacity = 0.3, scale = 0.8, className = '', children }) {
   return (
     <div className={`relative ${className}`}>
-      {/* Anchored to the FIRST SCREEN of the section, not to the whole
-          section. Centering inside the full section put the drawing somewhere
-          in the middle of a several-thousand-pixel column, where it is never
-          on screen. The hero only worked because it happens to be exactly one
-          viewport tall; this makes every section behave the same way. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-screen max-h-full flex items-center justify-center overflow-hidden"
-      >
-        <img
-          src={src}
-          alt={alt}
-          loading="lazy"
-          decoding="async"
-          className="object-contain"
-          style={{ width: `${scale * 100}%`, height: `${scale * 100}%`, opacity }}
-        />
-      </div>
+        className="section-art pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage: `url(${src})`,
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed',
+          backgroundPosition: 'center center',
+          backgroundSize: `auto ${scale * 100}vh`,
+          opacity,
+        }}
+      />
       <div className="relative z-10">{children}</div>
     </div>
   )

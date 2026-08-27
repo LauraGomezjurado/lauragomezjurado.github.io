@@ -195,3 +195,10 @@ figcaption,
   font-size: 1.1em;
   letter-spacing: 0.01em;
 }
+
+/* background-attachment: fixed is ignored on iOS Safari, where it degrades to a
+   scrolling background that gets clipped — the exact failure this replaced. Drop
+   the section art there rather than ship a broken version of it. */
+@media (max-width: 640px), (hover: none) and (pointer: coarse) {
+  .section-art { display: none; }
+}
