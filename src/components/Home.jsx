@@ -257,51 +257,45 @@ export default function Home() {
 
       <SectionBreather />
       <SectionArt
-        marks={[
-          { src: '/images/marks/task-arithmetic.webp', side: 'right', top: '8%', width: 'clamp(180px, 22vw, 340px)', opacity: 0.85, rotate: -2, inset: '8%' },
-          { src: '/images/marks/loss-basin.webp', side: 'left', top: '58%', width: 'clamp(150px, 17vw, 260px)', opacity: 0.8, rotate: 3 },
-        ]}
+        src="/images/marks/task-arithmetic.webp"
+        opacity={0.3}
+        scale={0.82}
       >
         <About />
       </SectionArt>
 
       <SectionBreather />
       <SectionArt
-        marks={[
-          { src: '/images/marks/norm-balls.webp', side: 'left', top: '2%', width: 'clamp(170px, 20vw, 310px)', opacity: 0.85, rotate: -3 },
-          { src: '/images/marks/spectrum.webp', side: 'right', top: '34%', width: 'clamp(160px, 19vw, 290px)', opacity: 0.78, rotate: 2, inset: '8%' },
-          { src: '/images/marks/hidden-objectives.webp', side: 'left', top: '72%', width: 'clamp(150px, 17vw, 260px)', opacity: 0.78, rotate: 4 },
-        ]}
+        src="/images/marks/norm-balls.webp"
+        opacity={0.26}
+        scale={0.8}
       >
         <Portfolio />
       </SectionArt>
 
       <SectionBreather />
       <SectionArt
-        marks={[
-          { src: '/images/marks/search-tree.webp', side: 'right', top: '6%', width: 'clamp(170px, 20vw, 300px)', opacity: 0.8, rotate: 2, inset: '8%' },
-          { src: '/images/marks/latent-chain.webp', side: 'left', top: '62%', width: 'clamp(180px, 21vw, 320px)', opacity: 0.75, rotate: -2 },
-        ]}
+        src="/images/marks/search-tree.webp"
+        opacity={0.3}
+        scale={0.82}
       >
         <News />
       </SectionArt>
 
       <SectionBreather />
       <SectionArt
-        marks={[
-          { src: '/images/marks/loss-basin.webp', side: 'left', top: '4%', width: 'clamp(170px, 20vw, 300px)', opacity: 0.8, rotate: -3 },
-          { src: '/images/marks/task-arithmetic.webp', side: 'right', top: '58%', width: 'clamp(160px, 18vw, 280px)', opacity: 0.75, rotate: 3, inset: '8%' },
-        ]}
+        src="/images/marks/loss-basin.webp"
+        opacity={0.26}
+        scale={0.8}
       >
         <Featured />
       </SectionArt>
 
       <SectionBreather />
       <SectionArt
-        marks={[
-          { src: '/images/marks/latent-chain.webp', side: 'right', top: '34%', width: 'clamp(190px, 23vw, 340px)', opacity: 0.8, rotate: 2, inset: '9%' },
-          { src: '/images/marks/norm-balls.webp', side: 'left', top: '55%', width: 'clamp(140px, 16vw, 240px)', opacity: 0.75, rotate: -4 },
-        ]}
+        src="/images/marks/latent-chain.webp"
+        opacity={0.32}
+        scale={0.78}
       >
         <Contact />
       </SectionArt>

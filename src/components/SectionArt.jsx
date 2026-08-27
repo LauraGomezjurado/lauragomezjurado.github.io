@@ -1,57 +1,51 @@
 /**
- * SectionArt: scatters small painted plates around a section.
+ * SectionArt: one drawing behind a section, the way the hero does it.
  *
- * This replaces the earlier full-bleed backdrop, which was the wrong idea twice
- * over. A 1400px plate stretched to cover a whole section is a 2-3x UPSCALE, so
- * the paint turned pixellated and the drawing became unreadable — you could see
- * the pixels. And one big image per section is not what a notebook looks like.
+ * Two earlier attempts were wrong, recorded so they are not repeated:
  *
- * A notebook has several small drawings in the margins. So the plates are used
- * at a few hundred pixels wide, which is a DOWNSCALE from the source and
- * therefore crisp, positioned around the section rather than behind it.
+ *   1. The full plate stretched with object-cover. That is a 2-3x UPSCALE of a
+ *      1400px source, so the paint went visibly pixellated and the drawing
+ *      became unreadable.
+ *   2. Small cutouts scattered into the corners. Those read as stickers pasted
+ *      onto the page, and the positions looked arbitrary because they were.
  *
- * They point at /images/marks/, which are rendered with --transparent: the
- * drawing ONLY, no paper. The first attempt reused the full plates, which carry
- * their own sheet, and the result was a visible rectangle with the drawing lost
- * inside it. Feathering the edges and blending with multiply did not save it —
- * multiply over the plate's own paper just made the patch darker than the page.
- * An opaque background cannot be hidden; it has to not be rendered.
+ * What works is what the hero already did: the drawing IS the background of the
+ * section. The only thing that needed changing was scale — object-contain
+ * rather than object-cover, so the whole drawing is visible in a reasonable
+ * shape instead of blown up and cropped.
  *
- * The hero is the deliberate exception and still gets one large plate: an
- * opening page can carry a single big image.
- *
- * marks: [{ src, side, top, width, opacity, rotate }]
- *   side   'left' | 'right'   which margin it hangs in
- *   top    CSS length/percent, measured from the top of the section
- *   width  CSS length — keep it small; these are marginalia
+ * The source is a /images/marks/ render (--transparent: drawing only, no
+ * paper). That matters here specifically: with contain there is empty space
+ * around the drawing, and a plate's own sheet would show in it as a
+ * letterboxed rectangle.
  */
-export default function SectionArt({ marks = [], className = '', children }) {
+export default function SectionArt({
+  src,
+  alt = '',
+  opacity = 0.38,
+  scale = 0.86,
+  className = '',
+  children,
+}) {
   return (
     <div className={`relative ${className}`}>
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        {marks.map((m, i) => (
-          <img
-            key={i}
-            src={m.src}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            className="absolute hidden sm:block"
-            style={{
-              top: m.top,
-              [m.side === 'left' ? 'left' : 'right']: m.inset ?? '1.5%',
-              width: m.width,
-              maxWidth: '38vw',
-              opacity: m.opacity ?? 0.62,
-              transform: `rotate(${m.rotate ?? 0}deg)`,
-              // Never object-cover here: these must keep their own aspect so the
-              // drawing stays legible and never gets scaled past 1:1.
-              // No blend mode and no mask: the asset has a real alpha channel,
-              // so it composites onto the page with nothing to hide.
-              objectFit: 'contain',
-            }}
-          />
-        ))}
+      {/* Anchored to the FIRST SCREEN of the section, not to the whole
+          section. Centering inside the full section put the drawing somewhere
+          in the middle of a several-thousand-pixel column, where it is never
+          on screen. The hero only worked because it happens to be exactly one
+          viewport tall; this makes every section behave the same way. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-screen max-h-full flex items-center justify-center overflow-hidden"
+      >
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          className="object-contain"
+          style={{ width: `${scale * 100}%`, height: `${scale * 100}%`, opacity }}
+        />
       </div>
       <div className="relative z-10">{children}</div>
     </div>
