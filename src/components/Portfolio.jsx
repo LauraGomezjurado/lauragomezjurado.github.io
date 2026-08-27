@@ -155,14 +155,17 @@ export default function Portfolio() {
                     />
 
                     <div className="relative">
-                      {/* Meta line in the same hand as the doodles: index ·
-                          topic, a dashed hand-rule, then the year. */}
+                      {/* Meta line: index · topic, a dashed hand-rule, then the
+                          year. These are LABELS, so they take the shared label
+                          treatment rather than the handwriting — the hand is
+                          reserved for genuine margin notes, or the card ends up
+                          carrying three faces at once. */}
                       <div className="flex items-baseline gap-2.5 md:gap-3 mb-3 flex-wrap">
-                        <span className="handwritten text-[20px] leading-none" style={{ color: 'var(--accent)' }}>
+                        <span className="mono text-[11px] tracking-widest uppercase leading-none" style={{ color: 'var(--accent)' }}>
                           {String(index + 1).padStart(2, '0')}
                         </span>
                         {project.topic && (
-                          <span className="handwritten text-[19px] leading-none" style={{ color: 'var(--accent-dim)' }}>
+                          <span className="mono text-[11px] tracking-widest uppercase leading-none" style={{ color: 'var(--accent-dim)' }}>
                             {project.topic}
                           </span>
                         )}
@@ -170,7 +173,7 @@ export default function Portfolio() {
                           className="flex-1 min-w-[28px] self-center"
                           style={{ borderTop: '1.5px dashed rgba(156,107,79,0.42)' }}
                         />
-                        <span className="handwritten text-[19px] leading-none" style={{ color: 'var(--accent-dim)' }}>
+                        <span className="mono text-[11px] tracking-widest uppercase leading-none" style={{ color: 'var(--accent-dim)' }}>
                           {project.year}
                         </span>
                       </div>
@@ -273,17 +276,22 @@ export default function Portfolio() {
           <div className="mt-12 md:mt-28 flex flex-col items-center gap-3">
             <Link
               to="/portfolio"
-              className="group inline-flex items-center gap-3 px-6 md:px-7 py-2.5 md:py-3 mono text-[11px] tracking-widest uppercase transition-colors"
+              className="group inline-flex items-baseline gap-3 mono text-[12px] tracking-widest uppercase transition-all"
               style={{
                 color: 'var(--accent)',
-                border: '1px solid var(--border)',
-                borderRadius: '2px',
-                background: 'rgba(244,238,226,0.6)',
-                backdropFilter: 'blur(10px)',
                 textDecoration: 'none',
+                // A drawn pencil rule rather than a bordered box: the bordered
+                // version was the last hard-edged control left on the page.
+                // Inline styles are used because they are what the old box used,
+                // and CSS cannot override them from the stylesheet.
+                padding: '0.15rem 0 0.55rem',
+                backgroundImage: 'url(/images/ui/underline.png)',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'left bottom',
+                backgroundSize: '100% 10px',
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--accent)')}
-              onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--border)')}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundSize = '100% 13px')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundSize = '100% 10px')}
             >
               <span>{`View all ${projects.length} projects`}</span>
               <span aria-hidden="true">→</span>

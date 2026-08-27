@@ -13,6 +13,7 @@ import Contact from './Contact'
 import { morphState, cameraState, stageState } from './backgroundState'
 import PaperBackground from './PaperBackground'
 import PlateBackdrop from './PlateBackdrop'
+import SectionArt from './SectionArt'
 // Light drops disabled for a cleaner background. To restore: uncomment this
 // import and the <LightDrops /> render site below. See memory: light-drops-disabled.
 // import LightDrops from './LightDrops'
@@ -255,33 +256,55 @@ export default function Home() {
       </PlateBackdrop>
 
       <SectionBreather />
-      <About />
+      <SectionArt
+        marks={[
+          { src: '/images/art/plate-task-arithmetic.webp', side: 'right', top: '4%', width: 'clamp(180px, 22vw, 340px)', opacity: 0.62, rotate: -2 },
+          { src: '/images/art/plate-loss-basin.webp', side: 'left', top: '58%', width: 'clamp(150px, 17vw, 260px)', opacity: 0.55, rotate: 3 },
+        ]}
+      >
+        <About />
+      </SectionArt>
 
       <SectionBreather />
-      <PlateBackdrop
-        src="/images/art/plate-norm-balls.webp"
-        alt="Unit balls of three norms, painted"
-        opacity={0.32}
-        align="right"
+      <SectionArt
+        marks={[
+          { src: '/images/art/plate-norm-balls.webp', side: 'left', top: '2%', width: 'clamp(170px, 20vw, 310px)', opacity: 0.6, rotate: -3 },
+          { src: '/images/art/plate-spectrum.webp', side: 'right', top: '34%', width: 'clamp(160px, 19vw, 290px)', opacity: 0.54, rotate: 2 },
+          { src: '/images/art/plate-hidden-objectives.webp', side: 'left', top: '72%', width: 'clamp(150px, 17vw, 260px)', opacity: 0.54, rotate: 4 },
+        ]}
       >
         <Portfolio />
-      </PlateBackdrop>
+      </SectionArt>
 
       <SectionBreather />
-      <News />
+      <SectionArt
+        marks={[
+          { src: '/images/art/plate-search-tree.webp', side: 'right', top: '6%', width: 'clamp(170px, 20vw, 300px)', opacity: 0.58, rotate: 2 },
+          { src: '/images/art/plate-latent-chain.webp', side: 'left', top: '62%', width: 'clamp(180px, 21vw, 320px)', opacity: 0.52, rotate: -2 },
+        ]}
+      >
+        <News />
+      </SectionArt>
 
       <SectionBreather />
-      <PlateBackdrop
-        src="/images/art/plate-loss-basin.webp"
-        alt="A loss surface with a saddle, painted"
-        opacity={0.28}
-        align="center"
+      <SectionArt
+        marks={[
+          { src: '/images/art/plate-loss-basin.webp', side: 'left', top: '4%', width: 'clamp(170px, 20vw, 300px)', opacity: 0.58, rotate: -3 },
+          { src: '/images/art/plate-task-arithmetic.webp', side: 'right', top: '58%', width: 'clamp(160px, 18vw, 280px)', opacity: 0.52, rotate: 3 },
+        ]}
       >
         <Featured />
-      </PlateBackdrop>
+      </SectionArt>
 
       <SectionBreather />
-      <Contact />
+      <SectionArt
+        marks={[
+          { src: '/images/art/plate-latent-chain.webp', side: 'right', top: '10%', width: 'clamp(190px, 23vw, 350px)', opacity: 0.55, rotate: 2 },
+          { src: '/images/art/plate-norm-balls.webp', side: 'left', top: '55%', width: 'clamp(140px, 16vw, 240px)', opacity: 0.5, rotate: -4 },
+        ]}
+      >
+        <Contact />
+      </SectionArt>
     </>
   )
 }

@@ -47,8 +47,43 @@ h1, h2, h3, h4,
   letter-spacing: -0.012em;
 }
 
-/* Monospace stays monospace — code should not be softened. */
+/* Monospace stays monospace — but ONLY for code. */
 code, pre, kbd, samp { font-family: 'JetBrains Mono', 'Fira Mono', monospace; }
+
+/* Two visible faces, not four.
+ *
+ * The page was running Inter (body + headings), JetBrains Mono (every small
+ * label, tag, byline and button), Caveat (margin notes) and Newsreader. Four
+ * voices reads as noise rather than as a considered page.
+ *
+ * So: the serif carries everything typographic, INCLUDING the small labels.
+ * They stay uppercase and widely tracked, which is what makes a label read as a
+ * label — the mono was never doing that work, it was just louder. Caveat is
+ * kept for genuine margin annotations only, which is the one place a second
+ * hand belongs. */
+.mono,
+.section-index,
+.lead-shell,
+.lead-hero-left h1,
+.lead-byline,
+button, input, select, textarea {
+  font-family: var(--font-body);
+}
+
+/* Small serif caps need a touch more weight to hold at 10px. */
+.mono,
+.section-index {
+  font-weight: 400;
+  font-variant-numeric: oldstyle-nums;
+}
+
+.section-index {
+  letter-spacing: 0.2em;
+  opacity: 0.72;
+}
+
+/* Caveat is for margin notes and nothing else. */
+.handwritten { font-family: var(--font-hand); }
 
 /* ── 2. Kill the hairline borders ───────────────────────────────────────────
    A 1px rectangle is the most software-looking element on a page. A panel
