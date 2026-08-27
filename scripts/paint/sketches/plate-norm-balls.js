@@ -16,7 +16,14 @@
  * Pans: sap, ochre, sienna. Warm and dry after the hero's cool.
  */
 
-const PAPER = '#E9E0CE'
+// The page's RENDERED paper, measured from a screenshot — not the CSS value.
+// index.css declares #E6DCC8, but PaperBackground's grain layers put #D9D0BE on
+// screen. Every earlier figure was painted against the CSS value, so it was
+// always a slightly different material from the page, and every attempt to fix
+// that (feathered masks, multiply, transparent cut-outs, full-bleed) was hiding
+// a mismatch instead of removing it. Match the real value and a figure can just
+// be placed, with no blending at all.
+const PAPER = '#D9D0BE'
 const INK = '#3A2A22'
 const OLIVE = '#6B7A55'  // sap
 const SLATE = '#B98A46'  // ochre
@@ -69,7 +76,7 @@ function draw() {
     WC.cornerTicks(P)
     WC.scaleBar(P)
   }
-  if (!TRANSPARENT) WC.applyPaper(20)
+  // no applyPaper: the page's own grain already textures this area
 }
 
 /** The three boundaries, ruled lightly over the paint. */

@@ -16,7 +16,14 @@
  * Pans: teal for what is said, ochre for the answer, madder for the probe.
  */
 
-const PAPER = '#E9E0CE'
+// The page's RENDERED paper, measured from a screenshot — not the CSS value.
+// index.css declares #E6DCC8, but PaperBackground's grain layers put #D9D0BE on
+// screen. Every earlier figure was painted against the CSS value, so it was
+// always a slightly different material from the page, and every attempt to fix
+// that (feathered masks, multiply, transparent cut-outs, full-bleed) was hiding
+// a mismatch instead of removing it. Match the real value and a figure can just
+// be placed, with no blending at all.
+const PAPER = '#D9D0BE'
 const INK = '#3A2A22'
 const PLUM = '#4E7A78'   // teal, for spoken steps
 const GOLD = '#B98A46'   // ochre, for the answer
@@ -68,7 +75,7 @@ function draw() {
     WC.cornerTicks(P)
     WC.scaleBar(P)
   }
-  if (!TRANSPARENT) WC.applyPaper(20)
+  // no applyPaper: the page's own grain already textures this area
 }
 
 /** The steps that were said out loud: pigment on the page. */

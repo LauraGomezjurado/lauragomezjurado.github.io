@@ -257,40 +257,50 @@ export default function Home() {
 
       <SectionBreather />
       <SectionArt
-        src="/images/art/plate-task-arithmetic.webp"
-        opacity={0.5}
+        src="/images/figures/task-arithmetic.webp"
+        side="right"
+        top="58%"
+        width={300}
       >
         <About />
       </SectionArt>
 
       <SectionBreather />
       <SectionArt
-        src="/images/art/plate-norm-balls.webp"
-        opacity={0.5}
+        src="/images/figures/norm-balls.webp"
+        side="left"
+        top="3%"
+        width={290}
       >
         <Portfolio />
       </SectionArt>
 
       <SectionBreather />
       <SectionArt
-        src="/images/art/plate-search-tree.webp"
-        opacity={0.5}
+        src="/images/figures/search-tree.webp"
+        side="right"
+        top="5%"
+        width={300}
       >
         <News />
       </SectionArt>
 
       <SectionBreather />
       <SectionArt
-        src="/images/art/plate-loss-basin.webp"
-        opacity={0.5}
+        src="/images/figures/loss-basin.webp"
+        side="left"
+        top="5%"
+        width={280}
       >
         <Featured />
       </SectionArt>
 
       <SectionBreather />
       <SectionArt
-        src="/images/art/plate-latent-chain.webp"
-        opacity={0.5}
+        src="/images/figures/latent-chain.webp"
+        side="right"
+        top="18%"
+        width={320}
       >
         <Contact />
       </SectionArt>

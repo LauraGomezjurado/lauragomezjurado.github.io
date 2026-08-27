@@ -14,7 +14,14 @@
  *   node scripts/paint/render.mjs sketches/plate-task-arithmetic.js --size 1400x900 --seed 6
  */
 
-const PAPER = '#E9E0CE'
+// The page's RENDERED paper, measured from a screenshot — not the CSS value.
+// index.css declares #E6DCC8, but PaperBackground's grain layers put #D9D0BE on
+// screen. Every earlier figure was painted against the CSS value, so it was
+// always a slightly different material from the page, and every attempt to fix
+// that (feathered masks, multiply, transparent cut-outs, full-bleed) was hiding
+// a mismatch instead of removing it. Match the real value and a figure can just
+// be placed, with no blending at all.
+const PAPER = '#D9D0BE'
 const ULTRA = '#5B6E96'
 const ROSE = '#B4738A'
 const SEPIA = '#5A4436'
@@ -63,7 +70,7 @@ function draw() {
     WC.cornerTicks(P)
     WC.scaleBar(P)
   }
-  if (!TRANSPARENT) WC.applyPaper(20)
+  // no applyPaper: the page's own grain already textures this area
 }
 
 /**

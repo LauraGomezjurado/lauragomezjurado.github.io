@@ -15,7 +15,11 @@
  * is the plate that sits behind type.
  */
 
-const PAPER = '#E9E0CE'
+// The page's RENDERED paper, sampled from a screenshot — not the CSS value.
+// index.css says #E6DCC8, but PaperBackground's grain layers darken it to
+// #DCD2BE on screen. Matching the CSS value is why every figure read as a
+// different material to the page it sat on.
+const PAPER = '#D9D0BE'
 const INK = '#3A2A22'
 const SLATE = '#6E7C92'  // payne
 const OLIVE = '#6B705C'  // olive
@@ -63,7 +67,7 @@ function draw() {
     WC.cornerTicks(P)
     WC.scaleBar(P)
   }
-  if (!TRANSPARENT) WC.applyPaper(20)
+  // no applyPaper: the page's own grain shows through around the figure
 }
 
 /** Wet pools in the two minima, so the low ground reads as low. */

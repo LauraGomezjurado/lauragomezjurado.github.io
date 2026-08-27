@@ -13,7 +13,14 @@
  *   node scripts/paint/render.mjs sketches/plate-hidden-objectives.js --size 1400x900 --seed 7
  */
 
-const PAPER = '#E9E0CE'
+// The page's RENDERED paper, measured from a screenshot — not the CSS value.
+// index.css declares #E6DCC8, but PaperBackground's grain layers put #D9D0BE on
+// screen. Every earlier figure was painted against the CSS value, so it was
+// always a slightly different material from the page, and every attempt to fix
+// that (feathered masks, multiply, transparent cut-outs, full-bleed) was hiding
+// a mismatch instead of removing it. Match the real value and a figure can just
+// be placed, with no blending at all.
+const PAPER = '#D9D0BE'
 const MADDER = '#94566A'
 const SAP = '#6B7A55'
 const SEPIA = '#5A4436'
@@ -61,7 +68,7 @@ function draw() {
     WC.cornerTicks(P)
     WC.scaleBar(P)
   }
-  if (!TRANSPARENT) WC.applyPaper(20)
+  // no applyPaper: the page's own grain already textures this area
 }
 
 /** Each adapter's support, flooded so the boundary stays soft. */
