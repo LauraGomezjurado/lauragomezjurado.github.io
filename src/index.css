@@ -1,8 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Space+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap');
+/**
+ * The design system. One layer, not three.
+ *
+ * This file used to be the base that src/styles/soft.css was loaded after, in
+ * order to WIN against it - a serif re-fonting and a de-bordering pass applied
+ * as cascade overrides on top of an Inter/panel/hairline system underneath.
+ * That is a costume over a suit: it only ever reached the elements it named by
+ * hand, so everything it missed still looked like a web app, which is precisely
+ * why the "painted" pass read as unchanged. soft.css is gone; its good ideas
+ * (drawn rules, drawn underlines, no hairline boxes, captions in the hand) live
+ * here as first-class rules.
+ *
+ * Ground truth for colour lives in src/design-tokens.json, which the offline
+ * paint pipeline reads too. main.jsx asserts the two agree in dev.
+ */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Fonts are loaded from index.html so the preconnects work - an @import here
+   would be discovered only after this file parses. */
 
 * {
   margin: 0;
@@ -15,174 +32,355 @@ html {
   scroll-padding-top: 80px;
 }
 
-/* Smooth section transitions */
-@supports (scroll-behavior: smooth) {
-  html {
-    scroll-behavior: smooth;
-  }
+/* ─── Palette ───────────────────────────────────────────────────────────────
+   Near-white paper, soft warm charcoal ink, and accents taken from the twelve
+   pigments the plates are actually painted with.
+
+   The previous palette was #E6DCC8 sand / #2A211A espresso / #9C6B4F terracotta
+   - three values of one brown. Nothing on a single-hue page can be an event, and
+   at 16% down from white the ground read as a colour field rather than as paper,
+   which drained the chroma out of every wash laid on it. Near-white is what lets
+   pigment stay pigment. */
+:root {
+  /* Declared slightly light of target: the grain in PaperBackground multiplies
+     it down to --paper-rendered, which is the value plates are painted on.
+     Both live in src/design-tokens.json. */
+  --paper:          #F6F3EC;
+  --paper-rendered: #F4F1EA;
+  --paper-recess:   #EDE8DE;
+
+  /* Ink. Never black - black is a terminal, not a pen. */
+  --ink:        #3A3632;
+  --ink-strong: #211E1A;
+  --ink-soft:   rgba(58, 54, 50, 0.78);
+  --ink-quiet:  rgba(58, 54, 50, 0.52);
+  --hairline:   rgba(58, 54, 50, 0.10);
+
+  /* The pigment box, mirroring WC.PIGMENTS in scripts/paint/watercolour.js.
+     These exist in the interface so the UI and the paintings share a language;
+     before, the CSS knew none of them. */
+  --indigo: #455571;  --payne: #6E7C92;  --ultramarine: #5B6E96;
+  --teal:   #4E7A78;  --sap:   #6B7A55;  --olive:       #6B705C;
+  --ochre:  #B98A46;  --raw:   #C08A4E;  --sienna:      #A8654A;
+  --madder: #94566A;  --rose:  #B4738A;  --sepia:       #5A4436;
+
+  /* Accent: a real pigment, not a brown. Each <section> overrides this with the
+     lead pigment of its own plate (see .panel-* rules below), so scrolling the
+     page changes colour the way turning pages in a painted book does. */
+  --accent:       var(--sienna);
+  --accent-quiet: color-mix(in srgb, var(--accent) 55%, transparent);
+  --accent-ghost: color-mix(in srgb, var(--accent) 12%, transparent);
+
+  /* Back-compat aliases. The components still name the old tokens in ~20 inline
+     styles; the score pass (each panel rebuilt) removes those usages and then
+     these can go. Keeping them means the rename does not have to land as one
+     giant unreviewable diff. */
+  --paper-base:  var(--paper);
+  --accent-dim:  var(--accent-quiet);
+  --accent-hover: var(--ink-strong);
+  --border:      var(--hairline);
+  --panel-bg:        color-mix(in srgb, var(--paper-recess) 55%, transparent);
+  --panel-bg-strong: color-mix(in srgb, var(--paper-recess) 82%, transparent);
+
+  /* Type: four faces, four jobs. */
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-text:    'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-label:   'Fragment Mono', ui-monospace, 'SF Mono', monospace;
+  --font-hand:    'Caveat', 'Bradley Hand', cursive;
+
+  /* LOW optical size is the warm end of Fraunces: soft bracketed serifs that
+     read like ink. opsz 144 is the thin-hairline setting and looks like a
+     fashion magazine next to wet paint. */
+  --display-soft: 'opsz' 9, 'SOFT' 100, 'WONK' 1;
+  --display-mid:  'opsz' 24, 'SOFT' 100, 'WONK' 1;
 }
+
+/* Per-section accent. Set data-accent on a <section> and everything inside that
+   uses var(--accent) follows - links, rules, section numbers, marks.
+
+   The derived tints have to be re-declared HERE rather than only on :root. A
+   custom property's var() substitutions resolve against the element where the
+   property is DECLARED, so an --accent-quiet declared on :root bakes in the
+   root's sienna and inherits that same sienna into every section - which is why
+   the meta labels stayed terracotta inside a green panel while everything using
+   --accent directly turned green. Declaring them on [data-accent] resolves them
+   against that section's own --accent. */
+[data-accent] {
+  --accent-quiet: color-mix(in srgb, var(--accent) 55%, transparent);
+  --accent-ghost: color-mix(in srgb, var(--accent) 12%, transparent);
+  --accent-dim: var(--accent-quiet);
+}
+[data-accent='indigo'] { --accent: var(--indigo); }
+[data-accent='payne']  { --accent: var(--payne); }
+[data-accent='teal']   { --accent: var(--teal); }
+[data-accent='sap']    { --accent: var(--sap); }
+[data-accent='olive']  { --accent: var(--olive); }
+[data-accent='ochre']  { --accent: var(--ochre); }
+[data-accent='sienna'] { --accent: var(--sienna); }
+[data-accent='madder'] { --accent: var(--madder); }
+[data-accent='rose']   { --accent: var(--rose); }
+[data-accent='sepia']  { --accent: var(--sepia); }
 
 body {
-  font-family: 'Inter', 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  /* Matches PaperBackground `--paper-base` (warm sand stationery). */
-  background: #E6DCC8;
-  color: #2A211A;
+  font-family: var(--font-text);
+  font-size: 17px;
+  line-height: 1.7;
+  letter-spacing: 0.004em;
+  background: var(--paper);
+  color: var(--ink);
   overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  line-height: 1.8;
-  letter-spacing: 0.02em;
+  -webkit-font-smoothing: antialiased;
+}
+
+canvas { display: block; }
+
+/* ─── Type scale ────────────────────────────────────────────────────────────
+   The hierarchy used to be inverted: the name was 30px while section headers
+   were 72px, so the page shouted its own table of contents and whispered whose
+   it was. Headers come down; the name goes up. */
+
+.t-name {
+  font-family: var(--font-display);
+  font-variation-settings: var(--display-soft);
   font-weight: 300;
+  font-size: clamp(3.2rem, 8.5vw, 6.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.026em;
+  color: var(--ink-strong);
 }
 
-/* Light theme sections */
-body.light-theme {
-  background: #FAFBFC;
-  color: #1F2937;
+.t-section {
+  font-family: var(--font-display);
+  font-variation-settings: var(--display-soft);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  line-height: 1.1;
+  letter-spacing: -0.014em;
+  color: var(--ink-strong);
 }
 
-body.light-theme section[id] {
-  background: #FAFBFC;
-  color: #1F2937;
+.t-title {
+  font-family: var(--font-display);
+  font-variation-settings: var(--display-mid);
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink-strong);
 }
 
-canvas {
-  display: block;
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-variation-settings: var(--display-soft);
+  font-weight: 400;
+  letter-spacing: -0.014em;
+  line-height: 1.12;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #E6DCC8;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(156, 107, 79, 0.40);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 107, 79, 0.6);
-}
-
-/* Light theme scrollbar */
-body.light-theme ::-webkit-scrollbar-track {
-  background: #FAFBFC;
-}
-
-body.light-theme ::-webkit-scrollbar-thumb {
-  background: #6B7280;
-  opacity: 0.4;
-}
-
-body.light-theme ::-webkit-scrollbar-thumb:hover {
-  background: #4B5563;
-  opacity: 0.6;
-}
-
-/* ─── Palette: warm sand stationery, espresso ink, terracotta accent ───────── */
-:root {
-  /* Warm sand “paper”; no coloured wash overlays on top of this in UI */
-  --paper-base:   #E6DCC8;
-
-  --ink:        #2A211A;
-  /* Near-black warm ink: reserved for the one high-contrast move (oversized
-     project/section titles) so the rest of the page can stay quiet on purpose. */
-  --ink-strong: #1A130C;
-  --ink-soft:   rgba(42, 33, 26, 0.80);
-  --ink-quiet:  rgba(42, 33, 26, 0.56);
-
-  --accent:       #9C6B4F;
-  --accent-hover: #82542F;
-  --accent-dim:   rgba(156, 107, 79, 0.62);
-  --accent-ghost: rgba(156, 107, 79, 0.12);
-
-  --border:       rgba(60, 45, 35, 0.16);
-  --hairline:     rgba(42, 33, 26, 0.12);
-
-  --panel-bg:        rgba(244, 238, 226, 0.62);
-  --panel-bg-strong: rgba(244, 238, 226, 0.84);
-}
-
-/* ─── Editorial panel system ─────────────────────────────────────────────── */
-.panel {
-  position: relative;
-  background: var(--panel-bg);
-  backdrop-filter: blur(18px) saturate(105%);
-  -webkit-backdrop-filter: blur(18px) saturate(105%);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 252, 245, 0.45),
-    0 1px 2px rgba(60, 45, 35, 0.10);
-}
-.panel-strong {
-  background: var(--panel-bg-strong);
-}
-/* Local darkening for dense panels: blends with `--paper-base` */
-.scrim::before {
-  content: '';
-  position: absolute;
-  inset: -8%;
-  background: radial-gradient(ellipse 75% 70% at 30% 50%,
-    rgba(244, 238, 226, 0.62) 0%,
-    rgba(244, 238, 226, 0.28) 45%,
-    transparent 78%);
-  filter: blur(26px);
-  pointer-events: none;
-  z-index: -1;
-}
-
-
-
-/* Editorial rule: a corner-marked hairline used as section chrome */
-.rule-top::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, var(--hairline) 15%, var(--hairline) 85%, transparent 100%);
-}
-
-/* Section index chip: small mono caption like "§ 02" */
+/* Labels: §-numbers, years, tech lists, bylines. Uppercase and widely tracked
+   is what makes a label read as a label. */
+.mono,
 .section-index {
-  font-family: 'JetBrains Mono', 'Fira Mono', monospace;
-  font-weight: 300;
-  font-size: 0.72rem;
-  letter-spacing: 0.25em;
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--accent-dim);
+  color: var(--ink-quiet);
 }
 
-/* Editorial link: subtle underline grows on hover */
+.section-index { color: var(--accent); }
+
+/* The hand, for genuine margin annotation only - the one place a second voice
+   belongs. It is not a general-purpose caption font. */
+.handwritten {
+  font-family: var(--font-hand);
+  font-weight: 600;
+  font-size: 1.12em;
+  letter-spacing: 0.01em;
+}
+
+code, pre, kbd, samp {
+  font-family: var(--font-label);
+}
+
+/* ─── Surfaces ──────────────────────────────────────────────────────────────
+   A 1px rectangle with a 2px radius is the most software-looking element that
+   can appear on a page. A panel should read as a patch of slightly different
+   paper, not as a box. */
+.panel,
+.panel-strong,
+.glass {
+  position: relative;
+  border: none;
+  border-radius: 0;
+  background: color-mix(in srgb, var(--paper-recess) 55%, transparent);
+}
+
+.panel-strong {
+  background: color-mix(in srgb, var(--paper-recess) 82%, transparent);
+}
+
+/* A drawn registration tick where the eye expects a corner - rendered through
+   the same p5.brush pipeline as the plates (scripts/paint/sketches/chrome.js). */
+.panel::before,
+.panel-strong::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: 45px;
+  height: 45px;
+  background: url('/images/ui/corner.png') no-repeat top left / contain;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* Squared surfaces. Paper does not have ROUNDED corners; it has irregular ones,
+   and the drawn tick above carries the edge. Named targets only - Tailwind's
+   rounded-full is load-bearing for the News bullets. */
+figure img,
+img[src*='/images/art/'],
+img[src*='/images/figures/'],
+img[src*='/images/blog/'] {
+  border-radius: 0;
+  border: none;
+}
+
+/* Images sit ON the sheet. A faint shadow reads as laid down; a border reads as
+   framed. The painted plates get no shadow at all - they are painted on the same
+   stock the page uses, so a shadow would turn one back into a floating card,
+   which is the exact thing this system is trying to undo. */
+figure img {
+  box-shadow: 0 2px 26px rgba(58, 54, 50, 0.09);
+}
+
+img[src*='/images/art/'],
+img[src*='/images/figures/'] {
+  box-shadow: none;
+}
+
+/* A painting held in the research column, cross-fading as the text hands over.
+   Slow on purpose: a quick swap reads as a slideshow, a slow dissolve reads as
+   one painting becoming another. */
+.plate-held {
+  transition: opacity 900ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plate-held { transition: none; }
+}
+
+/* ─── Marks ─────────────────────────────────────────────────────────────────
+   Rules are drawn, not stroked: graphite with a baseline that wanders the way a
+   hand does. */
+hr,
+.lead-rule {
+  border: none;
+  height: 13px;
+  background: url('/images/ui/rule.png') no-repeat center / 100% 100%;
+  opacity: 0.7;
+  margin: 3rem auto;
+}
+
+/* A bordered rectangle is a UI control. A pencil rule under a word is a note in
+   a margin, which is what this site should feel like. It thickens on hover
+   rather than filling. */
+.btn-ghost {
+  border: none;
+  background-color: transparent;
+  color: var(--accent);
+  font-family: var(--font-text);
+  padding: 0.1rem 0 0.45rem;
+  background-image: url('/images/ui/underline.png');
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 100% 9px;
+  transition: background-size 0.2s ease, color 0.2s ease;
+}
+
+.btn-ghost:hover {
+  background-color: transparent;
+  background-size: 100% 12px;
+  color: var(--ink-strong);
+}
+
 .link-editorial {
   position: relative;
   color: var(--accent);
   transition: color 0.25s ease;
 }
+
 .link-editorial::after {
   content: '';
   position: absolute;
-  left: 0; bottom: -2px;
+  left: 0;
+  bottom: -2px;
   height: 1px;
   width: 100%;
   background: currentColor;
-  opacity: 0.3;
+  opacity: 0.28;
   transform-origin: left;
-  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.25s ease;
 }
-.link-editorial:hover::after { opacity: 0.9; }
 
-/* Text shadow for headings on the grain background */
+.link-editorial:hover::after { opacity: 0.85; }
+
+/* Captions are where a notebook shows its handwriting. */
+figcaption,
+.lead-byline {
+  font-family: var(--font-hand);
+  font-size: 1.08em;
+  letter-spacing: 0.01em;
+  color: var(--ink-quiet);
+}
+
+/* A soft paper-coloured lift behind display type sitting on a painting. Tuned
+   to the new ground; the old values were mixed for #E6DCC8 sand. */
 .text-on-bg {
   text-shadow:
-    0 1px 18px rgba(230, 220, 200, 0.85),
-    0 1px 3px rgba(230, 220, 200, 0.70);
+    0 1px 20px rgba(244, 241, 234, 0.9),
+    0 1px 4px rgba(244, 241, 234, 0.75);
 }
 
-/* Reduced motion: kill all scroll-driven transforms */
+/* Press photography: previously pushed through sepia(0.25), which sepia-fied the
+   one part of the page that should carry real colour. Just calm it slightly. */
+.portfolio-image {
+  filter: saturate(0.92) contrast(1.04);
+  transition: filter 0.4s ease;
+}
+
+.portfolio-image:hover {
+  filter: saturate(1) contrast(1.06);
+}
+
+/* Stanford wordmark: white plate drops out via multiply, ink stays. */
+img[src*='stanford-logo'] {
+  filter: brightness(0) saturate(100%);
+  mix-blend-mode: multiply;
+  background: transparent;
+}
+
+/* ─── Structure ─────────────────────────────────────────────────────────────
+   Content stays visible without JS: GSAP animates FROM these states when its
+   triggers fire, but a slow-mounting trigger must never leave the page blank. */
+section { position: relative; }
+
+section[id] .max-w-7xl,
+section[id] .max-w-6xl,
+section[id] .max-w-5xl,
+section[id] .max-w-4xl,
+section[id] h2 {
+  opacity: 1;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--paper); }
+::-webkit-scrollbar-thumb {
+  background: var(--accent-quiet);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
@@ -192,152 +390,12 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
   html { scroll-behavior: auto; }
 }
 
-/* Gradient text */
-.gradient-text {
-  color: var(--accent);
-}
-
-/* Monospace: for dates, tags, technical labels */
-.mono {
-  font-family: 'JetBrains Mono', 'Fira Mono', monospace;
-  font-weight: 300;
-  letter-spacing: 0.04em;
-}
-
-/* Handwriting: a casual hand for margin annotations drawn on top of figures,
-   so a diagram reads like a page someone was thinking on rather than a slide. */
-.handwritten {
-  font-family: 'Caveat', 'Bradley Hand', 'Segoe Print', cursive;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-
-/* Glass morphism: paper-tinted, very faint */
-.glass {
-  background: rgba(255, 252, 245, 0.30);
-  backdrop-filter: blur(14px);
-  border: 1px solid var(--border);
-}
-
-/* Ghost button */
-.btn-ghost {
-  background: transparent;
-  border: 1px solid var(--accent-dim);
-  color: var(--accent);
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-}
-.btn-ghost:hover {
-  background: var(--accent-ghost);
-  border-color: var(--accent);
-  color: var(--accent-hover);
-}
-
-/* Remove white backgrounds from Stanford logo using CSS filter */
-img[src*="stanford-logo"] {
-  /* Dark logo on light paper: white plate drops out via multiply, ink stays */
-  filter: brightness(0) saturate(100%);
-  mix-blend-mode: multiply;
-  background: transparent;
-}
-
-/* Light theme glass effect */
-body.light-theme .glass {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(74, 144, 226, 0.15);
-  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
-}
-
-/* Subtle shadow instead of glow */
-.glow {
-  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.15);
-}
-
-/* 3D Card effects */
-.project-card {
-  transform-style: preserve-3d;
-  transition: transform 0.5s ease;
-}
-
-.project-card:hover {
-  transform: translateY(-8px) scale(1.02);
-}
-
-/* Smooth animations */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-/* Section transitions - smoother */
-section {
-  position: relative;
-  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Ensure content is visible by default: GSAP will animate from these states
-   if its triggers fire, but users with JS disabled or slow-mounting triggers
-   still see readable content. */
-section[id] .max-w-7xl,
-section[id] .max-w-6xl,
-section[id] .max-w-5xl,
-section[id] .max-w-4xl {
-  opacity: 1;
-}
-
-section[id] h2 {
-  opacity: 1;
-}
-
-/* Subtle dividers between sections - removed for seamless transitions */
-.section-divider {
-  display: none;
-}
-
-/* Smooth parallax effect */
-.parallax-section {
-  will-change: opacity, transform;
-  transition: opacity 0.8s ease-out;
-}
-
-/* Smooth scroll container */
-html {
-  scroll-padding-top: 80px;
-}
-
-/* Portfolio image standardization - unified aesthetic */
-.portfolio-image {
-  filter: brightness(0.88) contrast(1.15) saturate(0.6) sepia(0.25);
-  transition: filter 0.4s ease;
-}
-
-.portfolio-image:hover {
-  filter: brightness(0.95) contrast(1.2) saturate(0.75) sepia(0.15);
-}
-
-/* Light theme adjustments for portfolio images */
-body.light-theme .portfolio-image {
-  filter: brightness(0.95) contrast(1.12) saturate(0.65) sepia(0.2);
-}
-
-body.light-theme .portfolio-image:hover {
-  filter: brightness(1) contrast(1.18) saturate(0.8) sepia(0.12);
-}
-
 /* ─── LEAD-inspired blog layout ──────────────────────────────────────────── */
 .lead-shell {
   max-width: 1300px;
   margin: 0 auto;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-  color: #1a1a1a;
+  font-family: var(--font-text);
+  color: var(--ink-strong);
 }
 
 .lead-hero {
@@ -357,19 +415,19 @@ body.light-theme .portfolio-image:hover {
 }
 
 .lead-hero-left h1 {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-text);
   font-size: clamp(2rem, 3.6vw, 2.8rem);
   font-weight: 500;
   line-height: 1.15;
   letter-spacing: -0.015em;
-  color: #1a1a1a;
+  color: var(--ink-strong);
   margin-bottom: 1.5rem;
 }
 
 .lead-hero-left .lead-abstract p {
   font-size: 1.02rem;
   line-height: 1.7;
-  color: #2a2a2a;
+  color: var(--ink);
   margin-bottom: 1rem;
   font-weight: 400;
 }
@@ -380,7 +438,7 @@ body.light-theme .portfolio-image:hover {
 
 .lead-hero-left .lead-byline {
   font-size: 0.85rem;
-  color: #6b6b6b;
+  color: var(--ink-quiet);
   letter-spacing: 0.01em;
   margin-top: 2rem;
   margin-bottom: 0;
@@ -427,14 +485,14 @@ body.light-theme .portfolio-image:hover {
 .lead-prose-inner p {
   font-size: 1.02rem;
   line-height: 1.72;
-  color: #2a2a2a;
+  color: var(--ink);
   margin-bottom: 1.1rem;
 }
 
 .lead-prose-inner h2 {
   font-size: 1.5rem;
   font-weight: 500;
-  color: #1a1a1a;
+  color: var(--ink-strong);
   margin-top: 3rem;
   margin-bottom: 1rem;
   letter-spacing: -0.005em;
@@ -445,7 +503,7 @@ body.light-theme .portfolio-image:hover {
 .lead-prose-inner h3 {
   font-size: 1.15rem;
   font-weight: 500;
-  color: #262626;
+  color: var(--ink);
   margin-top: 1.75rem;
   margin-bottom: 0.6rem;
   letter-spacing: 0;
@@ -457,7 +515,7 @@ body.light-theme .portfolio-image:hover {
 .lead-prose-inner ol {
   padding-left: 1.5rem;
   margin-bottom: 1.25rem;
-  color: #2a2a2a;
+  color: var(--ink);
 }
 
 .lead-prose-inner ul { list-style: disc; }
@@ -470,7 +528,7 @@ body.light-theme .portfolio-image:hover {
 }
 
 .lead-prose-inner a {
-  color: #5b3a8a;
+  color: var(--accent);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -479,7 +537,7 @@ body.light-theme .portfolio-image:hover {
   border-left: 2px solid #b8a8d0;
   padding-left: 1.25rem;
   margin: 1.5rem 0;
-  color: #4a4a4a;
+  color: var(--ink-soft);
   font-style: italic;
   font-size: 1rem;
   line-height: 1.65;
@@ -493,16 +551,16 @@ body.light-theme .portfolio-image:hover {
 }
 
 .lead-prose-inner code {
-  background: #f1ede4;
-  color: #5b3a8a;
+  background: var(--paper-recess);
+  color: var(--accent);
   padding: 0.1em 0.35em;
   border-radius: 3px;
   font-size: 0.92em;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-label);
 }
 
 .lead-prose-inner pre {
-  background: #f6f3ec;
+  background: var(--paper);
   border: 1px solid #e6e0d0;
   padding: 1rem 1.25rem;
   border-radius: 3px;
@@ -533,18 +591,18 @@ body.light-theme .portfolio-image:hover {
   padding: 0.5rem 0.75rem;
   text-align: left;
   font-weight: 500;
-  color: #1a1a1a;
+  color: var(--ink-strong);
 }
 
 .lead-prose-inner td {
   border-bottom: 1px solid #e6e0d0;
   padding: 0.5rem 0.75rem;
-  color: #2a2a2a;
+  color: var(--ink);
 }
 
 .lead-prose-inner strong {
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--ink-strong);
 }
 
 /* Figures: large centered blocks that break out wider than the text column,
@@ -570,7 +628,7 @@ body.light-theme .portfolio-image:hover {
 
 .lead-prose-inner figure.side figcaption {
   font-size: 0.86rem;
-  color: #5b5b5b;
+  color: var(--ink-soft);
   font-style: italic;
   line-height: 1.6;
   margin-top: 0.8rem;
@@ -594,12 +652,12 @@ body.light-theme .portfolio-image:hover {
   border-top: 1px solid #e6e0d0;
   font-size: 0.8rem;
   line-height: 1.6;
-  color: #8a8a8a;
+  color: var(--ink-quiet);
   font-style: italic;
 }
 
 .lead-prose-inner .lead-design-credit a {
-  color: #5b3a8a;
+  color: var(--accent);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -613,7 +671,7 @@ body.light-theme .portfolio-image:hover {
 .lead-prose-inner figure.margin-fig {
   font-size: 0.82rem;
   line-height: 1.55;
-  color: #5b5b5b;
+  color: var(--ink-soft);
 }
 
 .lead-prose-inner .margin-note.margin-right,
@@ -635,7 +693,7 @@ body.light-theme .portfolio-image:hover {
 .lead-prose-inner .margin-note p {
   font-size: 0.82rem;
   line-height: 1.55;
-  color: #5b5b5b;
+  color: var(--ink-soft);
   margin-bottom: 0.5rem;
 }
 
@@ -644,7 +702,7 @@ body.light-theme .portfolio-image:hover {
 }
 
 .lead-prose-inner .margin-note a {
-  color: #5b3a8a;
+  color: var(--accent);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -662,7 +720,7 @@ body.light-theme .portfolio-image:hover {
 
 .lead-prose-inner figure.margin-fig figcaption {
   font-size: 0.78rem;
-  color: #6b6b6b;
+  color: var(--ink-quiet);
   font-style: italic;
   line-height: 1.5;
   margin-top: 0.45rem;
@@ -763,41 +821,6 @@ section[id] {
     padding-left: 0;
     padding-right: 0;
   }
-}
-
-/* Typography refinement - techy and modern */
-h1 {
-  font-family: 'Inter', 'Space Grotesk', sans-serif;
-  font-weight: 300;
-  letter-spacing: 0.1em;
-  line-height: 1.1;
-  font-size: clamp(3.5rem, 9vw, 7rem);
-  color: var(--ink);
-}
-
-h2 {
-  font-family: 'Inter', 'Space Grotesk', sans-serif;
-  font-weight: 300;
-  letter-spacing: 0.08em;
-  line-height: 1.2;
-  font-size: clamp(2.25rem, 5.5vw, 4rem);
-  color: var(--ink);
-}
-
-h3 {
-  font-family: 'Inter', 'Space Grotesk', sans-serif;
-  font-weight: 300;
-  letter-spacing: 0.05em;
-  line-height: 1.3;
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  color: var(--ink);
-}
-
-p {
-  font-family: 'Inter', 'Space Grotesk', sans-serif;
-  font-weight: 300;
-  letter-spacing: 0.03em;
-  line-height: 1.75;
 }
 
 /* Overlap sections slightly for smoother transition */

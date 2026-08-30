@@ -1,0 +1,54 @@
+{
+  "_comment": [
+    "Single source of truth for the values that BOTH the web page and the offline",
+    "paint pipeline need to agree on.",
+    "",
+    "This file exists because of a specific bug. Seven sketches under",
+    "scripts/paint/sketches/ each hardcoded `const PAPER = '#D9D0BE'`, a value",
+    "sampled by eye from a screenshot of the rendered page. It was correct only so",
+    "long as PaperBackground's three feTurbulence opacities never changed - and any",
+    "change to them would silently mismatch all seven plates at once.",
+    "",
+    "Now: scripts/paint/render.mjs reads paper.rendered and injects it as the PAPER",
+    "global, and src/index.css declares paper.declared once in :root. main.jsx",
+    "asserts in dev that the browser actually paints paper.rendered, so the two can",
+    "never drift apart in silence again."
+  ],
+
+  "paper": {
+    "declared": "#F6F3EC",
+    "rendered": "#F4F1EA",
+    "note": "declared is what :root sets; rendered is what the grain multiplies it down to, and is what plates must be painted on. Re-measure with scripts/paint/README.md's procedure if the grain opacities in PaperBackground.jsx change."
+  },
+
+  "ink": {
+    "base": "#3A3632",
+    "strong": "#211E1A"
+  },
+
+  "pigments": {
+    "_note": "Mirrors WC.PIGMENTS in scripts/paint/watercolour.js. The interface draws its per-section accents from this box so the UI and the paintings speak one language.",
+    "indigo": "#455571",
+    "payne": "#6E7C92",
+    "ultramarine": "#5B6E96",
+    "teal": "#4E7A78",
+    "sap": "#6B7A55",
+    "olive": "#6B705C",
+    "ochre": "#B98A46",
+    "raw": "#C08A4E",
+    "sienna": "#A8654A",
+    "madder": "#94566A",
+    "rose": "#B4738A",
+    "sepia": "#5A4436"
+  },
+
+  "sectionAccents": {
+    "_note": "Each panel carries the lead pigment of its own plate, so scrolling changes colour the way turning pages in a painted book does.",
+    "hero": "indigo",
+    "about": "sepia",
+    "research": "per-plate",
+    "news": "payne",
+    "featured": "sienna",
+    "contact": "madder"
+  }
+}
