@@ -18,19 +18,39 @@
     <meta name="twitter:title" content="Which geometry on which layer? — Laura Gomezjurado Gonzalez" />
     <meta name="twitter:description" content="Mixed-optimizer recipes (Adam on embed/head, Muon on hidden) are frozen guesses about the sign of one scalar per layer: R(W;B) := Δ_spec / Δ_sign. It factors into signal efficiency times a curvature…" />
     <meta name="twitter:image" content="https://lauragomezjurado.github.io/profile.jpg" />
+
+    <!--
+      Four faces, four jobs. Loaded here rather than through an @import in
+      index.css so the preconnects can actually do their work - an @import is
+      discovered only after the stylesheet parses, which serialises the fetch.
+
+      Fraunces is requested across its opsz / SOFT / WONK axes. LOW optical size
+      is the warm end: opsz 9 has soft bracketed serifs and reads like ink, while
+      opsz 144 is the thin-hairline fashion setting that fights wet paint.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1&family=Newsreader:opsz,wght@6..72,200..700&family=Fragment+Mono&family=Caveat:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
+      /* Pre-paint ground so the first frame is already paper, not white.
+         Must match --paper in src/index.css (see src/design-tokens.json). */
       body {
         margin: 0;
-        background: #0a0a0a;
-        color: #ffffff;
+        background: #F6F3EC;
+        color: #3A3632;
       }
       #root {
         min-height: 100vh;
       }
     </style>
-    <script type="module" crossorigin src="/assets/index-XvxkI0Uu.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/three-CDDAhSkH.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-qcj1ifwb.css">
+    <script type="module" crossorigin src="/assets/index-aMB9XmED.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/react-nm6yGVBQ.js">
+    <link rel="modulepreload" crossorigin href="/assets/motion-DIYxqKnZ.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-C6yHnxGy.css">
   </head>
   <body>
     <div id="root"><article style="max-width:760px;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif"><p><a href="/blog">← back to blog</a></p><h1>Which geometry on which layer?</h1><p><time datetime="2026-05-25">2026-05-25</time></p><p>Mixed-optimizer recipes (Adam on embed/head, Muon on hidden) are frozen guesses about the sign of one scalar per layer: R(W;B) := Δ_spec / Δ_sign. It factors into signal efficiency times a curvature ratio, and a one-line estimator decides every layer's geometry — beating fixed Scion across four GPT-2 scales, ViT-B/16, and a nanoVLM head reversal that the LM convention gets wrong.</p><p>Loading the full post…</p></article></div>

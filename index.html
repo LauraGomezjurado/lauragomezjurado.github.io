@@ -6,19 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Laura Gomezjurado Gonzalez - AI Researcher & Global Governance Advocate. Research on interpretability, fairness, and reliability of large models." />
     <title>Laura Gomezjurado Gonzalez - AI research</title>
+
+    <!--
+      Four faces, four jobs. Loaded here rather than through an @import in
+      index.css so the preconnects can actually do their work - an @import is
+      discovered only after the stylesheet parses, which serialises the fetch.
+
+      Fraunces is requested across its opsz / SOFT / WONK axes. LOW optical size
+      is the warm end: opsz 9 has soft bracketed serifs and reads like ink, while
+      opsz 144 is the thin-hairline fashion setting that fights wet paint.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1&family=Newsreader:opsz,wght@6..72,200..700&family=Fragment+Mono&family=Caveat:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
+      /* Pre-paint ground so the first frame is already paper, not white.
+         Must match --paper in src/index.css (see src/design-tokens.json). */
       body {
         margin: 0;
-        background: #0a0a0a;
-        color: #ffffff;
+        background: #F6F3EC;
+        color: #3A3632;
       }
       #root {
         min-height: 100vh;
       }
     </style>
-    <script type="module" crossorigin src="/assets/index-XvxkI0Uu.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/three-CDDAhSkH.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-qcj1ifwb.css">
+    <script type="module" crossorigin src="/assets/index-aMB9XmED.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/react-nm6yGVBQ.js">
+    <link rel="modulepreload" crossorigin href="/assets/motion-DIYxqKnZ.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-C6yHnxGy.css">
   </head>
   <body>
     <div id="root"></div>
