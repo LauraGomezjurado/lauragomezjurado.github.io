@@ -12,9 +12,13 @@ export default defineConfig({
       output: {
         // Split heavy libraries into their own chunks so they cache
         // independently and don't bloat the initial app shell.
+        //
+        // The `three` entry that used to live here was preloading a 1MB chunk
+        // on every visit for a canvas that had been commented out for months.
+        // These are the libraries actually on the critical path.
         manualChunks: {
-          three: ['three', '@react-three/fiber', '@react-three/drei'],
-          markdown: ['react-markdown', 'remark-gfm', 'remark-math', 'rehype-katex', 'katex'],
+          react: ['react', 'react-dom', 'react-router-dom'],
+          motion: ['gsap', 'framer-motion'],
         },
       },
     },
