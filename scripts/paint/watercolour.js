@@ -92,7 +92,21 @@ const WC = {
   },
 
   /** Lay the tooth over everything painted so far. Call last. */
+  /**
+   * Multiply a paper tooth over the finished sheet.
+   *
+   * OFF by default now, and that is a change of principle rather than taste.
+   * The web page applies its own grain over everything it renders - plates
+   * included - since the tooth moved on top of the stack so that page and
+   * painting would read as one sheet. A plate that also bakes in its own tooth
+   * therefore gets grained twice and lands ~6% darker than the paper around it,
+   * which is the exact seam this whole approach exists to remove.
+   *
+   * Opt back in with `--tooth` for a plate meant to be looked at outside the
+   * site, where nothing else will supply it.
+   */
   applyPaper(depth = 18) {
+    if (typeof TOOTH === 'undefined' || !TOOTH) return
     const g = this.paper(width, height, depth)
     blendMode(MULTIPLY)
     image(g, 0, 0, width, height)
@@ -151,7 +165,7 @@ const WC = {
    * wash meets dry paper.
    */
   fillRegion(inside, box, opts = {}) {
-    const { colour = '#9C6B4F', alpha = 90, r = 26, cols = 9, rows = 9, bleed = 0.5, seed = 0 } = opts
+    const { colour = '#9C6B4F', alpha = 90, r = 26, cols = 9, rows = 9, bleed = 0.5, seed = 0, fit = null } = opts
     for (let i = 0; i < cols; i++) {
       for (let j = 0; j < rows; j++) {
         const jx = (noise(i * 3.1 + seed, j * 1.7) - 0.5) * (box.w / cols)
@@ -159,10 +173,21 @@ const WC = {
         const x = box.x + ((i + 0.5) / cols) * box.w + jx
         const y = box.y + ((j + 0.5) / rows) * box.h + jy
         if (!inside(x, y)) continue
+        let rr = r * (0.7 + 0.5 * noise(i * 5.5, j * 4.1 + seed))
+        // `fit(x, y)` returns how much room there is before the boundary. A
+        // touch is a disc of radius rr centred here, so without this the wash
+        // overruns the region by up to rr - unnoticeable on a slow boundary,
+        // fatal on a figure whose whole claim is which side of a line a point
+        // falls. Clamp, and skip the touch if there is no room at all.
+        if (fit) {
+          const room = fit(x, y)
+          if (room <= 0) continue
+          rr = Math.min(rr, room * 0.92)
+        }
         this.wet(bleed)
         brush.fill(colour, alpha)
         brush.beginShape(0.9)
-        this.blob(x, y, r * (0.7 + 0.5 * noise(i * 5.5, j * 4.1 + seed)), i * 7 + j + seed, 1)()
+        this.blob(x, y, rr, i * 7 + j + seed, 1)()
         brush.endShape(true)
       }
     }
@@ -177,6 +202,21 @@ const WC = {
 
   PENCIL: '#8A7663',
 
+  /**
+   * The drawing area.
+   *
+   * --bleed deliberately does NOT change this any more.
+   *
+   * It used to shrink the margin to almost nothing so a composition would fill
+   * its frame. That silently broke any sketch that places a point slightly
+   * outside the plate rect - plate-task-arithmetic puts the far parallelogram
+   * corner at about P.x + P.w * 1.05, which sits just inside the canvas at a 5%
+   * margin and lands past the edge at 0.6%. The result was a plate with its
+   * subject cropped off, which is worse than a plate with a wide margin.
+   *
+   * Suppressing the chrome was always the real win: the tick rails and scale bar
+   * are what made the margin read as dead space, not the margin itself.
+   */
   plateRect(margin = 0.05) {
     const m = width * margin
     return { x: m, y: m, w: width - 2 * m, h: height - 2 * m }
@@ -184,6 +224,7 @@ const WC = {
 
   /** Ruled ticks along the top and left, like a measuring stage. */
   cornerTicks(p, colour = null) {
+    if (typeof BLEED !== 'undefined' && BLEED) return
     const cell = p.h / 14
     const t = p.h * 0.013
     brush.noFill()
@@ -209,6 +250,7 @@ const WC = {
 
   /** Specimen scale bar with a half-division tick. */
   scaleBar(p, colour = null) {
+    if (typeof BLEED !== 'undefined' && BLEED) return
     const x = p.x + p.w * 0.05
     const y = p.y + p.h * 0.93
     const len = p.w * 0.1
@@ -231,3 +273,30 @@ const WC = {
     }
   },
 }
+
+/**
+ * WASH — one global knob on pigment load.
+ *
+ * Alphas throughout the sketches were mixed against a #D9D0BE sand ground. The
+ * page is near-white now, and the same alpha reads differently on it, so rather
+ * than re-tune 25 call sites by hand every time the paper moves, brush.fill is
+ * wrapped once here and every opacity is scaled by WASH (default 1, set with
+ * `--wash k`).
+ *
+ * Note the direction of the correction is not the obvious one. The intuition is
+ * that lighter paper needs LESS pigment; in practice a wash that read as solid
+ * on sand reads as thin on near-white, because the paper no longer supplies any
+ * of the darkness. If a re-render looks washed out, WASH goes UP.
+ *
+ * Signature-aware because brush.fill takes both (r,g,b,a) and (colour, alpha).
+ */
+;(function scaleFillOpacity() {
+  if (typeof brush === 'undefined' || typeof WASH === 'undefined' || WASH === 1) return
+  const clamp = (a) => Math.max(0, Math.min(255, a * WASH))
+  const original = brush.fill.bind(brush)
+  brush.fill = (...args) => {
+    if (args.length === 2 && typeof args[1] === 'number') args[1] = clamp(args[1])
+    else if (args.length === 4) args[3] = clamp(args[3])
+    return original(...args)
+  }
+})()

@@ -17,7 +17,11 @@
  *     mottle it into nothing.
  */
 
-const PAPER = '#E6DCC8'
+// PAPER, BLEED and WASH arrive as globals from render.mjs (see config.js).
+// PAPER is read from src/design-tokens.json, which the web page reads too - it
+// used to be a hardcoded '#D9D0BE' eyeballed from a screenshot and duplicated
+// across seven sketches, so it went silently wrong whenever the page's grain
+// changed. There is one value now, on both sides.
 const INK = '#2A211A'
 const CLAY = '#9C6B4F'
 const OLIVE = '#6B705C'

@@ -16,14 +16,11 @@
  * Pans: teal for what is said, ochre for the answer, madder for the probe.
  */
 
-// The page's RENDERED paper, measured from a screenshot — not the CSS value.
-// index.css declares #E6DCC8, but PaperBackground's grain layers put #D9D0BE on
-// screen. Every earlier figure was painted against the CSS value, so it was
-// always a slightly different material from the page, and every attempt to fix
-// that (feathered masks, multiply, transparent cut-outs, full-bleed) was hiding
-// a mismatch instead of removing it. Match the real value and a figure can just
-// be placed, with no blending at all.
-const PAPER = '#D9D0BE'
+// PAPER, BLEED and WASH arrive as globals from render.mjs (see config.js).
+// PAPER is read from src/design-tokens.json, which the web page reads too - it
+// used to be a hardcoded '#D9D0BE' eyeballed from a screenshot and duplicated
+// across seven sketches, so it went silently wrong whenever the page's grain
+// changed. There is one value now, on both sides.
 const INK = '#3A2A22'
 const PLUM = '#4E7A78'   // teal, for spoken steps
 const GOLD = '#B98A46'   // ochre, for the answer

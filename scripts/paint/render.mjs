@@ -12,11 +12,17 @@
  *     --data scripts/paint/data/depth-sweet-spot.json \
  *     --size 2100x1350 --seed 7 --out public/images/blog/.../fig.png
  *
- * Flags: --size WxH, --seed n, --out path, --data path, --font path.
+ * Flags: --size WxH, --seed n, --out path, --data path, --font path,
+ *        --p5brush ver, --transparent, --bleed, --wash k, --paper #hex, --tooth.
  *
- * The sketch reads CANVAS_W / CANVAS_H / SEED / DATA as globals (see config.js,
- * which this script generates), so one sketch renders at any size and the same
- * sketch can serve several datasets. See README.md.
+ * The sketch reads CANVAS_W / CANVAS_H / SEED / DATA / PAPER / BLEED / WASH as
+ * globals (see config.js, which this script generates), so one sketch renders at
+ * any size and the same sketch can serve several datasets. See README.md.
+ *
+ * PAPER comes from src/design-tokens.json rather than being hardcoded per
+ * sketch. It used to be `const PAPER = '#D9D0BE'` copied into seven files, a
+ * value eyeballed from a screenshot, and it silently went wrong the moment the
+ * page's grain opacities changed. One source now, read by both sides.
  */
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, copyFileSync, writeFileSync, mkdirSync, renameSync, existsSync, readFileSync } from 'node:fs'
@@ -49,7 +55,11 @@ const out = resolve(REPO, arg('out', `public/images/art/${sketchArg.split('/').p
 
 const stage = mkdtempSync(join(tmpdir(), 'p5paint-'))
 // p5.brush version is pinnable: the brush registry differs between releases.
-const brushVer = arg('p5brush', '2.1.0-beta')
+// 2.2.2 is the first non-beta release and the one that documents the custom-tip
+// contract (100x100 buffer, origin centred, dark = opaque) plus `type: "image"`
+// brushes. 2.1.0-beta is where the "nothing I passed as a tip rendered" note in
+// README.md came from.
+const brushVer = arg('p5brush', '2.2.2')
 // UI chrome (rules, underlines, deckle edges) has to sit on any ground, so it
 // needs a real alpha channel rather than a baked-in paper colour.
 const transparent = process.argv.includes('--transparent')
@@ -62,7 +72,7 @@ writeFileSync(
 copyFileSync(sketchPath, join(stage, 'sketch.js'))
 
 // The shared libraries, loaded before every sketch.
-for (const lib of ['figurekit.js', 'watercolour.js']) {
+for (const lib of ['figurekit.js', 'brushes.js', 'watercolour.js']) {
   if (existsSync(join(HERE, lib))) copyFileSync(join(HERE, lib), join(stage, lib))
 }
 
@@ -75,15 +85,45 @@ if (existsSync(fontSrc)) copyFileSync(fontSrc, join(stage, 'label.ttf'))
 const dataArg = arg('data', null)
 const data = dataArg ? readFileSync(resolve(REPO, dataArg), 'utf8') : 'null'
 
+// The one value the page and the plates must agree on.
+const tokens = JSON.parse(readFileSync(resolve(REPO, 'src/design-tokens.json'), 'utf8'))
+const paper = arg('paper', tokens.paper.rendered)
+
+// Plate chrome (the tick rails, corner marks and scale bar) is sized for a small
+// plate read as an object. At 600px+ beside body text it outshouts the drawing
+// and leaves it floating in dead margin, so full-size placements render with
+// --bleed and compose edge to edge instead.
+const bleed = process.argv.includes('--bleed')
+
+// Wash alphas were mixed against a dark sand ground. On near-white paper the
+// same values read ghostly, so every fill scales by WASH. This is the opposite
+// correction to the one you would guess: lighter paper needs MORE pigment.
+const wash = Number(arg('wash', '1'))
+
+// Paper tooth is supplied by the web page (PaperGrain renders over everything,
+// plates included). A plate that bakes its own in gets it twice and sits ~6%
+// darker than the sheet around it. Opt in only for plates viewed outside the
+// site.
+const tooth = process.argv.includes('--tooth')
+
 writeFileSync(
   join(stage, 'config.js'),
-  `const CANVAS_W = ${w};\nconst CANVAS_H = ${h};\nconst SEED = ${seed};\nconst DATA = ${data};\nconst TRANSPARENT = ${transparent};\n`
+  `const CANVAS_W = ${w};\n` +
+    `const CANVAS_H = ${h};\n` +
+    `const SEED = ${seed};\n` +
+    `const DATA = ${data};\n` +
+    `const TRANSPARENT = ${transparent};\n` +
+    `const PAPER = ${JSON.stringify(paper)};\n` +
+    `const BLEED = ${bleed};\n` +
+    `const WASH = ${wash};\n` +
+    `const TOOTH = ${tooth};\n`
 )
 
 mkdirSync(dirname(out), { recursive: true })
 const shot = join(stage, 'out.png')
 
-console.log(`painting ${sketchArg} @ ${w}x${h} seed=${seed} ...`)
+console.log(`painting ${sketchArg} @ ${w}x${h} seed=${seed} paper=${paper}` +
+  `${bleed ? ' bleed' : ''}${wash !== 1 ? ` wash=${wash}` : ''} (p5.brush ${brushVer}) ...`)
 const t0 = Date.now()
 try {
   execFileSync(
@@ -101,10 +141,14 @@ try {
       `--screenshot=${shot}`,
       `--window-size=${w},${h}`,
       // Virtual time, not wall time: it stalls while the sketch is painting.
-      '--virtual-time-budget=600000',
+      // Raised from 600s: plates with a few hundred bleeding fills exceed that
+      // and the run ends with no screenshot written, which surfaces as a bare
+      // "render failed" and looks like a bug in the sketch. If a render really
+      // is stuck, the execFileSync timeout below is the backstop.
+      '--virtual-time-budget=1800000',
       `file://${stage}/index.html`,
     ],
-    { stdio: ['ignore', 'ignore', 'pipe'], timeout: 15 * 60 * 1000 }
+    { stdio: ['ignore', 'ignore', 'pipe'], timeout: 30 * 60 * 1000 }
   )
 } catch (err) {
   const stderr = err.stderr?.toString() ?? ''

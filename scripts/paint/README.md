@@ -152,13 +152,72 @@ expect 2-3 minutes.
 
 **Pinned to p5.brush 2.1.0-beta**; `--p5brush 2.2.2` switches version. 2.2.2
 adds `seed()` (which would make renders reproducible), `massArray` and
-`hatchArray`, but ships the SAME eleven brushes. A `"watercolor"` brush, as in
-Narreddi's sketches, has to be registered with `brush.add(name, {type:"custom",
-..., tip})`. Registering one works — it appears in `box()` — but nothing I
-passed as a `tip` actually rendered. Unfinished lead; check the p5.brush source
-for the exact tip contract before trying again.
+`hatchArray`, and the eleven built-ins are all dry media. Wetness still comes
+from the FILL system, but the custom-tip lead is now CLOSED.
+
+**Custom brushes work. The contract (p5.brush 2.2.2, not the 2.1.0-beta this was
+originally written against):**
+
+- `tip: (_m) => {...}` receives a p5.Graphics buffer.
+- Its space is **100x100 with the origin at the CENTRE** — shapes are drawn
+  around `(0,0)`, edges land near +/-50. Drawing a few units across near the
+  origin is what made earlier attempts render nothing visible.
+- The buffer becomes a **mask: dark = opaque, white = transparent.** Define the
+  tip in dark tones; colour arrives later from `brush.set()`.
+- There is also `type: "image"`, which takes a photograph as the tip. That is the
+  better version of all of this: one scan of a real stroke would make every mark
+  on the site, plates and interface chrome alike, physically ours.
+  `brush.add` returns a Promise for image brushes, so `setup()` must be `async`.
+
+See `brushes.js` (`wash`, `wet-edge`, `dry`) and `sketches/brush-test.js`.
+
+**Tip geometry, measured with `sketches/brush-sweep.js` (radius x weight grid):**
+
+- Tip radius and brush weight BOTH scale the mark. The RATIO decides character.
+- **Small radius + high weight** -> granular, broken, stamps land apart and pool.
+  This is the wet end.
+- **Large radius + low weight** -> smooth and solid, stamps merge into a slab.
+- This is backwards from the obvious guess. A big soft tip does not make a soft
+  mark, it makes a tidy solid one. Anything aiming for "wet" wants a SMALL tip
+  driven hard.
+- `brush.set(name, colour, weight)`'s third argument **overrides** the weight the
+  brush was registered with. A brush's registered weight is only a default; the
+  call site decides scale, and the tip radius is what carries character.
+
+**Paper is no longer hardcoded.** `render.mjs` reads `src/design-tokens.json` and
+injects `PAPER`. The old `const PAPER = '#D9D0BE'` duplicated across seven
+sketches was sampled from a screenshot and went silently wrong the moment the
+page's grain opacities changed. `main.jsx` asserts in dev that the browser really
+paints that value.
+
+**New flags.** `--bleed` drops the plate chrome (tick rails, corner marks, scale
+bar) and shrinks the margin so the drawing fills the frame — plate grammar is
+right for a small plate read as an object, but at 600px+ beside body text the
+rails outshout the drawing. `--wash k` scales every fill opacity at once.
+
+**Alphas go UP on lighter paper, not down.** The floor below rises with the
+ground: a wash that read as solid on `#D9D0BE` reads thin on `#F4F1EA`, because
+the paper is no longer supplying any of the darkness. If a re-render looks washed
+out, raise `--wash`.
 
 ## Gotchas, all learned from failed renders
+
+- **A walked grid comes out woven once the pigment is strong enough to see.**
+  Placing touches at `(i/cols, k/rows)` hides its lattice at low alpha and shows
+  it as corduroy the moment you raise it - rows and columns line up across the
+  whole fill. Offset alternate columns by half a step and jitter both position
+  and radius per touch. This has now bitten three separate plates.
+- **A mark shown small needs MORE pigment than a plate shown large.** Marks are
+  displayed around 150px; alphas mixed for a 1500px plate read as a smudge there.
+
+
+- **`plate-spectrum` under `--bleed` is very slow, sometimes minutes.** It is not
+  hung. Bleeding scales the plate rect up, and the sketch stacks
+  `Math.round(h / (b.w * 0.8))` overlapping wet touches per bar across 26 bars -
+  several hundred bleeding fills, each one expensive. Every other plate finishes
+  in about a minute at 1600x1100. Either let it run or raise the step divisor
+  for that sketch specifically.
+
 
 - **Washes vanish below ~alpha 130.** p5.brush spreads pigment; a fill at
   alpha 60 renders as nothing. Use 140–210.

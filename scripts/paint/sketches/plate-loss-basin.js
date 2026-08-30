@@ -15,11 +15,11 @@
  * is the plate that sits behind type.
  */
 
-// The page's RENDERED paper, sampled from a screenshot — not the CSS value.
-// index.css says #E6DCC8, but PaperBackground's grain layers darken it to
-// #DCD2BE on screen. Matching the CSS value is why every figure read as a
-// different material to the page it sat on.
-const PAPER = '#D9D0BE'
+// PAPER, BLEED and WASH arrive as globals from render.mjs (see config.js).
+// PAPER is read from src/design-tokens.json, which the web page reads too - it
+// used to be a hardcoded '#D9D0BE' eyeballed from a screenshot and duplicated
+// across seven sketches, so it went silently wrong whenever the page's grain
+// changed. There is one value now, on both sides.
 const INK = '#3A2A22'
 const SLATE = '#6E7C92'  // payne
 const OLIVE = '#6B705C'  // olive
