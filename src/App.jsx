@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useRef, lazy, Suspense } from 'react'
 import Navigation from './components/Navigation'
 import Home from './components/Home'
+import { PaperGround, PaperGrain } from './components/PaperBackground'
 import './App.css'
 
 // Blog/Portfolio routes pull in heavy deps (KaTeX, react-markdown, the long
@@ -108,12 +109,17 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
+      {/* The sheet wraps every route, not just Home: the blog is printed on the
+          same paper. Ground goes under everything, tooth goes over everything
+          (including the painted plates) so page and painting are one material. */}
+      <PaperGround />
       <div className="App">
         <Navigation />
         <main>
           <AnimatedRoutes />
         </main>
       </div>
+      <PaperGrain />
     </Router>
   )
 }

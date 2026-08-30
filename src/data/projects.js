@@ -1,3 +1,18 @@
+/**
+ * Every project carries the painting that depicts it.
+ *
+ * `plate` replaced `motif` ({hue, intensity, spin}), which existed to tint a
+ * Three.js attractor retired months ago and which nothing has read since. The
+ * painting is the figure now, so the mapping belongs beside the data rather
+ * than in a lookup inside a component.
+ *
+ * `pigment` names the plate's lead pan. Research takes its accent from whichever
+ * plate is currently held, so colour moves as you scroll THROUGH the projects,
+ * not only between sections.
+ *
+ * `plate: null` means that project has no painting yet and shows none. Nothing
+ * is ever illustrated in a second drawing style - that is the whole point.
+ */
 export const projects = [
   {
     id: 4,
@@ -11,7 +26,7 @@ export const projects = [
     org: 'Supervised by Dr. Hiroki Naganuma · Hosted at ProPlace',
     link: 'https://arxiv.org/abs/2505.24262',
     github: 'https://github.com/LauraGomezjurado/fairness_task_vector_deploy',
-    motif: { hue: 0.35, intensity: 0.55, spin: 0.3 },
+    plate: { src: '/images/art/spread-task-arith.webp', pigment: 'ultramarine' },
     annotation: 'scale each Δθ by its own λ',
     aside: 'some subgroup edits increase disparity',
   },
@@ -29,7 +44,7 @@ export const projects = [
     link: 'https://arxiv.org/abs/2605.16341',
     annotation: 'QR fixes the geometry gap',
     // Orthogonalization = rotation, so this project spins the curve up.
-    motif: { hue: -0.1, intensity: 0.58, spin: 0.5 },
+    plate: { src: '/images/art/spread-dual-ball.webp', pigment: 'sienna' },
     aside: 'Dion and Orth-Dion pick the same subspace',
   },
   {
@@ -46,7 +61,7 @@ export const projects = [
     org: 'Stanford University',
     link: 'https://arxiv.org/abs/2604.13082',
     github: null,
-    motif: { hue: -0.45, intensity: 0.60, spin: -0.2 },
+    plate: { src: '/images/art/spread-shadow-knowledge.webp', pigment: 'indigo' },
     annotation: 'the encoder already knows here',
     aside: 'the numeral base decides whether it groks',
   },
@@ -61,6 +76,7 @@ export const projects = [
     briefDescription: 'Theory and G-Scion: pick spectral vs sign geometry per layer using the ratio R.',
     tech: ['Optimization', 'Muon', 'Mixed Optimizers', 'LLMs', 'VLMs'],
     link: 'https://openreview.net/forum?id=lDs4vkSX7J',
+    plate: { src: '/images/art/spread-norm-balls.webp', pigment: 'sap' },
   },
   {
     id: 11,
@@ -77,7 +93,7 @@ export const projects = [
     link: null,
     blogLink: 'https://lauragomezjurado.github.io/blog/subliminal-preference-transfer',
     github: 'https://github.com/LauraGomezjurado/subliminal_learning_rlhf',
-    motif: { hue: 0.55, intensity: 0.50, spin: 0.4 },
+    plate: { src: '/images/art/spread-hidden-obj.webp', pigment: 'madder' },
   },
   {
     id: 2,
@@ -91,7 +107,7 @@ export const projects = [
     org: 'Microsoft Research',
     link: null,
     github: null,
-    motif: { hue: 0.25, intensity: 0.45, spin: -0.15 },
+    plate: { src: '/images/art/spread-ceiling.webp', pigment: 'payne' },
   },
   {
     id: 3,
@@ -105,7 +121,7 @@ export const projects = [
     org: 'Stanford Scaling Intelligence Lab',
     link: null,
     github: null,
-    motif: { hue: -0.25, intensity: 0.55, spin: 0.25 },
+    plate: { src: '/images/art/spread-search-tree.webp', pigment: 'ochre' },
   },
   {
     id: 1,
@@ -119,7 +135,7 @@ export const projects = [
     org: 'Stanford CRFM',
     link: null,
     github: null,
-    motif: { hue: 0.20, intensity: 0.40, spin: 0.1 },
+    plate: { src: '/images/art/spread-harness.webp', pigment: 'madder' },
   },
   {
     id: 10,
@@ -133,7 +149,7 @@ export const projects = [
     org: 'Research Project',
     link: null,
     github: 'https://github.com/LauraGomezjurado/interpret_shifts',
-    motif: { hue: -0.55, intensity: 0.50, spin: -0.25 },
+    plate: { src: '/images/art/spread-attribution.webp', pigment: 'teal' },
   },
   {
     id: 5,
@@ -147,7 +163,7 @@ export const projects = [
     org: 'ASOFI · Co-founder & President',
     link: null,
     github: null,
-    motif: { hue: -0.70, intensity: 0.55, spin: 0.2 },
+    plate: { src: '/images/art/spread-leaf.webp', pigment: 'sap' },
   },
   {
     id: 6,
@@ -161,7 +177,7 @@ export const projects = [
     org: 'Stanford EE',
     link: 'https://ieeexplore.ieee.org/document/10125536',
     github: null,
-    motif: { hue: 0.50, intensity: 0.50, spin: 0.35 },
+    plate: { src: '/images/art/spread-bottleneck.webp', pigment: 'ultramarine' },
   },
   {
     id: 7,
@@ -175,7 +191,7 @@ export const projects = [
     org: 'Covid Detection Foundation / Virufy',
     link: 'https://ui.adsabs.harvard.edu/abs/2022arXiv220101669D/abstract',
     github: null,
-    motif: { hue: -0.35, intensity: 0.45, spin: -0.1 },
+    plate: { src: '/images/art/spread-roc.webp', pigment: 'olive' },
   },
   {
     id: 8,
@@ -189,7 +205,7 @@ export const projects = [
     org: 'Selected Project',
     link: null,
     github: 'https://github.com/LauraGomezjurado/clinical-notes-pipeline',
-    motif: { hue: 0.30, intensity: 0.50, spin: 0.15 },
+    plate: { src: '/images/art/spread-rouge-shift.webp', pigment: 'rose' },
   },
   {
     id: 9,
@@ -203,7 +219,7 @@ export const projects = [
     org: 'Selected Project',
     link: null,
     github: 'https://github.com/LauraGomezjurado/ee364b-project',
-    motif: { hue: 0.15, intensity: 0.45, spin: -0.2 },
+    plate: { src: '/images/art/spread-hidden-obj.webp', pigment: 'madder' },
   },
 ]
 

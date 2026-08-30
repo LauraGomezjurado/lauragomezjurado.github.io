@@ -1015,8 +1015,13 @@ gsap.registerPlugin(ScrollTrigger)
  *
  * These replace the hand-built JSX schematics that used to fill this slot. They
  * carry the same content — the schematics and the plates depict the same
- * objects — but in the site's own hand, so a post header stops being a diagram
- * pasted onto a painted page. See public/plate-series.html.
+ * objects - but in the site's own hand, so a post header stops being a diagram
+ * pasted onto a painted page. See docs/plate-series.html.
+ *
+ * Pointed at the spread-* renders: those are painted on the CURRENT paper (from
+ * src/design-tokens.json) with the plate chrome dropped. The older plate-*
+ * files are still on the retired #D9D0BE sand and would show a hard rectangle
+ * against the near-white page.
  */
 function PlateHero({ src, alt }) {
   return <img src={src} alt={alt} loading="eager" decoding="async" />
@@ -1025,19 +1030,19 @@ function PlateHero({ src, alt }) {
 const leadHeroComponents = {
   'monitoring-silent-thoughts': () => (
     <PlateHero
-      src="/images/art/plate-latent-chain.webp"
+      src="/images/art/spread-latent-chain.webp"
       alt="A reasoning chain whose middle steps are unpainted outlines, with a probe reaching into the silent stretch."
     />
   ),
   'hidden-objectives': () => (
     <PlateHero
-      src="/images/art/plate-hidden-objectives.webp"
+      src="/images/art/spread-hidden-obj.webp"
       alt="Two adapter supports overlapping, the intersection hatched, with two separately trained probes converging on it."
     />
   ),
   'materials-agents-exploration': () => (
     <PlateHero
-      src="/images/art/plate-search-tree.webp"
+      src="/images/art/spread-search-tree.webp"
       alt="A planner expanding candidates, pruning most of them, and committing to a single path."
     />
   ),
@@ -1578,7 +1583,7 @@ export default function BlogPost() {
 
     // Transition to light background
     gsap.to('body', {
-      background: '#E9E0CE',
+      background: 'var(--paper)',
       color: '#1a1a1a',
       duration: 0.8,
       ease: 'power2.out'
@@ -1608,7 +1613,7 @@ export default function BlogPost() {
 
   if (!post) {
     return (
-      <section className="relative min-h-screen py-20 px-4" style={{ background: '#E9E0CE', color: 'var(--ink)' }}>
+      <section className="relative min-h-screen py-20 px-4" style={{ background: 'var(--paper)', color: 'var(--ink)' }}>
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-light mb-4 gradient-text tracking-wider">Post Not Found</h2>
           <p className="text-gray-600 mb-8">The blog post you're looking for doesn't exist.</p>
@@ -1625,7 +1630,7 @@ export default function BlogPost() {
   // Custom component posts: rendered outside the markdown pipeline
   if (slug === 'task-arithmetic-fairness') {
     return (
-      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#E9E0CE', color: 'var(--ink)' }}>
+      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: 'var(--paper)', color: 'var(--ink)' }}>
         <div className="lead-shell">
           <Link to="/blog" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
             ← back to blog
@@ -1665,7 +1670,7 @@ export default function BlogPost() {
 
   if (slug === 'orth-dion-spectral-geometry') {
     return (
-      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#E9E0CE', color: 'var(--ink)' }}>
+      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: 'var(--paper)', color: 'var(--ink)' }}>
         <div className="lead-shell">
           <Link to="/blog" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
             ← back to blog
@@ -1723,7 +1728,7 @@ export default function BlogPost() {
 
   if (slug === 'muon-geometry-mixed-optimizer') {
     return (
-      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#E9E0CE', color: 'var(--ink)' }}>
+      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: 'var(--paper)', color: 'var(--ink)' }}>
         <div className="lead-shell">
           <Link to="/blog" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
             ← back to blog
@@ -1853,7 +1858,7 @@ export default function BlogPost() {
     const cleaned = stripLeadingH1(stripHtmlComments(post.content))
     const { abstract, body } = splitAtFirstH2(cleaned)
     return (
-      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#E9E0CE', color: 'var(--ink)' }}>
+      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: 'var(--paper)', color: 'var(--ink)' }}>
         <div className="lead-shell">
           <Link to="/blog" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
             ← back to blog
@@ -1928,7 +1933,7 @@ export default function BlogPost() {
   }
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#E9E0CE', color: 'var(--ink)' }}>
+    <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: 'var(--paper)', color: 'var(--ink)' }}>
       <div className="relative z-10 mx-auto w-full" style={{ maxWidth: '760px' }}>
         <Link to="/blog" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
           ← back to blog

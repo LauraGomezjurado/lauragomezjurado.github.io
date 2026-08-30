@@ -110,121 +110,127 @@ export default function News() {
   }, [])
 
   useEffect(() => {
-    if (titleRef.current) {
-      gsap.fromTo(
-        titleRef.current,
-        { opacity: 0, y: 24 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.2,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 85%', end: 'top 55%', scrub: 1 },
-        }
-      )
-    }
+    // Scoped with gsap.context so teardown reverts only THIS section's tweens
+    // and triggers. The previous cleanup called ScrollTrigger.getAll().kill(),
+    // which tore down every other panel's triggers too - and because StrictMode
+    // mounts, unmounts and remounts, whichever panel happened to unmount last
+    // could leave the others' scrubbed elements stranded at opacity 0.
+    const ctx = gsap.context(() => {
+      if (titleRef.current) {
+        gsap.fromTo(
+          titleRef.current,
+          { opacity: 0, y: 24 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 85%', end: 'top 55%', scrub: 1 },
+          }
+        )
+      }
 
-    itemsRef.current.forEach((el) => {
-      if (!el) return
-      gsap.fromTo(
-        el,
-        { opacity: 0, x: -16 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.9,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: el, start: 'top 92%', end: 'top 70%', scrub: 1 },
-        }
-      )
+      itemsRef.current.forEach((el) => {
+        if (!el) return
+        gsap.fromTo(
+          el,
+          { opacity: 0, x: -16 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.9,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 92%', end: 'top 70%', scrub: 1 },
+          }
+        )
+      })
     })
 
-    return () => ScrollTrigger.getAll().forEach((t) => t.kill())
+    return () => ctx.revert()
   }, [])
 
   return (
     <section
       ref={sectionRef}
       id="news"
-      className="relative z-10 py-14 md:py-32 px-4 sm:px-6 md:px-8 overflow-visible bg-transparent -mt-16 md:-mt-20"
+      data-accent="payne"
+      className="relative z-10 px-5 py-24 sm:px-8 md:px-12 md:py-32"
     >
-      <div className="relative z-10 max-w-4xl mx-auto w-full">
-        <header className="mb-10 md:mb-24 text-center">
-          <div className="section-index mb-3 md:mb-4">§ 03 · Recent</div>
-          <h2
-            ref={titleRef}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-wider text-on-bg"
-            style={{ color: 'var(--ink)' }}
-          >
+      {/*
+        The dense panel. Everything either side of it is large and airy - a
+        full-bleed plate, then spreads, then press images - so this one earns its
+        place by being tight: small type, close leading, no art at all. Contrast
+        of density is what stops six panels reading as six rows of a table.
+
+        Gone from here: the 1px badge boxes (a bordered rectangle is the most
+        software-looking element available), the glowing rail dots, and the
+        rgba(143,175,214) blue in them - a leftover from the dark theme sitting
+        in a warm palette.
+      */}
+      <div className="mx-auto w-full max-w-3xl">
+        <header className="mb-12 md:mb-16">
+          <div className="section-index mb-3">§ 03 · Recent</div>
+          <h2 ref={titleRef} className="t-section">
             News
           </h2>
         </header>
 
-        <div className="relative">
-          {/* Continuous vertical rail */}
-          <div
-            aria-hidden="true"
-            className="absolute top-0 bottom-0 left-[60px] md:left-[92px] w-px pointer-events-none"
-            style={{ background: 'linear-gradient(180deg, transparent 0%, var(--hairline) 8%, var(--hairline) 92%, transparent 100%)' }}
-          />
+        <div className="space-y-10 md:space-y-12">
+          {groups.map(([year, items]) => (
+            <section key={year} className="relative">
+              {/*
+                One bed per year, in the margin beside its heading.
 
-          <div className="space-y-10 md:space-y-16">
-            {groups.map(([year, items]) => (
-              <div key={year} className="relative">
-                {/* Year marker: sticky within its group for stronger spatial anchoring */}
-                <div className="flex items-center gap-3 md:gap-5 mb-4 md:mb-6">
-                  <div
-                    className="w-[50px] md:w-[80px] shrink-0 text-right mono text-[11px] md:text-xs tracking-widest"
-                    style={{ color: 'var(--accent)' }}
+                Deliberately not the research section's move - there, a single
+                figure holds position and mutates as you scroll, and repeating
+                that here would make the page look like it knows one trick.
+                These are separate specimens that do not move; what varies is
+                the DATA. The number of laminae in a bed is the number of things
+                that happened that year, so 2026 is thick and finely banded and
+                2023 is a thin quiet layer. The drawing is a count.
+              */}
+              <img
+                src={`/images/marks/year-${year}.webp`}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                decoding="async"
+                className="pointer-events-none absolute right-full top-1 mr-8 hidden w-[clamp(96px,11vw,185px)] lg:block xl:mr-12"
+              />
+
+              <h3
+                className="mono mb-4 border-t pt-3"
+                style={{ color: 'var(--accent)', borderColor: 'var(--hairline)' }}
+              >
+                {year}
+              </h3>
+
+              <ul className="space-y-3 md:space-y-3.5">
+                {items.map((item, idx) => (
+                  <li
+                    key={`${item.date}-${idx}`}
+                    ref={(el) => itemsRef.current.push(el)}
+                    className="grid grid-cols-[64px_1fr] gap-4 md:grid-cols-[92px_1fr] md:gap-6"
                   >
-                    {year}
-                  </div>
-                  <div className="relative w-[20px] md:w-[25px] flex justify-center">
-                    {/* Node on the rail */}
                     <span
-                      className="w-2 h-2 rounded-full"
-                      style={{ background: 'var(--accent)', boxShadow: '0 0 12px rgba(143,175,214,0.6)' }}
-                    />
-                  </div>
-                  <div className="h-px flex-1" style={{ background: 'var(--hairline)' }} />
-                </div>
-
-                <ul className="space-y-4 md:space-y-6">
-                  {items.map((item, idx) => (
-                    <li
-                      key={`${item.date}-${idx}`}
-                      ref={(el) => itemsRef.current.push(el)}
-                      className="grid grid-cols-[50px_20px_1fr] md:grid-cols-[80px_25px_1fr] items-start gap-3 md:gap-5"
+                      className="mono pt-[0.35em] leading-tight"
+                      style={{ color: 'var(--ink-quiet)', fontSize: '0.625rem' }}
                     >
-                      <span className="text-right mono text-[9.5px] md:text-[11px] tracking-widest uppercase pt-1 leading-tight" style={{ color: 'var(--accent-dim)' }}>
-                        {item.date}
-                      </span>
-                      <span className="relative flex justify-center pt-1.5">
-                        <span
-                          aria-hidden="true"
-                          className="w-1.5 h-1.5 rounded-full"
-                          style={{ background: 'rgba(143,175,214,0.45)' }}
-                        />
-                      </span>
-                      <div className="flex flex-col gap-1 md:gap-1.5">
-                        {item.badge && (
-                          <span
-                            className="mono text-[9.5px] md:text-[10px] tracking-widest uppercase self-start px-1.5 py-0.5"
-                            style={{ color: 'var(--accent-dim)', border: '1px solid var(--border)' }}
-                          >
-                            {item.badge}
-                          </span>
-                        )}
-                        <span className="text-[13.5px] md:text-base text-[#2A211A]/80 leading-relaxed font-light">
-                          {item.content}
+                      {item.date}
+                    </span>
+                    <p className="text-[14.5px] leading-[1.55] md:text-[15.5px]" style={{ color: 'var(--ink-soft)' }}>
+                      {item.badge && (
+                        <span className="mono mr-2" style={{ color: 'var(--accent)' }}>
+                          {item.badge}
                         </span>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+                      )}
+                      {item.content}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
         </div>
       </div>
     </section>

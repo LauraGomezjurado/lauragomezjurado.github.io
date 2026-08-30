@@ -2,412 +2,274 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import ProjectDoodle from './ProjectDoodle'
-import { motifState } from './backgroundState'
 import { projects, HERO_COUNT } from '../data/projects'
 
 gsap.registerPlugin(ScrollTrigger)
 
-/**
- * Portfolio: editorial project showcase (home-page slice).
- *
- * Shows the first HERO_COUNT projects only. The remaining projects live on
- * a dedicated /portfolio page so we don't have to handle a giant in-place
- * expansion (which caused a "black screen" during scroll-trigger reflow).
- */
 const visibleProjects = projects.slice(0, HERO_COUNT)
 
+/**
+ * Portfolio: the research section, where the paintings do the work.
+ *
+ * The painting column is sticky. It holds its place in the viewport while the
+ * project text scrolls past it, then cross-fades to the next project's painting
+ * as that project takes over. You cannot scroll this section without watching
+ * the paintings change, which is the difference between art that carries a page
+ * and art placed beside one.
+ *
+ * The section's accent follows the held painting, so colour moves WITHIN the
+ * section rather than only between sections.
+ *
+ * The scroll machinery was already here. The per-project ScrollTrigger below
+ * was written to push a {hue, intensity, spin} motif into a Three.js attractor
+ * parked in the left third of this grid; the attractor was retired months ago
+ * and the writes have gone nowhere since. The grid even kept columns 1-3 empty
+ * for it. This section was always designed around a figure that changes as you
+ * read - the hole just had the wrong thing in it, and then nothing at all.
+ *
+ * Gone with the old style: ProjectDoodle (14 hand-drawn SVG schematics wobbled
+ * with feTurbulence), the MarginAside and FigureAnnotation arrows, and the
+ * TickCorners frame. Two drawing languages on one page read as disorganised, so
+ * everything that looks drawn is now painted in the same medium. The handwritten
+ * `aside` survives as plain Caveat - the hand already marks it as an aside, and
+ * the arrow was doing no extra work.
+ *
+ * There is also no caption under any painting. A "Fig. 01 ·" line turns a
+ * drawing into a specimen with a museum card.
+ */
 export default function Portfolio() {
   const sectionRef = useRef(null)
   const titleRef = useRef(null)
   const itemsRef = useRef([])
+  const colRef = useRef(null)
   const [activeIdx, setActiveIdx] = useState(0)
 
   useEffect(() => {
-    if (titleRef.current) {
-      gsap.fromTo(
-        titleRef.current,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.4,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 85%', end: 'top 55%', scrub: 1 },
-        }
-      )
-    }
-
-    const triggers = []
-    itemsRef.current.forEach((el, idx) => {
-      if (!el) return
-      const isEven = idx % 2 === 0
-      const project = visibleProjects[idx]
-
-      gsap.fromTo(
-        el,
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.1,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: el, start: 'top 85%', end: 'top 55%', scrub: 1 },
-        }
-      )
-
-      const motifEl = el.querySelector('[data-motif-col]')
-      if (motifEl) {
+    const ctx = gsap.context(() => {
+      if (titleRef.current) {
         gsap.fromTo(
-          motifEl,
-          { y: isEven ? 30 : -30 },
+          titleRef.current,
+          { opacity: 0, y: 30 },
           {
-            y: isEven ? -30 : 30,
-            ease: 'none',
-            scrollTrigger: { trigger: el, start: 'top 85%', end: 'bottom 20%', scrub: true },
+            opacity: 1,
+            y: 0,
+            duration: 1.4,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 85%', end: 'top 55%', scrub: 1 },
           }
         )
       }
 
-      const t = ScrollTrigger.create({
-        trigger: el,
-        start: 'top 65%',
-        end: 'bottom 45%',
-        onEnter:      () => setActiveAndWrite(idx, project.motif),
-        onEnterBack:  () => setActiveAndWrite(idx, project.motif),
+      itemsRef.current.forEach((el) => {
+        if (!el) return
+
+        gsap.fromTo(
+          el,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.1,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 85%', end: 'top 60%', scrub: 1 },
+          }
+        )
+
       })
-      triggers.push(t)
-    })
 
-    const releaseTrigger = ScrollTrigger.create({
-      trigger: sectionRef.current,
-      start: 'top 20%',
-      end: 'bottom 10%',
-      onLeave:     () => releaseMotif(),
-      onLeaveBack: () => releaseMotif(),
-    })
-    triggers.push(releaseTrigger)
+      // Which painting is held.
+      //
+      // Derived from position, not from onEnter/onEnterBack. Those fire once per
+      // boundary crossing, so a fast scroll or a programmatic jump past several
+      // projects leaves whichever trigger happened to fire last, which is not
+      // necessarily the one you are reading. Reading the geometry on every update
+      // is always right and costs three getBoundingClientRect calls.
+      ScrollTrigger.create({
+        trigger: colRef.current,
+        start: 'top bottom',
+        end: 'bottom top',
+        onUpdate: () => {
+          // The line down the viewport where a project counts as "the one being
+          // read". Above centre, so the plate changes as a title arrives rather
+          // than after you have already read past it.
+          const readingLine = window.innerHeight * 0.42
+          let held = 0
+          itemsRef.current.forEach((el, i) => {
+            if (el && el.getBoundingClientRect().top <= readingLine) held = i
+          })
+          setActiveIdx((prev) => (prev === held ? prev : held))
+        },
+      })
+    }, sectionRef)
 
-    function setActiveAndWrite(idx, m) {
-      if (!m) return
-      setActiveIdx(idx)
-      motifState.hue = m.hue
-      motifState.intensity = m.intensity
-      motifState.spin = m.spin
-    }
-    function releaseMotif() {
-      motifState.hue = 0
-      motifState.intensity = 0
-      motifState.spin = 0
-    }
-
-    return () => {
-      triggers.forEach((t) => t.kill())
-    }
+    return () => ctx.revert()
   }, [])
+
+  const active = visibleProjects[activeIdx]
 
   return (
     <section
       ref={sectionRef}
       id="portfolio"
-      className="relative z-10 py-14 md:py-32 px-4 sm:px-6 md:px-8 overflow-visible bg-transparent -mt-16 md:-mt-20"
+      className="relative z-10 px-5 pb-12 pt-24 sm:px-8 md:px-12 md:pb-16 md:pt-32"
+      // The accent is the held painting's lead pigment, so the section changes
+      // colour as you scroll it rather than carrying one hue throughout.
+      style={
+        active?.plate
+          ? {
+              '--accent': `var(--${active.plate.pigment})`,
+              // Re-derived here on purpose: --accent-quiet is declared on :root,
+              // and a custom property's var() resolves against the element that
+              // DECLARES it - so inheriting it would keep the root's sienna
+              // while --accent turned green.
+              '--accent-quiet': `color-mix(in srgb, var(--${active.plate.pigment}) 55%, transparent)`,
+              '--accent-ghost': `color-mix(in srgb, var(--${active.plate.pigment}) 12%, transparent)`,
+            }
+          : undefined
+      }
     >
-      <div className="relative z-10 max-w-6xl mx-auto w-full">
-        <header ref={titleRef} className="mb-14 md:mb-32 text-center">
-          <div className="section-index mb-3 md:mb-4">§ 02 · Selected Research</div>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-wider mb-4 md:mb-5 text-on-bg" style={{ color: 'var(--ink)' }}>
-            Research &amp; Projects
-          </h2>
-          <p className="max-w-2xl mx-auto text-[13.5px] md:text-base text-[#2A211A]/60 font-light leading-relaxed">
-            Recent work centers on spectral and mixed-geometry optimization, and on the representations
-            transformers form before they can use them. A few projects are highlighted below; the rest sit
-            one click away.
+      <div className="relative mx-auto w-full max-w-6xl">
+        <header ref={titleRef} className="mb-16 md:mb-24">
+          <div className="section-index mb-3">§ 02 · Selected Research</div>
+          <h2 className="t-section mb-4">Research &amp; Projects</h2>
+          <p className="max-w-[46ch] text-[16px] leading-relaxed" style={{ color: 'var(--ink-quiet)' }}>
+            Recent work centers on spectral and mixed-geometry optimization, and on the
+            representations transformers form before they can use them. A few projects are
+            highlighted below; the rest sit one click away.
           </p>
         </header>
 
-        <div className="space-y-16 md:space-y-40">
-          {visibleProjects.map((project, index) => {
-            const isEven = index % 2 === 0
-            const isActive = activeIdx === index
-
-            return (
+        <div className="md:grid md:grid-cols-12 md:gap-x-10">
+          {/* The text: one continuous column that scrolls. */}
+          <div ref={colRef} className="md:col-span-5">
+            {visibleProjects.map((project, index) => (
               <article
                 key={project.id}
                 ref={(el) => (itemsRef.current[index] = el)}
-                className="project-item relative"
-                aria-current={isActive ? 'true' : undefined}
+                className={`project-item relative ${
+                  // The tall trailing padding exists so a painting can hold while
+                  // you finish reading before it hands over to the next one. The
+                  // LAST project has nothing to hand over to, so on that one it
+                  // is just a hole - and it landed right where Research's bottom
+                  // padding meets News's top padding, which is what made the gap.
+                  index === visibleProjects.length - 1 ? 'pb-8 md:pb-12' : 'pb-24 md:pb-[38vh]'
+                }`}
+                aria-current={activeIdx === index ? 'true' : undefined}
               >
-                {/* Left third (cols 1-3) is intentionally empty: that is where
-                    the parked attractor lives, with clean space and nothing over
-                    it. Text takes the middle, the hand-drawn figure the right. */}
-                <div className="relative z-10 grid md:grid-cols-12 gap-x-8 md:gap-x-12 gap-y-10 items-start">
-                  {/* ── Text (middle zone): no card. A soft, borderless glow
-                       lifts it off the paper grain without boxing it. ── */}
-                  <div className="col-span-12 md:col-span-5 md:col-start-4 relative">
-                    <div
-                      aria-hidden="true"
-                      className="absolute -inset-x-8 -inset-y-6 pointer-events-none"
-                      style={{
-                        background:
-                          'radial-gradient(ellipse 84% 80% at 30% 42%, rgba(238,231,217,0.66) 0%, rgba(238,231,217,0.24) 52%, transparent 80%)',
-                        filter: 'blur(30px)',
-                      }}
-                    />
+                {/* On a phone there is nowhere for a painting to be held, so it
+                    simply sits above the text it belongs to. */}
+                {project.plate && (
+                  <img
+                    src={project.plate.src}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    className="mb-6 block w-full md:hidden"
+                  />
+                )}
 
-                    <div className="relative">
-                      {/* Meta line: index · topic, a dashed hand-rule, then the
-                          year. These are LABELS, so they take the shared label
-                          treatment rather than the handwriting — the hand is
-                          reserved for genuine margin notes, or the card ends up
-                          carrying three faces at once. */}
-                      <div className="flex items-baseline gap-2.5 md:gap-3 mb-3 flex-wrap">
-                        <span className="mono text-[11px] tracking-widest uppercase leading-none" style={{ color: 'var(--accent)' }}>
-                          {String(index + 1).padStart(2, '0')}
-                        </span>
-                        {project.topic && (
-                          <span className="mono text-[11px] tracking-widest uppercase leading-none" style={{ color: 'var(--accent-dim)' }}>
-                            {project.topic}
-                          </span>
-                        )}
-                        <span
-                          className="flex-1 min-w-[28px] self-center"
-                          style={{ borderTop: '1.5px dashed rgba(156,107,79,0.42)' }}
-                        />
-                        <span className="mono text-[11px] tracking-widest uppercase leading-none" style={{ color: 'var(--accent-dim)' }}>
-                          {project.year}
-                        </span>
-                      </div>
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2 mb-3">
+                  <span className="mono leading-none" style={{ color: 'var(--accent)' }}>
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  {project.topic && (
+                    <span className="mono leading-none" style={{ color: 'var(--accent-quiet)' }}>
+                      {project.topic}
+                    </span>
+                  )}
+                  <span
+                    className="min-w-[28px] flex-1 self-center"
+                    style={{ borderTop: '1.5px dashed var(--accent-quiet)' }}
+                  />
+                  <span className="mono leading-none" style={{ color: 'var(--accent-quiet)' }}>
+                    {project.year}
+                  </span>
+                </div>
 
-                      {/* The one high-contrast move: oversized, near-black title.
-                          Everything around it stays deliberately quiet/light. */}
-                      <h3
-                        className="mb-3 tracking-[-0.02em] leading-[1.04] text-[1.9rem] sm:text-[2.3rem] md:text-[2.5rem] lg:text-[2.9rem]"
-                        style={{ color: 'var(--ink-strong)', fontWeight: 500 }}
-                      >
-                        {project.title}
-                      </h3>
+                <h3 className="t-title mb-3">{project.title}</h3>
 
-                      <p className="mono text-[10.5px] md:text-[11px] mb-5 tracking-[0.18em] uppercase" style={{ color: 'var(--accent-dim)' }}>
-                        {project.venue} · {project.org}
-                      </p>
+                <p className="mono mb-5" style={{ color: 'var(--accent-quiet)' }}>
+                  {[project.venue, project.org].filter(Boolean).join(' · ')}
+                </p>
 
-                      <p className="text-[14.5px] md:text-[1.02rem] leading-relaxed font-light max-w-xl" style={{ color: 'var(--ink-soft)' }}>
-                        {project.description}
-                      </p>
+                <p className="max-w-xl text-[15.5px] leading-relaxed md:text-[16.5px]" style={{ color: 'var(--ink-soft)' }}>
+                  {project.description}
+                </p>
 
-                      {/* Handwritten margin thought on the description. */}
-                      <MarginAside projectId={project.id} text={project.aside} />
+                {project.aside && (
+                  <p className="handwritten mt-4 max-w-md text-[18px] leading-snug" style={{ color: 'var(--accent)' }}>
+                    {project.aside}
+                  </p>
+                )}
 
-                      {/* Tech: quiet inline mono, no pills, no borders. */}
-                      <p className="mono text-[10.5px] md:text-[11px] mt-5 tracking-wider leading-relaxed" style={{ color: 'var(--accent-dim)' }}>
-                        {project.tech.join('   ·   ')}
-                      </p>
+                <p className="mono mt-5 leading-relaxed" style={{ color: 'var(--accent-quiet)' }}>
+                  {project.tech.join('   ·   ')}
+                </p>
 
-                      <div className="flex flex-wrap gap-x-6 gap-y-3 mt-6">
-                        {project.github && (
-                          <a
-                            href={project.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="link-editorial inline-flex items-center gap-2 text-[13px] font-light"
-                          >
-                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                            </svg>
-                            GitHub
-                          </a>
-                        )}
-                        {project.blogLink && (
-                          <a
-                            href={project.blogLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="link-editorial inline-flex items-center gap-2 text-[13px] font-light"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                            </svg>
-                            Blog Post
-                          </a>
-                        )}
-                        {project.link && (
-                          <a
-                            href={project.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="link-editorial inline-flex items-center gap-2 text-[13px] font-light"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                            </svg>
-                            Paper
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* ── Figure (right zone): unframed, hand-drawn, with a
-                       handwritten note and caption so the whole unit reads as a
-                       page someone sketched, opposite the live curve. ── */}
-                  <div
-                    data-motif-col
-                    className="col-span-12 md:col-span-4 md:col-start-9 relative"
-                  >
-                    <div className="relative w-full aspect-[4/3] md:aspect-[5/4]">
-                      <ProjectDoodle projectId={project.id} className="w-full h-full" />
-                      <FigureAnnotation
-                        projectId={project.id}
-                        text={project.annotation}
-                        side="right"
-                      />
-                    </div>
-                    <p className="handwritten mt-3 text-[16px] leading-snug text-[#2A211A]/55">
-                      Fig. {String(index + 1).padStart(2, '0')} · {project.briefDescription}
-                    </p>
-                  </div>
+                <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3">
+                  {project.github && (
+                    <a href={project.github} target="_blank" rel="noopener noreferrer" className="link-editorial text-[13px]">
+                      GitHub
+                    </a>
+                  )}
+                  {project.blogLink && (
+                    <a href={project.blogLink} target="_blank" rel="noopener noreferrer" className="link-editorial text-[13px]">
+                      Blog post
+                    </a>
+                  )}
+                  {project.link && (
+                    <a href={project.link} target="_blank" rel="noopener noreferrer" className="link-editorial text-[13px]">
+                      Paper
+                    </a>
+                  )}
                 </div>
               </article>
-            )
-          })}
+            ))}
+
+          </div>
+
+          {/* The paintings: held, and cross-faded as the text hands over. */}
+          <div className="hidden md:col-span-7 md:col-start-6 md:block">
+            <div className="sticky top-[11vh] h-[78vh]">
+              {visibleProjects.map((project, index) =>
+                project.plate ? (
+                  <img
+                    key={project.id}
+                    src={project.plate.src}
+                    alt={`Painted figure for ${project.title}`}
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    aria-hidden={activeIdx !== index}
+                    className="plate-held absolute inset-0 h-full w-full object-contain"
+                    style={{ opacity: activeIdx === index ? 1 : 0 }}
+                  />
+                ) : null
+              )}
+            </div>
+          </div>
         </div>
 
+        {/* A closing row, spanning the full measure.
+            Inside the text column this was a small link alone on the left with
+            the right two-thirds bare - the painting cannot reach here, because a
+            78vh sticky box needs 78vh of container left and by this point there
+            are a few pixels of it. The gap was never the problem; the section
+            stopped rather than closing. A rule across the measure ends it. */}
         {projects.length > HERO_COUNT && (
-          <div className="mt-12 md:mt-28 flex flex-col items-center gap-3">
-            <Link
-              to="/portfolio"
-              className="group inline-flex items-baseline gap-3 mono text-[12px] tracking-widest uppercase transition-all"
-              style={{
-                color: 'var(--accent)',
-                textDecoration: 'none',
-                // A drawn pencil rule rather than a bordered box: the bordered
-                // version was the last hard-edged control left on the page.
-                // Inline styles are used because they are what the old box used,
-                // and CSS cannot override them from the stylesheet.
-                padding: '0.15rem 0 0.55rem',
-                backgroundImage: 'url(/images/ui/underline.png)',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'left bottom',
-                backgroundSize: '100% 10px',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundSize = '100% 13px')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundSize = '100% 10px')}
-            >
+          <div
+            className="mt-4 flex flex-wrap items-baseline justify-between gap-4 border-t pt-5 md:mt-10"
+            style={{ borderColor: 'var(--hairline)' }}
+          >
+            <Link to="/portfolio" className="btn-ghost mono inline-flex items-baseline gap-3">
               <span>{`View all ${projects.length} projects`}</span>
               <span aria-hidden="true">→</span>
             </Link>
-            <span className="mono text-[10px] tracking-widest uppercase" style={{ color: 'var(--accent-dim)' }}>
+            <span className="mono" style={{ color: 'var(--ink-quiet)' }}>
               {`${HERO_COUNT} of ${projects.length}`}
             </span>
           </div>
         )}
       </div>
     </section>
-  )
-}
-
-/**
- * MarginAside: a short handwritten thought beside the project description, in the
- * same hand and warm hue as the doodles, introduced by a small hand-drawn corner
- * arrow. Desktop only; the jitter seed is derived from projectId for stable SSR.
- */
-function MarginAside({ projectId, text }) {
-  if (!text) return null
-  const fid = `aside-${projectId}`
-  return (
-    <div className="hidden md:flex items-start gap-2 mt-4 max-w-md" aria-hidden="true">
-      <svg width="24" height="24" viewBox="0 0 24 24" className="mt-[3px] shrink-0">
-        <defs>
-          <filter id={fid} x="-30%" y="-30%" width="160%" height="160%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed={projectId * 11 + 3} result="n" />
-            <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G" />
-          </filter>
-        </defs>
-        <g filter={`url(#${fid})`} stroke="var(--accent)" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity="0.85">
-          <path d="M 7 3 C 7 12, 8 16, 18 16" />
-          <path d="M 18 16 l -7 -3.5 M 18 16 l -4 6" />
-        </g>
-      </svg>
-      <p className="handwritten text-[18px] leading-snug" style={{ color: 'var(--accent)', opacity: 0.9 }}>
-        {text}
-      </p>
-    </div>
-  )
-}
-
-/**
- * FigureAnnotation: a short handwritten note drawn on top of a figure, with a
- * hand-drawn arrow (pencil jitter) curving into the diagram. Sits in the outer
- * margin so the figure reads like a page someone was thinking on, not a slide.
- *
- * The note itself stays crisp for legibility; only the arrow gets the wobble.
- * Jitter + tilt are derived from projectId so the server prerender and client
- * render match exactly (no Math.random hydration mismatch).
- */
-export function FigureAnnotation({ projectId, text, side = 'right' }) {
-  if (!text) return null
-
-  const isRight = side === 'right'
-  const tilt = (((projectId * 53) % 9) - 4) * 0.5 // ~ -2deg .. +2deg, stable per project
-  const filterId = `anno-${projectId}`
-
-  // Arrow path + small open arrowhead, mirrored per side. The tip lands near
-  // the top of the figure so the note clearly points "into" the diagram.
-  const arrow = isRight
-    ? { d: 'M 112 10 C 84 26, 60 34, 30 64', head: 'M 30 64 L 44 62 M 30 64 L 36 50' }
-    : { d: 'M 18 10 C 46 26, 70 34, 100 64', head: 'M 100 64 L 86 62 M 100 64 L 94 50' }
-
-  return (
-    <div
-      aria-hidden="true"
-      className="hidden md:block absolute z-20 pointer-events-none"
-      style={{
-        top: '-1.7rem',
-        [isRight ? 'right' : 'left']: '-1rem',
-        width: '170px',
-        textAlign: isRight ? 'left' : 'right',
-        transform: `rotate(${tilt}deg)`,
-      }}
-    >
-      <span
-        className="handwritten block"
-        style={{ color: 'var(--accent)', fontSize: '1.22rem', lineHeight: 1.12 }}
-      >
-        {text}
-      </span>
-
-      <svg
-        width="130"
-        height="80"
-        viewBox="0 0 130 80"
-        className="mt-1"
-        style={{ marginLeft: isRight ? 0 : 'auto', display: 'block' }}
-      >
-        <defs>
-          <filter id={filterId} x="-20%" y="-20%" width="140%" height="140%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed={projectId * 9 + 5} result="n" />
-            <feDisplacementMap in="SourceGraphic" in2="n" scale="1.8" xChannelSelector="R" yChannelSelector="G" />
-          </filter>
-        </defs>
-        <g filter={`url(#${filterId})`} stroke="var(--accent)" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity="0.85">
-          <path d={arrow.d} />
-          <path d={arrow.head} />
-        </g>
-      </svg>
-    </div>
-  )
-}
-
-export function TickCorners() {
-  const color = 'rgba(74,52,36,0.30)'
-  const size = 10
-  const s = { position: 'absolute', width: size, height: size, borderColor: color }
-  return (
-    <>
-      <span style={{ ...s, top: 6, left: 6, borderTop: '1px solid', borderLeft: '1px solid' }} />
-      <span style={{ ...s, top: 6, right: 6, borderTop: '1px solid', borderRight: '1px solid' }} />
-      <span style={{ ...s, bottom: 6, left: 6, borderBottom: '1px solid', borderLeft: '1px solid' }} />
-      <span style={{ ...s, bottom: 6, right: 6, borderBottom: '1px solid', borderRight: '1px solid' }} />
-    </>
   )
 }

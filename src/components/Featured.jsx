@@ -33,7 +33,7 @@ const features = [
       'Selected as a Youth Delegate attending the World Economic Forum 2025 in Davos, representing youth voices in global leadership discussions.',
     url: 'https://static1.squarespace.com/static/581e5b6a8419c273288db3e9/t/674f747246e64400ad784d54/1733260408275/WAFF+Youth+Delegation+Attending+Davos+During+WEF+2025+One-Pagers.pdf',
     type: 'PDF',
-    image: '/images/featured/waff-davos-2025.jpg',
+    image: '/images/featured/waff-davos-2025.webp',
     year: '2025',
   },
   {
@@ -43,7 +43,7 @@ const features = [
       'Featured in Mission Magazine Issue 12: The New Order, a celebration of the next generation of leaders tackling the world\'s most urgent challenges.',
     url: 'https://missionmagazinesubscriptions.org/home',
     type: 'Publication',
-    image: '/images/featured/mission-magazine.jpg',
+    image: '/images/featured/mission-magazine.webp',
     year: '2025',
   },
   {
@@ -53,7 +53,7 @@ const features = [
       'Presented our paper and AI research on respiratory disease detection at Prototypes for Humanity and attended Dubai Future Forum.',
     url: 'https://www.prototypesforhumanity.com/student/laura-gomezjurado/',
     type: 'Presentation',
-    image: '/images/featured/prototypes-dubai-presenting.jpg',
+    image: '/images/featured/prototypes-dubai-presenting.webp',
     year: '2024',
   },
   {
@@ -63,7 +63,7 @@ const features = [
       'Selected as a Masason Foundation Fellow by Masayoshi Son, SoftBank Group President, supporting exceptional young talent contributing to the future of humankind.',
     url: 'https://masason-foundation.org/en/scholars/',
     type: 'Fellowship',
-    image: '/images/featured/masason-fellowship-visit.jpg',
+    image: '/images/featured/masason-fellowship-visit.webp',
     year: '2023',
   },
   {
@@ -73,7 +73,7 @@ const features = [
       'Featured article discussing how AI can be leveraged as a tool for advancing gender equality and social impact.',
     url: 'https://girlup.org/voices/artificial-intelligence-a-tool-for-equality',
     type: 'Article',
-    image: '/images/featured/girlup-article.jpg',
+    image: '/images/featured/girlup-article.webp',
     year: '2024',
   },
   {
@@ -83,7 +83,7 @@ const features = [
       'Recognized as an adolescent leader working to uplift youth voices as a member of the Generation Equality Multi-Stakeholder Leadership Group.',
     url: 'https://forum.generationequality.org/news/meet-kurumuthu-and-laura-adolescent-leaders-working-uplift-youth-voices-members-generation',
     type: 'Feature',
-    image: '/images/featured/generation-equality-portrait.png',
+    image: '/images/featured/generation-equality-portrait.webp',
     year: '2023',
   },
   {
@@ -93,7 +93,7 @@ const features = [
       'Selected as a Global Teen Leader, recognized for leadership in technology, gender equality, and peace-building initiatives.',
     url: 'https://www.wearefamilyfoundation.org/gtl-2022/laura-gomezjurado-gonzlez',
     type: 'Recognition',
-    image: '/images/featured/global-teen-leader-2022.jpg',
+    image: '/images/featured/global-teen-leader-2022.webp',
     year: '2022',
   },
   {
@@ -103,7 +103,7 @@ const features = [
       'Featured speaker at the UN General Assembly discussing youth changemakers as the future of global STEM education and advocacy.',
     url: 'https://ssunga77.sched.com/event/1Aiwt/ref-20521-global-teen-leaders-youth-changemakers-as-the-future-of-global-stem-education-and-advocacy?iframe=no',
     type: 'Event',
-    image: '/images/featured/un-general-assembly-unga77.png',
+    image: '/images/featured/un-general-assembly-unga77.webp',
     year: '2022',
   },
 ]
@@ -120,63 +120,80 @@ export default function Featured() {
   const itemsRef = useRef([])
 
   useEffect(() => {
-    gsap.set(titleRef.current, { opacity: 1, y: 0 })
-    itemsRef.current.forEach((el) => el && gsap.set(el, { opacity: 1, y: 0 }))
+    // Scoped with gsap.context so teardown reverts only THIS section's tweens
+    // and triggers. The previous cleanup called ScrollTrigger.getAll().kill(),
+    // which tore down every other panel's triggers too - and because StrictMode
+    // mounts, unmounts and remounts, whichever panel happened to unmount last
+    // could leave the others' scrubbed elements stranded at opacity 0.
+    const ctx = gsap.context(() => {
+      gsap.set(titleRef.current, { opacity: 1, y: 0 })
+      itemsRef.current.forEach((el) => el && gsap.set(el, { opacity: 1, y: 0 }))
 
-    gsap.fromTo(
-      titleRef.current,
-      { opacity: 0, y: 24 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1.3,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 85%', end: 'top 55%', scrub: 1 },
-      }
-    )
-
-    itemsRef.current.forEach((el, idx) => {
-      if (!el) return
       gsap.fromTo(
-        el,
-        { opacity: 0, y: 36 },
+        titleRef.current,
+        { opacity: 0, y: 24 },
         {
           opacity: 1,
           y: 0,
-          duration: 1.1,
+          duration: 1.3,
           ease: 'power3.out',
-          delay: Math.min(idx * 0.05, 0.3),
-          scrollTrigger: { trigger: el, start: 'top 92%', end: 'top 70%', scrub: 1 },
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 85%', end: 'top 55%', scrub: 1 },
         }
       )
+
+      itemsRef.current.forEach((el, idx) => {
+        if (!el) return
+        gsap.fromTo(
+          el,
+          { opacity: 0, y: 36 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.1,
+            ease: 'power3.out',
+            delay: Math.min(idx * 0.05, 0.3),
+            scrollTrigger: { trigger: el, start: 'top 92%', end: 'top 70%', scrub: 1 },
+          }
+        )
+      })
     })
 
-    return () => ScrollTrigger.getAll().forEach((t) => t.kill())
+    return () => ctx.revert()
   }, [])
+
+  // Fewer, larger, irregular. A uniform 3-column grid of equal cards is a
+  // component library, not a page - and it was the most software-looking block
+  // on the site: every tile the same size, each one a 2px-radius rectangle with
+  // a 1px border and its own #efe7da fill, none of which was the page's paper.
+  //
+  // Spans over a 12-column grid: two wide, then one full-bleed, then three
+  // small. The rhythm is the design; the cards themselves are now just photos
+  // laid on the sheet.
+  const SPANS = ['md:col-span-7', 'md:col-span-5', 'md:col-span-12', 'md:col-span-4', 'md:col-span-4', 'md:col-span-4']
+  const shown = features.slice(0, SPANS.length)
 
   return (
     <section
       ref={sectionRef}
       id="featured"
-      className="relative z-10 py-14 md:py-32 px-4 sm:px-6 md:px-8 overflow-visible bg-transparent -mt-16 md:-mt-20"
+      data-accent="sienna"
+      className="relative z-10 px-5 py-24 sm:px-8 md:px-12 md:py-32"
     >
-      <div className="relative z-10 max-w-6xl mx-auto w-full">
-        <header className="mb-10 md:mb-24 text-center">
-          <div className="section-index mb-3 md:mb-4">§ 04 · Press &amp; Recognition</div>
-          <h2
-            ref={titleRef}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-wider text-on-bg"
-            style={{ color: 'var(--ink)' }}
-          >
-            Featured In
+      <div className="mx-auto w-full max-w-6xl">
+        <header className="mb-12 md:mb-16">
+          <div className="section-index mb-3">§ 04 · Press &amp; Recognition</div>
+          <h2 ref={titleRef} className="t-section">
+            Featured in
           </h2>
         </header>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          {features.map((feature, index) => (
+        <div className="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-12 md:gap-y-16">
+          {shown.map((feature, index) => (
             <FeatureCard
               key={index}
               feature={feature}
+              span={SPANS[index]}
+              wide={SPANS[index] === 'md:col-span-12'}
               innerRef={(el) => (itemsRef.current[index] = el)}
             />
           ))}
@@ -186,7 +203,7 @@ export default function Featured() {
   )
 }
 
-function FeatureCard({ feature, innerRef }) {
+function FeatureCard({ feature, innerRef, span, wide }) {
   const thumbs =
     feature.images?.length > 0 ? feature.images : feature.image ? [feature.image] : []
 
@@ -196,72 +213,56 @@ function FeatureCard({ feature, innerRef }) {
       target="_blank"
       rel="noopener noreferrer"
       ref={innerRef}
-      className="group relative block transition-transform duration-500 hover:-translate-y-1"
+      className={`group relative block ${span}`}
     >
-      {/* The photo is the only framed element: a hairline edge on warm paper,
-          no dark frosted card and no overlays. */}
-      <div
-        className="relative w-full aspect-[4/3] overflow-hidden"
-        style={{ border: '1px solid var(--border)', borderRadius: '2px', background: '#efe7da' }}
+      {/* No card. The photo sits directly on the sheet - the faint shadow from
+          `figure img` in index.css is the only thing holding it there. */}
+      <figure
+        className="relative w-full overflow-hidden"
+        style={{ aspectRatio: wide ? '21 / 9' : '4 / 3' }}
       >
         {thumbs.length === 1 ? (
           <Thumb
             src={thumbs[0]}
             alt={feature.title}
-            className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.04]"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]"
           />
         ) : thumbs.length > 1 ? (
-          <div className="absolute inset-0 grid grid-cols-2 gap-px bg-[#d8cdb6] transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]">
+          <div className="absolute inset-0 grid grid-cols-2 gap-px transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]" style={{ background: 'var(--hairline)' }}>
             {thumbs.map((src, i) => (
-              <Thumb
-                key={src}
-                src={src}
-                alt={`${feature.title} (${i + 1})`}
-                className="w-full h-full object-cover"
-              />
+              <Thumb key={src} src={src} alt={`${feature.title} (${i + 1})`} className="h-full w-full object-cover" />
             ))}
           </div>
         ) : (
-          <div
-            aria-hidden="true"
-            className="absolute inset-0"
-            style={{ background: 'radial-gradient(ellipse at 30% 30%, rgba(156,107,79,0.14) 0%, rgba(60,45,35,0.10) 70%)' }}
-          />
+          <div aria-hidden="true" className="absolute inset-0" style={{ background: 'var(--paper-recess)' }} />
         )}
-      </div>
+      </figure>
 
-      {/* All text sits below the photo, on bare paper, in the site's ink. */}
-      <div className="pt-3.5 md:pt-4">
-        <div className="flex items-baseline justify-between gap-3 mb-1.5">
-          <span className="mono text-[10px] tracking-widest uppercase" style={{ color: 'var(--accent-dim)' }}>
+      <div className="pt-4">
+        <div className="mb-2 flex items-baseline justify-between gap-3">
+          <span className="mono" style={{ color: 'var(--accent)' }}>
             {feature.organization}
           </span>
           {feature.year && (
-            <span className="handwritten text-[15px] leading-none shrink-0" style={{ color: 'var(--accent-dim)' }}>
+            <span className="handwritten shrink-0 leading-none" style={{ color: 'var(--ink-quiet)' }}>
               {feature.year}
             </span>
           )}
         </div>
-        <h3 className="text-base md:text-lg font-light leading-snug mb-2" style={{ color: 'var(--ink)' }}>
+        <h3
+          className="mb-2 font-normal leading-snug"
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontVariationSettings: 'var(--display-mid)',
+            fontSize: wide ? 'clamp(1.4rem, 2.4vw, 1.9rem)' : '1.15rem',
+            color: 'var(--ink-strong)',
+          }}
+        >
           {feature.title}
         </h3>
-        <p className="text-[13px] md:text-sm leading-relaxed font-light" style={{ color: 'var(--ink-quiet)' }}>
+        <p className="text-[14px] leading-relaxed" style={{ color: 'var(--ink-quiet)', maxWidth: wide ? '52ch' : 'none' }}>
           {feature.description}
         </p>
-        <div
-          className="flex items-center gap-2 mt-3.5 text-[12px] font-light tracking-wide opacity-75 group-hover:opacity-100 transition-opacity"
-          style={{ color: 'var(--accent)' }}
-        >
-          <span>{feature.type}</span>
-          <svg
-            className="w-3.5 h-3.5 transform translate-x-0 group-hover:translate-x-1 transition-transform"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 5l7 7-7 7" />
-          </svg>
-        </div>
       </div>
     </a>
   )

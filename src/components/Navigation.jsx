@@ -12,9 +12,9 @@ export default function Navigation() {
   const navItems = [
     { name: 'Home', href: '/', isHash: false },
     { name: 'About', href: '#about', isHash: true },
+    { name: 'Portfolio', href: '#portfolio', isHash: true },
     { name: 'News', href: '#news', isHash: true },
     { name: 'Featured', href: '#featured', isHash: true },
-    { name: 'Portfolio', href: '#portfolio', isHash: true },
     { name: 'Blog', href: '/blog', isHash: false },
     { name: 'Contact', href: '#contact', isHash: true },
   ]
@@ -58,7 +58,9 @@ export default function Navigation() {
     }
   }
 
-  const textColorClass = isBlogPage ? 'text-gray-800' : 'text-[#2A211A]'
+  // Nav ink comes from var(--ink) inline now: the blog route used to fall back
+  // to text-gray-800 and every other route to a hardcoded #2A211A, so neither
+  // followed the palette.
   const hoverClass = isBlogPage ? 'hover:text-indigo-600' : 'hover:text-[#82542F]'
 
   return (
@@ -71,7 +73,8 @@ export default function Navigation() {
                 key={item.name}
                 href={item.href}
                 onClick={(e) => handleNavClick(item.href, item.isHash, e)}
-              className={`${textColorClass} font-light text-sm uppercase tracking-widest ${hoverClass} transition-opacity duration-200`}
+              className={`mono ${hoverClass} transition-opacity duration-200`}
+              style={{ color: 'var(--ink)', fontSize: '0.72rem' }}
               style={{ letterSpacing: '0.15em' }}
               >
                 {item.name}
@@ -81,7 +84,8 @@ export default function Navigation() {
                 key={item.name}
                 to={item.href}
                 onClick={item.href === '/' ? handleHomeClick : () => setIsMenuOpen(false)}
-              className={`${textColorClass} font-light text-sm uppercase tracking-widest ${hoverClass} transition-opacity duration-200`}
+              className={`mono ${hoverClass} transition-opacity duration-200`}
+              style={{ color: 'var(--ink)', fontSize: '0.72rem' }}
               style={{ letterSpacing: '0.15em' }}
               >
                 {item.name}
@@ -92,7 +96,8 @@ export default function Navigation() {
 
       {/* Mobile Menu Button */}
         <button
-        className={`md:hidden ${textColorClass}`}
+        className="md:hidden"
+        style={{ color: 'var(--ink)' }}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -113,7 +118,8 @@ export default function Navigation() {
                 key={item.name}
                 href={item.href}
                 onClick={(e) => handleNavClick(item.href, item.isHash, e)}
-                className={`${textColorClass} font-light text-[12.5px] uppercase tracking-widest ${hoverClass} transition-opacity duration-200`}
+                className={`mono ${hoverClass} transition-opacity duration-200`}
+                style={{ color: 'var(--ink)' }}
                 style={{ letterSpacing: '0.15em' }}
               >
                 {item.name}
@@ -123,7 +129,8 @@ export default function Navigation() {
                 key={item.name}
                 to={item.href}
                 onClick={item.href === '/' ? handleHomeClick : () => setIsMenuOpen(false)}
-                className={`${textColorClass} font-light text-[12.5px] uppercase tracking-widest ${hoverClass} transition-opacity duration-200`}
+                className={`mono ${hoverClass} transition-opacity duration-200`}
+                style={{ color: 'var(--ink)' }}
                 style={{ letterSpacing: '0.15em' }}
               >
                 {item.name}

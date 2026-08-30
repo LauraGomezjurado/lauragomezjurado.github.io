@@ -2,9 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import ProjectDoodle from './ProjectDoodle'
 import { projects } from '../data/projects'
-import { TickCorners } from './Portfolio'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -21,8 +19,8 @@ export default function PortfolioPage() {
     // Reset to the sand site palette in case we navigated here from /blog,
     // which sets its own light body background.
     gsap.to('body', {
-      background: '#E6DCC8',
-      color: '#2A211A',
+      background: 'var(--paper)',
+      color: 'var(--ink)',
       duration: 0.4,
       ease: 'power2.out',
     })
@@ -65,7 +63,7 @@ export default function PortfolioPage() {
     <section
       id="portfolio-page"
       className="relative min-h-screen py-16 md:py-24 px-4 sm:px-6 md:px-8"
-      style={{ background: '#E6DCC8', color: '#2A211A' }}
+      style={{ background: 'var(--paper)', color: 'var(--ink)' }}
     >
       <div className="relative z-10 max-w-6xl mx-auto w-full">
         <Link
@@ -76,12 +74,10 @@ export default function PortfolioPage() {
           ← back to home
         </Link>
 
-        <header ref={titleRef} className="mb-14 md:mb-24 text-center">
-          <div className="section-index mb-3 md:mb-4">§ Selected Research</div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-wider mb-4 md:mb-5 text-on-bg" style={{ color: 'var(--ink)' }}>
-            Research &amp; Projects
-          </h1>
-          <p className="max-w-2xl mx-auto text-[13.5px] md:text-base text-[#2A211A]/60 font-light leading-relaxed">
+        <header ref={titleRef} className="mb-14 md:mb-20">
+          <div className="section-index mb-3">§ Selected Research</div>
+          <h1 className="t-section mb-4">Research &amp; Projects</h1>
+          <p className="max-w-[46ch] text-[16px] leading-relaxed" style={{ color: 'var(--ink-quiet)' }}>
             Every project, ordered by topic and recency. Recent work centers on spectral and
             mixed-geometry optimization, and on the representations transformers form before they can
             use them.
@@ -96,23 +92,18 @@ export default function PortfolioPage() {
                 key={project.id}
                 ref={(el) => (itemsRef.current[index] = el)}
                 className="project-item relative"
+                style={
+                  project.plate
+                    ? {
+                        '--accent': `var(--${project.plate.pigment})`,
+                        '--accent-quiet': `color-mix(in srgb, var(--${project.plate.pigment}) 55%, transparent)`,
+                      }
+                    : undefined
+                }
               >
-                <div
-                  aria-hidden="true"
-                  className="absolute -top-6 md:-top-14 left-0 md:left-4 pointer-events-none select-none font-light text-[4rem] md:text-[12rem] leading-none"
-                  style={{
-                    color: 'rgba(143,175,214,0.05)',
-                    fontFeatureSettings: '"tnum"',
-                    letterSpacing: '-0.05em',
-                    zIndex: 0,
-                  }}
-                >
-                  {String(index + 1).padStart(2, '0')}
-                </div>
-
                 <div className={`relative z-10 grid md:grid-cols-12 gap-6 md:gap-10 items-start ${isEven ? '' : 'md:[direction:rtl]'}`}>
                   <div className="md:col-span-7 md:[direction:ltr] relative">
-                    <div className="panel scrim px-5 md:px-10 py-6 md:py-10">
+                    <div>
                       <div className="flex items-baseline gap-3 md:gap-4 mb-4 md:mb-5 flex-wrap">
                         <span className="section-index">{String(index + 1).padStart(2, '0')}</span>
                         {project.topic && (
@@ -120,7 +111,6 @@ export default function PortfolioPage() {
                             className="mono text-[10px] tracking-widest uppercase px-2 py-0.5"
                             style={{
                               color: 'var(--accent-dim)',
-                              border: '1px solid var(--border)',
                             }}
                           >
                             {project.topic}
@@ -140,7 +130,7 @@ export default function PortfolioPage() {
                         {project.venue}{project.org ? ` · ${project.org}` : ''}
                       </p>
 
-                      <p className="text-[14.5px] md:text-[1.02rem] text-[#2A211A]/78 leading-relaxed font-light max-w-xl">
+                      <p className="text-[14.5px] md:text-[1.02rem] leading-relaxed font-light max-w-xl">
                         {project.description}
                       </p>
 
@@ -149,7 +139,7 @@ export default function PortfolioPage() {
                           <span
                             key={idx}
                             className="mono px-2.5 py-1 text-[10.5px] tracking-wider"
-                            style={{ color: 'var(--accent-dim)', border: '1px solid var(--border)' }}
+                            style={{ color: 'var(--accent)' }}
                           >
                             {tech}
                           </span>
@@ -203,23 +193,20 @@ export default function PortfolioPage() {
                   </div>
 
                   <div className="md:col-span-5 md:[direction:ltr] relative">
-                    <div
-                      className="relative w-full aspect-[4/3] md:aspect-[5/4] flex items-center justify-center overflow-hidden"
-                      style={{
-                        border: '1px solid var(--hairline)',
-                        borderRadius: '2px',
-                        background:
-                          'linear-gradient(160deg, rgba(255,251,244,0.55) 0%, rgba(60,45,35,0.06) 100%)',
-                      }}
-                    >
-                      <TickCorners />
-                      <div className="w-[85%] h-[85%] flex items-center justify-center">
-                        <ProjectDoodle projectId={project.id} className="w-full h-full" />
-                      </div>
-                    </div>
-                    <p className="mt-3 text-[11px] font-light tracking-wider uppercase text-[#2A211A]/45 text-center">
-                      Fig. {String(index + 1).padStart(2, '0')}: {project.briefDescription}
-                    </p>
+                    {/* The painting, on bare paper. It used to be a hand-drawn
+                        SVG inside a bordered box with registration corners and a
+                        "Fig. NN:" caption - a frame, a second drawing style and a
+                        museum card, all at once. Projects with no plate yet show
+                        nothing rather than something in the wrong medium. */}
+                    {project.plate && (
+                      <img
+                        src={project.plate.src}
+                        alt={`Painted figure for ${project.title}`}
+                        loading="lazy"
+                        decoding="async"
+                        className="block w-full"
+                      />
+                    )}
                   </div>
                 </div>
               </article>

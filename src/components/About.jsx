@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import TransparentLogo from './TransparentLogo'
@@ -18,210 +18,191 @@ export default function About() {
   const mosaicRef = useRef(null)
 
   useEffect(() => {
-    gsap.set([titleRef.current, contentRef.current, mosaicRef.current], { opacity: 1, y: 0, x: 0 })
+    // Scoped with gsap.context so teardown reverts only THIS section's tweens
+    // and triggers. The previous cleanup called ScrollTrigger.getAll().kill(),
+    // which tore down every other panel's triggers too - and because StrictMode
+    // mounts, unmounts and remounts, whichever panel happened to unmount last
+    // could leave the others' scrubbed elements stranded at opacity 0.
+    const ctx = gsap.context(() => {
+      gsap.set([titleRef.current, contentRef.current, mosaicRef.current], { opacity: 1, y: 0, x: 0 })
 
-    const trigger = {
-      trigger: sectionRef.current,
-      start: 'top 85%',
-      end: 'top 50%',
-      scrub: 1,
-    }
-
-    gsap.fromTo(
-      titleRef.current,
-      { opacity: 0, y: 28 },
-      { opacity: 1, y: 0, duration: 1.4, ease: 'power3.out', scrollTrigger: trigger }
-    )
-    gsap.fromTo(
-      contentRef.current,
-      { opacity: 0, x: -24 },
-      { opacity: 1, x: 0, duration: 1.4, ease: 'power3.out', scrollTrigger: trigger }
-    )
-    gsap.fromTo(
-      mosaicRef.current,
-      { opacity: 0, x: 24 },
-      { opacity: 1, x: 0, duration: 1.4, ease: 'power3.out', scrollTrigger: trigger }
-    )
-
-    // Subtle parallax on mosaic: 24px of drift feels premium, stays cheap
-    gsap.fromTo(
-      mosaicRef.current,
-      { y: 24 },
-      {
-        y: -24,
-        ease: 'none',
-        scrollTrigger: { trigger: sectionRef.current, start: 'top bottom', end: 'bottom top', scrub: true },
+      const trigger = {
+        trigger: sectionRef.current,
+        start: 'top 85%',
+        end: 'top 50%',
+        scrub: 1,
       }
-    )
 
-    return () => ScrollTrigger.getAll().forEach((t) => t.kill())
+      gsap.fromTo(
+        titleRef.current,
+        { opacity: 0, y: 28 },
+        { opacity: 1, y: 0, duration: 1.4, ease: 'power3.out', scrollTrigger: trigger }
+      )
+      gsap.fromTo(
+        contentRef.current,
+        { opacity: 0, x: -24 },
+        { opacity: 1, x: 0, duration: 1.4, ease: 'power3.out', scrollTrigger: trigger }
+      )
+      gsap.fromTo(
+        mosaicRef.current,
+        { opacity: 0, x: 24 },
+        { opacity: 1, x: 0, duration: 1.4, ease: 'power3.out', scrollTrigger: trigger }
+      )
+
+      // Subtle parallax on mosaic: 24px of drift feels premium, stays cheap
+      gsap.fromTo(
+        mosaicRef.current,
+        { y: 24 },
+        {
+          y: -24,
+          ease: 'none',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top bottom', end: 'bottom top', scrub: true },
+        }
+      )
+    })
+
+    return () => ctx.revert()
   }, [])
 
   return (
     <section
       ref={sectionRef}
       id="about"
-      className="relative z-10 py-14 md:py-32 px-4 sm:px-6 md:px-8 overflow-visible -mt-32 md:-mt-40 bg-transparent"
+      data-accent="sepia"
+      className="relative z-10 px-5 py-24 sm:px-8 md:px-12 md:py-40"
     >
-      <div className="relative z-10 max-w-6xl mx-auto w-full">
-        <header className="mb-10 md:mb-24 text-center">
-          <div className="section-index mb-3 md:mb-4">§ 01 · Who</div>
-          <h2
-            ref={titleRef}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-wider text-on-bg"
-            style={{ color: 'var(--ink)' }}
-          >
+      {/*
+        The rest. One narrow column, nothing in the margins, no plate.
+        After a full-bleed painting the page needs somewhere to be quiet, and a
+        panel with no art is a deliberate shape rather than an unfinished one.
+
+        Gone: the 12-column split with a four-tile photo mosaic (each tile a
+        2px-radius box under a pure-black rgba(0,0,0,0.78) gradient scrim - the
+        only true black on a warm-paper page), the -mt-40 negative margin hack,
+        and the blur(34px) radial scrim that existed to lift text off a Three.js
+        curve deleted months ago.
+      */}
+      <div className="mx-auto w-full max-w-[36rem]">
+        <header className="mb-10 md:mb-14">
+          <div className="section-index mb-3">§ 01 · Who</div>
+          <h2 ref={titleRef} className="t-section">
             About
           </h2>
         </header>
 
-        <div className="grid md:grid-cols-12 gap-8 md:gap-14 items-start">
-          {/* Narrative: no frame. A soft, borderless glow lifts the text off the
-              paper grain and the receded curve, so words and curve coexist. */}
-          <div ref={contentRef} className="md:col-span-7 relative">
-            <div
-              aria-hidden="true"
-              className="absolute -inset-x-6 -inset-y-6 pointer-events-none"
-              style={{
-                background:
-                  'radial-gradient(ellipse 82% 78% at 34% 40%, rgba(238,231,217,0.6) 0%, rgba(238,231,217,0.2) 52%, transparent 80%)',
-                filter: 'blur(34px)',
-              }}
+        <div ref={contentRef}>
+          <p className="mb-8 text-[17px] leading-[1.72] md:text-[19px]" style={{ color: 'var(--ink)' }}>
+            I work on the science of understanding and steering learned systems. My
+            research connects interpretability, optimization, and alignment by studying
+            how models form internal structure, how training shapes that structure, and
+            how we can intervene when model behavior is unreliable or unfair. The goal is
+            to make powerful AI systems more legible, controllable, and accountable before
+            they are deployed in the world.
+          </p>
+
+          <div className="mb-10">
+            <div className="mono mb-4" style={{ color: 'var(--accent)' }}>
+              Research focus
+            </div>
+            <ul className="space-y-3.5 border-l pl-5" style={{ borderColor: 'var(--hairline)' }}>
+              <FocusItem
+                title="Mechanistic interpretability."
+                body="Probing latent reasoning in language models and the internal structure behind arithmetic grokking."
+              />
+              <FocusItem
+                title="Optimization geometry."
+                body="Low rank spectral updates and per layer geometry selection for mixed optimizer training."
+              />
+              <FocusItem
+                title="Alignment on model editing."
+                body="Task vector merges that reduce demographic parity gaps while preserving accuracy, with provable bounds."
+              />
+              <FocusItem
+                title="Generalization and deployment."
+                body="Agent evaluation at Stanford CRFM and cost aware multi LLM routing at the Scaling Intelligence Lab."
+              />
+            </ul>
+          </div>
+        </div>
+
+        {/* Two photographs laid on the sheet rather than tiled into a grid:
+            slightly off-square, slightly overlapping, captioned in the hand. */}
+        <div ref={mosaicRef} className="my-12 flex items-start justify-center md:my-16">
+          <figure className="relative z-10 w-[56%]" style={{ transform: 'rotate(-1.6deg)' }}>
+            <img
+              src="/images/about/microsoft.webp?v=2"
+              alt="Laura at Microsoft Research"
+              loading="lazy"
+              decoding="async"
+              className="w-full"
             />
-            <div className="relative">
-              <p className="text-base sm:text-lg md:text-2xl leading-relaxed font-light mb-7 md:mb-9" style={{ color: 'var(--ink)' }}>
-                I work on the science of understanding and steering learned systems. My
-                research connects interpretability, optimization, and alignment by studying
-                how models form internal structure, how training shapes that structure, and
-                how we can intervene when model behavior is unreliable or unfair. The goal is
-                to make powerful AI systems more legible, controllable, and accountable before
-                they are deployed in the world.
-              </p>
+            <figcaption className="mt-2">Microsoft Research</figcaption>
+          </figure>
+          <figure className="-ml-5 mt-12 w-[46%]" style={{ transform: 'rotate(2.2deg)' }}>
+            <img
+              src="/images/about/un.webp?v=2"
+              alt="Laura at the United Nations"
+              loading="lazy"
+              decoding="async"
+              className="w-full"
+            />
+            <figcaption className="mt-2">UN General Assembly</figcaption>
+          </figure>
+        </div>
 
-              {/* Research focus: four anchored themes, tight, scannable */}
-              <div className="mb-8 md:mb-10">
-                <div
-                  className="mono text-[10px] tracking-widest uppercase mb-4 md:mb-5"
-                  style={{ color: 'var(--accent-dim)' }}
-                >
-                  Research focus
-                </div>
-                <div className="flex gap-4 md:gap-6">
-                  <span className="shrink-0 w-px" style={{ background: 'var(--hairline)' }} />
-                  <ul className="space-y-3 md:space-y-4 flex-1">
-                    <FocusItem
-                      title="Mechanistic interpretability."
-                      body="Probing latent reasoning in language models and the internal structure behind arithmetic grokking."
-                    />
-                    <FocusItem
-                      title="Optimization geometry."
-                      body="Low rank spectral updates and per layer geometry selection for mixed optimizer training."
-                    />
-                    <FocusItem
-                      title="Alignment on model editing."
-                      body="Task vector merges that reduce demographic parity gaps while preserving accuracy, with provable bounds."
-                    />
-                    <FocusItem
-                      title="Generalization and deployment."
-                      body="Agent evaluation at Stanford CRFM and cost aware multi LLM routing at the Scaling Intelligence Lab."
-                    />
-                  </ul>
-                </div>
-              </div>
+        <div className="space-y-5 border-l pl-5" style={{ borderColor: 'var(--hairline)' }}>
+          <p className="text-[15.5px] leading-relaxed md:text-[16.5px]" style={{ color: 'var(--ink-soft)' }}>
+            Alongside the research, I have spent six years working on AI deployment in low
+            resource settings, mostly through ASOFI, an initiative I co founded that builds
+            on device agricultural tools and AI literacy programs with rural cooperatives in
+            Colombia. I have also contributed to AI policy conversations at UN Women, the
+            World Economic Forum, and the UN General Assembly. This side of the work keeps
+            me honest about which safety questions are actually load bearing.
+          </p>
+          <p className="text-[15.5px] leading-relaxed md:text-[16.5px]" style={{ color: 'var(--ink-soft)' }}>
+            Currently at Stanford, previously Microsoft Research and supervised research
+            with Dr. Hiroki Naganuma at ProPlace.
+          </p>
+        </div>
 
-              {/* Conviction + closer: where the technical and the global identity meet */}
-              <div className="flex gap-4 md:gap-6">
-                <span className="shrink-0 w-px" style={{ background: 'var(--hairline)' }} />
-                <div className="space-y-4 md:space-y-5">
-                  <p className="text-[14.5px] md:text-lg text-[#2A211A]/72 leading-relaxed font-light">
-                    Alongside the research, I have spent six years working on AI
-                    deployment in low resource settings, mostly through ASOFI, an
-                    initiative I co founded that builds on device agricultural tools and
-                    AI literacy programs with rural cooperatives in Colombia. I have also
-                    contributed to AI policy conversations at UN Women, the World Economic
-                    Forum, and the UN General Assembly. This side of the work keeps me
-                    honest about which safety questions are actually load bearing.
-                  </p>
-                  <p className="text-[14.5px] md:text-lg text-[#2A211A]/72 leading-relaxed font-light">
-                    Currently at Stanford, previously Microsoft Research and supervised
-                    research with Dr. Hiroki Naganuma at ProPlace.
-                  </p>
-                </div>
-              </div>
-
-              {/* Affiliations: understated row */}
-              <div
-                className="flex flex-wrap items-center gap-x-6 md:gap-x-8 gap-y-3 md:gap-y-4 mt-8 md:mt-10 pt-5 md:pt-6"
-                style={{ borderTop: '1px solid var(--hairline)' }}
-              >
-                <span className="mono text-[10px] tracking-widest uppercase" style={{ color: 'var(--accent-dim)' }}>
-                  Affiliations
-                </span>
-                <a
-                  href="https://www.stanford.edu"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:opacity-100 opacity-70 transition-opacity"
-                  aria-label="Stanford University"
-                >
-                  <TransparentLogo src="/stanford-logo.png" alt="Stanford" className="h-6 w-auto" />
-                </a>
-                <a
-                  href="https://www.microsoft.com/en-us/research"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:opacity-100 opacity-70 transition-opacity inline-flex items-center"
-                  aria-label="Microsoft Research"
-                >
-                  <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0" y="0" width="10" height="10" fill="#F25022" rx="1" />
-                    <rect x="12" y="0" width="10" height="10" fill="#7FBA00" rx="1" />
-                    <rect x="0" y="12" width="10" height="10" fill="#00A4EF" rx="1" />
-                    <rect x="12" y="12" width="10" height="10" fill="#FFB900" rx="1" />
-                  </svg>
-                </a>
-                <a
-                  href="https://www.ersilia.io/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:opacity-100 opacity-70 transition-opacity"
-                  aria-label="Ersilia Open Source Initiative"
-                >
-                  <img src="/ersilia-logo.png" alt="Ersilia" className="h-6 w-auto" />
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Mosaic: one tall + three square, not a uniform grid */}
-          <div ref={mosaicRef} className="md:col-span-5 relative">
-            <div className="grid grid-cols-6 grid-rows-6 gap-1.5 md:gap-3 aspect-[5/6] md:aspect-auto md:h-[560px]">
-              <MosaicTile
-                src="/images/about/microsoft.jpg?v=2"
-                alt="Laura at Microsoft"
-                caption="Microsoft Research"
-                className="col-span-4 row-span-3"
-              />
-              <MosaicTile
-                src="/images/about/davos.jpg?v=2"
-                alt="Laura at World Economic Forum Davos 2025"
-                caption="WEF Davos, 2025"
-                className="col-span-2 row-span-2"
-              />
-              <MosaicTile
-                src="/images/about/un.jpg?v=2"
-                alt="Laura at United Nations"
-                caption="United Nations"
-                className="col-span-2 row-span-4"
-              />
-              <MosaicTile
-                src="/images/about/iclr-presentation.jpeg"
-                alt="Laura presenting at ICLR"
-                caption="ICLR 2026"
-                className="col-span-4 row-span-3"
-              />
-            </div>
-          </div>
+        {/* Affiliations. Microsoft's four-colour mark used to sit here in full
+            #F25022 / #7FBA00 / #00A4EF / #FFB900 - three saturated foreign
+            brand marks were the loudest thing left on a painted page. Set in
+            the site's own ink instead. */}
+        <div
+          className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t pt-5"
+          style={{ borderColor: 'var(--hairline)' }}
+        >
+          <span className="mono" style={{ color: 'var(--accent)' }}>
+            Affiliations
+          </span>
+          <a
+            href="https://www.stanford.edu"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="opacity-70 transition-opacity hover:opacity-100"
+            aria-label="Stanford University"
+          >
+            <TransparentLogo src="/stanford-logo.png" alt="Stanford" className="h-5 w-auto" />
+          </a>
+          <a
+            href="https://www.microsoft.com/en-us/research"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link-editorial mono"
+            style={{ color: 'var(--ink-soft)' }}
+          >
+            Microsoft Research
+          </a>
+          <a
+            href="https://www.ersilia.io/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="opacity-70 transition-opacity hover:opacity-100"
+            aria-label="Ersilia Open Source Initiative"
+          >
+            <img src="/ersilia-logo.png" alt="Ersilia" className="h-5 w-auto" />
+          </a>
         </div>
       </div>
     </section>
@@ -230,39 +211,8 @@ export default function About() {
 
 function FocusItem({ title, body }) {
   return (
-    <li className="text-[14.5px] md:text-[1.02rem] text-[#2A211A]/75 leading-relaxed font-light">
-      <span className="text-[#2A211A]/95">{title}</span>{' '}
-      <span className="text-[#2A211A]/65">{body}</span>
+    <li className="text-[15px] leading-relaxed md:text-[16px]" style={{ color: 'var(--ink-quiet)' }}>
+      <span style={{ color: 'var(--ink)' }}>{title}</span> {body}
     </li>
-  )
-}
-
-function MosaicTile({ src, alt, caption, className = '' }) {
-  const [loaded, setLoaded] = useState(false)
-  return (
-    <figure
-      className={`relative overflow-hidden group ${className}`}
-      style={{ border: '1px solid var(--hairline)', borderRadius: '2px', background: 'var(--paper-raise, #efe7da)' }}
-    >
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        decoding="async"
-        onLoad={() => setLoaded(true)}
-        className={`w-full h-full object-cover transition-[opacity,transform] duration-[1200ms] ease-out group-hover:scale-[1.06] ${loaded ? 'opacity-100' : 'opacity-0'}`}
-        onError={(e) => {
-          e.target.src = '/profile.jpg'
-        }}
-      />
-      {/* Bottom gradient for caption legibility */}
-      <div
-        className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none"
-        style={{ background: 'linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.78) 100%)' }}
-      />
-      <figcaption className="absolute bottom-2 left-2.5 right-2.5 mono text-[10px] tracking-widest uppercase text-white/85">
-        {caption}
-      </figcaption>
-    </figure>
   )
 }
