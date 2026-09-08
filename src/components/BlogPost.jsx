@@ -10,6 +10,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import TaskArithmeticPost from './TaskArithmeticPost'
 import OrthDionPost from './OrthDionPost'
 import MuonGeometryPost from './MuonGeometryPost'
+import CLensPost from './CLensPost'
 import latentThoughtRaw from '../../content/blog/2026-04-27-monitoring-silent-thoughts.md?raw'
 import confessionsRaw from '../../content/blog/2026-05-03-confessions-dont-escape-substrate.md?raw'
 
@@ -1005,6 +1006,197 @@ function MuonGeometryHeroFigure() {
   )
 }
 
+// Hero figure for the c-lens post: the sign of one change.
+// The R-lens adds three relevance rules to the J-lens backward pass. Whether
+// those three rules conserve MORE relevance or LESS is a single signed number
+// per model, and the axis below is that number. Under a causal mask it is
+// negative, which is the published result. Under a bidirectional mask, on the
+// same weights and the same prompts, it is positive — and that reversal is what
+// the post is about. The fourth rule is what closes it, which the strip beneath
+// the axis states.
+function CLensHeroFigure() {
+  const ink = '#1a1a1a'
+  const muted = '#6b6660'
+  const quiet = '#9c9483'
+  const accent = '#94566a'          // madder, the post's pigment
+  const helpTint = '#f0efe6'        // "the rules conserve more" half
+  const hurtTint = '#f7eef2'        // "the rules conserve less" half
+  const serif = "'Georgia', 'Iowan Old Style', 'Times New Roman', serif"
+  const mono = "'JetBrains Mono', ui-monospace, monospace"
+
+  // Short and wide, with every label below the geometry so nothing can collide.
+  const W = 520, H = 132
+  const padL = 28, padR = 22
+  const axisY = 70
+  const xMin = -50, xMax = 65
+  const span = W - padL - padR
+  const x = v => padL + ((v - xMin) / (xMax - xMin)) * span
+
+  // The change column of the conservation table, verbatim.
+  //  - Llama-2-7B, causal mask:          −36 %
+  //  - LLaDA-8B, bidirectional:           +6 %
+  //  - DiffuLLaMA, bidirectional:        +39 %
+  //  - Llama-2-7B, bidirectional:        +54 %
+  const tagged = [
+    { n: 1, v: -36, accent: false, label: 'Llama-2-7B  ·  causal mask',
+      sub: 'the three rules conserve more' },
+    { n: 2, v: 54, accent: true, label: 'Llama-2-7B  ·  bidirectional mask',
+      sub: 'same weights, same prompts' },
+  ]
+  const context = [{ v: 6 }, { v: 39 }]
+
+  return (
+    <div style={{ color: ink, width: '100%' }}>
+      {/* Lowercase italic kicker — not all-caps */}
+      <div style={{
+        fontFamily: serif,
+        fontStyle: 'italic',
+        fontSize: '0.86rem',
+        color: muted,
+        marginBottom: '1.1rem',
+      }}>
+        one change of attention mask reverses the sign of a correction
+      </div>
+
+      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}
+           aria-label="A horizontal axis of the change in conservation error the three R-lens rules produce. Llama-2-7B under a causal mask sits at minus 36 percent, where the rules conserve more. Under a bidirectional mask the same weights sit at plus 54 percent, where they conserve less. Two unlabelled points at plus 6 and plus 39 percent show the two bidirectionally trained models.">
+
+        {/* Tinted half-planes — subtle, frames the dichotomy */}
+        <rect x={padL} y={axisY - 11} width={x(0) - padL} height={22} fill={helpTint} />
+        <rect x={x(0)} y={axisY - 11} width={W - padR - x(0)} height={22} fill={hurtTint} />
+
+        {/* Axis line */}
+        <line x1={padL} y1={axisY} x2={W - padR} y2={axisY} stroke={ink} strokeWidth="1" />
+
+        {/* Ticks every 25 points; zero is darker */}
+        {[-50, -25, 0, 25, 50].map(v => {
+          const xv = x(v)
+          const isZero = v === 0
+          return (
+            <g key={v}>
+              <line x1={xv} y1={axisY - 4} x2={xv} y2={axisY + 4}
+                    stroke={ink} strokeWidth={isZero ? 1.3 : 0.7} />
+              <text x={xv} y={axisY + 17} fontSize="9.5"
+                    fill={isZero ? ink : quiet}
+                    fontFamily={mono} textAnchor="middle">
+                {isZero ? '0' : `${v > 0 ? '+' : '−'}${Math.abs(v)}%`}
+              </text>
+            </g>
+          )
+        })}
+
+        {/* Break-even guide at no change. It stops above the tick labels: run
+            past them and it strikes through the "0". */}
+        <line x1={x(0)} y1={axisY - 20} x2={x(0)} y2={axisY + 6}
+              stroke={ink} strokeWidth="1.1" strokeDasharray="4 3" />
+
+        {/* Region tags and axis name — all below the axis, never on the geometry */}
+        <text x={padL + 2} y={axisY + 36} fontSize="9.5" fill={muted}
+              fontFamily={serif} fontStyle="italic" textAnchor="start">
+          ← conserves more
+        </text>
+        <text x={W - padR - 2} y={axisY + 36} fontSize="9.5" fill={accent}
+              fontFamily={serif} fontStyle="italic" textAnchor="end">
+          conserves less →
+        </text>
+        <text x={x(0)} y={axisY + 52} fontSize="9" fill={quiet}
+              fontFamily={mono} textAnchor="middle" letterSpacing="0.06em">
+          CHANGE IN CONSERVATION ERROR FROM THE THREE R-LENS RULES
+        </text>
+
+        {/* Context dots: the two bidirectionally trained models */}
+        {context.map(({ v }) => (
+          <circle key={v} cx={x(v)} cy={axisY} r="3.1"
+                  fill="none" stroke={muted} strokeWidth="1.1" />
+        ))}
+
+        {/* Story points: a filled dot on the axis, a numbered tag above it */}
+        {tagged.map(({ n, v, accent: isAccent }) => {
+          const xv = x(v)
+          const c = isAccent ? accent : ink
+          return (
+            <g key={n}>
+              <line x1={xv} y1={axisY - 9} x2={xv} y2={axisY - 21}
+                    stroke={c} strokeWidth="0.9" />
+              <circle cx={xv} cy={axisY} r="4" fill={c} />
+              <circle cx={xv} cy={axisY - 27} r="7" fill="none" stroke={c} strokeWidth="0.9" />
+              <text x={xv} y={axisY - 23.6} fontSize="9" fill={c}
+                    fontFamily={mono} textAnchor="middle">{n}</text>
+            </g>
+          )
+        })}
+      </svg>
+
+      {/* Numbered legend, below the figure and never on it */}
+      <div style={{ marginTop: '1.15rem' }}>
+        {tagged.map(({ n, label, sub, accent: isAccent }) => {
+          const c = isAccent ? accent : ink
+          return (
+            <div key={n} style={{
+              display: 'grid',
+              gridTemplateColumns: '1.15rem 1fr',
+              gap: '0.6rem',
+              alignItems: 'baseline',
+              marginBottom: '0.5rem',
+            }}>
+              <span style={{ fontFamily: mono, fontSize: '0.7rem', color: c }}>{n}</span>
+              <span>
+                <span style={{ fontFamily: mono, fontSize: '0.72rem', color: c, letterSpacing: '0.02em' }}>
+                  {label}
+                </span>
+                <span style={{
+                  fontFamily: serif, fontStyle: 'italic', fontSize: '0.78rem',
+                  color: muted, display: 'block', marginTop: '0.1rem',
+                }}>
+                  {sub}
+                </span>
+              </span>
+            </div>
+          )
+        })}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1.15rem 1fr',
+          gap: '0.6rem',
+          alignItems: 'baseline',
+          marginBottom: '0.5rem',
+        }}>
+          <span aria-hidden="true" style={{ fontFamily: mono, fontSize: '0.7rem', color: quiet }}>○</span>
+          <span style={{ fontFamily: serif, fontStyle: 'italic', fontSize: '0.78rem', color: muted }}>
+            DiffuLLaMA and LLaDA-8B, both trained bidirectionally
+          </span>
+        </div>
+      </div>
+
+      {/* The resolution, set apart: a fourth rule closes the error on all four. */}
+      <div style={{
+        marginTop: '1.15rem',
+        paddingTop: '0.85rem',
+        borderTop: `1px solid ${accent}`,
+        display: 'flex',
+        alignItems: 'baseline',
+        gap: '0.7rem',
+        flexWrap: 'wrap',
+      }}>
+        <span style={{
+          fontFamily: mono, fontSize: '0.68rem', letterSpacing: '0.11em',
+          textTransform: 'uppercase', color: accent, fontWeight: 600,
+        }}>
+          C-lens
+        </span>
+        <span style={{
+          fontFamily: serif, fontStyle: 'italic', fontSize: '0.84rem',
+          color: muted, lineHeight: 1.5, flex: '1 1 220px',
+        }}>
+          with a fourth rule, for attention, the error is 7.3e-04 to 1.7e-03 on all four models:
+          floating-point zero.
+        </span>
+      </div>
+    </div>
+  )
+}
+
+
 gsap.registerPlugin(ScrollTrigger)
 
 // Map of slug → hero figure component for LEAD-style posts that use a JSX hero
@@ -1533,6 +1725,11 @@ The codebase is set up to make it easy to run these experiments. If you're inter
     date: '2026-05-25',
     content: '' // rendered via MuonGeometryPost component
   },
+  'c-lens-conservation': {
+    title: 'C-lens: making the R-lens conserve relevance under bidirectional attention',
+    date: '2026-09-07',
+    content: '' // rendered via CLensPost component
+  },
   'monitoring-silent-thoughts': {
     title: 'Is latent chain-of-thought monitorable?',
     date: '2026-04-30',
@@ -1767,6 +1964,71 @@ export default function BlogPost() {
           <div className="lead-prose-bi">
             <div className="lead-prose-inner-bi">
               <MuonGeometryPost />
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (slug === 'c-lens-conservation') {
+    return (
+      <section ref={sectionRef} className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: 'var(--paper)', color: 'var(--ink)' }}>
+        <div className="lead-shell">
+          <Link to="/blog" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
+            ← back to blog
+          </Link>
+
+          <header className="lead-hero">
+            <div className="lead-hero-left">
+              {/* Same words as post.title; the two lens names are held together
+                  so the headline never breaks a line after "R-". */}
+              <h1 ref={titleRef}>
+                <span style={{ whiteSpace: 'nowrap' }}>C-lens:</span> making the{' '}
+                <span style={{ whiteSpace: 'nowrap' }}>R-lens</span> conserve relevance under
+                bidirectional attention
+              </h1>
+              <div className="lead-abstract">
+                <p>
+                  The R-lens is the J-lens with three layerwise-relevance-propagation rules added to
+                  the backward pass its averaged Jacobian is taken through. The stated motivation is
+                  conservation of relevance, which means that the activation-times-gradient terms
+                  over the source coordinates sum to the target activation. I measured that sum.
+                  Under a causal mask the three rules reduce the error by 36%, and under a
+                  bidirectional mask on the same weights and the same prompts they increase it by
+                  54%. Euler&apos;s homogeneous function theorem says which modules conserve
+                  relevance, and by that criterion attention is the one module in a transformer
+                  layer left without a rule. With a fourth rule added the decomposition is exact to
+                  floating point on four models. I call the result the C-lens. On LLaDA-8B-Base it
+                  reads a masked position 21% more often than the J-lens at layer 25 and 50% more
+                  often where the model is least certain. On Llama-2-7B it reads more often at all
+                  20 layers the lens covers, by 2.06 times at layer 18 falling to 1.02 times at
+                  layer 29. Reading a diffusion language model with it, I measured that at 4% of the
+                  positions the model has written its current top prediction is a different token,
+                  and neither the sampler nor the generated text records that.
+                </p>
+              </div>
+              <p className="lead-byline">
+                Laura Gomezjurado
+                <span style={{ color: '#c8c2b3', margin: '0 0.6rem' }}>·</span>
+                {formattedDate}
+                <span style={{ color: '#c8c2b3', margin: '0 0.6rem' }}>·</span>
+                <a href="https://github.com/LauraGomezjurado/c-lens" target="_blank" rel="noopener noreferrer"
+                   style={{ color: '#5b3a8a', textDecoration: 'underline', textUnderlineOffset: '2px' }}>
+                  Code
+                </a>
+              </p>
+            </div>
+            <div className="lead-hero-right">
+              <CLensHeroFigure />
+            </div>
+          </header>
+
+          <hr className="lead-rule" />
+
+          <div className="lead-prose-bi">
+            <div className="lead-prose-inner-bi">
+              <CLensPost />
             </div>
           </div>
         </div>

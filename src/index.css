@@ -772,6 +772,23 @@ section[id] h2 {
   margin-right: auto;
 }
 
+/* A display equation set inside a framed panel already has the panel's padding
+   around it; KaTeX's own 1em display margin doubles it into a hollow box. */
+.lead-prose-inner-bi .math-panel .katex-display {
+  margin: 0.3em 0;
+}
+
+/* Breakout figures inside the bi-side layout. Multi-panel plots need more than
+   the 960px body, but the navigation is fixed 48px from the right edge of the
+   viewport, so a figure that only knows about the body column will run under it
+   on a 1440px screen. Sizing against 100vw is what keeps them clear. */
+.lead-prose-inner-bi figure.breakout {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1040px, calc(100vw - 320px));
+}
+
 /* On narrower viewports, paired figures stack vertically. */
 @media (max-width: 1000px) {
   .lead-prose-inner-bi {
@@ -782,6 +799,11 @@ section[id] h2 {
   }
   .lead-prose-inner-bi .paired-figure-row > * {
     margin-bottom: 1.5rem;
+  }
+  .lead-prose-inner-bi figure.breakout {
+    left: 0;
+    transform: none;
+    width: 100%;
   }
 }
 
