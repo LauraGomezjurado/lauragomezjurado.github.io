@@ -4,7 +4,7 @@
 export const blogPosts = [
   {
     slug: 'c-lens-conservation',
-    title: 'C-lens: making the R-lens conserve relevance under bidirectional attention',
+    title: 'C-lens: making the J-lens and R-lens conserve relevance under bidirectional attention',
     date: '2026-09-07',
     excerpt: "The R-lens adds three relevance rules to the J-lens backward pass. Under a causal mask they cut the conservation error by 36%; under a bidirectional mask, on the same weights and the same prompts, they raise it by 54%. Euler's homogeneous function theorem names attention as the one module in a transformer layer left without a rule, and adding it makes the decomposition exact to floating point on four models.",
     image: '/images/blog/c-lens/fig0_readout_examples.png',

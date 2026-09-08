@@ -1,4 +1,4 @@
-# C-lens: making the R-lens conserve relevance under bidirectional attention
+# C-lens: making the J-lens and R-lens conserve relevance under bidirectional attention
 
 Laura Gomezjurado | [Code](https://github.com/LauraGomezjurado/c-lens)
 

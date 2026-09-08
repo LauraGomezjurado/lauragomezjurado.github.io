@@ -1535,7 +1535,7 @@ The codebase is set up to make it easy to run these experiments. If you're inter
     content: '' // rendered via MuonGeometryPost component
   },
   'c-lens-conservation': {
-    title: 'C-lens: making the R-lens conserve relevance under bidirectional attention',
+    title: 'C-lens: making the J-lens and R-lens conserve relevance under bidirectional attention',
     date: '2026-09-07',
     content: '' // rendered via CLensPost component
   },
@@ -1794,6 +1794,7 @@ export default function BlogPost() {
                   so the headline never breaks a line after "R-". */}
               <h1 ref={titleRef}>
                 <span style={{ whiteSpace: 'nowrap' }}>C-lens:</span> making the{' '}
+                <span style={{ whiteSpace: 'nowrap' }}>J-lens</span> and{' '}
                 <span style={{ whiteSpace: 'nowrap' }}>R-lens</span> conserve relevance under
                 bidirectional attention
               </h1>
