@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>C-lens: making the R-lens conserve relevance under bidirectional attention — Laura Gomezjurado Gonzalez</title>
+    <meta name="description" content="The R-lens adds three relevance rules to the J-lens backward pass. Under a causal mask they cut the conservation error by 36%; under a bidirectional mask, on the same weights and the same prompts, th…" />
+    <link rel="canonical" href="https://lauragomezjurado.github.io/blog/c-lens-conservation" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Laura Gomezjurado Gonzalez" />
+    <meta property="og:title" content="C-lens: making the R-lens conserve relevance under bidirectional attention — Laura Gomezjurado Gonzalez" />
+    <meta property="og:description" content="The R-lens adds three relevance rules to the J-lens backward pass. Under a causal mask they cut the conservation error by 36%; under a bidirectional mask, on the same weights and the same prompts, th…" />
+    <meta property="og:url" content="https://lauragomezjurado.github.io/blog/c-lens-conservation" />
+    <meta property="og:image" content="https://lauragomezjurado.github.io/images/blog/c-lens/fig0_readout_examples.png" />
+    <meta property="article:published_time" content="2026-09-07" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="C-lens: making the R-lens conserve relevance under bidirectional attention — Laura Gomezjurado Gonzalez" />
+    <meta name="twitter:description" content="The R-lens adds three relevance rules to the J-lens backward pass. Under a causal mask they cut the conservation error by 36%; under a bidirectional mask, on the same weights and the same prompts, th…" />
+    <meta name="twitter:image" content="https://lauragomezjurado.github.io/images/blog/c-lens/fig0_readout_examples.png" />
+
+    <!--
+      Four faces, four jobs. Loaded here rather than through an @import in
+      index.css so the preconnects can actually do their work - an @import is
+      discovered only after the stylesheet parses, which serialises the fetch.
+
+      Fraunces is requested across its opsz / SOFT / WONK axes. LOW optical size
+      is the warm end: opsz 9 has soft bracketed serifs and reads like ink, while
+      opsz 144 is the thin-hairline fashion setting that fights wet paint.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1&family=Newsreader:opsz,wght@6..72,200..700&family=Fragment+Mono&family=Caveat:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Pre-paint ground so the first frame is already paper, not white.
+         Must match --paper in src/index.css (see src/design-tokens.json). */
+      body {
+        margin: 0;
+        background: #F6F3EC;
+        color: #3A3632;
+      }
+      #root {
+        min-height: 100vh;
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-BO07JXa5.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/react-nm6yGVBQ.js">
+    <link rel="modulepreload" crossorigin href="/assets/motion-DIYxqKnZ.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-BK_YHXC6.css">
+  </head>
+  <body>
+    <div id="root"><article style="max-width:760px;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif"><p><a href="/blog">← back to blog</a></p><h1>C-lens: making the R-lens conserve relevance under bidirectional attention</h1><p><time datetime="2026-09-07">2026-09-07</time></p><p>The R-lens adds three relevance rules to the J-lens backward pass. Under a causal mask they cut the conservation error by 36%; under a bidirectional mask, on the same weights and the same prompts, they raise it by 54%. Euler's homogeneous function theorem names attention as the one module in a transformer layer left without a rule, and adding it makes the decomposition exact to floating point on four models.</p><p>Loading the full post…</p></article></div>
+  </body>
+</html>
