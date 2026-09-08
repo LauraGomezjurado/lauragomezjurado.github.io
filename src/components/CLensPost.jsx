@@ -29,10 +29,12 @@ function Katex({ tex, display = false }) {
 }
 
 // ─── Section heading ──────────────────────────────────────────────────────────
+// The hero already closes on a rule, so §01 draws none of its own: two hairlines
+// separated by whitespace read as an accident rather than as a division.
 function SectionHeading({ number, title }) {
   return (
-    <div className="narrow-block" style={{ marginTop: '3.5rem', marginBottom: '1.25rem' }}>
-      <hr style={{ border: 0, borderTop: `1px solid ${RULE}`, marginBottom: '1.5rem' }} />
+    <div className="narrow-block" style={{ marginTop: number === 1 ? '1rem' : '3.5rem', marginBottom: '1.25rem' }}>
+      {number > 1 && <hr style={{ border: 0, borderTop: `1px solid ${RULE}`, marginBottom: '1.5rem' }} />}
       <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.85rem' }}>
         <span style={{ fontFamily: MONO, fontSize: '0.78rem', color: QUIET, letterSpacing: '0.1em' }}>
           §{number.toString().padStart(2, '0')}
@@ -166,15 +168,30 @@ function MathPanel({ tex, label }) {
 // figures take the full 960px body, `full` ones push past it into the gutters.
 // The caption stays on a 760px measure and centred beneath, so a 1140px figure
 // never leaves a single caption line running the whole width of the screen.
-function Figure({ src, alt, caption, size = 'wide', id }) {
-  const breakout = size === 'full'
+function Figure({ src, alt, caption, id }) {
   return (
-    <figure id={id} className={breakout ? 'breakout' : undefined} style={{
-      margin: '2.75rem 0',
+    <figure id={id} style={{
+      // One breakout ratio for the whole post: 1.25x the 640px text column,
+      // so the page has two measures rather than four. The caption stays on the
+      // text measure and therefore lines up with the paragraph above it.
+      width: '800px',
+      maxWidth: '100%',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      marginTop: '2.75rem',
+      marginBottom: '2.75rem',
       clear: 'both',
     }}>
       <img src={src} alt={alt || ''} loading="lazy"
-           style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '2px' }} />
+           style={{
+             width: '100%', height: 'auto', display: 'block', borderRadius: '2px',
+             // Every plot here is exported on a white ground. Multiplying it into
+             // the paper is what stops each figure reading as a white tile laid on
+             // the page. It only works while nothing between this image and the
+             // section background creates a stacking context, so this figure is
+             // centred with auto margins and never with a transform.
+             mixBlendMode: 'multiply',
+           }} />
       {caption && (
         <figcaption style={{
           fontFamily: 'var(--font-text)',
@@ -427,25 +444,6 @@ export default function CLensPost() {
       margin: '0 auto',
       color: INK,
     }}>
-      {/* ── Headline figure ───────────────────────────────────────────────── */}
-      <Figure
-        size="full"
-        id="fig-1"
-        src="/images/blog/c-lens/fig0_readout_examples.png"
-        alt="Four readouts at every layer for two masked positions of LLaDA-8B-Base. The C-lens names the committed token from layer 20; the plain logit lens does not name it until layer 29."
-        caption={
-          <>
-            <FigTitle>Figure 1. The C-lens names the token a masked position will write from layer 20
-            of LLaDA-8B-Base and the plain logit lens does not name it until layer 29.</FigTitle> These
-            are two of the 16 examples the browsing script emitted, ranked by how far ahead of
-            commitment the position became readable and never by what any readout named. Each cell
-            is the top token that readout names at that layer. The upper position commits to{' '}
-            <InlineCode>&apos; now&apos;</InlineCode> 21 denoising steps later. The logit lens column
-            repeats the same few tokens whatever the surrounding text, which the appendix quantifies.
-          </>
-        }
-      />
-
       {/* ── 1. Introduction ───────────────────────────────────────────────── */}
       <SectionHeading number={1} title="Introduction" />
 
@@ -778,7 +776,6 @@ g(\alpha x) \;&=\; \alpha^{k}\, g(x) \quad \text{for all } \alpha > 0, \\[8pt]
       </P>
 
       <Figure
-        size="full"
         id="fig-4"
         src="/images/blog/c-lens/fig7_ar_depth.png"
         alt="Panel a: pass@10 at every layer 10 to 29 of Llama-2-7B for four readouts. Panel b: the C-lens over J-lens ratio against layer, falling with depth on both architectures."
@@ -860,7 +857,6 @@ g(\alpha x) \;&=\; \alpha^{k}\, g(x) \quad \text{for all } \alpha > 0, \\[8pt]
       </P>
 
       <Figure
-        size="full"
         id="fig-5"
         src="/images/blog/c-lens/fig1_decision_forming.png"
         alt="One masked position read at eight layers across all 32 denoising steps, coloured by the rank each readout assigns to the token that position eventually commits to."
@@ -895,7 +891,6 @@ g(\alpha x) \;&=\; \alpha^{k}\, g(x) \quad \text{for all } \alpha > 0, \\[8pt]
       </P>
 
       <Figure
-        size="full"
         id="fig-6"
         src="/images/blog/c-lens/fig0_mechanism.png"
         alt="Panel A: autoregressive sampling. Panel B: masked diffusion sampling on one real LLaDA trajectory. Panel C: one position whose committed token stops matching the model's top prediction."
@@ -1020,7 +1015,6 @@ g(\alpha x) \;&=\; \alpha^{k}\, g(x) \quad \text{for all } \alpha > 0, \\[8pt]
       </P>
 
       <Figure
-        size="full"
         id="fig-8"
         src="/images/blog/c-lens/fig4_constant_direction.png"
         alt="Panel a: 566 layer-22 residual vectors plotted against the mean direction and two principal components, with the origin far outside the cloud."

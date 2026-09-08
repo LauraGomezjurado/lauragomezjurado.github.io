@@ -450,6 +450,27 @@ section[id] h2 {
   justify-content: center;
 }
 
+/* A hero whose right column carries a real multi-panel figure rather than a
+   small schematic. The default split is tuned for a diagram that reads at any
+   size; a plate of per-layer readouts needs the larger share of the row, and
+   the text column's 6.5rem outer padding is width the figure can use. */
+@media (min-width: 1001px) {
+  .lead-hero-with-figure .lead-hero-right {
+    align-items: flex-start;
+  }
+}
+
+/* Only where there is room to spare. The text column keeps its 6.5rem outer
+   padding at every width: that is what holds the headline clear of the fixed
+   navigation, and taking it back put the nav on top of the title at 1180px. */
+@media (min-width: 1200px) {
+  /* Column 1 is the FIGURE: the order swap above puts .lead-hero-right first on
+     desktop, so the larger share has to be the first track. */
+  .lead-hero-with-figure {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  }
+}
+
 .lead-hero-right img {
   width: 100%;
   height: auto;
@@ -778,17 +799,6 @@ section[id] h2 {
   margin: 0.3em 0;
 }
 
-/* Breakout figures inside the bi-side layout. Multi-panel plots need more than
-   the 960px body, but the navigation is fixed 48px from the right edge of the
-   viewport, so a figure that only knows about the body column will run under it
-   on a 1440px screen. Sizing against 100vw is what keeps them clear. */
-.lead-prose-inner-bi figure.breakout {
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(1040px, calc(100vw - 320px));
-}
-
 /* On narrower viewports, paired figures stack vertically. */
 @media (max-width: 1000px) {
   .lead-prose-inner-bi {
@@ -799,11 +809,6 @@ section[id] h2 {
   }
   .lead-prose-inner-bi .paired-figure-row > * {
     margin-bottom: 1.5rem;
-  }
-  .lead-prose-inner-bi figure.breakout {
-    left: 0;
-    transform: none;
-    width: 100%;
   }
 }
 
