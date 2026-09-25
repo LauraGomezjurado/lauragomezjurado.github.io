@@ -10,7 +10,7 @@ const newsItems = [
     year: '2026',
     content: (
       <>
-        Joining{' '}
+        Completed the AI Residency at{' '}
         <a
           href="https://www.lila.ai/"
           target="_blank"
@@ -18,11 +18,10 @@ const newsItems = [
           className="link-editorial"
         >
           Lila Sciences
-        </a>{' '}
-        as an AI Resident (incoming).
+        </a>
+        .
       </>
     ),
-    badge: 'Upcoming',
   },
   {
     date: 'June 2026',
