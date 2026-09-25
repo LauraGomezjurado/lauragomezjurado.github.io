@@ -6,7 +6,29 @@ gsap.registerPlugin(ScrollTrigger)
 
 const newsItems = [
   {
-    date: 'June 2026',
+    date: 'Sep 2026',
+    year: '2026',
+    content: (
+      <>
+        Joined the Fall 2026 cohort of the{' '}
+        <a href="https://sparai.org/" target="_blank" rel="noopener noreferrer" className="link-editorial">
+          Supervised Program for Alignment Research (SPAR)
+        </a>{' '}
+        with{' '}
+        <a href="https://belindal.github.io/" target="_blank" rel="noopener noreferrer" className="link-editorial">
+          Belinda Li
+        </a>{' '}
+        (Anthropic), working on{' '}
+        <a href="https://sparai.org/projects/f26/" target="_blank" rel="noopener noreferrer" className="link-editorial">
+          Deploying Programmatic Attention in Real Transformers
+        </a>
+        .
+      </>
+    ),
+    badge: 'Ongoing',
+  },
+  {
+    date: 'June to Sep 2026',
     year: '2026',
     content: (
       <>
@@ -62,7 +84,7 @@ const newsItems = [
     date: 'Feb 2026',
     year: '2026',
     content:
-      'Joined the Supervised Alignment Research Program with Uzay Macar working on Mech Interp for Latent Reasoning Models.',
+      'Joined the Supervised Program for Alignment Research (SPAR) with Uzay Macar working on Mech Interp for Latent Reasoning Models.',
   },
   { date: 'Dec 2025', year: '2025', content: 'Presented workshop paper (2025).', badge: 'Talk' },
   { date: 'June to Aug 2025', year: '2025', content: 'Completed research internship at Microsoft Research.' },
