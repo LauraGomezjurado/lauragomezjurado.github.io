@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { StanfordMark, MicrosoftMark, UNMark } from './Logos'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -144,26 +143,32 @@ export default function About() {
           </p>
         </div>
 
-        {/* Affiliations, drawn in the site's ink (see Logos.jsx). */}
+        {/* Affiliations, painted from the real logos by the same pipeline as
+            the plates (scripts/paint/sketches/mark-affiliation.js). */}
         <div
-          className="mt-10 flex flex-wrap items-center gap-x-9 gap-y-4 border-t pt-6"
-          style={{ borderColor: 'var(--hairline)', color: 'var(--ink)' }}
+          className="mt-10 flex flex-wrap items-center gap-x-10 gap-y-5 border-t pt-6"
+          style={{ borderColor: 'var(--hairline)' }}
         >
           {[
-            ['https://www.stanford.edu', 'Stanford University', StanfordMark],
-            ['https://www.microsoft.com/en-us/research', 'Microsoft Research', MicrosoftMark],
-            ['https://www.un.org', 'United Nations', UNMark],
-          ].map(([href, label, Mark]) => (
+            ['https://www.stanford.edu', 'Stanford University', 'stanford', 'h-16'],
+            ['https://www.microsoft.com/en-us/research', 'Microsoft Research', 'microsoft', 'h-12'],
+            ['https://www.un.org', 'United Nations', 'un', 'h-14'],
+          ].map(([href, label, mark, size]) => (
             <a
               key={label}
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={label}
               title={label}
-              className="opacity-60 transition-opacity hover:opacity-100"
+              className="opacity-90 transition-opacity hover:opacity-100"
             >
-              <Mark className="h-10 w-auto" />
+              <img
+                src={`/images/marks/${mark}.webp`}
+                alt={label}
+                loading="lazy"
+                decoding="async"
+                className={`${size} w-auto`}
+              />
             </a>
           ))}
         </div>

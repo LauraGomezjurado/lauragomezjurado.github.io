@@ -1,76 +1,9 @@
 /**
- * Affiliation marks, drawn here in the site's ink so they sit on the paper
- * like the rest of the page. Each takes `currentColor`; set colour and size
- * on the parent.
+ * Contact marks, drawn here in the site's ink so they sit on the paper like the
+ * rest of the page. Each takes `currentColor`; set colour and size on the
+ * parent. (The affiliation logos in About are painted instead; see
+ * scripts/paint/sketches/mark-affiliation.js.)
  */
-
-/** Stanford: the block S with the tree standing through it. */
-export function StanfordMark(props) {
-  return (
-    <svg viewBox="0 0 40 48" fill="currentColor" aria-hidden="true" {...props}>
-      <text
-        x="20"
-        y="43"
-        textAnchor="middle"
-        fontFamily="Georgia, 'Times New Roman', serif"
-        fontWeight="700"
-        fontSize="52"
-      >
-        S
-      </text>
-      <g stroke="var(--paper)" strokeWidth="1.6" strokeLinejoin="round">
-        <path d="M20 4 L23.5 12 L21.8 12 L25.5 21 L23 21 L27 31 L13 31 L17 21 L14.5 21 L18.2 12 L16.5 12 Z" />
-        <rect x="18.8" y="31" width="2.4" height="11" />
-      </g>
-    </svg>
-  )
-}
-
-/** Microsoft: four squares in a 2 by 2 grid. */
-export function MicrosoftMark(props) {
-  return (
-    <svg viewBox="0 0 23 23" fill="currentColor" aria-hidden="true" {...props}>
-      <rect x="1" y="1" width="10" height="10" />
-      <rect x="12" y="1" width="10" height="10" />
-      <rect x="1" y="12" width="10" height="10" />
-      <rect x="12" y="12" width="10" height="10" />
-    </svg>
-  )
-}
-
-/** United Nations: a polar globe inside two olive branches. */
-export function UNMark(props) {
-  // Two rows of leaves run up the left branch, tilted off it to either side;
-  // the right branch mirrors them.
-  const leaves = Array.from({ length: 12 }, (_, i) => {
-    const outer = i % 2 === 0
-    const deg = 246 - i * 8
-    const r = outer ? 21.8 : 18.4
-    const a = deg * (Math.PI / 180)
-    return { x: 24 + r * Math.cos(a), y: 24 - r * Math.sin(a), rot: 180 - deg + (outer ? -38 : 38) }
-  })
-  return (
-    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" aria-hidden="true" {...props}>
-      <g strokeWidth="1.3">
-        {[4, 8, 12, 16].map((r) => (
-          <circle key={r} cx="24" cy="23" r={r} />
-        ))}
-        {[0, 45, 90, 135].map((d) => (
-          <line key={d} x1="24" y1="7" x2="24" y2="39" transform={`rotate(${d} 24 23)`} />
-        ))}
-      </g>
-      <path d="M17.2 42.8 A20 20 0 0 1 6.7 14 M30.8 42.8 A20 20 0 0 0 41.3 14" strokeWidth="1.3" />
-      <g fill="currentColor" stroke="none">
-        {leaves.map(({ x, y, rot }, i) => (
-          <g key={i}>
-            <ellipse cx={x} cy={y} rx="1.1" ry="2.6" transform={`rotate(${rot} ${x} ${y})`} />
-            <ellipse cx={48 - x} cy={y} rx="1.1" ry="2.6" transform={`rotate(${-rot} ${48 - x} ${y})`} />
-          </g>
-        ))}
-      </g>
-    </svg>
-  )
-}
 
 /** GitHub: the octocat silhouette in a circle. */
 export function GitHubMark(props) {
