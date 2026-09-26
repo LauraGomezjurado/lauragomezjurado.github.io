@@ -16,7 +16,7 @@
 export const projects = [
   {
     id: 4,
-    title: 'High-Dimensional Model Editing for Fairness',
+    title: 'High-Dimensional Model Editing for Algorithmic Fairness',
     year: '2024 to 2026',
     venue: 'ICLR 2026',
     topic: 'Model Editing',
@@ -49,21 +49,21 @@ export const projects = [
   },
   {
     id: 12,
-    title: 'The Long Delay to Arithmetic Generalization: When Learned Representations Outrun Behavior',
+    title: 'Delta-Aware Introspection: Self-Reporting the Alignment Side Effects of Fine-Tuning',
     year: '2026',
-    venue: 'arXiv 2604.13082 · Under review',
-    topic: 'Mech Interp',
+    venue: 'arXiv 2608.04347 · Preprint',
+    topic: 'Alignment',
     description:
-      'Encoder-decoder transformers learn Collatz structure long before they can use it: probes pass 99% within ~2k steps while output accuracy lags for tens of thousands more (a "shadow knowledge" gap). Causal splits pin the bottleneck on decoder readout; numeral base acts as an inductive bias.',
+      'Fine-tuning on a task unrelated to safety can degrade the alignment the base model had. We formulate side-effect introspection, where a model is trained to describe alignment shifts it was never deliberately given, build a dataset for it, and propose DAIA, an introspection adapter that reads both base-model activations and the activation differences fine-tuning induced. Introspection generalizes to unseen fine-tuned models and safety categories, and DAIA outperforms existing introspection adapters.',
     briefDescription:
-      'Fig. 1 · parity probe rises by ~2k steps while output accuracy groks late; the encoder knows before the decoder can read it.',
-    tech: ['Grokking', 'Transformers', 'Collatz', 'Probing', 'Mechanistic interpretability'],
-    org: 'Stanford University',
-    link: 'https://arxiv.org/abs/2604.13082',
+      'Fig. 1 · a fine-tuned model against its base: the adapter reads where the activations depart from the reflection.',
+    tech: ['Introspection', 'Fine-tuning', 'LoRA', 'Alignment', 'Side-effect misalignment'],
+    org: 'With K. Yoshida, Y. Yamamoto, Y. Naraki, R. Shimizu, W. Wang',
+    link: 'https://arxiv.org/abs/2608.04347',
     github: null,
-    plate: { src: '/images/art/spread-shadow-knowledge.webp', pigment: 'indigo' },
-    annotation: 'the encoder already knows here',
-    aside: 'the numeral base decides whether it groks',
+    plate: { src: '/images/art/spread-mirror-delta.webp', pigment: 'teal' },
+    annotation: 'the adapter reads this difference',
+    aside: 'a side effect can go either way',
   },
   {
     id: 14,

@@ -62,20 +62,17 @@ export default function Hero() {
 
             <p ref={metaRef} className="mono mt-6 md:mt-7" style={{ color: 'var(--ink-soft)' }}>
               Stanford CS
-              <Sep /> ICLR 2026
-              <Sep /> Microsoft Research
-              <Sep /> Lila Sciences
             </p>
 
             <div ref={cueRef} className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2">
-              <a href="mailto:lpgomez@stanford.edu" className="link-editorial mono">
+              <a href="mailto:lpgomez@stanford.edu" className="link-editorial link-bare mono">
                 lpgomez [at] stanford.edu
               </a>
               <a
                 href="https://github.com/LauraGomezjurado"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="link-editorial mono"
+                className="link-editorial link-bare mono"
               >
                 GitHub
               </a>
@@ -83,7 +80,7 @@ export default function Hero() {
                 href="https://www.linkedin.com/in/laura-gomezjurado/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="link-editorial mono"
+                className="link-editorial link-bare mono"
               >
                 LinkedIn
               </a>
@@ -92,14 +89,5 @@ export default function Hero() {
         </div>
       </Plate>
     </section>
-  )
-}
-
-/** A quiet separator that does not read as punctuation. */
-function Sep() {
-  return (
-    <span aria-hidden="true" className="mx-2 md:mx-3" style={{ color: 'var(--ink-quiet)' }}>
-      /
-    </span>
   )
 }

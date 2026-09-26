@@ -131,12 +131,7 @@ export default function Portfolio() {
       <div className="relative mx-auto w-full max-w-6xl">
         <header ref={titleRef} className="mb-16 md:mb-24">
           <div className="section-index mb-3">§ 02 · Selected Research</div>
-          <h2 className="t-section mb-4">Research &amp; Projects</h2>
-          <p className="max-w-[46ch] text-[16px] leading-relaxed" style={{ color: 'var(--ink-quiet)' }}>
-            Recent work centers on spectral and mixed-geometry optimization, and on the
-            representations transformers form before they can use them. A few projects are
-            highlighted below; the rest sit one click away.
-          </p>
+          <h2 className="t-section">Research &amp; Projects</h2>
         </header>
 
         <div className="md:grid md:grid-cols-12 md:gap-x-10">

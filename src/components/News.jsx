@@ -86,7 +86,6 @@ const newsItems = [
     content:
       'Joined the Supervised Program for Alignment Research (SPAR) with Uzay Macar working on Mech Interp for Latent Reasoning Models.',
   },
-  { date: 'Dec 2025', year: '2025', content: 'Presented workshop paper (2025).', badge: 'Talk' },
   { date: 'June to Aug 2025', year: '2025', content: 'Completed research internship at Microsoft Research.' },
   { date: 'Jan 2025', year: '2025', content: 'Featured in Mission Magazine, Issue 12: The New Order.' },
   {

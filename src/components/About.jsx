@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import TransparentLogo from './TransparentLogo'
+import { StanfordMark, MicrosoftMark, UNMark } from './Logos'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -92,37 +92,22 @@ export default function About() {
 
         <div ref={contentRef}>
           <p className="mb-8 text-[17px] leading-[1.72] md:text-[19px]" style={{ color: 'var(--ink)' }}>
-            I work on the science of understanding and steering learned systems. My
-            research connects interpretability, optimization, and alignment by studying
-            how models form internal structure, how training shapes that structure, and
-            how we can intervene when model behavior is unreliable or unfair. The goal is
-            to make powerful AI systems more legible, controllable, and accountable before
-            they are deployed in the world.
+            I am a computer science student at Stanford working on the science of deep
+            learning, from optimization and training dynamics to mechanistic
+            interpretability and alignment. I currently work with Belinda&nbsp;Li and Jacob&nbsp;Andreas
+            at MIT on programmatic attention for <span className="whitespace-nowrap">interpretable-by-construction</span> transformers.
+            Previously, I studied model editing methods such as task arithmetic and their
+            downstream effects (
+            <a
+              href="https://arxiv.org/abs/2505.24262"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-editorial"
+            >
+              ICLR 2026
+            </a>
+            ) and interned at Microsoft Research.
           </p>
-
-          <div className="mb-10">
-            <div className="mono mb-4" style={{ color: 'var(--accent)' }}>
-              Research focus
-            </div>
-            <ul className="space-y-3.5 border-l pl-5" style={{ borderColor: 'var(--hairline)' }}>
-              <FocusItem
-                title="Mechanistic interpretability."
-                body="Probing latent reasoning in language models and the internal structure behind arithmetic grokking."
-              />
-              <FocusItem
-                title="Optimization geometry."
-                body="Low rank spectral updates and per layer geometry selection for mixed optimizer training."
-              />
-              <FocusItem
-                title="Alignment on model editing."
-                body="Task vector merges that reduce demographic parity gaps while preserving accuracy, with provable bounds."
-              />
-              <FocusItem
-                title="Generalization and deployment."
-                body="Agent evaluation at Stanford CRFM and cost aware multi LLM routing at the Scaling Intelligence Lab."
-              />
-            </ul>
-          </div>
         </div>
 
         {/* Two photographs laid on the sheet rather than tiled into a grid:
@@ -152,67 +137,37 @@ export default function About() {
 
         <div className="space-y-5 border-l pl-5" style={{ borderColor: 'var(--hairline)' }}>
           <p className="text-[15.5px] leading-relaxed md:text-[16.5px]" style={{ color: 'var(--ink-soft)' }}>
-            Alongside the research, I have spent six years working on AI deployment in low
-            resource settings, mostly through ASOFI, an initiative I co founded that builds
-            on device agricultural tools and AI literacy programs with rural cooperatives in
-            Colombia. I have also contributed to AI policy conversations at UN Women, the
-            World Economic Forum, and the UN General Assembly. This side of the work keeps
-            me honest about which safety questions are actually load bearing.
-          </p>
-          <p className="text-[15.5px] leading-relaxed md:text-[16.5px]" style={{ color: 'var(--ink-soft)' }}>
-            Currently at Stanford, previously Microsoft Research and supervised research
-            with Dr. Hiroki Naganuma at ProPlace.
+            Before moving into technical research, I worked on AI deployment and policy in
+            low-resource settings. I co-founded ASOFI, which builds AI tools and literacy
+            programs with rural cooperatives in Colombia, and contributed to AI policy
+            discussions at UN Women, the World Economic Forum, and the UN General Assembly.
           </p>
         </div>
 
-        {/* Affiliations. Microsoft's four-colour mark used to sit here in full
-            #F25022 / #7FBA00 / #00A4EF / #FFB900 - three saturated foreign
-            brand marks were the loudest thing left on a painted page. Set in
-            the site's own ink instead. */}
+        {/* Affiliations, drawn in the site's ink (see Logos.jsx). */}
         <div
-          className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t pt-5"
-          style={{ borderColor: 'var(--hairline)' }}
+          className="mt-10 flex flex-wrap items-center gap-x-9 gap-y-4 border-t pt-6"
+          style={{ borderColor: 'var(--hairline)', color: 'var(--ink)' }}
         >
-          <span className="mono" style={{ color: 'var(--accent)' }}>
-            Affiliations
-          </span>
-          <a
-            href="https://www.stanford.edu"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="opacity-70 transition-opacity hover:opacity-100"
-            aria-label="Stanford University"
-          >
-            <TransparentLogo src="/stanford-logo.png" alt="Stanford" className="h-5 w-auto" />
-          </a>
-          <a
-            href="https://www.microsoft.com/en-us/research"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="link-editorial mono"
-            style={{ color: 'var(--ink-soft)' }}
-          >
-            Microsoft Research
-          </a>
-          <a
-            href="https://www.ersilia.io/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="opacity-70 transition-opacity hover:opacity-100"
-            aria-label="Ersilia Open Source Initiative"
-          >
-            <img src="/ersilia-logo.png" alt="Ersilia" className="h-5 w-auto" />
-          </a>
+          {[
+            ['https://www.stanford.edu', 'Stanford University', StanfordMark],
+            ['https://www.microsoft.com/en-us/research', 'Microsoft Research', MicrosoftMark],
+            ['https://www.un.org', 'United Nations', UNMark],
+          ].map(([href, label, Mark]) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              title={label}
+              className="opacity-60 transition-opacity hover:opacity-100"
+            >
+              <Mark className="h-10 w-auto" />
+            </a>
+          ))}
         </div>
       </div>
     </section>
-  )
-}
-
-function FocusItem({ title, body }) {
-  return (
-    <li className="text-[15px] leading-relaxed md:text-[16px]" style={{ color: 'var(--ink-quiet)' }}>
-      <span style={{ color: 'var(--ink)' }}>{title}</span> {body}
-    </li>
   )
 }

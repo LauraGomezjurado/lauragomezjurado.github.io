@@ -1,14 +1,14 @@
 import { useEffect, useRef } from 'react'
 import Plate from './Plate'
+import { GitHubMark, LinkedInMark } from './Logos'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
 /**
- * Contact: an editorial invitation rather than a generic form. The email is the
- * single bold, oversized move; a plain note and a handwritten aside carry the
- * voice; secondary links sit quiet underneath. No panel, no frosted frame, so it
+ * Contact: the email, a handwritten aside, and GitHub and LinkedIn marks in
+ * the body ink, set small in the lower left corner. No panel, no frosted frame, so it
  * coexists with the receded curve like every other section.
  */
 export default function Contact() {
@@ -34,8 +34,8 @@ export default function Contact() {
   return (
     <section ref={sectionRef} id="contact" data-accent="madder" className="relative">
       {/*
-        The page ends the way it began: on a full painting, with the one thing
-        being asked for set large over it.
+        The page ends the way it began: on a full painting, with the address
+        kept small in the left margin so the painting stays clear.
 
         This panel used to be a text column with a small mark tucked in the
         margin, and it read as the emptiest thing on the site - a lot of paper
@@ -57,16 +57,11 @@ export default function Contact() {
         <div className="absolute inset-0 flex items-end">
           <div className="w-full px-5 pb-16 sm:px-8 md:px-12 md:pb-24">
             <div className="section-index mb-3">§ 05 · Reach out</div>
-            <h2 ref={titleRef} className="t-section mb-8">
+            <h2 ref={titleRef} className="t-section mb-5">
               Get in touch
             </h2>
 
             <div ref={bodyRef}>
-              <p className="mb-8 max-w-[42ch] text-[16.5px] leading-relaxed md:text-[18px]" style={{ color: 'var(--ink-soft)' }}>
-                I am always glad to talk about interpretability, optimization, or deploying
-                AI where infrastructure is thin. Email is the surest way to reach me.
-              </p>
-
               <a
                 href="mailto:lpgomez@stanford.edu"
                 className="inline-block leading-[1.02]"
@@ -74,7 +69,7 @@ export default function Contact() {
                   fontFamily: 'var(--font-display)',
                   fontVariationSettings: 'var(--display-soft)',
                   fontWeight: 400,
-                  fontSize: 'clamp(2rem, 6vw, 4.4rem)',
+                  fontSize: 'clamp(1.4rem, 2.4vw, 1.9rem)',
                   letterSpacing: '-0.024em',
                   color: 'var(--ink-strong)',
                 }}
@@ -82,28 +77,28 @@ export default function Contact() {
                 lpgomez@stanford.edu
               </a>
 
-              <p className="handwritten mt-5 text-[18px] leading-snug" style={{ color: 'var(--accent)' }}>
+              <p className="handwritten mt-3 text-[17px] leading-snug" style={{ color: 'var(--accent)' }}>
                 I read every message, replies can lag near deadlines
               </p>
 
-              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
                 <a
                   href="https://github.com/LauraGomezjurado"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="link-editorial mono"
+                  aria-label="GitHub"
                   style={{ color: 'var(--ink-soft)' }}
                 >
-                  GitHub
+                  <GitHubMark className="h-[22px] w-[22px]" />
                 </a>
                 <a
                   href="https://www.linkedin.com/in/laura-gomezjurado/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="link-editorial mono"
+                  aria-label="LinkedIn"
                   style={{ color: 'var(--ink-soft)' }}
                 >
-                  LinkedIn
+                  <LinkedInMark className="h-[22px] w-[22px]" />
                 </a>
                 <span className="mono" style={{ color: 'var(--ink-quiet)' }}>
                   Stanford, CA

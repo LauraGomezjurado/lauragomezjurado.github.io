@@ -325,6 +325,10 @@ hr,
 
 .link-editorial:hover::after { opacity: 0.85; }
 
+/* No rule at rest; it appears on hover. */
+.link-editorial.link-bare::after { opacity: 0; }
+.link-editorial.link-bare:hover::after { opacity: 0.85; }
+
 /* Captions are where a notebook shows its handwriting. */
 figcaption,
 .lead-byline {
@@ -351,13 +355,6 @@ figcaption,
 
 .portfolio-image:hover {
   filter: saturate(1) contrast(1.06);
-}
-
-/* Stanford wordmark: white plate drops out via multiply, ink stays. */
-img[src*='stanford-logo'] {
-  filter: brightness(0) saturate(100%);
-  mix-blend-mode: multiply;
-  background: transparent;
 }
 
 /* ─── Structure ─────────────────────────────────────────────────────────────
