@@ -49,7 +49,7 @@ export const projects = [
   },
   {
     id: 12,
-    title: 'Delta-Aware Introspection: Self-Reporting the Alignment Side Effects of Fine-Tuning',
+    title: 'Introspecting the Alignment Side Effects of Fine-Tuning',
     year: '2026',
     venue: 'arXiv 2608.04347 · Preprint',
     topic: 'Alignment',
