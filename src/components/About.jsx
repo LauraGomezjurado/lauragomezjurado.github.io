@@ -5,15 +5,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 /**
- * About: editorial layout with a panel-wrapped narrative and an asymmetric
- * photo mosaic. Text is guaranteed legible by sitting on a soft panel; images
- * are arranged with intentional mass (one tall, three square) rather than a
- * generic 2×2 grid.
+ * About: two photographs, the policy paragraph and the affiliation logos.
+ * The section header and the research paragraph moved into the Hero, so this
+ * section follows straight on from it.
  */
 export default function About() {
   const sectionRef = useRef(null)
-  const titleRef = useRef(null)
-  const contentRef = useRef(null)
   const mosaicRef = useRef(null)
 
   useEffect(() => {
@@ -23,7 +20,7 @@ export default function About() {
     // mounts, unmounts and remounts, whichever panel happened to unmount last
     // could leave the others' scrubbed elements stranded at opacity 0.
     const ctx = gsap.context(() => {
-      gsap.set([titleRef.current, contentRef.current, mosaicRef.current], { opacity: 1, y: 0, x: 0 })
+      gsap.set(mosaicRef.current, { opacity: 1, y: 0, x: 0 })
 
       const trigger = {
         trigger: sectionRef.current,
@@ -32,16 +29,6 @@ export default function About() {
         scrub: 1,
       }
 
-      gsap.fromTo(
-        titleRef.current,
-        { opacity: 0, y: 28 },
-        { opacity: 1, y: 0, duration: 1.4, ease: 'power3.out', scrollTrigger: trigger }
-      )
-      gsap.fromTo(
-        contentRef.current,
-        { opacity: 0, x: -24 },
-        { opacity: 1, x: 0, duration: 1.4, ease: 'power3.out', scrollTrigger: trigger }
-      )
       gsap.fromTo(
         mosaicRef.current,
         { opacity: 0, x: 24 },
@@ -82,36 +69,9 @@ export default function About() {
         curve deleted months ago.
       */}
       <div className="mx-auto w-full max-w-[36rem]">
-        <header className="mb-10 md:mb-14">
-          <div className="section-index mb-3">§ 01 · Who</div>
-          <h2 ref={titleRef} className="t-section">
-            About
-          </h2>
-        </header>
-
-        <div ref={contentRef}>
-          <p className="mb-8 text-[17px] leading-[1.72] md:text-[19px]" style={{ color: 'var(--ink)' }}>
-            I am a computer science student at Stanford working on the science of deep
-            learning, from optimization and training dynamics to mechanistic
-            interpretability and alignment. I currently work with Belinda&nbsp;Li and Jacob&nbsp;Andreas
-            at MIT on programmatic attention for <span className="whitespace-nowrap">interpretable-by-construction</span> transformers.
-            Previously, I studied model editing methods such as task arithmetic and their
-            downstream effects (
-            <a
-              href="https://arxiv.org/abs/2505.24262"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="link-editorial"
-            >
-              ICLR 2026
-            </a>
-            ) and interned at Microsoft Research.
-          </p>
-        </div>
-
         {/* Two photographs laid on the sheet rather than tiled into a grid:
             slightly off-square, slightly overlapping, captioned in the hand. */}
-        <div ref={mosaicRef} className="my-12 flex items-start justify-center md:my-16">
+        <div ref={mosaicRef} className="mb-12 flex items-start justify-center md:mb-16">
           <figure className="relative z-10 w-[56%]" style={{ transform: 'rotate(-1.6deg)' }}>
             <img
               src="/images/about/microsoft.webp?v=2"

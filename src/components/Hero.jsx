@@ -3,21 +3,18 @@ import { gsap } from 'gsap'
 import Plate from './Plate'
 
 /**
- * Hero: the name, set over a full-bleed painting.
+ * Hero: a full-bleed painting, with the portrait, name and bio in its empty
+ * left third.
  *
- * What changed, and why:
- *
- * - It was `min-h-[180vh]` with the copy pinned to the bottom of the FIRST
- *   viewport, so roughly 80vh of empty paper followed before anything else
- *   happened. One screen now.
- * - The copy was capped at `lg:max-w-[43%]` to leave room for a Three.js
- *   attractor on the right. That attractor was deleted months ago; the hole it
- *   left was still shaping the page. The measure is now chosen for the words.
- * - The name was `text-3xl` - 30px at most - while section headings downstream
- *   ran to 72px, so the page shouted its own table of contents and whispered
- *   whose it was. It is the largest thing here now, as it should be.
- * - The blurred radial scrim is gone. On near-white paper with the type placed
- *   in the quiet half of the composition, nothing needs to be scrimmed.
+ * - The attractor is the largest thing on the screen. The name used to be
+ *   (t-name, up to 6.5rem), which read as a company masthead with nothing
+ *   about the person; it is now t-name-sm and sits over the bio that used to
+ *   open About.
+ * - "Stanford CS" is gone: the first sentence of the bio says it.
+ * - The plate has thin leader lines painted into it. The text column is capped
+ *   at 26rem and centred vertically so none of them cross the paragraph.
+ * - On phones the text moves below the painting, in flow, and the plate crops
+ *   to the right so the whole attractor stays in frame.
  */
 export default function Hero() {
   const nameRef = useRef(null)
@@ -47,47 +44,76 @@ export default function Hero() {
   }, [])
 
   return (
-    <section id="home" data-accent="indigo" className="relative">
+    <section
+      id="home"
+      data-accent="indigo"
+      className="relative [--hero-h:62svh] [--hero-pos:76%_44%] md:[--hero-h:100svh] md:[--hero-pos:38%_44%]"
+    >
       <Plate
         src="/images/art/hero-attractor.webp"
         alt="A Lorenz attractor painted as a specimen plate"
-        position="76% 44%"
+        position="var(--hero-pos)"
+        height="var(--hero-h)"
         priority
-      >
-        <div className="absolute inset-0 flex items-end">
-          <div className="w-full px-5 pb-20 sm:px-8 md:px-12 md:pb-24">
-            <h1 ref={nameRef} className="t-name max-w-[13ch]">
-              Laura Gomezjurado
-            </h1>
+      />
 
-            <p ref={metaRef} className="mono mt-6 md:mt-7" style={{ color: 'var(--ink-soft)' }}>
-              Stanford CS
+      <div className="px-5 pb-16 pt-2 sm:px-8 md:absolute md:inset-0 md:flex md:items-center md:px-12 md:pb-0 md:pt-8">
+        <div className="max-w-[26rem]">
+          <div ref={nameRef}>
+            <img
+              src="/images/about/portrait-research.webp"
+              alt="Laura Gomezjurado"
+              width="480"
+              height="600"
+              fetchPriority="high"
+              className="mb-6 w-[88px] md:w-[104px]"
+            />
+            <h1 className="t-name-sm">Laura Gomezjurado</h1>
+          </div>
+
+          <div ref={metaRef}>
+            <p className="mt-5 text-[16px] leading-[1.65] md:text-[16.5px]" style={{ color: 'var(--ink)' }}>
+              I am a computer science student at Stanford working on the science of deep
+              learning, from optimization and training dynamics to mechanistic
+              interpretability and alignment. I currently work with Belinda&nbsp;Li and Jacob&nbsp;Andreas
+              at MIT on programmatic attention for interpretable-by-construction transformers.
+              Previously, I studied model editing methods such as task arithmetic and their
+              downstream effects (
+              <a
+                href="https://arxiv.org/abs/2505.24262"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-editorial"
+              >
+                ICLR 2026
+              </a>
+              ) and interned at Microsoft Research.
             </p>
+          </div>
 
-            <div ref={cueRef} className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2">
-              <a href="mailto:lpgomez@stanford.edu" className="link-editorial link-bare mono">
-                lpgomez [at] stanford.edu
-              </a>
-              <a
-                href="https://github.com/LauraGomezjurado"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="link-editorial link-bare mono"
-              >
-                GitHub
-              </a>
-              <a
-                href="https://www.linkedin.com/in/laura-gomezjurado/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="link-editorial link-bare mono"
-              >
-                LinkedIn
-              </a>
-            </div>
+          <div ref={cueRef} className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2">
+            <a href="mailto:lpgomez@stanford.edu" className="link-editorial link-bare mono">
+              lpgomez [at] stanford.edu
+            </a>
+            <a
+              href="https://github.com/LauraGomezjurado"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-editorial link-bare mono"
+            >
+              GitHub
+            </a>
+            <a
+              href="https://www.linkedin.com/in/laura-gomezjurado/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-editorial link-bare mono"
+            >
+              LinkedIn
+            </a>
           </div>
         </div>
-      </Plate>
+      </div>
     </section>
   )
 }

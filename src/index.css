@@ -149,6 +149,18 @@ canvas { display: block; }
   color: var(--ink-strong);
 }
 
+/* The name when it shares the hero with the bio: large enough to be the
+   heading, small enough that the painting stays the largest thing on screen. */
+.t-name-sm {
+  font-family: var(--font-display);
+  font-variation-settings: var(--display-soft);
+  font-weight: 300;
+  font-size: clamp(2.3rem, 3.4vw, 2.9rem);
+  line-height: 1;
+  letter-spacing: -0.022em;
+  color: var(--ink-strong);
+}
+
 .t-section {
   font-family: var(--font-display);
   font-variation-settings: var(--display-soft);
