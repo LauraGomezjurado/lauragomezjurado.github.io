@@ -7,8 +7,9 @@
  *   - Microsoft: public/images/microsoft-logo.svg, the four squares.
  *   - United Nations: data/logos/un-emblem.svg, the emblem outline from
  *     simple-icons (CC0), coloured UN blue.
- *   - GitHub and LinkedIn (the Contact marks): data/logos/github-mark.svg and
- *     linkedin-mark.svg, the simple-icons outlines (CC0), on white.
+ *   - GitHub, LinkedIn and Google Scholar (the Contact marks):
+ *     data/logos/github-mark.svg, linkedin-mark.svg and googlescholar-mark.svg,
+ *     the simple-icons outlines (CC0), on white.
  *
  * Each ink maps one colour in the source to three pans (body, deep, light).
  * An ink with no pans is the paper: classified, then left unpainted.
@@ -64,6 +65,13 @@ const LOGOS = {
     inks: [
       { key: '#ffffff' },
       { key: '#0a66c2', pans: ['#1B6DB8', '#0E4A80', '#5B9AD3'], r: 0.06 },
+    ],
+  },
+  googlescholar: {
+    src: 'scripts/paint/data/logos/googlescholar-mark.svg',
+    inks: [
+      { key: '#ffffff' },
+      { key: '#4285f4', pans: ['#3F7FD9', '#24569E', '#7FAAE8'], r: 0.06 },
     ],
   },
 }

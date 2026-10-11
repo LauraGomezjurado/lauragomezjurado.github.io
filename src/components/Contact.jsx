@@ -75,6 +75,9 @@ export default function Contact() {
             <a href="https://www.linkedin.com/in/laura-gomezjurado/" target="_blank" rel="noopener noreferrer" title="LinkedIn" className="opacity-90 transition-opacity hover:opacity-100">
               <img src="/images/marks/linkedin.webp" alt="LinkedIn" loading="lazy" decoding="async" className="h-11 w-auto" />
             </a>
+            <a href="https://scholar.google.com/citations?user=vhmfQwgAAAAJ" target="_blank" rel="noopener noreferrer" title="Google Scholar" className="opacity-90 transition-opacity hover:opacity-100">
+              <img src="/images/marks/googlescholar.webp" alt="Google Scholar" loading="lazy" decoding="async" className="h-11 w-auto" />
+            </a>
           </div>
         </div>
       </div>
