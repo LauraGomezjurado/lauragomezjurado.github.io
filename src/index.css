@@ -316,30 +316,24 @@ hr,
   color: var(--ink-strong);
 }
 
+/* The rule under a link is a real text underline, so it follows every line of
+   a link that wraps. It used to be an absolutely positioned ::after, which
+   lands on only one fragment of a wrapped link and drew nothing under
+   "interpretable-by-construction transformers" in the hero. */
 .link-editorial {
-  position: relative;
   color: var(--accent);
-  transition: color 0.25s ease;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, currentColor 28%, transparent);
+  transition: color 0.25s ease, text-decoration-color 0.25s ease;
 }
 
-.link-editorial::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  height: 1px;
-  width: 100%;
-  background: currentColor;
-  opacity: 0.28;
-  transform-origin: left;
-  transition: opacity 0.25s ease;
-}
-
-.link-editorial:hover::after { opacity: 0.85; }
+.link-editorial:hover { text-decoration-color: color-mix(in srgb, currentColor 85%, transparent); }
 
 /* No rule at rest; it appears on hover. */
-.link-editorial.link-bare::after { opacity: 0; }
-.link-editorial.link-bare:hover::after { opacity: 0.85; }
+.link-editorial.link-bare { text-decoration-color: transparent; }
+.link-editorial.link-bare:hover { text-decoration-color: color-mix(in srgb, currentColor 85%, transparent); }
 
 /* Captions are where a notebook shows its handwriting. */
 figcaption,

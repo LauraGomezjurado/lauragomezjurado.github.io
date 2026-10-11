@@ -79,7 +79,16 @@ export default function Hero() {
               <strong className="font-semibold" style={{ color: 'var(--ink-strong)' }}>
                 Belinda&nbsp;Li and Jacob&nbsp;Andreas at MIT
               </strong>{' '}
-              on programmatic attention for interpretable-by-construction transformers.
+              on programmatic attention for{' '}
+              <a
+                href="https://www.alignmentforum.org/posts/Hy6PX43HGgmfiTaKu/an-ambitious-vision-for-interpretability"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-editorial"
+              >
+                interpretable-by-construction transformers
+              </a>
+              .
               Previously, I studied model editing methods such as task arithmetic and their
               downstream effects (
               <a
