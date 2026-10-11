@@ -115,7 +115,7 @@ export default function About() {
           <div className="space-y-5 border-l pl-5" style={{ borderColor: 'var(--hairline)' }}>
             <p className="text-[15.5px] leading-relaxed md:text-[16.5px]" style={{ color: 'var(--ink-soft)' }}>
               I believe AGI should enhance humanity and work with us to make a better world. I
-              co-founded ASOFI, where I built AI
+              co-founded ASOFI, where we built AI
               tools and literacy programs with rural cooperatives in Colombia, and I contributed
               to AI policy discussions at UN Women, the World Economic Forum, and the UN General
               Assembly.
