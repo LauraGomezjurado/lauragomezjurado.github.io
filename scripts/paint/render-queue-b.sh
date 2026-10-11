@@ -19,6 +19,7 @@ JOBS=(
   "mark-stratum:marks/year-2025:460x260:5:scripts/paint/data/year-2025.json:--transparent"
   "mark-stratum:marks/year-2024:460x230:7:scripts/paint/data/year-2024.json:--transparent"
   "mark-stratum:marks/year-2023:460x230:9:scripts/paint/data/year-2023.json:--transparent"
+  "mark-stratum:marks/year-2022:460x210:11:scripts/paint/data/year-2022.json:--transparent"
 )
 
 for job in "${JOBS[@]}"; do

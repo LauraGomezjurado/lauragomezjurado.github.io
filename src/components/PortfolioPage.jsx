@@ -75,7 +75,6 @@ export default function PortfolioPage() {
         </Link>
 
         <header ref={titleRef} className="mb-14 md:mb-20">
-          <div className="section-index mb-3">§ Selected Research</div>
           <h1 className="t-section mb-4">Research &amp; Projects</h1>
           <p className="max-w-[46ch] text-[16px] leading-relaxed" style={{ color: 'var(--ink-quiet)' }}>
             Every project, ordered by topic and recency. Recent work centers on spectral and
@@ -104,24 +103,6 @@ export default function PortfolioPage() {
                 <div className={`relative z-10 grid md:grid-cols-12 gap-6 md:gap-10 items-start ${isEven ? '' : 'md:[direction:rtl]'}`}>
                   <div className="md:col-span-7 md:[direction:ltr] relative">
                     <div>
-                      <div className="flex items-baseline gap-3 md:gap-4 mb-4 md:mb-5 flex-wrap">
-                        <span className="section-index">{String(index + 1).padStart(2, '0')}</span>
-                        {project.topic && (
-                          <span
-                            className="mono text-[10px] tracking-widest uppercase px-2 py-0.5"
-                            style={{
-                              color: 'var(--accent-dim)',
-                            }}
-                          >
-                            {project.topic}
-                          </span>
-                        )}
-                        <span className="h-px flex-1 min-w-[24px]" style={{ background: 'var(--hairline)' }} />
-                        <span className="mono text-[11px] tracking-widest uppercase" style={{ color: 'var(--accent-dim)' }}>
-                          {project.year}
-                        </span>
-                      </div>
-
                       <h3 className="text-2xl md:text-4xl font-light mb-3 tracking-tight leading-tight" style={{ color: 'var(--ink)' }}>
                         {project.title}
                       </h3>
@@ -133,18 +114,6 @@ export default function PortfolioPage() {
                       <p className="text-[14.5px] md:text-[1.02rem] leading-relaxed font-light max-w-xl">
                         {project.description}
                       </p>
-
-                      <div className="flex flex-wrap gap-2 mt-5 md:mt-6">
-                        {project.tech.map((tech, idx) => (
-                          <span
-                            key={idx}
-                            className="mono px-2.5 py-1 text-[10.5px] tracking-wider"
-                            style={{ color: 'var(--accent)' }}
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
 
                       {(project.github || project.blogLink || project.link) && (
                         <div className="flex flex-wrap gap-4 md:gap-5 mt-6 md:mt-7 pt-5 md:pt-6" style={{ borderTop: '1px solid var(--hairline)' }}>

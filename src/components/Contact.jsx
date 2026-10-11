@@ -56,7 +56,6 @@ export default function Contact() {
       >
         <div className="absolute inset-0 flex items-end">
           <div className="w-full px-5 pb-16 sm:px-8 md:px-12 md:pb-24">
-            <div className="section-index mb-3">§ 05 · Reach out</div>
             <h2 ref={titleRef} className="t-section mb-5">
               Get in touch
             </h2>

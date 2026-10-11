@@ -130,7 +130,6 @@ export default function Portfolio() {
     >
       <div className="relative mx-auto w-full max-w-6xl">
         <header ref={titleRef} className="mb-16 md:mb-24">
-          <div className="section-index mb-3">§ 02 · Selected Research</div>
           <h2 className="t-section">Research &amp; Projects</h2>
         </header>
 
@@ -163,24 +162,6 @@ export default function Portfolio() {
                   />
                 )}
 
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2 mb-3">
-                  <span className="mono leading-none" style={{ color: 'var(--accent)' }}>
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                  {project.topic && (
-                    <span className="mono leading-none" style={{ color: 'var(--accent-quiet)' }}>
-                      {project.topic}
-                    </span>
-                  )}
-                  <span
-                    className="min-w-[28px] flex-1 self-center"
-                    style={{ borderTop: '1.5px dashed var(--accent-quiet)' }}
-                  />
-                  <span className="mono leading-none" style={{ color: 'var(--accent-quiet)' }}>
-                    {project.year}
-                  </span>
-                </div>
-
                 <h3 className="t-title mb-3">{project.title}</h3>
 
                 <p className="mono mb-5" style={{ color: 'var(--accent-quiet)' }}>
@@ -189,16 +170,6 @@ export default function Portfolio() {
 
                 <p className="max-w-xl text-[15.5px] leading-relaxed md:text-[16.5px]" style={{ color: 'var(--ink-soft)' }}>
                   {project.description}
-                </p>
-
-                {project.aside && (
-                  <p className="handwritten mt-4 max-w-md text-[18px] leading-snug" style={{ color: 'var(--accent)' }}>
-                    {project.aside}
-                  </p>
-                )}
-
-                <p className="mono mt-5 leading-relaxed" style={{ color: 'var(--accent-quiet)' }}>
-                  {project.tech.join('   ·   ')}
                 </p>
 
                 <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3">

@@ -5,7 +5,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 /**
- * About: two photographs, the policy paragraph and the affiliation logos.
+ * About: a painted background, two photographs, the policy paragraph and
+ * the affiliation logos.
  * The section header and the research paragraph moved into the Hero, so this
  * section follows straight on from it.
  */
@@ -55,81 +56,101 @@ export default function About() {
       ref={sectionRef}
       id="about"
       data-accent="sepia"
-      className="relative z-10 px-5 py-24 sm:px-8 md:px-12 md:py-40"
+      className="relative z-10 overflow-hidden xl:min-h-[100svh]"
     >
-      {/*
-        The rest. One narrow column, nothing in the margins, no plate.
-        After a full-bleed painting the page needs somewhere to be quiet, and a
-        panel with no art is a deliberate shape rather than an unfinished one.
+      {/* Star trails about the pole, over the Andes
+          (scripts/paint/sketches/about-north-star.js). From xl (1280px) up the plate
+          sits at the section's left edge at no more than 1120px wide, so the
+          star field is about the size of the hero's attractor and the 2400px
+          render stays above 2x on retina screens. Its right half is bare
+          paper. Below xl there is no room beside it for the photographs, so it is
+          a band above the content. */}
+      <img
+        src="/images/art/about-north-star.webp"
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+        className="block h-[100vw] w-full object-cover md:h-[60vw] xl:absolute xl:left-0 xl:top-1/2 xl:h-auto xl:w-[min(78vw,1120px)] xl:-translate-y-1/2 xl:object-contain"
+        style={{
+          objectPosition: '0% 45%',
+          // The plate is painted on the page's own paper, so fading it to
+          // transparent at the top and bottom shows the same paper: the trails
+          // and the ridge dissolve into the sheet instead of ending at the
+          // section's edges.
+          maskImage: 'linear-gradient(to bottom, transparent 0, #000 9%, #000 84%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to bottom, transparent 0, #000 9%, #000 84%, transparent 100%)',
+        }}
+      />
 
-        Gone: the 12-column split with a four-tile photo mosaic (each tile a
-        2px-radius box under a pure-black rgba(0,0,0,0.78) gradient scrim - the
-        only true black on a warm-paper page), the -mt-40 negative margin hack,
-        and the blur(34px) radial scrim that existed to lift text off a Three.js
-        curve deleted months ago.
-      */}
-      <div className="mx-auto w-full max-w-[36rem]">
-        {/* Two photographs laid on the sheet rather than tiled into a grid:
-            slightly off-square, slightly overlapping, captioned in the hand. */}
-        <div ref={mosaicRef} className="mb-12 flex items-start justify-center md:mb-16">
-          <figure className="relative z-10 w-[56%]" style={{ transform: 'rotate(-1.6deg)' }}>
-            <img
-              src="/images/about/microsoft.webp?v=2"
-              alt="Laura at Microsoft Research"
-              loading="lazy"
-              decoding="async"
-              className="w-full"
-            />
-            <figcaption className="mt-2">Microsoft Research</figcaption>
-          </figure>
-          <figure className="-ml-5 mt-12 w-[46%]" style={{ transform: 'rotate(2.2deg)' }}>
-            <img
-              src="/images/about/un.webp?v=2"
-              alt="Laura at the United Nations"
-              loading="lazy"
-              decoding="async"
-              className="w-full"
-            />
-            <figcaption className="mt-2">UN General Assembly</figcaption>
-          </figure>
-        </div>
+      <div className="relative px-5 pb-24 pt-4 sm:px-8 md:px-12 xl:flex xl:min-h-[100svh] xl:items-center xl:justify-end xl:py-32 xl:pr-[11rem]">
+        <div className="w-full md:mx-auto md:max-w-[34rem] xl:mx-0 xl:max-w-[31rem]">
+          {/* Two photographs, overlapping each other. From xl up the pair is
+              pulled left past the text column so the first photo lies over the
+              right edge of the painting; the paragraph below stays on bare
+              paper. The photos are recognisable, so they carry no captions.
+              The column clears the fixed menu. */}
+          <div ref={mosaicRef} className="mb-12 flex items-start md:mb-14 xl:-ml-40">
+            {[
+              ['un', 'Laura at the United Nations', -2.2, 'w-[54%] md:w-[46%]', '45% 30%'],
+              ['davos-crop', 'Laura at the World Economic Forum in Davos', 1.8, 'w-[50%] -ml-[4%] mt-10 md:w-[42%] md:-ml-[6%]', '50% 50%'],
+            ].map(([file, alt, turn, place, pos], i) => (
+              <figure
+                key={file}
+                className={`relative ${place}`}
+                style={{ transform: `rotate(${turn}deg)`, zIndex: i + 1 }}
+              >
+                <img
+                  src={`/images/about/${file}.webp?v=2`}
+                  alt={alt}
+                  loading="lazy"
+                  decoding="async"
+                  className="aspect-[4/5] w-full object-cover"
+                  style={{ objectPosition: pos }}
+                />
+              </figure>
+            ))}
+          </div>
 
-        <div className="space-y-5 border-l pl-5" style={{ borderColor: 'var(--hairline)' }}>
-          <p className="text-[15.5px] leading-relaxed md:text-[16.5px]" style={{ color: 'var(--ink-soft)' }}>
-            My north star is for AGI to enhance humanity. I co-founded ASOFI, where I built AI tools and literacy programs with
-            rural cooperatives in Colombia, and I contributed to AI policy discussions at UN
-            Women, the World Economic Forum, and the UN General Assembly.
-          </p>
-        </div>
+          <div className="space-y-5 border-l pl-5" style={{ borderColor: 'var(--hairline)' }}>
+            <p className="text-[15.5px] leading-relaxed md:text-[16.5px]" style={{ color: 'var(--ink-soft)' }}>
+              I believe AGI should enhance humanity and work with us to make a better world. I
+              co-founded ASOFI, where I built AI
+              tools and literacy programs with rural cooperatives in Colombia, and I contributed
+              to AI policy discussions at UN Women, the World Economic Forum, and the UN General
+              Assembly.
+            </p>
+          </div>
 
-        {/* Affiliations, painted from the real logos by the same pipeline as
-            the plates (scripts/paint/sketches/mark-affiliation.js). */}
-        <div
-          className="mt-10 flex flex-wrap items-center gap-x-10 gap-y-5 border-t pt-6"
-          style={{ borderColor: 'var(--hairline)' }}
-        >
-          {[
-            ['https://www.stanford.edu', 'Stanford University', 'stanford', 'h-16'],
-            ['https://www.microsoft.com/en-us/research', 'Microsoft Research', 'microsoft', 'h-12'],
-            ['https://www.un.org', 'United Nations', 'un', 'h-14'],
-          ].map(([href, label, mark, size]) => (
-            <a
-              key={label}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={label}
-              className="opacity-90 transition-opacity hover:opacity-100"
-            >
-              <img
-                src={`/images/marks/${mark}.webp`}
-                alt={label}
-                loading="lazy"
-                decoding="async"
-                className={`${size} w-auto`}
-              />
-            </a>
-          ))}
+          {/* Affiliations, painted from the real logos by the same pipeline as
+              the plates (scripts/paint/sketches/mark-affiliation.js). */}
+          <div
+            className="mt-10 flex flex-wrap items-center gap-x-10 gap-y-5 border-t pt-6"
+            style={{ borderColor: 'var(--hairline)' }}
+          >
+            {[
+              ['https://www.stanford.edu', 'Stanford University', 'stanford', 'h-16'],
+              ['https://www.microsoft.com/en-us/research', 'Microsoft Research', 'microsoft', 'h-12'],
+              ['https://www.un.org', 'United Nations', 'un', 'h-14'],
+            ].map(([href, label, mark, size]) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={label}
+                className="opacity-90 transition-opacity hover:opacity-100"
+              >
+                <img
+                  src={`/images/marks/${mark}.webp`}
+                  alt={label}
+                  loading="lazy"
+                  decoding="async"
+                  className={`${size} w-auto`}
+                />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </section>

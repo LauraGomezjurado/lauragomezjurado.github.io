@@ -181,7 +181,6 @@ export default function Featured() {
     >
       <div className="mx-auto w-full max-w-6xl">
         <header className="mb-12 md:mb-16">
-          <div className="section-index mb-3">§ 04 · Press &amp; Recognition</div>
           <h2 ref={titleRef} className="t-section">
             Featured in
           </h2>
@@ -239,16 +238,6 @@ function FeatureCard({ feature, innerRef, span, wide }) {
       </figure>
 
       <div className="pt-4">
-        <div className="mb-2 flex items-baseline justify-between gap-3">
-          <span className="mono" style={{ color: 'var(--accent)' }}>
-            {feature.organization}
-          </span>
-          {feature.year && (
-            <span className="handwritten shrink-0 leading-none" style={{ color: 'var(--ink-quiet)' }}>
-              {feature.year}
-            </span>
-          )}
-        </div>
         <h3
           className="mb-2 font-normal leading-snug"
           style={{

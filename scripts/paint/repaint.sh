@@ -25,6 +25,10 @@ shot () { # sketch  out  size  seed  extra...
 # the name, and bleeding would fill it.
 shot attractor-plate-wet   hero-attractor      2400x1500 7
 
+# About: no --bleed, same reason as the hero. Subject on the left 55%, the
+# right left bare for the text and photographs.
+shot about-north-star      about-north-star    2400x1650 3
+
 # Research spreads: bleed, so the drawing fills its half of the spread.
 shot plate-norm-balls      spread-norm-balls   1600x1100 4  --bleed
 shot plate-loss-basin      spread-loss-basin   1600x1100 2  --bleed

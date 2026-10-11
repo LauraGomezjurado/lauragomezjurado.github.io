@@ -202,6 +202,23 @@ out, raise `--wash`.
 
 ## Gotchas, all learned from failed renders
 
+- **A blank render that finishes in a few seconds is a name clash.** A helper
+  named after a p5 global (`smooth`, `arc`, ...) replaces p5's own function and
+  setup dies silently. Name helpers `ramp`, `arcPath`, and so on.
+- **A painted streak is round touches at 0.9r spacing.** At 2r they read as a
+  chain of beads, and long thin ellipses (squash below ~0.2) do not render at
+  all. `pastel` at weight 1-2 gives a cheaper grainy band for lesser marks.
+  Swatch card: about-north-star.js header.
+- **Mountains are one glazed silhouette, not many touches.** Touches hung from a
+  crest read as a picket fence or a cloud bank. A single fat polygon through
+  `WC.layers` triangulates fine. Keep its bleed low (0.12-0.25): high outward
+  bleed rounds every peak into a cauliflower edge. Square a ridged-noise term to
+  narrow the peaks.
+- **Let the page fade a background plate's edges.** A plate painted on the
+  page's own paper can run off its canvas and be faded with a CSS
+  `mask-image` gradient; the transparent part shows the same paper. See the
+  About section.
+
 - **A walked grid comes out woven once the pigment is strong enough to see.**
   Placing touches at `(i/cols, k/rows)` hides its lattice at low alpha and shows
   it as corduroy the moment you raise it - rows and columns line up across the

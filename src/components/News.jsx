@@ -4,6 +4,22 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
+/**
+ * A paper title in quotes, linked to the paper. The co-authors are listed on
+ * the linked page, so the news item does not repeat them.
+ */
+function Paper({ href, children }) {
+  return (
+    <>
+      &ldquo;
+      <a href={href} target="_blank" rel="noopener noreferrer" className="link-editorial">
+        {children}
+      </a>
+      &rdquo;
+    </>
+  )
+}
+
 const newsItems = [
   {
     date: 'Sep 2026',
@@ -18,7 +34,11 @@ const newsItems = [
         <a href="https://belindal.github.io/" target="_blank" rel="noopener noreferrer" className="link-editorial">
           Belinda Li
         </a>{' '}
-        (Anthropic), working on{' '}
+        (Anthropic) and{' '}
+        <a href="https://www.mit.edu/~jda/" target="_blank" rel="noopener noreferrer" className="link-editorial">
+          Jacob Andreas
+        </a>{' '}
+        (MIT), working on{' '}
         <a href="https://sparai.org/projects/f26/" target="_blank" rel="noopener noreferrer" className="link-editorial">
           Deploying Programmatic Attention in Real Transformers
         </a>
@@ -48,15 +68,23 @@ const newsItems = [
   {
     date: 'June 2026',
     year: '2026',
-    content:
-      'Paper "Orth-Dion: Eliminating Geometric Mismatch in Distributed Low-Rank Spectral Optimization" (with Tatsuhiro Nakamori, Ganesh Talluri, Ansh Tiwari, Hideyuki Kawashima, Ioannis Mitliagkas, Guillaume Rabusseau, Hiroki Naganuma) accepted to the Connecting Low-rank Representations in AI (CoLoRAI) Workshop at ICML 2026.',
+    content: (
+      <>
+        Paper <Paper href="https://arxiv.org/abs/2605.16341">Orth-Dion: Eliminating Geometric Mismatch in Distributed Low-Rank Spectral Optimization</Paper>{' '}
+        accepted to the Connecting Low-rank Representations in AI (CoLoRAI) Workshop at ICML 2026.
+      </>
+    ),
     badge: 'Accepted',
   },
   {
     date: 'May 2026',
     year: '2026',
-    content:
-      'Paper "Which Geometry on Which Layer? A Principled Criterion for Mixed-Optimizer Training" (with Hiroki Naganuma, Mahdi Ghaznavi, Atsushi Nitanda, Seng Pei Liew, Ryuichiro Hataya, Ioannis Mitliagkas) under review.',
+    content: (
+      <>
+        Paper <Paper href="https://openreview.net/forum?id=lDs4vkSX7J">Which Geometry on Which Layer? A Principled Criterion for Mixed-Optimizer Training</Paper>{' '}
+        under review.
+      </>
+    ),
     badge: 'Preprint',
   },
   {
@@ -70,14 +98,18 @@ const newsItems = [
     date: 'Mar 2026',
     year: '2026',
     content:
-      'Paper "The Long Delay to Arithmetic Generalization: When Learned Representations Outrun Behavior" under review.',
+      'Paper “The Long Delay to Arithmetic Generalization: When Learned Representations Outrun Behavior” under review.',
     badge: 'Preprint',
   },
   {
     date: 'Feb 2026',
     year: '2026',
-    content:
-      'Paper "On Fairness of Task Arithmetic: The Role of Task Vectors" (with Hiroki Naganuma, Kotaro Yoshida, Takafumi Horie, Yuji Naraki, Ryotaro Shimizu) accepted to ICLR 2026.',
+    content: (
+      <>
+        Paper <Paper href="https://arxiv.org/abs/2505.24262">On Fairness of Task Arithmetic: The Role of Task Vectors</Paper>{' '}
+        accepted to ICLR 2026.
+      </>
+    ),
     badge: 'Accepted',
   },
   {
@@ -107,6 +139,12 @@ const newsItems = [
   },
   { date: 'Sep 2023', year: '2023', content: 'Started B.S. in Computer Science at Stanford University.' },
   { date: 'Jun 2023', year: '2023', content: 'Named Masason Foundation Fellow.' },
+  { date: '2022', year: '2022', content: 'Named a Global Teen Leader by the We Are Family Foundation.' },
+  {
+    date: '2022',
+    year: '2022',
+    content: "Competed at the European Girls’ Olympiad in Informatics (EGOI), representing Colombia.",
+  },
 ]
 
 /**
@@ -189,7 +227,6 @@ export default function News() {
       */}
       <div className="mx-auto w-full max-w-3xl">
         <header className="mb-12 md:mb-16">
-          <div className="section-index mb-3">§ 03 · Recent</div>
           <h2 ref={titleRef} className="t-section">
             News
           </h2>
