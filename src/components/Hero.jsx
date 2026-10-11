@@ -99,7 +99,11 @@ export default function Hero() {
               >
                 ICLR 2026
               </a>
-              ) and interned at Microsoft Research. This past summer, I built RL envs and evals
+              ) and interned at{' '}
+              <strong className="font-semibold" style={{ color: 'var(--ink-strong)' }}>
+                Microsoft&nbsp;Research
+              </strong>
+              . This past summer, I built RL envs and evals
               for scientific discovery at{' '}
               <a
                 href="https://www.lila.ai/"
