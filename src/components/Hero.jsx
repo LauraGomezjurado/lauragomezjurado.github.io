@@ -75,8 +75,11 @@ export default function Hero() {
             <p className="mt-5 text-[16px] leading-[1.65] md:text-[16.5px]" style={{ color: 'var(--ink)' }}>
               I am a computer science student at Stanford working on the science of deep
               learning, from optimization and training dynamics to mechanistic
-              interpretability and alignment. I currently work with Belinda&nbsp;Li and Jacob&nbsp;Andreas
-              at MIT on programmatic attention for interpretable-by-construction transformers.
+              interpretability and alignment. I currently work with{' '}
+              <strong className="font-semibold" style={{ color: 'var(--ink-strong)' }}>
+                Belinda&nbsp;Li and Jacob&nbsp;Andreas at MIT
+              </strong>{' '}
+              on programmatic attention for interpretable-by-construction transformers.
               Previously, I studied model editing methods such as task arithmetic and their
               downstream effects (
               <a
