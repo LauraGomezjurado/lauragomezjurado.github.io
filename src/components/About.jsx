@@ -96,10 +96,9 @@ export default function About() {
 
         <div className="space-y-5 border-l pl-5" style={{ borderColor: 'var(--hairline)' }}>
           <p className="text-[15.5px] leading-relaxed md:text-[16.5px]" style={{ color: 'var(--ink-soft)' }}>
-            Before moving into technical research, I worked on AI deployment and policy in
-            low-resource settings. I co-founded ASOFI, which builds AI tools and literacy
-            programs with rural cooperatives in Colombia, and contributed to AI policy
-            discussions at UN Women, the World Economic Forum, and the UN General Assembly.
+            My north star is for AGI to enhance humanity. I co-founded ASOFI, where I built AI tools and literacy programs with
+            rural cooperatives in Colombia, and I contributed to AI policy discussions at UN
+            Women, the World Economic Forum, and the UN General Assembly.
           </p>
         </div>
 

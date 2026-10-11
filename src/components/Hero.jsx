@@ -57,7 +57,7 @@ export default function Hero() {
         priority
       />
 
-      <div className="px-5 pb-16 pt-2 sm:px-8 md:absolute md:inset-0 md:flex md:items-center md:px-12 md:pb-0 md:pt-8">
+      <div className="px-5 pb-16 pt-2 sm:px-8 md:absolute md:inset-0 md:flex md:items-center md:px-12 md:pb-8 md:pt-0">
         <div className="max-w-[26rem]">
           <div ref={nameRef}>
             <img
@@ -87,30 +87,44 @@ export default function Hero() {
               >
                 ICLR 2026
               </a>
-              ) and interned at Microsoft Research.
+              ) and interned at Microsoft Research. This past summer, I built RL envs and evals
+              for scientific discovery at{' '}
+              <a
+                href="https://www.lila.ai/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-editorial"
+              >
+                Lila&nbsp;Sciences
+              </a>
+              .
             </p>
           </div>
 
-          <div ref={cueRef} className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2">
-            <a href="mailto:lpgomez@stanford.edu" className="link-editorial link-bare mono">
+          {/* Two short lines, each ending left of x=340, where a horizontal
+              leader painted into the plate begins at every common viewport. */}
+          <div ref={cueRef} className="mt-6 space-y-2">
+            <a href="mailto:lpgomez@stanford.edu" className="link-editorial link-bare mono block w-fit">
               lpgomez [at] stanford.edu
             </a>
-            <a
-              href="https://github.com/LauraGomezjurado"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="link-editorial link-bare mono"
-            >
-              GitHub
-            </a>
-            <a
-              href="https://www.linkedin.com/in/laura-gomezjurado/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="link-editorial link-bare mono"
-            >
-              LinkedIn
-            </a>
+            <div className="flex items-center gap-x-5">
+              <a
+                href="https://github.com/LauraGomezjurado"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-editorial link-bare mono"
+              >
+                GitHub
+              </a>
+              <a
+                href="https://www.linkedin.com/in/laura-gomezjurado/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-editorial link-bare mono"
+              >
+                LinkedIn
+              </a>
+            </div>
           </div>
         </div>
       </div>
