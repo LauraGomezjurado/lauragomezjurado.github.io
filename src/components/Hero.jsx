@@ -137,7 +137,7 @@ export default function Hero() {
                 LinkedIn
               </a>
               <a
-                href="https://scholar.google.com/citations?view_op=search_authors&mauthors=Laura+Gomezjurado"
+                href="https://scholar.google.com/citations?user=vhmfQwgAAAAJ"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="link-editorial link-bare mono"
