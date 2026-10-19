@@ -101,7 +101,7 @@ export default function About() {
                 style={{ transform: `rotate(${turn}deg)`, zIndex: i + 1 }}
               >
                 <img
-                  src={`/images/about/${file}.webp?v=3`}
+                  src={`/images/about/${file}.webp?v=4`}
                   alt={alt}
                   loading="lazy"
                   decoding="async"
