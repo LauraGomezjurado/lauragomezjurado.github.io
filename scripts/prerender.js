@@ -80,8 +80,13 @@ const buildRootContent = (post) =>
 
 let count = 0
 for (const post of blogPosts) {
-  // Strip the generic site description (the per-post head supplies its own).
-  let html = template.replace(/\s*<meta name="description"[^>]*\/>/, '')
+  // Strip the generic site description and the home-page social card tags
+  // (the per-post head supplies its own).
+  let html = template
+    .replace(/\s*<meta name="description"[^>]*\/>/, '')
+    .replace(/\s*<!-- Social card for the home page[\s\S]*?-->/, '')
+    .replace(/\s*<link rel="canonical"[^>]*\/>/, '')
+    .replace(/\s*<meta (?:property="og:|name="twitter:)[^>]*\/>/g, '')
 
   // Replace the single default <title> with the per-post head block.
   const head = buildHead(post)
