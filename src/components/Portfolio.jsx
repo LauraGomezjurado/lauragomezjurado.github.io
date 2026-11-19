@@ -111,7 +111,7 @@ export default function Portfolio() {
     <section
       ref={sectionRef}
       id="portfolio"
-      className="relative z-10 px-5 pb-12 pt-24 sm:px-8 md:px-12 md:pb-16 md:pt-32"
+      className="relative z-10 px-5 pb-10 pt-16 sm:px-8 md:px-12 md:pb-12 md:pt-24"
       // The accent is the held painting's lead pigment, so the section changes
       // colour as you scroll it rather than carrying one hue throughout.
       style={
@@ -129,7 +129,7 @@ export default function Portfolio() {
       }
     >
       <div className="relative mx-auto w-full max-w-6xl">
-        <header ref={titleRef} className="mb-16 md:mb-24">
+        <header ref={titleRef} className="mb-8 md:mb-10">
           <h2 className="t-section">Research &amp; Projects</h2>
         </header>
 
@@ -146,7 +146,7 @@ export default function Portfolio() {
                   // LAST project has nothing to hand over to, so on that one it
                   // is just a hole - and it landed right where Research's bottom
                   // padding meets News's top padding, which is what made the gap.
-                  index === visibleProjects.length - 1 ? 'pb-8 md:pb-12' : 'pb-24 md:pb-[38vh]'
+                  index === visibleProjects.length - 1 ? 'pb-8 md:pb-12' : 'pb-10 md:pb-[14vh]'
                 }`}
                 aria-current={activeIdx === index ? 'true' : undefined}
               >
@@ -162,9 +162,9 @@ export default function Portfolio() {
                   />
                 )}
 
-                <h3 className="t-title mb-3">{project.title}</h3>
+                <h3 className="t-title mb-2">{project.title}</h3>
 
-                <p className="mono mb-5" style={{ color: 'var(--accent-quiet)' }}>
+                <p className="mono mb-3" style={{ color: 'var(--accent-quiet)', textTransform: 'none', letterSpacing: '0.02em', fontSize: '0.78rem' }}>
                   {[project.venue, project.org].filter(Boolean).join(' · ')}
                 </p>
 
@@ -172,7 +172,7 @@ export default function Portfolio() {
                   {project.description}
                 </p>
 
-                <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3">
+                <div className="mt-3 flex flex-wrap gap-x-6 gap-y-3">
                   {project.github && (
                     <a href={project.github} target="_blank" rel="noopener noreferrer" className="link-editorial text-[13px]">
                       GitHub

@@ -73,7 +73,15 @@ export default function Hero() {
 
           <div ref={metaRef}>
             <p className="mt-5 text-[16px] leading-[1.65] md:text-[16.5px]" style={{ color: 'var(--ink)' }}>
-              I am a computer science student at Stanford working on the science of deep
+              I am a{' '}
+              <strong className="font-semibold" style={{ color: 'var(--ink-strong)' }}>
+                computer science
+              </strong>{' '}
+              student at{' '}
+              <strong className="font-semibold" style={{ color: 'var(--ink-strong)' }}>
+                Stanford
+              </strong>{' '}
+              working on the science of deep
               learning, from optimization and training dynamics to mechanistic
               interpretability and alignment. I currently work with{' '}
               <strong className="font-semibold" style={{ color: 'var(--ink-strong)' }}>

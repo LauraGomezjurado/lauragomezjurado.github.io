@@ -107,7 +107,7 @@ export default function PortfolioPage() {
                         {project.title}
                       </h3>
 
-                      <p className="mono text-[10.5px] md:text-[11px] mb-5 md:mb-6 tracking-widest uppercase" style={{ color: 'var(--accent-dim)' }}>
+                      <p className="mono mb-4" style={{ textTransform: 'none', letterSpacing: '0.02em', fontSize: '0.78rem', color: 'var(--accent-dim)' }}>
                         {project.venue}{project.org ? ` · ${project.org}` : ''}
                       </p>
 
