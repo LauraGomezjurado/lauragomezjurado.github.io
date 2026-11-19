@@ -8,10 +8,10 @@ import katex from 'katex'
 const INK = '#1a1a1a'
 const BODY = '#2a2a2a'
 const MUTED = '#5b5b5b'
-const QUIET = '#9c9483'
-const RULE = '#d8d3c8'
-const CARD_LINE = '#e3dccc'
-const CARD_BG = '#fdfbf6'
+const QUIET = '#93949A'
+const RULE = '#D9D8D4'
+const CARD_LINE = '#E3E2DD'
+const CARD_BG = '#FDFCFA'
 const ACCENT = '#94566a'          // madder
 const ACCENT_TINT = '#f7eef2'
 const LINK = '#5b3a8a'
@@ -81,7 +81,7 @@ const FigTitle = ({ children }) => (
 )
 const InlineCode = ({ children }) => (
   <code style={{
-    background: '#f1ede4', color: LINK, padding: '0.1em 0.35em', borderRadius: '3px',
+    background: '#F2F1ED', color: LINK, padding: '0.1em 0.35em', borderRadius: '3px',
     fontSize: '0.9em', fontFamily: MONO,
   }}>{children}</code>
 )
@@ -278,7 +278,7 @@ function DataTable({ head, rows, align = [], caption }) {
                       textAlign: alignOf(i),
                       padding: '0.5rem 0.85rem',
                       paddingLeft: i === 0 ? (emph ? '0.45rem' : 0) : '0.85rem',
-                      borderBottom: `1px solid #e6e0d0`,
+                      borderBottom: `1px solid #E3E2DD`,
                       color: emph ? INK : BODY,
                       fontWeight: emph ? 600 : 400,
                       fontFamily: alignOf(i) === 'right' ? MONO : 'inherit',
@@ -318,7 +318,7 @@ function RuleRow({ name, tex, note, isNew }) {
       padding: '0.62rem 0.6rem',
       borderRadius: '4px',
       background: isNew ? ACCENT_TINT : 'transparent',
-      borderTop: `1px solid ${isNew ? 'transparent' : '#efe9dc'}`,
+      borderTop: `1px solid ${isNew ? 'transparent' : '#ECEBE6'}`,
     }}>
       <div>
         <div style={{
@@ -383,7 +383,7 @@ function LensCard({ title, sub, rules, accent }) {
       border: `1px solid #d4cebf`,
       borderTop: `2px solid ${accent ? ACCENT : INK}`,
       borderRadius: '6px',
-      background: '#fdfcf9',
+      background: '#FDFCFA',
       padding: '0.95rem 1rem 1rem',
     }}>
       <div style={{
@@ -415,7 +415,7 @@ function LensCard({ title, sub, rules, accent }) {
         )
       })}
       <div style={{
-        marginTop: '0.7rem', paddingTop: '0.5rem', borderTop: '1px solid #efe9dc',
+        marginTop: '0.7rem', paddingTop: '0.5rem', borderTop: '1px solid #ECEBE6',
         fontFamily: MONO, fontSize: '0.7rem', color: accent ? ACCENT : MUTED,
       }}>
         {rules.length} of 4

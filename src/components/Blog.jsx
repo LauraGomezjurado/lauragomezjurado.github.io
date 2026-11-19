@@ -13,7 +13,7 @@ export default function Blog() {
   useEffect(() => {
     // Transition to light background
     gsap.to('body', {
-      background: '#faf9f6',
+      background: '#FDFCFA',
       color: '#1a1a1a',
       duration: 0.8,
       ease: 'power2.out'
@@ -44,7 +44,7 @@ export default function Blog() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="blog" className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#fdfcf9', color: '#1a1a1a', fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
+    <section ref={sectionRef} id="blog" className="relative min-h-screen py-16 px-4 sm:px-6 md:px-8 overflow-hidden" style={{ background: '#FDFCFA', color: '#1a1a1a', fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
       <div className="relative z-10 mx-auto w-full" style={{ maxWidth: '760px' }}>
         <Link to="/" style={{ display: 'inline-block', marginBottom: '2.5rem', fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.02em' }}>
           ← back to home
@@ -63,7 +63,7 @@ export default function Blog() {
           <p style={{ fontSize: '0.92rem', color: '#5b5b5b', lineHeight: 1.6, margin: 0 }}>
             Drafts and full posts about ongoing research in interpretability, fairness, and alignment.
           </p>
-          <hr style={{ marginTop: '1.5rem', border: 0, borderTop: '1px solid #d8d3c8' }} />
+          <hr style={{ marginTop: '1.5rem', border: 0, borderTop: '1px solid #D9D8D4' }} />
         </header>
 
         {blogPosts.length === 0 ? (
@@ -90,7 +90,7 @@ export default function Blog() {
                   <p style={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: '0.78rem',
-                    color: '#9c9483',
+                    color: '#93949A',
                     letterSpacing: '0.05em',
                     marginBottom: '0.6rem'
                   }}>

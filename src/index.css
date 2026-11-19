@@ -483,7 +483,7 @@ section[id] h2 {
 
 .lead-rule {
   border: 0;
-  border-top: 1px solid #d8d3c8;
+  border-top: 1px solid #D9D8D4;
   margin: 0 0 3rem 0;
 }
 
@@ -569,7 +569,7 @@ section[id] h2 {
 
 .lead-prose-inner hr {
   border: 0;
-  border-top: 1px solid #d8d3c8;
+  border-top: 1px solid #D9D8D4;
   margin: 2.5rem 0;
   clear: both;
 }
@@ -585,7 +585,7 @@ section[id] h2 {
 
 .lead-prose-inner pre {
   background: var(--paper);
-  border: 1px solid #e6e0d0;
+  border: 1px solid #E3E2DD;
   padding: 1rem 1.25rem;
   border-radius: 3px;
   overflow-x: auto;
@@ -619,7 +619,7 @@ section[id] h2 {
 }
 
 .lead-prose-inner td {
-  border-bottom: 1px solid #e6e0d0;
+  border-bottom: 1px solid #E3E2DD;
   padding: 0.5rem 0.75rem;
   color: var(--ink);
 }
@@ -673,7 +673,7 @@ section[id] h2 {
 .lead-prose-inner .lead-design-credit {
   margin-top: 3.5rem;
   padding-top: 1.25rem;
-  border-top: 1px solid #e6e0d0;
+  border-top: 1px solid #E3E2DD;
   font-size: 0.8rem;
   line-height: 1.6;
   color: var(--ink-quiet);

@@ -17,9 +17,9 @@ function Katex({ tex, display = false }) {
 function SectionHeading({ number, title }) {
   return (
     <div style={{ marginTop: '3.5rem', marginBottom: '1.25rem' }}>
-      <hr style={{ border: 0, borderTop: '1px solid #d8d3c8', marginBottom: '1.5rem' }} />
+      <hr style={{ border: 0, borderTop: '1px solid #D9D8D4', marginBottom: '1.5rem' }} />
       <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.85rem' }}>
-        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.78rem', color: '#9c9483', letterSpacing: '0.1em' }}>
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.78rem', color: '#93949A', letterSpacing: '0.1em' }}>
           §{number.toString().padStart(2, '0')}
         </span>
         <h2 style={{ fontSize: '1.4rem', fontWeight: 500, color: '#1a1a1a', letterSpacing: '-0.005em', lineHeight: 1.3, margin: 0 }}>
@@ -116,7 +116,7 @@ function FigureRow({ items, caption }) {
               <div style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: '0.72rem',
-                color: '#9c9483',
+                color: '#93949A',
                 letterSpacing: '0.05em',
                 marginTop: '0.5rem',
                 textAlign: 'center'
@@ -159,11 +159,11 @@ function AlgRow({ n, code, note, highlight }) {
       paddingLeft: highlight ? '0.4rem' : 0,
       paddingRight: highlight ? '0.4rem' : 0,
     }}>
-      <span style={{ fontFamily: ALG_MONO, color: '#9c9483', fontSize: '0.78rem' }}>{n}</span>
+      <span style={{ fontFamily: ALG_MONO, color: '#93949A', fontSize: '0.78rem' }}>{n}</span>
       <div>
         <span style={{ fontFamily: ALG_MONO, fontSize: '0.86rem', color: '#1a1a1a' }}>{code}</span>
         {note && (
-          <span style={{ fontFamily: ALG_MONO, fontSize: '0.74rem', color: '#9c9483', marginLeft: '0.75rem' }}>
+          <span style={{ fontFamily: ALG_MONO, fontSize: '0.74rem', color: '#93949A', marginLeft: '0.75rem' }}>
             ▷ {note}
           </span>
         )}
@@ -175,16 +175,16 @@ function AlgRow({ n, code, note, highlight }) {
 function AlgorithmBox() {
   return (
     <div style={{
-      border: '1px solid #e3dccc',
+      border: '1px solid #E3E2DD',
       borderRadius: '6px',
       padding: '1.1rem 1.25rem',
       margin: '2rem 0',
-      background: '#fdfbf6'
+      background: '#FDFCFA'
     }}>
       <div style={{
         fontFamily: "'JetBrains Mono', monospace",
         fontSize: '0.72rem',
-        color: '#9c9483',
+        color: '#93949A',
         letterSpacing: '0.1em',
         textTransform: 'uppercase',
         marginBottom: '0.6rem'
@@ -206,7 +206,7 @@ function AlgorithmBox() {
       <div style={{
         fontFamily: "'JetBrains Mono', monospace",
         fontSize: '0.72rem',
-        color: '#9c9483',
+        color: '#93949A',
         marginTop: '0.6rem',
         lineHeight: 1.55
       }}>
@@ -227,7 +227,7 @@ function GeometryCard({ title, formula, lines, accent }) {
       borderTop: `2px solid ${accent}`,
       borderRadius: '6px',
       padding: '1.05rem 1.15rem',
-      background: '#fdfcf9'
+      background: '#FDFCFA'
     }}>
       <div style={{
         fontFamily: "'JetBrains Mono', monospace",
@@ -299,7 +299,7 @@ function SpectrumPanel() {
       sub: <>direction <em>= G</em></>,
       sigmas: [3.41, 0.59],
       summary: 'spectrum inherited',
-      color: '#9c9483'
+      color: '#93949A'
     },
     {
       label: 'SignSGD',
@@ -332,7 +332,7 @@ function SpectrumPanel() {
       <div style={{
         fontFamily: "'JetBrains Mono', monospace",
         fontSize: '0.7rem',
-        color: '#9c9483',
+        color: '#93949A',
         letterSpacing: '0.1em',
         textTransform: 'uppercase',
         marginBottom: '0.45rem'
@@ -347,7 +347,7 @@ function SpectrumPanel() {
           return (
             <g key={v}>
               <line x1={x} y1={top - 6} x2={x} y2={top + 3 * rowH + 6} stroke="#ececec" strokeWidth="1" />
-              <text x={x} y={top + 3 * rowH + 20} fontSize="9" fill="#9c9483"
+              <text x={x} y={top + 3 * rowH + 20} fontSize="9" fill="#93949A"
                     fontFamily="'JetBrains Mono', monospace" textAnchor="middle">
                 {v}
               </text>
@@ -370,7 +370,7 @@ function SpectrumPanel() {
                 {row.label}
               </text>
               <text x={labelW} y={yCenter + 18} fontSize="9.5"
-                    fill="#9c9483" fontFamily="'JetBrains Mono', monospace" textAnchor="end">
+                    fill="#93949A" fontFamily="'JetBrains Mono', monospace" textAnchor="end">
                 σ = ({row.sigmas[0].toFixed(2)}, {row.sigmas[1].toFixed(2)})
               </text>
 
@@ -430,7 +430,7 @@ const P = ({ children }) => (
 const Em = ({ children }) => <em style={{ fontStyle: 'italic', color: '#2a2a2a' }}>{children}</em>
 const Strong = ({ children }) => <strong style={{ color: '#1a1a1a', fontWeight: 600 }}>{children}</strong>
 const InlineCode = ({ children }) => (
-  <code style={{ background: '#f1ede4', color: '#5b3a8a', padding: '0.1em 0.35em', borderRadius: '3px', fontSize: '0.92em', fontFamily: "'JetBrains Mono', monospace" }}>
+  <code style={{ background: '#F2F1ED', color: '#5b3a8a', padding: '0.1em 0.35em', borderRadius: '3px', fontSize: '0.92em', fontFamily: "'JetBrains Mono', monospace" }}>
     {children}
   </code>
 )
@@ -995,9 +995,9 @@ export default function OrthDionPost() {
       </P>
 
       {/* ── Reference ─────────────────────────────────────────────────────── */}
-      <hr style={{ border: 0, borderTop: '1px solid #d8d3c8', margin: '3rem 0 1.5rem' }} />
+      <hr style={{ border: 0, borderTop: '1px solid #D9D8D4', margin: '3rem 0 1.5rem' }} />
       <div style={{ marginTop: '1.5rem' }}>
-        <p style={{ color: '#9c9483', fontSize: '0.78rem', fontFamily: "'JetBrains Mono', monospace", marginBottom: '0.5rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+        <p style={{ color: '#93949A', fontSize: '0.78rem', fontFamily: "'JetBrains Mono', monospace", marginBottom: '0.5rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
           Reference
         </p>
         <p style={{ color: '#2a2a2a', fontSize: '0.92rem', margin: 0, lineHeight: 1.65 }}>
@@ -1011,8 +1011,8 @@ export default function OrthDionPost() {
           fontFamily: "'JetBrains Mono', monospace",
           fontSize: '0.78rem',
           color: '#3a3a3a',
-          background: '#fdfbf6',
-          border: '1px solid #e3dccc',
+          background: '#FDFCFA',
+          border: '1px solid #E3E2DD',
           borderRadius: '4px',
           padding: '1rem 1.1rem',
           whiteSpace: 'pre',

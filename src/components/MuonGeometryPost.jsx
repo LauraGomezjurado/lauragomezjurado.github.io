@@ -17,9 +17,9 @@ function Katex({ tex, display = false }) {
 function SectionHeading({ number, title }) {
   return (
     <div className="narrow-block" style={{ marginTop: '3.5rem', marginBottom: '1.25rem' }}>
-      <hr style={{ border: 0, borderTop: '1px solid #d8d3c8', marginBottom: '1.5rem' }} />
+      <hr style={{ border: 0, borderTop: '1px solid #D9D8D4', marginBottom: '1.5rem' }} />
       <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.85rem' }}>
-        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.78rem', color: '#9c9483', letterSpacing: '0.1em' }}>
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.78rem', color: '#93949A', letterSpacing: '0.1em' }}>
           §{number.toString().padStart(2, '0')}
         </span>
         <h2 style={{ fontSize: '1.4rem', fontWeight: 500, color: '#1a1a1a', letterSpacing: '-0.005em', lineHeight: 1.3, margin: 0 }}>
@@ -152,11 +152,11 @@ function AlgLine({ n, code, note, highlight }) {
       paddingLeft: highlight ? '0.4rem' : 0,
       paddingRight: highlight ? '0.4rem' : 0,
     }}>
-      <span style={{ fontFamily: ALG_MONO, color: '#9c9483', fontSize: '0.78rem' }}>{n}</span>
+      <span style={{ fontFamily: ALG_MONO, color: '#93949A', fontSize: '0.78rem' }}>{n}</span>
       <div>
         <span style={{ fontFamily: ALG_MONO, fontSize: '0.86rem', color: '#1a1a1a' }}>{code}</span>
         {note && (
-          <span style={{ fontFamily: ALG_MONO, fontSize: '0.74rem', color: '#9c9483', marginLeft: '0.75rem' }}>
+          <span style={{ fontFamily: ALG_MONO, fontSize: '0.74rem', color: '#93949A', marginLeft: '0.75rem' }}>
             ▷ {note}
           </span>
         )}
@@ -168,16 +168,16 @@ function AlgLine({ n, code, note, highlight }) {
 function GScionAlgorithm() {
   return (
     <div className="narrow-block" style={{
-      border: '1px solid #e3dccc',
+      border: '1px solid #E3E2DD',
       borderRadius: '6px',
       padding: '1.1rem 1.25rem',
       margin: '2rem auto',
-      background: '#fdfbf6'
+      background: '#FDFCFA'
     }}>
       <div style={{
         fontFamily: "'JetBrains Mono', monospace",
         fontSize: '0.72rem',
-        color: '#9c9483',
+        color: '#93949A',
         letterSpacing: '0.1em',
         textTransform: 'uppercase',
         marginBottom: '0.6rem'
@@ -196,7 +196,7 @@ function GScionAlgorithm() {
       <div style={{
         fontFamily: "'JetBrains Mono', monospace",
         fontSize: '0.72rem',
-        color: '#9c9483',
+        color: '#93949A',
         marginTop: '0.6rem',
         lineHeight: 1.55
       }}>
@@ -222,7 +222,7 @@ function GeometryDuel() {
         borderTop: '2px solid #1a1a1a',
         borderRadius: '6px',
         padding: '1.05rem 1.15rem',
-        background: '#fdfcf9',
+        background: '#FDFCFA',
       }}>
         <div style={{
           fontFamily: "'JetBrains Mono', monospace",
@@ -252,7 +252,7 @@ function GeometryDuel() {
         borderTop: '2px solid #b8531f',
         borderRadius: '6px',
         padding: '1.05rem 1.15rem',
-        background: '#fdfcf9',
+        background: '#FDFCFA',
       }}>
         <div style={{
           fontFamily: "'JetBrains Mono', monospace",
@@ -657,9 +657,9 @@ export default function MuonGeometryPost() {
       </P>
 
       {/* ── Reference ─────────────────────────────────────────────────────── */}
-      <hr className="narrow-block" style={{ border: 0, borderTop: '1px solid #d8d3c8', margin: '3rem auto 1.5rem' }} />
+      <hr className="narrow-block" style={{ border: 0, borderTop: '1px solid #D9D8D4', margin: '3rem auto 1.5rem' }} />
       <div className="narrow-block" style={{ marginTop: '1.5rem' }}>
-        <p style={{ color: '#9c9483', fontSize: '0.78rem', fontFamily: "'JetBrains Mono', monospace", marginBottom: '0.5rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+        <p style={{ color: '#93949A', fontSize: '0.78rem', fontFamily: "'JetBrains Mono', monospace", marginBottom: '0.5rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
           Reference
         </p>
         <p style={{ color: '#2a2a2a', fontSize: '0.92rem', margin: 0, lineHeight: 1.65 }}>
@@ -674,8 +674,8 @@ export default function MuonGeometryPost() {
           fontFamily: "'JetBrains Mono', monospace",
           fontSize: '0.78rem',
           color: '#3a3a3a',
-          background: '#fdfbf6',
-          border: '1px solid #e3dccc',
+          background: '#FDFCFA',
+          border: '1px solid #E3E2DD',
           borderRadius: '4px',
           padding: '1rem 1.1rem',
           whiteSpace: 'pre',

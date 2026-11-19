@@ -18,9 +18,9 @@ function Katex({ tex, display = false }) {
 function SectionHeading({ number, title }) {
   return (
     <div style={{ marginTop: '3.5rem', marginBottom: '1.25rem' }}>
-      <hr style={{ border: 0, borderTop: '1px solid #d8d3c8', marginBottom: '1.5rem' }} />
+      <hr style={{ border: 0, borderTop: '1px solid #D9D8D4', marginBottom: '1.5rem' }} />
       <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.85rem' }}>
-        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.78rem', color: '#9c9483', letterSpacing: '0.1em' }}>
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.78rem', color: '#93949A', letterSpacing: '0.1em' }}>
           §{number.toString().padStart(2, '0')}
         </span>
         <h2 style={{ fontSize: '1.4rem', fontWeight: 500, color: '#1a1a1a', letterSpacing: '-0.005em', lineHeight: 1.3, margin: 0 }}>
@@ -917,7 +917,7 @@ const Em = ({ children }) => <em style={{ fontStyle: 'italic', color: '#2a2a2a' 
 const Strong = ({ children }) => <strong style={{ color: '#1a1a1a', fontWeight: 600 }}>{children}</strong>
 
 const InlineCode = ({ children }) => (
-  <code style={{ background: '#f1ede4', color: '#5b3a8a', padding: '0.1em 0.35em', borderRadius: '3px', fontSize: '0.92em', fontFamily: "'JetBrains Mono', monospace" }}>
+  <code style={{ background: '#F2F1ED', color: '#5b3a8a', padding: '0.1em 0.35em', borderRadius: '3px', fontSize: '0.92em', fontFamily: "'JetBrains Mono', monospace" }}>
     {children}
   </code>
 )
@@ -1325,9 +1325,9 @@ export default function TaskArithmeticPost() {
         precondition for making things better.
       </P>
 
-      <hr style={{ border: 0, borderTop: '1px solid #d8d3c8', margin: '3rem 0 1.5rem' }} />
+      <hr style={{ border: 0, borderTop: '1px solid #D9D8D4', margin: '3rem 0 1.5rem' }} />
       <div style={{ marginTop: '1.5rem' }}>
-        <p style={{ color: '#9c9483', fontSize: '0.78rem', fontFamily: "'JetBrains Mono', monospace", marginBottom: '0.5rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+        <p style={{ color: '#93949A', fontSize: '0.78rem', fontFamily: "'JetBrains Mono', monospace", marginBottom: '0.5rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
           Reference
         </p>
         <p style={{ color: '#2a2a2a', fontSize: '0.92rem', margin: 0, lineHeight: 1.65 }}>

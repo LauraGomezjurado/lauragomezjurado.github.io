@@ -35,7 +35,7 @@ function TaskArithmeticHeroFigure() {
   const ink = '#1a1a1a'
   const accent = '#5b3a8a'
   const muted = '#5b5b5b'
-  const quiet = '#9c9483'
+  const quiet = '#93949A'
   const hair = '#ececec'
   const grid = '#f4f0e8'
 
@@ -126,7 +126,7 @@ function HiddenObjectivesHeroFigure() {
   const ink = '#1a1a1a'
   const accent = '#5b3a8a'
   const muted = '#5b5b5b'
-  const quiet = '#9c9483'
+  const quiet = '#93949A'
   const hair = '#ececec'
   const warm = '#b8531f'
   const mono = "'JetBrains Mono', ui-monospace, monospace"
@@ -230,7 +230,7 @@ function MaterialsAgentsHeroFigure() {
   const ink = '#1a1a1a'
   const accent = '#5b3a8a'
   const muted = '#5b5b5b'
-  const quiet = '#9c9483'
+  const quiet = '#93949A'
   const hair = '#ececec'
   const mono = "'JetBrains Mono', ui-monospace, monospace"
 
@@ -331,7 +331,7 @@ function MaterialsAgentsHeroFigure() {
 function MonitoringHeroFigure() {
   const ink = '#1a1a1a'
   const muted = '#6b6b6b'
-  const quiet = '#9c9483'
+  const quiet = '#93949A'
   const hair = '#ececec'
   const accent = '#5b3a8a'
   const warm = '#b8531f'
@@ -735,7 +735,7 @@ function OrthDionHeroFigure() {
 function MuonGeometryHeroFigure() {
   const ink = '#1a1a1a'
   const muted = '#6b6660'
-  const quiet = '#9c9483'
+  const quiet = '#93949A'
   // Two-color palette: ink for "the resting state" / structural, rust for the
   // single accent used to call out where the heuristic disagrees with the metric.
   const accent = '#b8531f'
@@ -1857,7 +1857,7 @@ export default function BlogPost() {
                   ahead of commitment the position became readable and never by what any readout
                   named. Each cell is the top token that readout names at that layer. The upper
                   position commits to <code style={{
-                    background: '#f1ede4', color: '#5b3a8a', padding: '0.1em 0.35em',
+                    background: '#F2F1ED', color: '#5b3a8a', padding: '0.1em 0.35em',
                     borderRadius: '3px', fontSize: '0.9em', fontStyle: 'normal',
                     fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                   }}>&apos; now&apos;</code> 21 denoising steps later. The logit lens column repeats
@@ -2059,7 +2059,7 @@ export default function BlogPost() {
             <p style={{ fontSize: '0.85rem', color: '#6b6b6b', letterSpacing: '0.01em', margin: 0 }}>
               Laura Gomezjurado · {formattedDate}
             </p>
-            <hr style={{ marginTop: '1.5rem', border: 0, borderTop: '1px solid #d8d3c8' }} />
+            <hr style={{ marginTop: '1.5rem', border: 0, borderTop: '1px solid #D9D8D4' }} />
           </header>
 
           <div className="lead-prose">
@@ -2103,13 +2103,13 @@ export default function BlogPost() {
                 li: ({node, ...props}) => <li style={{ marginBottom: '0.4rem', lineHeight: 1.7, fontSize: '1.02rem' }} {...props} />,
                 code: ({node, inline, ...props}) => (
                   inline
-                    ? <code style={{ background: '#f1ede4', color: '#5b3a8a', padding: '0.1em 0.35em', borderRadius: '3px', fontSize: '0.92em', fontFamily: "'JetBrains Mono', monospace" }} {...props} />
+                    ? <code style={{ background: '#F2F1ED', color: '#5b3a8a', padding: '0.1em 0.35em', borderRadius: '3px', fontSize: '0.92em', fontFamily: "'JetBrains Mono', monospace" }} {...props} />
                     : <code style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.88em' }} {...props} />
                 ),
                 pre: ({node, ...props}) => (
                   <pre style={{
-                    background: '#f6f3ec',
-                    border: '1px solid #e6e0d0',
+                    background: '#F7F6F3',
+                    border: '1px solid #E3E2DD',
                     padding: '1rem 1.25rem',
                     borderRadius: '3px',
                     overflowX: 'auto',
@@ -2130,7 +2130,7 @@ export default function BlogPost() {
                     lineHeight: 1.65
                   }} {...props} />
                 ),
-                hr: () => <hr style={{ border: 0, borderTop: '1px solid #d8d3c8', margin: '2.5rem auto', width: '100%' }} />,
+                hr: () => <hr style={{ border: 0, borderTop: '1px solid #D9D8D4', margin: '2.5rem auto', width: '100%' }} />,
                 img: ({node, src, alt}) => <Figure src={src} alt={alt} />,
                 table: ({node, ...props}) => (
                   <div style={{ overflowX: 'auto', margin: '1.5rem 0' }}>
@@ -2138,7 +2138,7 @@ export default function BlogPost() {
                   </div>
                 ),
                 th: ({node, ...props}) => <th style={{ borderBottom: '1px solid #c8c2b3', padding: '0.5rem 0.75rem', textAlign: 'left', fontWeight: 500, color: '#1a1a1a' }} {...props} />,
-                td: ({node, ...props}) => <td style={{ borderBottom: '1px solid #e6e0d0', padding: '0.5rem 0.75rem', color: '#2a2a2a' }} {...props} />,
+                td: ({node, ...props}) => <td style={{ borderBottom: '1px solid #E3E2DD', padding: '0.5rem 0.75rem', color: '#2a2a2a' }} {...props} />,
                 em: ({node, ...props}) => <em style={{ fontStyle: 'italic' }} {...props} />,
                 strong: ({node, ...props}) => <strong style={{ fontWeight: 600, color: '#1a1a1a' }} {...props} />
               }}
