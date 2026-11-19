@@ -16,7 +16,6 @@ export default function Navigation() {
     { name: 'News', href: '#news', isHash: true },
     { name: 'Featured', href: '#featured', isHash: true },
     { name: 'Blog', href: '/blog', isHash: false },
-    { name: 'Contact', href: '#contact', isHash: true },
   ]
 
   const handleNavClick = (href, isHash, e) => {

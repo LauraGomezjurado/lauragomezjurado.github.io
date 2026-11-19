@@ -14,18 +14,15 @@
     "asserts in dev that the browser actually paints paper.rendered, so the two can",
     "never drift apart in silence again."
   ],
-
   "paper": {
-    "declared": "#F6F3EC",
-    "rendered": "#F4F1EA",
-    "note": "declared is what :root sets; rendered is what the grain multiplies it down to, and is what plates must be painted on. Re-measure with scripts/paint/README.md's procedure if the grain opacities in PaperBackground.jsx change."
+    "declared": "#FDFCFA",
+    "rendered": "#FDFCFA",
+    "note": "declared is what :root sets. rendered is the background the plates are painted on. The grain layer sits above both page and plates, so the two values are equal."
   },
-
   "ink": {
-    "base": "#3A3632",
-    "strong": "#211E1A"
+    "base": "#34363B",
+    "strong": "#1D1F23"
   },
-
   "pigments": {
     "_note": "Mirrors WC.PIGMENTS in scripts/paint/watercolour.js. The interface draws its per-section accents from this box so the UI and the paintings speak one language.",
     "indigo": "#455571",
@@ -41,7 +38,6 @@
     "rose": "#B4738A",
     "sepia": "#5A4436"
   },
-
   "sectionAccents": {
     "_note": "Each panel carries the lead pigment of its own plate, so scrolling changes colour the way turning pages in a painted book does.",
     "hero": "indigo",

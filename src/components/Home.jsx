@@ -3,7 +3,6 @@ import About from './About'
 import News from './News'
 import Portfolio from './Portfolio'
 import Featured from './Featured'
-import Contact from './Contact'
 
 /**
  * Home: the score.
@@ -13,7 +12,6 @@ import Contact from './Contact'
  *   Research  a painting that holds while the text scrolls past    per project
  *   News      dense small-type list, no art - the contrast         payne
  *   Featured  fewer, larger press plates, irregular                sienna
- *   Contact   one oversized address                                madder
  *
  * There is no divider between them. Varied shape is what separates the panels;
  * a repeated rule is what made five panels read as five rows of a table.
@@ -37,7 +35,6 @@ export default function Home() {
       <Portfolio />
       <News />
       <Featured />
-      <Contact />
     </>
   )
 }

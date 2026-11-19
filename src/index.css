@@ -45,16 +45,16 @@ html {
   /* Declared slightly light of target: the grain in PaperBackground multiplies
      it down to --paper-rendered, which is the value plates are painted on.
      Both live in src/design-tokens.json. */
-  --paper:          #F6F3EC;
-  --paper-rendered: #F4F1EA;
-  --paper-recess:   #EDE8DE;
+  --paper:          #FDFCFA;
+  --paper-rendered: #FDFCFA;
+  --paper-recess:   #F2F1ED;
 
   /* Ink. Never black - black is a terminal, not a pen. */
-  --ink:        #3A3632;
-  --ink-strong: #211E1A;
-  --ink-soft:   rgba(58, 54, 50, 0.78);
-  --ink-quiet:  rgba(58, 54, 50, 0.52);
-  --hairline:   rgba(58, 54, 50, 0.10);
+  --ink:        #34363B;
+  --ink-strong: #1D1F23;
+  --ink-soft:   rgba(52, 54, 59, 0.80);
+  --ink-quiet:  rgba(52, 54, 59, 0.54);
+  --hairline:   rgba(52, 54, 59, 0.10);
 
   /* The pigment box, mirroring WC.PIGMENTS in scripts/paint/watercolour.js.
      These exist in the interface so the UI and the paintings share a language;
@@ -82,17 +82,17 @@ html {
   --panel-bg:        color-mix(in srgb, var(--paper-recess) 55%, transparent);
   --panel-bg-strong: color-mix(in srgb, var(--paper-recess) 82%, transparent);
 
-  /* Type: four faces, four jobs. */
-  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  /* Type: Newsreader for headings and text, Fragment Mono for labels, Caveat
+     for margin notes. */
+  --font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
   --font-text:    'Newsreader', Georgia, 'Times New Roman', serif;
   --font-label:   'Fragment Mono', ui-monospace, 'SF Mono', monospace;
   --font-hand:    'Caveat', 'Bradley Hand', cursive;
 
-  /* LOW optical size is the warm end of Fraunces: soft bracketed serifs that
-     read like ink. opsz 144 is the thin-hairline setting and looks like a
-     fashion magazine next to wet paint. */
-  --display-soft: 'opsz' 9, 'SOFT' 100, 'WONK' 1;
-  --display-mid:  'opsz' 24, 'SOFT' 100, 'WONK' 1;
+  /* Headings use Newsreader, the face the blog posts set their titles in, so
+     the home page and the posts share one serif. */
+  --display-soft: 'opsz' 36;
+  --display-mid:  'opsz' 24;
 }
 
 /* Per-section accent. Set data-accent on a <section> and everything inside that
@@ -142,7 +142,7 @@ canvas { display: block; }
 .t-name {
   font-family: var(--font-display);
   font-variation-settings: var(--display-soft);
-  font-weight: 300;
+  font-weight: 500;
   font-size: clamp(3.2rem, 8.5vw, 6.5rem);
   line-height: 0.92;
   letter-spacing: -0.026em;
@@ -154,7 +154,7 @@ canvas { display: block; }
 .t-name-sm {
   font-family: var(--font-display);
   font-variation-settings: var(--display-soft);
-  font-weight: 300;
+  font-weight: 500;
   font-size: clamp(2.3rem, 3.4vw, 2.9rem);
   line-height: 1;
   letter-spacing: -0.022em;
@@ -164,7 +164,7 @@ canvas { display: block; }
 .t-section {
   font-family: var(--font-display);
   font-variation-settings: var(--display-soft);
-  font-weight: 400;
+  font-weight: 500;
   font-size: clamp(1.6rem, 3vw, 2.4rem);
   line-height: 1.1;
   letter-spacing: -0.014em;
@@ -174,7 +174,7 @@ canvas { display: block; }
 .t-title {
   font-family: var(--font-display);
   font-variation-settings: var(--display-mid);
-  font-weight: 400;
+  font-weight: 500;
   font-size: clamp(1.8rem, 3.4vw, 2.6rem);
   line-height: 1.05;
   letter-spacing: -0.02em;
@@ -184,7 +184,7 @@ canvas { display: block; }
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   font-variation-settings: var(--display-soft);
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: -0.014em;
   line-height: 1.12;
 }
@@ -263,7 +263,7 @@ img[src*='/images/blog/'] {
    stock the page uses, so a shadow would turn one back into a floating card,
    which is the exact thing this system is trying to undo. */
 figure img {
-  box-shadow: 0 2px 26px rgba(58, 54, 50, 0.09);
+  box-shadow: 0 2px 26px rgba(52, 54, 59, 0.09);
 }
 
 img[src*='/images/art/'],
@@ -348,8 +348,8 @@ figcaption,
    to the new ground; the old values were mixed for #E6DCC8 sand. */
 .text-on-bg {
   text-shadow:
-    0 1px 20px rgba(244, 241, 234, 0.9),
-    0 1px 4px rgba(244, 241, 234, 0.75);
+    0 1px 20px rgba(251, 250, 248, 0.9),
+    0 1px 4px rgba(251, 250, 248, 0.75);
 }
 
 /* Press photography: previously pushed through sepia(0.25), which sepia-fied the

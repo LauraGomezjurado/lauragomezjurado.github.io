@@ -48,15 +48,6 @@ export function PaperGround() {
   return (
     <div aria-hidden="true" className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
       <div className="absolute inset-0" style={{ background: 'var(--paper)' }} />
-      {/* One barely-there warm lift so a large empty area is not perfectly flat.
-          The old pair of slate-blue gradients would grey out warm paper. */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            'radial-gradient(ellipse 85% 65% at 18% 15%, rgba(168,101,74,0.035) 0%, transparent 60%)',
-        }}
-      />
     </div>
   )
 }

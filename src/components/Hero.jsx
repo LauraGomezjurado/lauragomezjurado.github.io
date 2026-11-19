@@ -123,31 +123,18 @@ export default function Hero() {
             <a href="mailto:lpgomez@stanford.edu" className="link-editorial link-bare mono block w-fit">
               lpgomez [at] stanford.edu
             </a>
-            <div className="flex items-center gap-x-5">
-              <a
-                href="https://github.com/LauraGomezjurado"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="link-editorial link-bare mono"
-              >
-                GitHub
-              </a>
-              <a
-                href="https://www.linkedin.com/in/laura-gomezjurado/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="link-editorial link-bare mono"
-              >
-                LinkedIn
-              </a>
-              <a
-                href="https://scholar.google.com/citations?user=vhmfQwgAAAAJ"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="link-editorial link-bare mono"
-              >
-                Scholar
-              </a>
+            {/* The painted marks that used to sit in the Contact section,
+                from scripts/paint/sketches/mark-affiliation.js. */}
+            <div className="flex items-center gap-x-6 pt-2">
+              {[
+                ['https://github.com/LauraGomezjurado', '/images/marks/github.webp', 'GitHub'],
+                ['https://www.linkedin.com/in/laura-gomezjurado/', '/images/marks/linkedin.webp', 'LinkedIn'],
+                ['https://scholar.google.com/citations?user=vhmfQwgAAAAJ', '/images/marks/googlescholar.webp', 'Google Scholar'],
+              ].map(([href, src, name]) => (
+                <a key={name} href={href} target="_blank" rel="noopener noreferrer" title={name} className="opacity-90 transition-opacity hover:opacity-100">
+                  <img src={src} alt={name} decoding="async" className="h-8 w-auto" />
+                </a>
+              ))}
             </div>
           </div>
         </div>

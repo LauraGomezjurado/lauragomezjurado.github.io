@@ -26,23 +26,9 @@ const newsItems = [
     year: '2026',
     content: (
       <>
-        Joined the Fall 2026 cohort of the{' '}
-        <a href="https://sparai.org/" target="_blank" rel="noopener noreferrer" className="link-editorial">
-          Supervised Program for Alignment Research (SPAR)
-        </a>{' '}
-        with{' '}
-        <a href="https://belindal.github.io/" target="_blank" rel="noopener noreferrer" className="link-editorial">
-          Belinda Li
-        </a>{' '}
-        (Anthropic) and{' '}
-        <a href="https://www.mit.edu/~jda/" target="_blank" rel="noopener noreferrer" className="link-editorial">
-          Jacob Andreas
-        </a>{' '}
-        (MIT), working on{' '}
-        <a href="https://sparai.org/projects/f26/" target="_blank" rel="noopener noreferrer" className="link-editorial">
-          Deploying Programmatic Attention in Real Transformers
-        </a>
-        .
+        Joined <a href="https://sparai.org/" target="_blank" rel="noopener noreferrer" className="link-editorial">SPAR</a> with <a href="https://belindal.github.io/" target="_blank" rel="noopener noreferrer" className="link-editorial">Belinda Li</a> (Anthropic) and{' '}
+        <a href="https://www.mit.edu/~jda/" target="_blank" rel="noopener noreferrer" className="link-editorial">Jacob Andreas</a> (MIT) on{' '}
+        <a href="https://sparai.org/projects/f26/" target="_blank" rel="noopener noreferrer" className="link-editorial">programmatic attention in real transformers</a>.
       </>
     ),
     badge: 'Ongoing',
@@ -50,101 +36,40 @@ const newsItems = [
   {
     date: 'June to Sep 2026',
     year: '2026',
-    content: (
-      <>
-        Completed the AI Residency at{' '}
-        <a
-          href="https://www.lila.ai/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="link-editorial"
-        >
-          Lila Sciences
-        </a>
-        .
-      </>
-    ),
+    content: <>AI Residency at <a href="https://www.lila.ai/" target="_blank" rel="noopener noreferrer" className="link-editorial">Lila Sciences</a>.</>,
   },
   {
     date: 'June 2026',
     year: '2026',
-    content: (
-      <>
-        Paper <Paper href="https://arxiv.org/abs/2605.16341">Orth-Dion: Eliminating Geometric Mismatch in Distributed Low-Rank Spectral Optimization</Paper>{' '}
-        accepted to the Connecting Low-rank Representations in AI (CoLoRAI) Workshop at ICML 2026.
-      </>
-    ),
+    content: <><Paper href="https://arxiv.org/abs/2605.16341">Orth-Dion</Paper> accepted to the ICML 2026 CoLoRAI workshop.</>,
     badge: 'Accepted',
   },
   {
     date: 'May 2026',
     year: '2026',
-    content: (
-      <>
-        Paper <Paper href="https://openreview.net/forum?id=lDs4vkSX7J">Which Geometry on Which Layer? A Principled Criterion for Mixed-Optimizer Training</Paper>{' '}
-        under review.
-      </>
-    ),
+    content: <><Paper href="https://openreview.net/forum?id=lDs4vkSX7J">Which Geometry on Which Layer?</Paper> under review.</>,
     badge: 'Preprint',
   },
-  {
-    date: 'Apr 2026',
-    year: '2026',
-    content:
-      'Selected ICLR 2026 oral presentation at the Geometry-grounded Representation Learning and Generative Modeling Workshop.',
-    badge: 'Oral',
-  },
-  {
-    date: 'Mar 2026',
-    year: '2026',
-    content:
-      'Paper “The Long Delay to Arithmetic Generalization: When Learned Representations Outrun Behavior” under review.',
-    badge: 'Preprint',
-  },
+  { date: 'Apr 2026', year: '2026', content: 'Oral at the ICLR 2026 GRaM workshop.', badge: 'Oral' },
+  { date: 'Mar 2026', year: '2026', content: '“The Long Delay to Arithmetic Generalization” under review.', badge: 'Preprint' },
   {
     date: 'Feb 2026',
     year: '2026',
-    content: (
-      <>
-        Paper <Paper href="https://arxiv.org/abs/2505.24262">On Fairness of Task Arithmetic: The Role of Task Vectors</Paper>{' '}
-        accepted to ICLR 2026.
-      </>
-    ),
+    content: <><Paper href="https://arxiv.org/abs/2505.24262">On Fairness of Task Arithmetic</Paper> accepted to ICLR 2026.</>,
     badge: 'Accepted',
   },
-  {
-    date: 'Feb 2026',
-    year: '2026',
-    content:
-      'Joined the Supervised Program for Alignment Research (SPAR) with Uzay Macar working on Mech Interp for Latent Reasoning Models.',
-  },
-  { date: 'June to Aug 2025', year: '2025', content: 'Completed research internship at Microsoft Research.' },
-  { date: 'Jan 2025', year: '2025', content: 'Featured in Mission Magazine, Issue 12: The New Order.' },
-  {
-    date: 'Jan 2025',
-    year: '2025',
-    content: 'Attended the World Economic Forum in Davos as a Youth Delegate for the We Are Family Foundation.',
-  },
-  {
-    date: 'Dec 2024',
-    year: '2024',
-    content: 'Presented paper on AI for Respiratory Disease Detection at Prototypes for Humanity in Dubai.',
-  },
-  { date: 'Mar 2024', year: '2024', content: 'Attended the UN Women Commission on the Status of Women (CSW).' },
-  { date: 'Jun to Aug 2024', year: '2024', content: 'Joined the Ersilia Open Source Initiative, working on AI for drug discovery.' },
-  {
-    date: 'Sep 2023',
-    year: '2023',
-    content: 'Attended the UN General Assembly and the UN Women Generation Equality Midpoint Moment.',
-  },
-  { date: 'Sep 2023', year: '2023', content: 'Started B.S. in Computer Science at Stanford University.' },
-  { date: 'Jun 2023', year: '2023', content: 'Named Masason Foundation Fellow.' },
+  { date: 'Feb 2026', year: '2026', content: 'Joined SPAR with Uzay Macar (Anthropic) on interpretability of latent reasoning models.' },
+  { date: 'June to Aug 2025', year: '2025', content: 'Research internship at Microsoft Research.' },
+  { date: 'Jan 2025', year: '2025', content: 'Featured in Mission Magazine, Issue 12.' },
+  { date: 'Jan 2025', year: '2025', content: 'Youth Delegate at the World Economic Forum in Davos.' },
+  { date: 'Dec 2024', year: '2024', content: 'Presented AI for respiratory disease detection at Prototypes for Humanity, Dubai.' },
+  { date: 'Mar 2024', year: '2024', content: 'Attended the UN Commission on the Status of Women.' },
+  { date: 'Jun to Aug 2024', year: '2024', content: 'AI for drug discovery at the Ersilia Open Source Initiative.' },
+  { date: 'Sep 2023', year: '2023', content: 'Attended the UN General Assembly.' },
+  { date: 'Sep 2023', year: '2023', content: 'Started a B.S. in Computer Science at Stanford.' },
+  { date: 'Jun 2023', year: '2023', content: 'Named a Masason Foundation Fellow.' },
   { date: '2022', year: '2022', content: 'Named a Global Teen Leader by the We Are Family Foundation.' },
-  {
-    date: '2022',
-    year: '2022',
-    content: "Competed at the European Girls’ Olympiad in Informatics (EGOI), representing Colombia.",
-  },
+  { date: '2022', year: '2022', content: 'Represented Colombia at the European Girls’ Olympiad in Informatics.' },
 ]
 
 /**
