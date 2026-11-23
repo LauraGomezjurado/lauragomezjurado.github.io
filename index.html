@@ -24,6 +24,38 @@
     <meta name="twitter:description" content="Computer science student at Stanford working on the science of deep learning, from optimization and training dynamics to mechanistic interpretability and alignment." />
     <meta name="twitter:image" content="https://lauragomezjurado.github.io/images/og/home.jpg" />
 
+    <!-- Person structured data for Google's knowledge graph. sameAs lists every
+         profile that is the same person. The prerender script removes this
+         block from blog pages, which describe articles. -->
+    <script type="application/ld+json" id="person-jsonld">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Laura Gomezjurado Gonzalez",
+      "alternateName": "Laura Gomezjurado",
+      "url": "https://lauragomezjurado.github.io/",
+      "image": "https://lauragomezjurado.github.io/images/about/portrait-research.webp",
+      "jobTitle": "AI Researcher",
+      "description": "Computer science student at Stanford working on the science of deep learning, from optimization and training dynamics to mechanistic interpretability and alignment.",
+      "affiliation": {
+        "@type": "CollegeOrUniversity",
+        "name": "Stanford University",
+        "url": "https://www.stanford.edu"
+      },
+      "knowsAbout": [
+        "Mechanistic interpretability",
+        "Deep learning optimization",
+        "Training dynamics",
+        "AI alignment"
+      ],
+      "sameAs": [
+        "https://github.com/LauraGomezjurado",
+        "https://www.linkedin.com/in/laura-gomezjurado/",
+        "https://scholar.google.com/citations?user=vhmfQwgAAAAJ"
+      ]
+    }
+    </script>
+
     <!--
       Newsreader, Fragment Mono and Caveat. Loaded here rather than through an @import in
       index.css so the preconnects can actually do their work - an @import is

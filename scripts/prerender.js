@@ -87,6 +87,8 @@ for (const post of blogPosts) {
     .replace(/\s*<!-- Social card for the home page[\s\S]*?-->/, '')
     .replace(/\s*<link rel="canonical"[^>]*\/>/, '')
     .replace(/\s*<meta (?:property="og:|name="twitter:)[^>]*\/>/g, '')
+    .replace(/\s*<!-- Person structured data[\s\S]*?-->/, '')
+    .replace(/\s*<script type="application\/ld\+json" id="person-jsonld">[\s\S]*?<\/script>/, '')
 
   // Replace the single default <title> with the per-post head block.
   const head = buildHead(post)
@@ -109,3 +111,23 @@ for (const post of blogPosts) {
 }
 
 console.log(`prerender: wrote ${count} static blog pages to dist/blog/<slug>/index.html`)
+
+// sitemap.xml and robots.txt for Google Search Console. Only URLs that GitHub
+// Pages serves with a 200 are listed: the home page and the prerendered posts.
+// /blog and /portfolio are served by 404.html and would be reported as errors.
+const urls = [
+  { loc: `${ORIGIN}/` },
+  ...blogPosts.map((post) => ({ loc: `${ORIGIN}/blog/${post.slug}`, lastmod: post.date })),
+]
+const sitemap =
+  `<?xml version="1.0" encoding="UTF-8"?>\n` +
+  `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+  urls
+    .map(({ loc, lastmod }) =>
+      `  <url><loc>${loc}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}</url>`,
+    )
+    .join('\n') +
+  `\n</urlset>\n`
+writeFileSync(join(dist, 'sitemap.xml'), sitemap, 'utf8')
+writeFileSync(join(dist, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${ORIGIN}/sitemap.xml\n`, 'utf8')
+console.log(`prerender: wrote sitemap.xml with ${urls.length} URLs and robots.txt`)
